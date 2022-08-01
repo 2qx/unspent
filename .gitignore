@@ -1,0 +1,13 @@
+.idea
+.DS_Store
+.vscode
+.env.testnet
+.env.mainnet
+node_modules
+*.log
+*.d.ts
+*.js.map
+coverage
+jest/playwright/*
+jest/docker/data
+dist
