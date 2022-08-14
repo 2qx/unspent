@@ -1,0 +1,75 @@
+pragma cashscript >= 0.7.1;
+
+// v20220727
+
+
+
+// Unfinished, untested.
+contract Mine(
+
+    // interval for payouts, in blocks
+    int period,
+
+    // amount to be paid by faucet allowance. 
+    int payout,
+
+    // how many leading zeros should the nonce and currenct bytecode have
+    int difficulty,
+
+    // the old nonce, which is replaced each time.
+    bytes7 canary
+) {
+    function execute(bytes7 nonce) {
+
+        // Check that time has passed and that time locks are enabled
+        require(tx.age >= period);
+            
+        // Use the old nonce 
+        require(canary.length==7);
+
+        // Get the total value on the contract
+        bytes zeros = bytes7(0);
+        bytes hash = sha256(this.activeBytecode + bytes7(nonce));
+        require(hash.split(difficulty)[0] == zeros.split(difficulty)[0]);
+
+        // Require the first output to detail the parameters of the mining contract in a zero value OP_RETURN
+        bytes announcement = new LockingBytecodeNullData([
+            // The protocol
+            0x62616e6b,
+            // M for mining contract
+            bytes('M'),
+            // The period, little-endian 
+            bytes(period),
+            // The payout, little-endian 
+            bytes(payout),
+            // preceeding zeros on solution
+            bytes(difficulty),
+            // The current nonce (future canary), of the mining contract funds are similtaniously sent to
+            bytes(nonce)
+        ]);
+
+        // Assure that the first output matches the arguments to the contract
+        require(tx.outputs[0].lockingBytecode == announcement);
+
+        // Assure it has zero value
+        require(tx.outputs[0].value == 0);
+
+        // Get the total value on the contract
+        int currentValue = tx.inputs[this.activeInputIndex].value;
+
+        // Calculate value returned to the contract
+        int returnedValue = currentValue - payout;
+
+        // If the value on the contract exceeds the payout amount
+        if(currentValue > payout){
+           // Create the locking bytecode for the new contract and check that
+           // the change output sends to that contract
+           bytes newContract = 0x7 + bytes7(nonce) + this.activeBytecode.split(8)[1];
+           bytes20 contractHash = hash160(newContract);
+           bytes23 lockingCode = new LockingBytecodeP2SH(contractHash);
+           require(tx.outputs[1].lockingBytecode == lockingCode);
+           require(tx.outputs[1].value >= returnedValue);
+        }
+    }
+
+}

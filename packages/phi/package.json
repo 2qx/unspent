@@ -1,0 +1,52 @@
+{
+  "name": "@unspent/phi",
+  "version": "0.0.1",
+  "description": "a collection of anyone can spend contracts",
+  "author": "2qx",
+  "private":"true",
+  "scripts": {
+    "update:artifacts":"node script/updateArtifacts.js",
+    "clean": "rm -fr dist/* && rm -fr jest/playwright/*",
+    "prebuild": "yarn install",
+    "build": "yarn clean && tsc ",
+    "build:browser": "#npx webpack",
+    "nuke": "rm -fr jest/playwright/* && rm -fr node_modules ",
+    "test": "npx jest --runInBand  --logHeapUsage --forceExit"
+  },
+  "type": "module",
+  "main": "dist/main/index.js",
+  "types": "dist/main/index.d.ts",
+  "keywords": [
+    "bitcoin",
+    "bitcoin cash",
+    "bch",
+    "tBCH",
+    "cashscript",
+    "testnet",
+    "faucet"
+  ],
+  "dependencies": {
+    "@bitauth/libauth": "^1.19.1",
+    "@tsconfig/node16-strictest-esm": "latest",
+    "cashc": "^0.7.1",
+    "cashscript": "^0.7.1",
+    "ts-node": "^10.8.0",
+    "typescript": "^4.7.2"
+  },
+  "devDependencies": {
+    "@generalprotocols/cspell-dictionary": "git+https://gitlab.com/GeneralProtocols/cspell-dictionary.git",
+    "@generalprotocols/eslint-config": "git+https://gitlab.com/GeneralProtocols/eslint-config.git",
+    "@types/jest": "^27.0.1",
+    "@types/js-yaml": "^4.0.1",
+    "@types/node": "^15.12.2",
+    "jest": "^27.1.1",
+    "jest-process-manager": "^0.3.1",
+    "jest-runner": "^27.2.2",
+    "mainnet-js": "0.5.4",
+    "supertest": "^6.1.3",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.7.2",
+    "webpack-cli": "^4.10.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,45 @@
+pragma cashscript >= 0.7.1;
+
+// v202205626
+
+// This is an experimental annuity contract 
+// Prelim testing on regtest, just a concept
+contract Annuity(
+
+    // interval for payouts, in blocks
+    int period,
+
+    // LockingBytecode of the beneficiary, the address receiving payments
+    bytes recipientLockingBytecode,
+
+    // amount paid in each installment
+    int installment,
+
+    // extra allowance for administration of contract
+    // fees are paid from executors' allowance. 
+    int executorAllowance
+) {
+    function execute() {
+
+        // Check that the first output sends to the recipient
+        require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+        // Check that time has passed and that time locks are enabled
+        require(tx.age >= period);
+            
+        // require the second output to match the active bytecode
+        require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
+
+        // Get the total value on the contract
+        int currentValue = tx.inputs[this.activeInputIndex].value;
+
+        // Calculate value returned to the contract
+        int returnedValue = currentValue - installment - executorAllowance;
+
+        // Check that the outputs send the correct amounts
+        require(tx.outputs[0].value >= installment);
+        require(tx.outputs[1].value >= returnedValue);
+            
+    }
+
+}

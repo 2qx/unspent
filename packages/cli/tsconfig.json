@@ -1,0 +1,6 @@
+{
+    "extends": "@tsconfig/node16-strictest-esm/tsconfig.json",
+    "ts-node": {
+      "swc": true
+    }
+}
