@@ -1,6 +1,6 @@
 import { Annuity } from "./Annuity.js"
 import { 
-    createProtocolOpReturnData, 
+    createOpReturnData, 
     derivePublicKeyHashHex, 
     decodeNullDataScript  
 } from "../../common/util.js"
@@ -40,7 +40,7 @@ describe(`Annuity Class Tests`, () => {
         let options = {version:1,network:"regtest"}
         let a1 = new Annuity(5,process.env['ADDRESS']!,5000, 500, options)
         let chunks = a1.toChunks()
-        let data = createProtocolOpReturnData(chunks)
+        let data = createOpReturnData(chunks)
         let opReturn = decodeNullDataScript(data)
         let a2 = Annuity.fromOpReturn(opReturn, "regtest")
         expect(a1.toString()).toEqual(a2.toString())

@@ -26,7 +26,8 @@
     "test": "node --max-old-space-size=8000  --expose-gc ./node_modules/jest/bin/jest.js --runInBand  --config jest.config.js  --logHeapUsage  --forceExit",
     "test:skip": "SKIP_REGTEST_INIT=1 yarn test",
     "test:browser": "npx jest --config jest.config.browser.js --detectOpenHandles",
-    "test:browser:skip": "SKIP_REGTEST_INIT=1 yarn test:browser"
+    "test:browser:skip": "SKIP_REGTEST_INIT=1 yarn test:browser",
+    "update:artifacts": "yarn workspace @unspent/phi run update:artifacts"
   },
   "keywords": [
     "bitcoin",

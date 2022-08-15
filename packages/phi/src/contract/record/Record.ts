@@ -1,11 +1,11 @@
 import type { Artifact } from "cashscript"
 import type { TransactionDetails } from "cashscript/dist/module/interfaces"
 import type { ContractOptions } from "../../common/interface.js"
-import { DELIMITER, DefaultOptions } from "../../common/constant.js"
+import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
 import { BaseUtxfiContract } from "../../common/contract.js"
 import { artifact as v1 } from "./cash/v1.js"
 import { 
-    createProtocolOpReturnData, 
+    createOpReturnData, 
     hash160, 
     toHex
 } from "../../common/util.js"
@@ -69,6 +69,7 @@ export class Record extends BaseUtxfiContract  {
 
     toChunks() :(string)[]{
         return [
+            PROTOCOL_ID,
             Record.c,
             toHex(this.options!.version!),
             toHex(this.maxFee),
@@ -86,7 +87,7 @@ export class Record extends BaseUtxfiContract  {
     async broadcast(chunks?: string[]): Promise<TransactionDetails> {
         chunks = chunks ? chunks : this.toChunks()
         let fn = this.getFunction(Record.fn)!;
-        let opReturn = createProtocolOpReturnData(chunks)
+        let opReturn = createOpReturnData(chunks)
         try{            
             if( typeof opReturn === "string") throw opReturn
             let checkHash = await hash160(opReturn)

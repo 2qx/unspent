@@ -1,5 +1,6 @@
 import {
     binToHex,
+    binToNumberUintLE,
     decodeCashAddressFormat,
     decodeCashAddressFormatWithoutPrefix,
     cashAddressToLockingBytecode,
@@ -7,11 +8,11 @@ import {
     hexToBin,
     instantiateSha256, 
     instantiateRipemd160,
-    utf8ToBin
+    utf8ToBin,
+    numberToBinUintLE
   } from "@bitauth/libauth";
 
   import { Op, encodeNullDataScript } from "@cashscript/utils"
-  import { PROTOCOL_ID } from "./index.js";
 
 /**
  * Helper function to convert an address to a public key hash
@@ -65,10 +66,9 @@ import {
   }
 
 
-  export function createProtocolOpReturnData(
+  export function createOpReturnData(
     opReturnData: string[],
   ): Uint8Array {
-    opReturnData.unshift(...[PROTOCOL_ID])
       
     const script = [
       Op.OP_RETURN,
@@ -84,19 +84,15 @@ import {
     return encode(data);
   }
 
-  export function toHex(num: number): string{
-    // convet the number to hexidecimal base
-    let hex = `${num.toString(16).toUpperCase()}`
-
-    // assure the resulting string is padded in byte pairs
-    if(hex.length % 2) hex = "0" + hex
-
+  export function toHex(num: number): string{ 
+    let hex = binToHex(numberToBinUintLE(num)).toUpperCase()
+    if(!hex) hex = "00"
     return "0x"+ hex
   }
 
 export function binToNumber(data: Uint8Array) : number{
-  let h = binToHex(data)
-  return parseInt(h, 16)
+  let h = binToNumberUintLE(data)
+  return h
 }
 
 // For decoding OP_RETURN data 
@@ -151,4 +147,53 @@ export async function hash160(message: Uint8Array) {
  export async function sha256(message: Uint8Array) {
   const sha256 = await instantiateSha256();
   return sha256.hash(message);
+}
+
+
+// Simple function to get a random integer
+export function getRandomIntWeak(max: number) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+export function sum(previousValue:any, currentValue:any) {
+  return previousValue + currentValue;
+}
+
+
+/**
+ * Mine bitcoin blocks on a local regtest node to a regtest address
+ *
+ * @param cashaddr - the address to mine to
+ * @param blocks - the number of blocks to mine
+ *
+ * @remarks
+ * This function assumes a local regtest bitcoin node with RPC_* matching the docker configuration
+ */
+
+ export async function mine({
+  cashaddr,
+  blocks,
+}: {
+  cashaddr: string;
+  blocks: number;
+}) {
+
+  const generateArgs = [
+    `exec`,
+    `bitcoind`,
+    `bitcoin-cli`,
+    `--rpcconnect=${process.env['RPC_HOST']}`,
+    `--rpcuser=${process.env['RPC_USER']}`,
+    `--rpcpassword=${process.env['RPC_PASS']}`,
+    `--rpcport=${process.env['RPC_PORT']}`,
+    `generatetoaddress`,
+    blocks,
+    cashaddr,
+  ];
+  const spawnSync = eval('require("child_process")').spawnSync;
+  const cli = await spawnSync(`docker`, generateArgs);
+  if (cli.stderr.length > 0) {
+    return console.log("Mine Error: " + cli.stderr.toString());
+  }
+  return JSON.parse(cli.stdout.toString());
 }

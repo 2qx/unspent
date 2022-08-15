@@ -2,7 +2,7 @@ import { RegTestWallet} from "mainnet-js"
 import { Divide } from "./Divide"
 import { 
     derivePublicKeyHashHex, 
-    createProtocolOpReturnData, 
+    createOpReturnData, 
     decodeNullDataScript 
 } from "../../common/util"
 
@@ -58,7 +58,7 @@ describe(`Divide Class Tests`, () => {
         let options = {version:1,network:"regtest"}
         let d1 = new Divide(3000, payees, options)
         let chunks = d1.toChunks()
-        let data = createProtocolOpReturnData(chunks)
+        let data = createOpReturnData(chunks)
         let opReturn = decodeNullDataScript(data)
         let d2 = Divide.fromOpReturn(opReturn, "regtest")
         expect(d1.toString()).toEqual(d2.toString())
@@ -77,7 +77,7 @@ describe(`Divide Class Tests`, () => {
         let options = {version:1,network:"regtest"}
         let d1 = new Divide(3000, payees, options)
         let chunks = d1.toChunks()
-        let data = createProtocolOpReturnData(chunks)
+        let data = createOpReturnData(chunks)
         let opReturn = decodeNullDataScript(data)
         let d2 = Divide.fromOpReturn(opReturn, "regtest")
         expect(d1.toString()).toEqual(d2.toString())

@@ -1,5 +1,5 @@
 import { Faucet } from "./Faucet.js"
-import { createProtocolOpReturnData, decodeNullDataScript, deriveLockingBytecodeHex } from "../../common/util.js"
+import { createOpReturnData, decodeNullDataScript, deriveLockingBytecodeHex } from "../../common/util.js"
 
 describe(`Faucet Class Tests`, () => {
 
@@ -31,7 +31,7 @@ describe(`Faucet Class Tests`, () => {
         let options = {version:1,network:"regtest"}
         let f1 = new Faucet(5,3000,2,options)
         let chunks = f1.toChunks()
-        let data = createProtocolOpReturnData(chunks)
+        let data = createOpReturnData(chunks)
         let opReturn = decodeNullDataScript(data)
         let f2 = Faucet.fromOpReturn(opReturn, "regtest")
         expect(f1.toString()).toEqual(f2.toString())

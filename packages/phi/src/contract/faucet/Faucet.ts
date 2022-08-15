@@ -103,7 +103,8 @@ export class Faucet extends BaseUtxfiContract implements UtxfiContract {
     }
 
     toChunks(): string[]{
-        return [Faucet.c,
+        return [PROTOCOL_ID,
+               Faucet.c,
                toHex(this.options!.version!),
                toHex(this.period),
                toHex(this.payout),

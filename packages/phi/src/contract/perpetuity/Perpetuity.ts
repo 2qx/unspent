@@ -11,7 +11,6 @@ import { binToNumber, derivePublicKeyHashHex,
     deriveLockingBytecodeHex,
     getPrefixFromNetwork, toHex } from "../../common/util.js"
 import { artifact as v1 } from "./cash/v1.js"
-import { artifact as v2 } from "./cash/v1.js"
 
 
 export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
@@ -31,9 +30,6 @@ export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
         let script:Artifact
         if(options.version===1){
             script = v1  
-        }
-        else if(options.version===2){
-            script = v2     
         }else{
             throw Error("Unrecognized Perpetuity Version")
         }
@@ -133,7 +129,8 @@ export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
     }
 
     toChunks(): string[]{
-        return [Perpetuity.c,
+        return [PROTOCOL_ID,
+               Perpetuity.c,
                toHex(this.options!.version!),
                toHex(this.period),
                '0x'+ deriveLockingBytecodeHex(this.address),

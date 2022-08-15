@@ -1,14 +1,12 @@
 import { ElectrumCluster, ClusterOrder, ElectrumTransport } from "electrum-cash"
 import { Contract, ElectrumNetworkProvider } from "cashscript"
 import { RegTestWallet, mine as mineBlocks } from "mainnet-js"
-import { binToHex, hexToBin, bigIntToBinUintLE } from "@bitauth/libauth";
+import { binToHex, hexToBin, bigIntToBinUintLE, bigIntToScriptNumber } from "@bitauth/libauth";
 import { getRandomInt } from "mainnet-js/dist/main/util";
-import { sha256 } from "../../../common/util";
+import { sha256, sum, deriveLockingBytecodeHex } from "../../../common/util";
 import { artifact as v1 } from "./v1.js"
 
-function sum(previousValue:any, currentValue:any) {
-    return previousValue + currentValue;
-}
+
 
 describe(`Mining Contract Tests`, () => {
 
@@ -60,7 +58,7 @@ describe(`Mining Contract Tests`, () => {
             let result = new Uint8Array([])
             while(!mined){
                 nonce = getRandomInt(9007199254740991)
-                nonceBin = bigIntToBinUintLE(BigInt(nonce))
+                nonceBin = bigIntToScriptNumber(BigInt(nonce))
                 let msg = new Uint8Array([...hexToBin(contract.getRedeemScriptHex()), ...nonceBin])
                 result = await sha256(msg)
                 if(result.slice(0,difficulty).reduce(sum) === 0) mined = true
@@ -78,7 +76,7 @@ describe(`Mining Contract Tests`, () => {
 
             //console.log(payout)
             let tx = await fn
-                .withOpReturn(['0x62616e6b','M','0x01', '0x8813', '0x0'+ difficulty, '0x'+nonceHex])
+                .withOpReturn(['0x62616e6b','M','0x01', '0x01', '0x8813', '0x0'+ difficulty, '0x'+nonceHex, '0x'+ deriveLockingBytecodeHex(newContract.address)])
                 .to([
                     {
                         to: newContract.address,

@@ -1,9 +1,9 @@
-import { binToHex, hexToBin } from "@bitauth/libauth"
+import { binToHex, hexToBin, bigIntToBinUintLE } from "@bitauth/libauth"
 import type { Artifact } from "cashscript"
 import type { UtxfiContract, ContractOptions }  from "../../common/interface.js"
 import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
 import { BaseUtxfiContract } from "../../common/contract.js"
-import { toHex, binToNumber } from "../../common/util.js"
+import { toHex, binToNumber, sha256, getRandomIntWeak, sum } from "../../common/util.js"
 import { artifact as v1 } from "./cash/v1.js"
 
 
@@ -108,7 +108,8 @@ export class Mine extends BaseUtxfiContract implements UtxfiContract {
     }
 
     toChunks(): string[]{
-        return [Mine.c,
+        return [PROTOCOL_ID,
+               Mine.c,
                toHex(this.options!.version!),
                toHex(this.period),
                toHex(this.payout),
@@ -124,16 +125,37 @@ export class Mine extends BaseUtxfiContract implements UtxfiContract {
         console.log("contract principal:        ", await this.getBalance());
     }
 
+    async getNonce(): Promise<Uint8Array>{
+        let nonce = new Uint8Array([])
+        let result = new Uint8Array([])
+        let mined = false
+        while(!mined){
+            let nonceNumber = getRandomIntWeak(9007199254740991)
+            nonce = bigIntToBinUintLE(BigInt(nonceNumber))
+            let msg = new Uint8Array([...hexToBin(this.getRedeemScriptHex()), ...nonce])
+            result = await sha256(msg)
+            if(result.slice(0,this.difficulty).reduce(sum) === 0) mined = true
+        }
+        return nonce
+    }
+
     async execute(exAddress?: string, fee?:number): Promise<string> {
         let balance = await this.getBalance();
         let fn = this.getFunction(Mine.fn)!;
         let newPrincipal = balance - this.payout
-        let minerFee = fee ? fee : 152;
-        let sendAmout = this.payout - minerFee
+        let minerFee = fee ? fee : 400;
+        let reward = this.payout - minerFee
+
+        this.canary = await this.getNonce()
+        
+
+        let nextContract = new Mine(this.period, this.payout, this.difficulty, this.canary, this.options)
+        let chunks = nextContract.toChunks()
+
 
         let to = [
             {
-                to: this.getAddress(),
+                to: nextContract.getAddress(),
                 amount: newPrincipal,
             }
             ]
@@ -141,11 +163,32 @@ export class Mine extends BaseUtxfiContract implements UtxfiContract {
         if(exAddress) to.push(
             { 
                 to: exAddress,
-                amount: sendAmout
+                amount: reward
             })
 
+        let canaryHex = '0x'+binToHex(this.canary)
+                
         try{
-            let payTx = await fn()
+            let size = await fn(canaryHex)
+            .withOpReturn(chunks)
+            .to(to)
+            .withAge(this.period)
+            .withHardcodedFee(minerFee)
+            .build();
+            
+            if(exAddress){
+                let minerFee = fee ? fee : size.length/2;
+                let reward = this.payout - (minerFee+4)
+                to.pop();
+                to.push(
+                    { 
+                        to: exAddress,
+                        amount: reward
+                    })
+            } 
+
+            let payTx = await fn(canaryHex)
+            .withOpReturn(chunks)
             .to(to)
             .withAge(this.period)
             .withoutChange()

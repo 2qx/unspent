@@ -135,7 +135,8 @@ export class Annuity extends BaseUtxfiContract implements UtxfiContract {
     }
 
     toChunks(): string[]{
-        return [Annuity.c,
+        return [PROTOCOL_ID,
+               Annuity.c,
                toHex(this.options!.version!),
                toHex(this.period),
                '0x'+deriveLockingBytecodeHex(this.address),

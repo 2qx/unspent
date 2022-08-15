@@ -3,7 +3,7 @@ import { Contract, ElectrumNetworkProvider } from "cashscript"
 import { RegTestWallet } from "mainnet-js"
 import { compileFile } from "cashc"
 import { Divide } from "../../divide/index"
-import { createProtocolOpReturnData, hash160 } from "../../../common/util"
+import { createOpReturnData, hash160 } from "../../../common/util"
 
 describe(`Record Contract Tests`, () => {
 
@@ -42,7 +42,7 @@ describe(`Record Contract Tests`, () => {
         
         let chunks = c.toChunks() 
 
-        let opReturn = createProtocolOpReturnData(chunks)
+        let opReturn = createOpReturnData(chunks)
         if( typeof opReturn === "string") throw opReturn
         
         let checkHash = await hash160(opReturn)
@@ -95,7 +95,7 @@ describe(`Record Contract Tests`, () => {
             },
         ]);
 
-        let opReturn = createProtocolOpReturnData(chunks)
+        let opReturn = createOpReturnData(chunks)
         if( typeof opReturn === "string") throw opReturn
         let checkHash = await hash160(opReturn)
               

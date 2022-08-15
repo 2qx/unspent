@@ -41,6 +41,10 @@ export class BaseUtxfiContract{
         return deriveLockingBytecode(this.contract.address)
     }    
 
+    getRedeemScriptHex(){
+        return this.contract.getRedeemScriptHex()
+    }
+    
     getFunction(fn:string){
         return this.contract.functions[fn]    
     }

@@ -130,6 +130,7 @@ export class Divide extends BaseUtxfiContract implements UtxfiContract {
 
     toChunks() :(string)[]{
         return [
+            PROTOCOL_ID,
             Divide.c,
             toHex(this.options!.version!),
             toHex(this.executorAllowance),
