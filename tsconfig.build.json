@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "es2015",
+      "declaration": true,
+      "lib": ["es2020", "dom"],
+      "types": ["node", "jest"],
+      "sourceMap": true,
+      "strict": true,
+      "strictPropertyInitialization": false,
+      "experimentalDecorators": true,
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+    },
+    "exclude": [
+      "node_modules",
+      "dist",
+    ],
+  }
