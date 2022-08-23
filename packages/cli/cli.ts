@@ -122,7 +122,8 @@ class PerpetuityCommand extends Command {
          r.info()
       }else{
         let r =  new Record( maxFeeInt, indexInt,  {version:1, network:network} )
-        await r.broadcast()
+        let details = await r.broadcast()
+        console.log(details)
       }
     }
   }
