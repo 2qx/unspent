@@ -4,9 +4,9 @@ import { binToHex,
     lockingBytecodeToCashAddress
 } from "@bitauth/libauth"
 import { compileString } from "cashc"
-import type { UtxfiContract, ContractOptions } from "../../common/interface.js"
+import type { UtxPhiIface, ContractOptions } from "../../common/interface.js"
 import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
-import { BaseUtxfiContract } from "../../common/contract.js"
+import { BaseUtxPhiContract } from "../../common/contract.js"
 import {  
     deriveLockingBytecodeHex,
     getPrefixFromNetwork,
@@ -14,7 +14,7 @@ import {
     binToNumber } from "../../common/util.js"
 import { getV1 } from "./cash/v1.js"
 
-export class Divide extends BaseUtxfiContract implements UtxfiContract {
+export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
     private static c: string = 'D';
     private static delimiter: string = DELIMITER;

@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
-  "private":"true",
   "scripts": {
     "update:artifacts":"node script/updateArtifacts.js",
     "clean": "rm -fr dist/* && rm -fr jest/playwright/*",

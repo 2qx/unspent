@@ -1,7 +1,13 @@
 
-export interface UtxfiContract {
+export interface UtxPhiIface {
 
     toString(): string
+
+    // fromString(str:string, network:string): any
+
+    // fromOpReturn(chunks:Uint8Array[], network:string): any 
+
+    toChunks(): string[]
 
     execute(exAddress: string, fee:number): Promise<string>
 

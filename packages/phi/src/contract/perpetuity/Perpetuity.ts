@@ -4,19 +4,19 @@ import {
     hexToBin,
     lockingBytecodeToCashAddress } from "@bitauth/libauth"
 import type { Artifact } from "cashscript"
-import type { UtxfiContract, ContractOptions } from "../../common/interface.js"
+import type { UtxPhiIface, ContractOptions } from "../../common/interface.js"
 import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
-import { BaseUtxfiContract } from "../../common/contract.js"
-import { binToNumber, derivePublicKeyHashHex, 
+import { BaseUtxPhiContract } from "../../common/contract.js"
+import { binToNumber,  
     deriveLockingBytecodeHex,
     getPrefixFromNetwork, toHex } from "../../common/util.js"
 import { artifact as v1 } from "./cash/v1.js"
 
 
-export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
+export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
-    private static c: string = "P"; 
-    private static delimiter: string = DELIMITER;
+    public static c: string = "P"; 
+    public static delimiter: string = DELIMITER;
     private static fn: string = "execute";
 
 
@@ -72,11 +72,11 @@ export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
         let perpetuity = new Perpetuity(period, address, executorAllowance, decay, options)
         
         // check that the address matches
-        if(!(checksum==derivePublicKeyHashHex(perpetuity.getAddress()))) throw("Perpetuity deserializtion resulted in different contract public key hash")
+        if(!(checksum==deriveLockingBytecodeHex(perpetuity.getAddress()))) throw("Perpetuity deserializtion resulted in different contract public key hash")
         return perpetuity
     }
 
-    // Create a Annunity contract from an OpReturn by building a serialized string.
+    // Create a Perpetuity contract from an OpReturn by building a serialized string.
     static fromOpReturn(chunks:Uint8Array[], network="mainnet"): Perpetuity {
 
         let protocol = "0x"+ binToHex(chunks.shift()!)
@@ -114,7 +114,7 @@ export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
         let perpetuity = new Perpetuity(period, address, executorAllowance, decay, options)
         
         // check that the address 
-        if(binToHex(checksum) !==derivePublicKeyHashHex(perpetuity.getAddress())) throw("Perpetuity deserializtion resulted in different contract public key hash")
+        if(binToHex(checksum) !==deriveLockingBytecodeHex(perpetuity.getAddress())) throw("Perpetuity deserializtion resulted in different contract public key hash")
         return perpetuity
     }
 
@@ -125,7 +125,7 @@ export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
                `${deriveLockingBytecodeHex(this.address)}`,
                `${this.executorAllowance}`,
                `${this.decay}`,
-               `${derivePublicKeyHashHex(this.getAddress())}`].join(Perpetuity.delimiter)
+               `${this.getLockingBytecode()}`].join(Perpetuity.delimiter)
     }
 
     toChunks(): string[]{
@@ -136,7 +136,7 @@ export class Perpetuity extends BaseUtxfiContract implements UtxfiContract {
                '0x'+ deriveLockingBytecodeHex(this.address),
                toHex(this.executorAllowance),
                toHex(this.decay),
-               '0x'+ derivePublicKeyHashHex(this.getAddress())]
+               '0x'+ this.getLockingBytecode()]
     }
 
     async info(){

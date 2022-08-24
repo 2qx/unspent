@@ -2,7 +2,7 @@ import { Artifact, Contract } from "cashscript"
 import { ElectrumNetworkProvider } from 'cashscript';
 import { ElectrumCluster, ClusterOrder, ElectrumTransport } from "electrum-cash"
 import { deriveLockingBytecode, deriveLockingBytecodeHex  } from "./util.js";
-export class BaseUtxfiContract{
+export class BaseUtxPhiContract{
 
     private contract: Contract
     protected testnet: boolean

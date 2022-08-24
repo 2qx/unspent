@@ -1,6 +1,7 @@
 import { Record } from "./Record"
 import { Divide } from "../divide/index"
 import { RegTestWallet } from "mainnet-js"
+import { createOpReturnData, decodeNullDataScript } from "../../common/util.js"
 
 describe(`Record Class Tests`, () => {
 
@@ -55,7 +56,19 @@ describe(`Record Class Tests`, () => {
     });
 
 
-
+    test("Should a deserialize and reserialize a regtest Record to chunks and from an opreturn", async () => {
+        
+        let options = {version:1,network:"regtest"}
+        let r1 = new Record(850,0,options)
+        let chunks = r1.toChunks()
+        let data = createOpReturnData(chunks)
+        let opReturn = decodeNullDataScript(data)
+        let r2 = Record.fromOpReturn(opReturn, "regtest")
+        expect(r1.toString()).toEqual(r2.toString())
+        expect(r2.isTestnet()).toEqual(true)
+        expect(r1.getAddress()).toEqual(r2.getAddress())
+        
+    });
 
     test("Should announce itself and Divider", async () => {
         // let payees = [

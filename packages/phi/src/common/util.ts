@@ -12,7 +12,7 @@ import {
     numberToBinUintLE
   } from "@bitauth/libauth";
 
-  import { Op, encodeNullDataScript } from "@cashscript/utils"
+import { Op, encodeNullDataScript } from "@cashscript/utils"
 
 /**
  * Helper function to convert an address to a public key hash
@@ -53,42 +53,42 @@ import {
   if(typeof(lock)==="string") throw lock
   return lock.bytecode
 }
- 
-  export function getPrefixFromNetwork(network: string) : CashAddressNetworkPrefix{
-    let prefix = !network ? CashAddressNetworkPrefix.mainnet : undefined
-    if(!prefix){
-      if(network=="mainnet") prefix=CashAddressNetworkPrefix.mainnet
-      if(network=="staging") prefix=CashAddressNetworkPrefix.testnet
-      if(network=="regtest") prefix=CashAddressNetworkPrefix.regtest
-    }
-    if(!prefix) throw Error("unknown network")
-    return prefix
+
+export function getPrefixFromNetwork(network: string) : CashAddressNetworkPrefix{
+  let prefix = !network ? CashAddressNetworkPrefix.mainnet : undefined
+  if(!prefix){
+    if(network=="mainnet") prefix=CashAddressNetworkPrefix.mainnet
+    if(network=="staging") prefix=CashAddressNetworkPrefix.testnet
+    if(network=="regtest") prefix=CashAddressNetworkPrefix.regtest
   }
+  if(!prefix) throw Error("unknown network")
+  return prefix
+}
 
 
-  export function createOpReturnData(
-    opReturnData: string[],
-  ): Uint8Array {
-      
-    const script = [
-      Op.OP_RETURN,
-      ...opReturnData.map((output: string) => toBin(output)),
-    ];
-  
-    return encodeNullDataScript(script);
-  }
+export function createOpReturnData(
+  opReturnData: string[],
+): Uint8Array {
+    
+  const script = [
+    Op.OP_RETURN,
+    ...opReturnData.map((output: string) => toBin(output)),
+  ];
 
-  export function toBin(output: string): Uint8Array {
-    const data = output.replace(/^0x/, '');
-    const encode = data === output ? utf8ToBin : hexToBin;
-    return encode(data);
-  }
+  return encodeNullDataScript(script);
+}
 
-  export function toHex(num: number): string{ 
-    let hex = binToHex(numberToBinUintLE(num)).toUpperCase()
-    if(!hex) hex = "00"
-    return "0x"+ hex
-  }
+export function toBin(output: string): Uint8Array {
+  const data = output.replace(/^0x/, '');
+  const encode = data === output ? utf8ToBin : hexToBin;
+  return encode(data);
+}
+
+export function toHex(num: number): string{ 
+  let hex = binToHex(numberToBinUintLE(num)).toUpperCase()
+  if(!hex) hex = "00"
+  return "0x"+ hex
+}
 
 export function binToNumber(data: Uint8Array) : number{
   let h = binToNumberUintLE(data)
@@ -197,3 +197,5 @@ export function sum(previousValue:any, currentValue:any) {
   }
   return JSON.parse(cli.stdout.toString());
 }
+
+

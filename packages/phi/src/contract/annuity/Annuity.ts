@@ -6,9 +6,9 @@ import {
     lockingBytecodeToCashAddress 
 } from "@bitauth/libauth"
 import type { Artifact } from "cashscript"
-import type { UtxfiContract, ContractOptions } from "../../common/interface.js"
+import type { UtxPhiIface, ContractOptions } from "../../common/interface.js"
 import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
-import { BaseUtxfiContract } from "../../common/contract.js"
+import { BaseUtxPhiContract } from "../../common/contract.js"
 import { 
     getPrefixFromNetwork, 
     deriveLockingBytecodeHex,
@@ -17,10 +17,10 @@ import {
     } from "../../common/util.js"
 import { artifact as v1 } from "./cash/v1.js"
 
-export class Annuity extends BaseUtxfiContract implements UtxfiContract {
+export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
-    private static c: string = 'A';  //A
-    private static delimiter: string = DELIMITER;
+    public static c: string = 'A';  //A
+    public static delimiter: string = DELIMITER;
     private static fn: string = "execute";
 
 

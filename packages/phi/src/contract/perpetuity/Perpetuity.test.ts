@@ -7,7 +7,7 @@ describe(`Perpetuity Class Tests`, () => {
         let p = new Perpetuity(4000, "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",1000,12)
         let chk = derivePublicKeyHashHex("bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr")
         expect(p.toString()).toContain(chk)
-        expect(p.toString()).toEqual("P,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1000,12,01f2644ebbda119fb742c1d34be1b38cb7cae88a")
+        expect(p.toString()).toEqual("P,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1000,12,a91401f2644ebbda119fb742c1d34be1b38cb7cae88a87")
 
         let p2 = Perpetuity.fromString(p.toString())
 

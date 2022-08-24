@@ -1,17 +1,17 @@
 import type { Artifact } from "cashscript"
-import type { UtxfiContract, ContractOptions }  from "../../common/interface.js"
+import type { UtxPhiIface, ContractOptions }  from "../../common/interface.js"
 import { binToHex } from "@bitauth/libauth"
 import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
-import { BaseUtxfiContract } from "../../common/contract.js"
+import { BaseUtxPhiContract } from "../../common/contract.js"
 import { toHex, binToNumber } from "../../common/util.js"
 import { artifact as v1 } from "./cash/v1.js"
 
 
-export class Faucet extends BaseUtxfiContract implements UtxfiContract {
+export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
-    private static c: string = 'F'; 
-    private static delimiter: string = DELIMITER;
-    private static fn: string = "drip";
+    public static c: string = 'F'; 
+    public static delimiter: string = DELIMITER;
+    private static fn: string = "execute";
 
 
     constructor(
