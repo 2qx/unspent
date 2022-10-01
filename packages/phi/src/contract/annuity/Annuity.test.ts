@@ -1,3 +1,4 @@
+import { opReturn } from '@bitauth/libauth';
 import { Annuity } from "./Annuity.js"
 import { 
     createOpReturnData, 
@@ -39,9 +40,7 @@ describe(`Annuity Class Tests`, () => {
         
         let options = {version:1,network:"regtest"}
         let a1 = new Annuity(5,process.env['ADDRESS']!,5000, 500, options)
-        let chunks = a1.toChunks()
-        let data = createOpReturnData(chunks)
-        let opReturn = decodeNullDataScript(data)
+        let opReturn = a1.toOpReturn(false)
         let a2 = Annuity.fromOpReturn(opReturn, "regtest")
         expect(a1.toString()).toEqual(a2.toString())
         expect(a2.isTestnet()).toEqual(true)
@@ -49,5 +48,14 @@ describe(`Annuity Class Tests`, () => {
 
     });
 
+    test("Should a return info", async () => {
+        
+        let options = {version:1,network:"regtest"}
+        let c1 = new Annuity(5,process.env['ADDRESS']!,5000, 500, options)
+        let info = await c1.info(false)
+        expect(info).toContain(c1.toString())
+        expect(info).toContain("balance")
+        
+    });
 
 });

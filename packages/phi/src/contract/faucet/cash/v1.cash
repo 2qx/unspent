@@ -32,8 +32,12 @@ contract Faucet(
         // Calculate value returned to the contract
         int returnedValue = currentValue - payout;
 
-        // Check that the outputs send the correct amounts
-        require(tx.outputs[0].value >= returnedValue);
+        // If the value on the contract exceeds the payout amount
+        //  then assert that the value must return to the contract
+        if(currentValue > payout){
+           require(tx.outputs[0].value >= returnedValue);
+        }
+
     }
 
 }

@@ -10,7 +10,7 @@ describe(`Example Perpituity Tests`, () => {
 
     test("Should pay a perpituity contract", async () => {
 
-        let regTest = new ElectrumCluster('CashScript Application', '1.4.1', 1, 1, ClusterOrder.PRIORITY);
+        let regTest = new ElectrumCluster('CashScript Application', '1.4.1', 1, 1, ClusterOrder.PRIORITY, 2000);
         regTest.addServer('127.0.0.1', 60003, ElectrumTransport.WS.Scheme, false);
       
         let regtestNetwork  = new ElectrumNetworkProvider("regtest",regTest, false)

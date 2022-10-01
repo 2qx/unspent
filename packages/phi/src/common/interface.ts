@@ -3,11 +3,9 @@ export interface UtxPhiIface {
 
     toString(): string
 
-    // fromString(str:string, network:string): any
-
-    // fromOpReturn(chunks:Uint8Array[], network:string): any 
-
-    toChunks(): string[]
+    asText(): string
+    
+    toOpReturn(hex:boolean): Uint8Array | string
 
     execute(exAddress: string, fee:number): Promise<string>
 

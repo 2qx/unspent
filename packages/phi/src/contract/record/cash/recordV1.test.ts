@@ -1,9 +1,10 @@
+import { binToHex } from '@bitauth/libauth';
 import { ElectrumCluster, ClusterOrder, ElectrumTransport } from "electrum-cash"
-import { Contract, ElectrumNetworkProvider } from "cashscript"
+import { Contract as CashScriptContract, ElectrumNetworkProvider } from "cashscript"
 import { RegTestWallet } from "mainnet-js"
 import { compileFile } from "cashc"
-import { Divide } from "../../divide/index"
-import { createOpReturnData, hash160 } from "../../../common/util"
+import { Divide } from "../../divide/index.js"
+import { createOpReturnData, decodeNullDataScript, hash160 } from "../../../common/util.js"
 
 describe(`Record Contract Tests`, () => {
 
@@ -17,7 +18,7 @@ describe(`Record Contract Tests`, () => {
 
         let maxFee = 850;
         let script = compileFile("./packages/phi/src/contract/record/cash/v1.cash")
-        let contract = new Contract(
+        let contract = new CashScriptContract(
             script,
             [maxFee, 2],
             regtestNetwork
@@ -40,9 +41,8 @@ describe(`Record Contract Tests`, () => {
             "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss"
         ], {version: 1, network:"regtest"})
         
-        let chunks = c.toChunks() 
-
-        let opReturn = createOpReturnData(chunks)
+        let opReturn = c.toOpReturn() 
+        let chunks = decodeNullDataScript(opReturn).map( b => "0x"+binToHex(b))
         if( typeof opReturn === "string") throw opReturn
         
         let checkHash = await hash160(opReturn)
@@ -68,7 +68,7 @@ describe(`Record Contract Tests`, () => {
 
         let maxFee = 850;
         let script = compileFile("./packages/phi/src/contract/record/cash/v1.cash")
-        let contract = new Contract(
+        let contract = new CashScriptContract(
             script,
             [maxFee, 0],
             provider
@@ -77,13 +77,10 @@ describe(`Record Contract Tests`, () => {
             "bchreg:pzt2852zlgtyqu6585wtu72y2u8646tefsa54drfw8",
             "bchreg:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwus03a55xe",
             "bchreg:pzvv2yhpsq2twj3kxgmsd76de4y785d3evpjtdwver",
-            "bchreg:pzpzxvw8kluds32v3lpa9mq43l2rdpny65qp7nluud",
-            "bchreg:ppawvmf2u4uar27pmlz5kqyz6zr8ntwug55qj9tz5k",
-            "bchreg:pr2w0jrvwnqkenwunee3vs3dnadxwl3txsn4p6lane",
-            "bchreg:pzr5rcyce80eyh049uef2pxkwfn2hszzrqr29mkxzx"
+            "bchreg:pzpzxvw8kluds32v3lpa9mq43l2rdpny65qp7nluud"
           ], {version: 1, network:"regtest"})
         
-        let chunks =  c.toChunks() 
+        let opReturn =  c.toOpReturn() 
 
         // fund the contract
         const alice = await RegTestWallet.fromId(process.env['ALICE_ID']!);
@@ -95,7 +92,7 @@ describe(`Record Contract Tests`, () => {
             },
         ]);
 
-        let opReturn = createOpReturnData(chunks)
+        let chunks = decodeNullDataScript(opReturn).map(c => "0x"+binToHex(c))
         if( typeof opReturn === "string") throw opReturn
         let checkHash = await hash160(opReturn)
               

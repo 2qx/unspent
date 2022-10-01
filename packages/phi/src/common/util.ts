@@ -69,7 +69,6 @@ export function getPrefixFromNetwork(network: string) : CashAddressNetworkPrefix
 export function createOpReturnData(
   opReturnData: string[],
 ): Uint8Array {
-    
   const script = [
     Op.OP_RETURN,
     ...opReturnData.map((output: string) => toBin(output)),
@@ -96,7 +95,10 @@ export function binToNumber(data: Uint8Array) : number{
 }
 
 // For decoding OP_RETURN data 
-export function decodeNullDataScript(data : Uint8Array) {
+export function decodeNullDataScript(data : Uint8Array|string) {
+  if(typeof data === "string")
+  data = hexToBin(data)
+  
   if(data.slice(0,1)[0] !== 106){
     throw Error("Attempted to decode NullDataScript without a OP_RETURN code (106), not an OpReturn output?")
   }
@@ -107,7 +109,6 @@ export function decodeNullDataScript(data : Uint8Array) {
   let r:Uint8Array[] = []
   while(i<data.length){
     if(data.slice(i,i+1)[0] === 0x4c){
-      console.log("76")
       r.push(data.slice(i,i+1))
       i+1
     }else if(data.slice(i,i+1)[0] === 0x4d){
@@ -160,42 +161,5 @@ export function sum(previousValue:any, currentValue:any) {
 }
 
 
-/**
- * Mine bitcoin blocks on a local regtest node to a regtest address
- *
- * @param cashaddr - the address to mine to
- * @param blocks - the number of blocks to mine
- *
- * @remarks
- * This function assumes a local regtest bitcoin node with RPC_* matching the docker configuration
- */
-
- export async function mine({
-  cashaddr,
-  blocks,
-}: {
-  cashaddr: string;
-  blocks: number;
-}) {
-
-  const generateArgs = [
-    `exec`,
-    `bitcoind`,
-    `bitcoin-cli`,
-    `--rpcconnect=${process.env['RPC_HOST']}`,
-    `--rpcuser=${process.env['RPC_USER']}`,
-    `--rpcpassword=${process.env['RPC_PASS']}`,
-    `--rpcport=${process.env['RPC_PORT']}`,
-    `generatetoaddress`,
-    blocks,
-    cashaddr,
-  ];
-  const spawnSync = eval('require("child_process")').spawnSync;
-  const cli = await spawnSync(`docker`, generateArgs);
-  if (cli.stderr.length > 0) {
-    return console.log("Mine Error: " + cli.stderr.toString());
-  }
-  return JSON.parse(cli.stdout.toString());
-}
 
 

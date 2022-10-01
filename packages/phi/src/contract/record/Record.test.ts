@@ -1,11 +1,13 @@
-import { Record } from "./Record"
-import { Divide } from "../divide/index"
+import { opReturn } from '@bitauth/libauth';
+import { Record } from "./Record.js"
+import { Faucet } from "../faucet/index.js"
 import { RegTestWallet } from "mainnet-js"
+import { _PROTOCOL_ID } from "../../common/constant.js"
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js"
 
 describe(`Record Class Tests`, () => {
 
-    test("Should announce itself and Divider", async () => {
+    test("Should announce itself and Faucet", async () => {
 
         let options = {version:1, network:"regtest"}
         let r = new Record(850,0,options)
@@ -20,22 +22,15 @@ describe(`Record Class Tests`, () => {
         ]);   
 
         let tx2 = await r.broadcast()
-        expect(r.toChunks()).toEqual(
-            [
-                '0x62616e6b',
-                'R',
-                '0x01',
-                '0x5203',
-                '0x00',
-                '0xa91496e199d7ea23fb779f5764b97196824002ef811a87'
-              ]
+        expect(r.toOpReturn(true)).toEqual(
+            "6a047574786f01520101025203010017a91496e199d7ea23fb779f5764b97196824002ef811a87"
         )
         expect(r.toString()).toEqual("R,1,850,0,a91496e199d7ea23fb779f5764b97196824002ef811a87")
         expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array([
             // op return
             106, 
             // 4 byte protocol id
-            4, 98, 97, 110, 107,
+            4, 117,  116, 120, 111,
             // R
             1, 82,
             // 1
@@ -56,13 +51,11 @@ describe(`Record Class Tests`, () => {
     });
 
 
-    test("Should a deserialize and reserialize a regtest Record to chunks and from an opreturn", async () => {
+    test("Should deserialize and reserialize a regtest Record to chunks and from an opreturn", async () => {
         
         let options = {version:1,network:"regtest"}
         let r1 = new Record(850,0,options)
-        let chunks = r1.toChunks()
-        let data = createOpReturnData(chunks)
-        let opReturn = decodeNullDataScript(data)
+        let opReturn = r1.toOpReturn()
         let r2 = Record.fromOpReturn(opReturn, "regtest")
         expect(r1.toString()).toEqual(r2.toString())
         expect(r2.isTestnet()).toEqual(true)
@@ -70,7 +63,7 @@ describe(`Record Class Tests`, () => {
         
     });
 
-    test("Should announce itself and Divider", async () => {
+    test("Should announce itself and Faucet", async () => {
         // let payees = [
         //     "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
         //     "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
@@ -82,7 +75,7 @@ describe(`Record Class Tests`, () => {
         //     "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss"
         // ]
         let options = {version:1, network:"regtest"}
-        // //let d = new Divide(4000, payees, options)
+        let f = new Faucet(1,1000,0,options)
         let r = new Record(850,1,options)
         
         // fund the contract
@@ -95,12 +88,12 @@ describe(`Record Class Tests`, () => {
             },
         ]);     
         
-        //let tx = await r.broadcast(d.toChunks())
+        let tx = await r.broadcast(f.toOpReturn())
         let tx2 = await r.broadcast()
         expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array(
             [
                 106,   
-                4,  98,  97, 110, 107,   
+                4,  117,  116, 120, 111,   
                 1,  82,   
                 1,  1,   
                 2,    82,   3, 
@@ -117,17 +110,10 @@ describe(`Record Class Tests`, () => {
         ))
     });
 
-    test("Should a serialize and broadcast a Divide contract and itself", async () => {
-        let payees = [
-            "bchtest:qregan4d575yu6vepkmg6qu0jhy4w568kqm2nu0gs6",
-            "bchtest:qpm0fcekjj69fhcf7cl6gc8q4yx32k9vrsj7kug49q",
-            "bchtest:qrgexapv88zs5f9y8xs9ksxkhjek6ndmpqr0s83fpv",
-            "bchtest:qregan4d575yu6vepkmg6qu0jhy4w568kqm2nu0gs6",
-            "bchtest:qpm0fcekjj69fhcf7cl6gc8q4yx32k9vrsj7kug49q",
-            "bchtest:qrgexapv88zs5f9y8xs9ksxkhjek6ndmpqr0s83fpv"
-          ]
+    test("Should serialize and broadcast a Faucet contract and itself", async () => {
+ 
         let options = {version:1, network:"regtest"}
-        let d = new Divide(4000, payees, options)
+        let f = new Faucet(1,3000,0,options)
         
         let r = new Record(850,0,options)
         // fund the contract
@@ -140,18 +126,39 @@ describe(`Record Class Tests`, () => {
             },
         ]);   
 
-        let tx = await r.broadcast(d.toChunks())
-        let aBin = new Uint8Array([106, 4, 98, 97, 110])
+        let tx = await r.broadcast(f.toOpReturn())
+        let aBin = new Uint8Array([106, 4, 117,  116, 120, 111,])
 
-        let payload = new Uint8Array([107, 1, 68, 1, 1, 2, 160, 15, 25, 118, 169, 20, 242, 142, 206, 173, 167, 168, 78, 105, 153, 13, 182, 141, 3, 143, 149, 201, 87, 83, 71, 176, 136, 172, 25, 118, 169, 20, 118, 244, 227, 54, 148, 180, 84, 223, 9, 246, 63, 164, 96, 224, 169, 13, 21, 88, 172, 28, 136, 172, 25, 118, 169, 20, 209, 147, 116, 44, 57, 197, 10, 36, 164, 57, 160, 91, 64, 214, 188, 179, 109, 77, 187, 8, 136, 172, 25, 118, 169, 20, 242, 142, 206, 173, 167, 168, 78, 105, 153, 13, 182, 141])
+        let payload = new Uint8Array([1, 70, 1, 1, 1, 1, 2, 184, 11, 1, 0, 23, 169, 20, 
+            247,
+            135,
+            189,
+            218,
+            91,
+            240,
+            187,
+            75,
+            166,
+            223,
+            100,
+            240,
+            47,
+            168,
+            42,
+            30,
+            147,
+            221,
+            196,
+            28, 
+            135])
         //expect(opCodeString).toEqual(a)
-        expect(tx.outputs[0]!.lockingBytecode.slice(0,5)).toEqual(aBin)
-        expect(tx.outputs[0]!.lockingBytecode.slice(5,107)).toEqual(payload)
+        expect(tx.outputs[0]!.lockingBytecode.slice(0,6)).toEqual(aBin)
+        expect(tx.outputs[0]!.lockingBytecode.slice(6,107)).toEqual(payload)
         let tx2 = await r.broadcast()
         expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array(
             [
                 106,  
-                4,  98,  97, 110, 107,   
+                4,  117,  116, 120, 111,  
                 1,  82,   
                 1,   1,   
                 2,   82,  3,  
@@ -168,6 +175,24 @@ describe(`Record Class Tests`, () => {
     });
 
 
-    
+    test("Should return info", async () => {
+        
+        let options = {version:1,network:"regtest"}
+        let c1 = new Record(850,0,options)
+        let info = await c1.info(false)
+        expect(info).toContain(c1.toString())
+        expect(info).toContain("balance")
+        
+    });
+
+    test("Should return info", async () => {
+        
+        let options = {version:1,network:"staging"}
+        let c1 = new Record(850,1,options)
+        let info = await c1.info(false)
+        expect(info).toContain(c1.toString())
+        expect(info).toContain("balance")
+        
+    });
 
 });

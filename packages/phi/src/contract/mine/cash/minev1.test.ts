@@ -3,8 +3,9 @@ import { Contract, ElectrumNetworkProvider } from "cashscript"
 import { RegTestWallet, mine as mineBlocks } from "mainnet-js"
 import { binToHex, hexToBin, bigIntToBinUintLE, bigIntToScriptNumber } from "@bitauth/libauth";
 import { getRandomInt } from "mainnet-js/dist/main/util";
-import { sha256, sum, deriveLockingBytecodeHex } from "../../../common/util";
+import { sha256, sum, deriveLockingBytecodeHex } from "../../../common/util.js";
 import { artifact as v1 } from "./v1.js"
+import { _PROTOCOL_ID } from "../../../common/constant.js";
 
 
 
@@ -64,6 +65,11 @@ describe(`Mining Contract Tests`, () => {
                 if(result.slice(0,difficulty).reduce(sum) === 0) mined = true
             }
 
+            if(nonceBin.length < 7){
+                let zeros = 7-nonceBin.length
+                nonceBin = new Uint8Array( [... nonceBin, ... new Uint8Array(zeros)])
+            }
+
             let nonceHex = binToHex(nonceBin)
             
             let fn = contract!.functions["execute"]!(nonceHex);
@@ -76,7 +82,7 @@ describe(`Mining Contract Tests`, () => {
 
             //console.log(payout)
             let tx = await fn
-                .withOpReturn(['0x62616e6b','M','0x01', '0x01', '0x8813', '0x0'+ difficulty, '0x'+nonceHex, '0x'+ deriveLockingBytecodeHex(newContract.address)])
+                .withOpReturn([_PROTOCOL_ID,'M','0x01', '0x01', '0x8813', '0x0'+ difficulty, '0x'+nonceHex, '0x'+ deriveLockingBytecodeHex(newContract.address)])
                 .to([
                     {
                         to: newContract.address,

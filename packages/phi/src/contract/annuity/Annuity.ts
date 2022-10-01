@@ -1,13 +1,12 @@
 
 import { 
-    binToHex, 
     hexToBin, 
     cashAddressToLockingBytecode, 
     lockingBytecodeToCashAddress 
 } from "@bitauth/libauth"
 import type { Artifact } from "cashscript"
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js"
-import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
+import { DefaultOptions } from "../../common/constant.js"
 import { BaseUtxPhiContract } from "../../common/contract.js"
 import { 
     getPrefixFromNetwork, 
@@ -20,13 +19,13 @@ import { artifact as v1 } from "./cash/v1.js"
 export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     public static c: string = 'A';  //A
-    public static delimiter: string = DELIMITER;
     private static fn: string = "execute";
 
+    public recipientLockingBytecode:any
 
     constructor(
         public period: number = 4000,
-        public address:any,
+        public recipientAddress:any,
         public installment:number,
         public executorAllowance:number = 800,
         public options: ContractOptions = DefaultOptions
@@ -38,71 +37,60 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         }else{
             throw Error("Unrecognized Annuity Version")
         }
-        let lock = cashAddressToLockingBytecode(address)
+
+
+        let lock = cashAddressToLockingBytecode(recipientAddress)
         if(typeof(lock)==="string") throw lock
-        let bytecode = lock.bytecode
+
         
-  
-        super(options.network!, script, [period, bytecode, installment, executorAllowance] );
+        super(options.network!, script, [period, lock.bytecode, installment, executorAllowance] );
+        this.recipientLockingBytecode = lock.bytecode
         this.options = options
     }
 
 
+    refresh(): void {
+        this._refresh([this.period, this.recipientLockingBytecode, this.installment, this.executorAllowance])
+    }
+
     static fromString(str: string, network="mainnet"): Annuity {
-        let comp = str.split(Annuity.delimiter)
+
+        let p = this.parseSerializedString(str, network)
         
         // if the contract shortcode doesn't match, error
-        if(!(Annuity.c ==comp.shift())) throw("non-Annuity serialized string passed to Annuity constructor")
-        let version = parseInt(comp.shift()!)
-        let options = {version: version, network: network}
+        if(!(Annuity.c ==p.code)) throw("non-faucet serilaized string passed to faucet constructor")
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = comp.splice(-1)[0]
-
-        let period = parseInt(comp.shift()!)
-        let lock = comp.shift()!
-
+        if(p.options.version!=1) throw Error(`${this.name} contract version not recognized`)
+        if(p.args.length != 4) throw(`invalid number of arguments ${p.args.length}`)
+        
+        let period = parseInt(p.args.shift()!)        
+        let lock = p.args.shift()!
         let prefix = getPrefixFromNetwork(network)
         let address = lockingBytecodeToCashAddress(hexToBin(lock), prefix)
         if(typeof(address) !== "string") throw Error("non-standard address" + address)
+        let installment = parseInt(p.args.shift()!)
+        let executorAllowance = parseInt(p.args.shift()!)
+        let annuity = new Annuity(period, address, installment, executorAllowance, p.options)
 
-
-        let [installment, executorAllowance] = [30000,3000]
-        if(version==1){
-           installment = parseInt(comp.shift()!) 
-           executorAllowance = parseInt(comp.shift()!)   
-        }else{
-            throw Error("Annuity contract version not recognized")
-        }
-
-        let annuity = new Annuity(period, address, installment, executorAllowance, options)
-        
-        // check that the address 
-        if(checksum!==annuity.getLockingBytecode()) throw("Annuity deserializtion resulted in different contract public key hash")
+        // check that the address is the same
+        annuity.checkLockingBytecode(p.lockingBytecode)
         return annuity
     }
 
     // Create a Annunity contract from an OpReturn by building a serialized string.
-    static fromOpReturn(chunks:Uint8Array[], network="mainnet"): Annuity {
+    static fromOpReturn(opReturn:Uint8Array|string, network="mainnet"): Annuity {
 
-        let protocol = "0x"+ binToHex(chunks.shift()!)
-        if(protocol !== PROTOCOL_ID) throw Error(`Protocol specified in OpReturn didn't match the PROTOCOL_ID: ${protocol} v ${PROTOCOL_ID}`)
-        let charArray = chunks.shift()!
-        
-        let c = String.fromCharCode(charArray[0]!)!;
-        if(c!==this.c) throw Error(`Wrong short code passed to Annuity class: ${c}`)
-        
+        let p = this.parseOpReturn(opReturn, network)
+
+        // check code
+        if(p.code!==this.c) throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`)
         
         // version
-        let version = binToNumber(chunks.shift()!);
-        if(version !==1) throw Error(`Wrong version code passed to Annuity class: ${version}`)
-        let options = {version: version, network: network}
+        if(p.options.version !==1) throw Error(`Wrong version code passed to ${this.name} class: ${p.options.version}`)
+        
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = chunks.pop()!
-
-        let period = binToNumber(chunks.shift()!)
-        let lock = chunks.shift()!
+        let period = binToNumber(p.args.shift()!)
+        let lock = p.args.shift()!
 
         let prefix = getPrefixFromNetwork(network)
         let address = lockingBytecodeToCashAddress(lock, prefix)
@@ -110,17 +98,17 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
 
         let [installment, executorAllowance] = [30000,3000]
-        if(version==1){
-           installment = binToNumber(chunks.shift()!) 
-           executorAllowance = binToNumber(chunks.shift()!)
+        if(p.options.version==1){
+           installment = binToNumber(p.args.shift()!) 
+           executorAllowance = binToNumber(p.args.shift()!)
         }else{
             throw Error("Annuity contract version not recognized")
         }
 
-        let annuity = new Annuity(period, address, installment, executorAllowance, options)
+        let annuity = new Annuity(period, address, installment, executorAllowance, p.options)
         
-        // check that the address 
-        if(binToHex(checksum)!==annuity.getLockingBytecode()) throw("Annuity deserializtion resulted in different contract public key hash")
+        // check that the address is the same
+        annuity.checkLockingBytecode(p.lockingBytecode)
         return annuity
     }
 
@@ -128,29 +116,31 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         return [`${Annuity.c}`,
                `${this.options!.version!}`,
                `${this.period}`,
-               `${deriveLockingBytecodeHex(this.address)}`,
+               `${deriveLockingBytecodeHex(this.recipientAddress)}`,
                `${this.installment}`,
                `${this.executorAllowance}`,
                `${this.getLockingBytecode()}`].join(Annuity.delimiter)
     }
 
-    toChunks(): string[]{
-        return [PROTOCOL_ID,
-               Annuity.c,
-               toHex(this.options!.version!),
-               toHex(this.period),
-               '0x'+deriveLockingBytecodeHex(this.address),
-               toHex(this.installment),
-               toHex(this.executorAllowance),
-               '0x'+this.getLockingBytecode()]
+    override asText(){
+        return `Annuity paying ${this.installment} (sat), every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`
     }
 
-    async info(){
-        console.log(`# Annuity paying ${this.installment} (sat), every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`)
-        console.log('# ', this.toString());
-        console.log('contract address:          ', this.address);
-        console.log("contract principal:        ", await this.getBalance());
+    toOpReturn(hex=false): string | Uint8Array{
+        let chunks = [
+                Annuity._PROTOCOL_ID,
+                Annuity.c,
+                toHex(this.options!.version!),
+                toHex(this.period),
+                '0x'+deriveLockingBytecodeHex(this.recipientAddress),
+                toHex(this.installment),
+                toHex(this.executorAllowance),
+                '0x'+this.getLockingBytecode(true)
+            ]
+        return this.asOpReturn(chunks, hex)
     }
+
+
     
     async execute(exAddress?: string, fee?:number): Promise<string> {
         let balance = await this.getBalance();
@@ -165,7 +155,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
         let outputs = [
             { 
-                to: this.address,
+                to: this.recipientAddress,
                 amount: installment
             },
             {

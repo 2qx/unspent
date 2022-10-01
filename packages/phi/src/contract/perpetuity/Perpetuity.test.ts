@@ -1,4 +1,4 @@
-import { Perpetuity } from "./Perpetuity"
+import { Perpetuity } from "./Perpetuity.js"
 import { derivePublicKeyHashHex, createOpReturnData, decodeNullDataScript } from "../../common/util.js"
 
 describe(`Perpetuity Class Tests`, () => {
@@ -31,9 +31,7 @@ describe(`Perpetuity Class Tests`, () => {
         
         let options = {version:1,network:"regtest"}
         let p1 = new Perpetuity(5,"bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",2000, 120, options)
-        let chunks = p1.toChunks()
-        let data = createOpReturnData(chunks)
-        let opReturn = decodeNullDataScript(data)
+        let opReturn = p1.toOpReturn()
         let p2 = Perpetuity.fromOpReturn(opReturn, "regtest")
         expect(p1.toString()).toEqual(p2.toString())
         expect(p2.isTestnet()).toEqual(true)

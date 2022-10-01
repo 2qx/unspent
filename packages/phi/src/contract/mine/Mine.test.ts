@@ -1,13 +1,12 @@
-import { Mine } from "./Mine"
-import { RegTestWallet } from "mainnet-js";
+import { Mine } from "./Mine.js"
+import { RegTestWallet, mine as mineBlocks  } from "mainnet-js";
 
-import { createOpReturnData, decodeNullDataScript, mine } from "../../common/util"
 
 describe(`Mine Class Tests`, () => {
 
-    test("Should a serialize a mine", async () => {
+    test("Should serialize a 'mine' contract", async () => {
         let m = new Mine()
-        expect(m.toString()).toEqual(`M,1,1,5000,3,00000000000000,a914513bd2e0bc053a4352652a91a05aff1ef003c7b787`)
+        expect(m.toString()).toEqual(`M,1,1,5000,3,00000000000000,a914df288c9062bc5b1a7180d83ca19a7231b0fb50ad87`)
 
         let m2 = Mine.fromString(m.toString())
 
@@ -16,7 +15,7 @@ describe(`Mine Class Tests`, () => {
         expect(m.isTestnet()).toEqual(m2.isTestnet())
     });
 
-    test("Should a deserialize and reserialize a staging mine", async () => {
+    test("Should deserialize and reserialize a staging mine", async () => {
         let m = new Mine(5,3000,2,undefined,{version: 1,network: "staging"})
 
         let m2 = Mine.fromString(m.toString(), "staging")
@@ -26,13 +25,11 @@ describe(`Mine Class Tests`, () => {
         expect(m.isTestnet()).toEqual(m2.isTestnet())
     });
 
-    test("Should a deserialize and reserialize a regtest Mine to chunks and from an opreturn", async () => {
+    test("Should deserialize and reserialize a regtest Mine to chunks and from an opreturn", async () => {
         
         let options = {version:1,network:"regtest"}
         let m1 = new Mine(5,3000,2,undefined,options)
-        let chunks = m1.toChunks()
-        let data = createOpReturnData(chunks)
-        let opReturn = decodeNullDataScript(data)
+        let opReturn = m1.toOpReturn()
         let m2 = Mine.fromOpReturn(opReturn, "regtest")
         expect(m1.toString()).toEqual(m2.toString())
         expect(m2.isTestnet()).toEqual(true)
@@ -55,7 +52,7 @@ describe(`Mine Class Tests`, () => {
                 unit: "satoshis",
             },
         ]);  
-        await mine({cashaddr: alice.getDepositAddress(), blocks:6})
+        await mineBlocks({cashaddr: alice.getDepositAddress(), blocks:6})
         expect(await m1.getBalance()).toBeGreaterThan(100)
         m1.getAddress()
         let response = await m1.execute(bob.getDepositAddress()) 
@@ -63,6 +60,14 @@ describe(`Mine Class Tests`, () => {
         
     });
 
-
+    test("Should return info", async () => {
+        
+        let options = {version:1,network:"regtest"}
+        let c1 = new Mine(5,3000,2,undefined,options)
+        let info = await c1.info(false)
+        expect(info).toContain(c1.toString())
+        expect(info).toContain("balance")
+        
+    });
 
 });

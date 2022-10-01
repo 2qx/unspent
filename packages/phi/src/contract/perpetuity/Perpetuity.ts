@@ -1,11 +1,10 @@
 import { 
-    binToHex,
     cashAddressToLockingBytecode,
     hexToBin,
     lockingBytecodeToCashAddress } from "@bitauth/libauth"
 import type { Artifact } from "cashscript"
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js"
-import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
+import { DefaultOptions,  _PROTOCOL_ID } from "../../common/constant.js"
 import { BaseUtxPhiContract } from "../../common/contract.js"
 import { binToNumber,  
     deriveLockingBytecodeHex,
@@ -16,7 +15,6 @@ import { artifact as v1 } from "./cash/v1.js"
 export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     public static c: string = "P"; 
-    public static delimiter: string = DELIMITER;
     private static fn: string = "execute";
 
 
@@ -43,78 +41,59 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
 
     static fromString(str: string, network="mainnet"): Perpetuity {
-        let comp = str.split(Perpetuity.delimiter)
+
+        let p = this.parseSerializedString(str, network)
         
         // if the contract shortcode doesn't match, error
-        if(!(Perpetuity.c ==comp.shift())) throw("non-Perpetuity serialized string passed to Perpetuity constructor")
-        let version = parseInt(comp.shift()!)
-        let options = {version: version, network: network}
+        if(!(this.c ==p.code)) throw(`non-${this.name} serilaized string passed to ${this.name} constructor`)
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = comp.splice(-1)[0]
-
-        let period = parseInt(comp.shift()!)
+        if(p.options.version!=1) throw Error(`${this.name} contract version not recognized`)
+        if(p.args.length != 4) throw(`invalid number of arguments ${p.args.length}`)
         
-        let lock = comp.shift()!
+        const period = parseInt(p.args.shift()!)    
 
-        let prefix = getPrefixFromNetwork(network)
-        let address = lockingBytecodeToCashAddress(hexToBin(lock), prefix)
+        const lock = p.args.shift()!
+
+        const prefix = getPrefixFromNetwork(network)
+        const address = lockingBytecodeToCashAddress(hexToBin(lock), prefix)
         if(typeof(address) !== "string") throw Error("non-standard address" + address)
-
-
-        let [executorAllowance, decay] = [3000, 120]
-        if(version==1){
-            executorAllowance = parseInt(comp.shift()!)
-            decay = parseInt(comp.shift()!)
-        }else{
-            throw Error("Perpetuity contract version not recognized")
-        }
-        let perpetuity = new Perpetuity(period, address, executorAllowance, decay, options)
         
-        // check that the address matches
-        if(!(checksum==deriveLockingBytecodeHex(perpetuity.getAddress()))) throw("Perpetuity deserializtion resulted in different contract public key hash")
+        const executorAllowance = parseInt(p.args.shift()!)
+        const decay = parseInt(p.args.shift()!)
+
+        let perpetuity = new Perpetuity(period, address, executorAllowance, decay, p.options)
+
+        // check that the address 
+        perpetuity.checkLockingBytecode(p.lockingBytecode)
         return perpetuity
     }
 
     // Create a Perpetuity contract from an OpReturn by building a serialized string.
-    static fromOpReturn(chunks:Uint8Array[], network="mainnet"): Perpetuity {
+    static fromOpReturn(opReturn:Uint8Array|string, network="mainnet"): Perpetuity {
 
-        let protocol = "0x"+ binToHex(chunks.shift()!)
-        if(protocol !== PROTOCOL_ID) throw Error(`Protocol specified in OpReturn didn't match the PROTOCOL_ID: ${protocol} v ${PROTOCOL_ID}`)
-        let charArray = chunks.shift()!
-
-        let c = String.fromCharCode(charArray[0]!)!;
-        if(c!==this.c) throw Error(`Wrong short code passed to Perpetuity class: ${c}`)
+        let p = this.parseOpReturn(opReturn, network)
+        
+        // check code
+        if(p.code!==this.c) throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`)
         
         // version
-        let version = binToNumber(chunks.shift()!);
-        if(version !==1) throw Error(`Wrong version code passed to Perpetuity class: ${version}`)
-        let options = {version: version, network: network}
+        if(p.options.version !==1) throw Error(`Wrong version code passed to ${this.name} class: ${p.options.version}`)
+       
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = chunks.pop()!
-
-        let period = binToNumber(chunks.shift()!)
-        let lock = chunks.shift()!
+        let period = binToNumber(p.args.shift()!)
+        let lock = p.args.shift()!
 
         let prefix = getPrefixFromNetwork(network)
         let address = lockingBytecodeToCashAddress(lock, prefix)
-        JSON.stringify(address)
         if(typeof(address) !== "string") throw Error("non-standard address" + address)
 
-
-        let [executorAllowance, decay] = [3000, 120]
-        if(version==1){
-            executorAllowance = binToNumber(chunks.shift()!)
-            decay = binToNumber(chunks.shift()!)
-        }else{
-            throw Error("Perpetuity contract version not recognized")
-        }
-
-        let perpetuity = new Perpetuity(period, address, executorAllowance, decay, options)
+        const executorAllowance = binToNumber(p.args.shift()!)
+        const decay = binToNumber(p.args.shift()!)
+       
+        let perpetuity = new Perpetuity(period, address, executorAllowance, decay, p.options)
         
         // check that the address 
-        if(binToHex(checksum) !==deriveLockingBytecodeHex(perpetuity.getAddress())) throw("Perpetuity deserializtion resulted in different contract public key hash")
+        perpetuity.checkLockingBytecode(p.lockingBytecode)
         return perpetuity
     }
 
@@ -128,24 +107,24 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
                `${this.getLockingBytecode()}`].join(Perpetuity.delimiter)
     }
 
-    toChunks(): string[]{
-        return [PROTOCOL_ID,
-               Perpetuity.c,
-               toHex(this.options!.version!),
-               toHex(this.period),
-               '0x'+ deriveLockingBytecodeHex(this.address),
-               toHex(this.executorAllowance),
-               toHex(this.decay),
-               '0x'+ this.getLockingBytecode()]
+    override asText():string{
+        return `Perpetuity to pay 1/${this.decay} the input, every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`
     }
 
-    async info(){
-        console.log(`# Perpetuity to pay 1/${this.decay} total, every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`)
-        console.log('# ', this.toString());
-        console.log('contract address:          ', this.address);
-        console.log("contract principal:        ", await this.getBalance());
+    toOpReturn(hex=false): string | Uint8Array {
+        const chunks = [
+            Perpetuity._PROTOCOL_ID,
+            Perpetuity.c,
+            toHex(this.options!.version!),
+            toHex(this.period),
+            '0x'+ deriveLockingBytecodeHex(this.address),
+            toHex(this.executorAllowance),
+            toHex(this.decay),
+            '0x'+ this.getLockingBytecode()
+        ]
+        return this.asOpReturn(chunks, hex)
     }
-
+   
 
     async execute(exAddress?: string, fee?:number): Promise<string> {
         let balance = await this.getBalance();

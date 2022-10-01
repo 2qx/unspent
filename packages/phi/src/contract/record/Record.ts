@@ -1,21 +1,19 @@
 import type { Artifact } from "cashscript"
 import type { TransactionDetails } from "cashscript/dist/module/interfaces"
 import type { ContractOptions } from "../../common/interface.js"
-import { binToHex } from "@bitauth/libauth"
-import { binToNumber, deriveLockingBytecodeHex } from "../../common/util.js"
-import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
+import { binToNumber, decodeNullDataScript } from "../../common/util.js"
+import { DefaultOptions } from "../../common/constant.js"
 import { BaseUtxPhiContract } from "../../common/contract.js"
 import { artifact as v1 } from "./cash/v1.js"
 import { 
-    createOpReturnData, 
     hash160, 
     toHex
 } from "../../common/util.js"
+import { binToHex } from "@bitauth/libauth"
 
 export class Record extends BaseUtxPhiContract  {
 
     static c: string = 'R';
-    private static delimiter: string = DELIMITER;
     private static fn: string = "execute";
 
 
@@ -38,25 +36,19 @@ export class Record extends BaseUtxPhiContract  {
 
     static fromString(str: string, network="mainnet"): Record {
 
-        let comp = str.split(Record.delimiter)
-        
+        let p = this.parseSerializedString(str, network)
         // if the contract shortcode doesn't match, error
-        if(!(Record.c ==comp.shift())) throw("non-record (contract) serilaized string passed to record (contract) constructor")
-        let version = parseInt(comp.shift()!)
-    
-        if(version!==1)throw Error("record contract version not recognized")
-        let options = {version: version, network: network}
+        if(!(this.c ==p.code)) throw(`non-${this.name} serilaized string passed to ${this.name} constructor`)
 
+        if(p.options.version!=1) throw Error(`${this.name} contract version not recognized`)
         
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = comp.splice(-1)[0]
         
-        let maxFee = parseInt(comp.shift()!)
-        let index =  parseInt(comp.shift()!)
-        let record = new Record(maxFee, index, options)
+        let maxFee = parseInt(p.args.shift()!)
+        let index =  parseInt(p.args.shift()!)
+        let record = new Record(maxFee, index, p.options)
 
         // check that the address 
-        if(!(checksum==record.getLockingBytecode())) throw("Divide deserializtion resulted in different contract address")
+        record.checkLockingBytecode(p.lockingBytecode)
         return record
     }
 
@@ -69,60 +61,61 @@ export class Record extends BaseUtxPhiContract  {
                `${this.getLockingBytecode()}`].join(Record.delimiter)
     }
 
-    toChunks() :(string)[]{
-        return [
-            PROTOCOL_ID,
+    override asText(): string {
+        return `Recording contract with up to ${this.maxFee} per broadcast, index ${this.index}`
+    }
+
+    toOpReturn(hex=false): string | Uint8Array {
+        const chunks = [
+            Record._PROTOCOL_ID,
             Record.c,
             toHex(this.options!.version!),
             toHex(this.maxFee),
             toHex(this.index),
-            '0x'+this.getLockingBytecode()
+            "0x"+this.getLockingBytecode(true)
         ]
+        return this.asOpReturn(chunks, hex)
     }
 
     // Create a Record contract from an OpReturn by building a serialized string.
-    static fromOpReturn(chunks:Uint8Array[], network="mainnet"): Record {
+    static fromOpReturn(opReturn:Uint8Array|string, network="mainnet"): Record {
 
-        let protocol = "0x"+ binToHex(chunks.shift()!)
-        if(protocol !== PROTOCOL_ID) throw Error(`Protocol specified in OpReturn didn't match the PROTOCOL_ID: ${protocol} v ${PROTOCOL_ID}`)
-        let charArray = chunks.shift()!
+        let p = this.parseOpReturn(opReturn, network)
 
-        let c = String.fromCharCode(charArray[0]!)!;
-        if(c!==this.c) throw Error(`Wrong short code passed to Record class: ${c} v. ${this.c}`)
+        // check code
+        if(p.code!==this.c) throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`)
         
         // version
-        let version = binToNumber(chunks.shift()!);
-        if(version !==1) throw Error(`Wrong version code passed to Record class: ${version}`)
-        let options = {version: version, network: network}
-
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = chunks.pop()!
-
+        if(p.options.version !==1) throw Error(`Wrong version code passed to ${this.name} class: ${p.options.version}`)
+        
         let [maxFee, index] = [850, 0]
-        if(version==1){
-            maxFee = binToNumber(chunks.shift()!)
-            index = binToNumber(chunks.shift()!)
+        if(p.options.version==1){
+            maxFee = binToNumber(p.args.shift()!)
+            index = binToNumber(p.args.shift()!)
         }else{
             throw Error("Record contract version not recognized")
         }
 
-        let record = new Record(maxFee, index, options)
+        let record = new Record(maxFee, index, p.options)
         
         // check that the address 
-        if(binToHex(checksum) !==record.getLockingBytecode()) throw("Record deserializtion resulted in different contract public key hash")
+        record.checkLockingBytecode(p.lockingBytecode)
         return record
     }
-
-    async info(){
-        console.log(`# Recording contract with up to ${this.maxFee} per broadcast, index ${this.index} `)
-        console.log('contract address:     ', this.getAddress());
-        console.log('contract balance:     ', await this.getBalance());
-    }
     
-    async broadcast(chunks?: string[]): Promise<TransactionDetails> {
-        chunks = chunks ? chunks : this.toChunks()
+    async broadcast(opReturn?: Uint8Array|string): Promise<TransactionDetails> {
+
+        // Don't attempt to broadcast from an unfunded contract
+        if(!await this.isFunded()) throw(`Record contract is not funded: ${this.getAddress()}`)
+
+        opReturn = opReturn ? opReturn : this.toOpReturn(false)
+
+        // .withOpReturn likes hex to be prefixed with 0x.
+        const chunks = decodeNullDataScript(opReturn).map( c => "0x"+binToHex(c))
+
         let fn = this.getFunction(Record.fn)!;
-        let opReturn = createOpReturnData(chunks)
+        
+        
         try{            
             if( typeof opReturn === "string") throw opReturn
             let checkHash = await hash160(opReturn)

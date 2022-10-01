@@ -1,7 +1,8 @@
 import axios from "axios";
+import { PROTOCOL_ID } from "../common/constant.js";
 
-export async function getUnspent(host:string, prefix?:string, node?:string){
-    prefix = prefix ? prefix : "6a0462616e6b"
+export async function getRecords(host:string, prefix?:string, node?:string){
+    prefix = prefix ? prefix : "6a04"+ PROTOCOL_ID
     node = node ? node : "bchn"
     let response = await axios({
         url: host,
@@ -17,7 +18,7 @@ export async function getUnspent(host:string, prefix?:string, node?:string){
                   node:node
               }
         }
-      }).catch((e) => {
+      }).catch((e:any) => {
           throw e
       })
       
@@ -29,6 +30,7 @@ export async function getUnspent(host:string, prefix?:string, node?:string){
             throw Error(response.data.errors[0].message)
         }
       }
+      
       let results = response.data.data["search_output_prefix"]
 
       // transform list of objects to a list of strings

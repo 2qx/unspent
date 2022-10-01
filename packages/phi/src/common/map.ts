@@ -1,24 +1,99 @@
 import { binToHex, hexToBin } from "@bitauth/libauth";
-import { decodeNullDataScript } from "./util";
-import { contractMap } from "../contract/constant"
+import { Artifact } from "@cashscript/utils";
+import { nameMap, contractMap, CodeType } from "../contract/constant.js"
+import { decodeNullDataScript } from "./util.js";
+import { BaseUtxPhiContract } from "./contract.js"
 
 
-type C = keyof typeof contractMap;
-type constractType = typeof contractMap[keyof typeof contractMap]
+type ContractType = typeof contractMap[keyof typeof contractMap]
 
-export function opReturnToInstance(serialized:string|Uint8Array, network?:string) : InstanceType<constractType>{
+export function parseOpReturn(serialized:string|Uint8Array){
+  if(typeof serialized  === "string"){
+    serialized = hexToBin(serialized)
+  }
+
+  let data = BaseUtxPhiContract.parseOpReturn(serialized)
+  return {
+    "name": nameMap[data.code as CodeType] as string,
+    "opReturn": serialized,
+    ... data
+  }
+}
+
+export function opReturnToInstance(serialized:string|Uint8Array, network?:string) : InstanceType<ContractType>|undefined{
   if(typeof serialized  === "string"){
     serialized = hexToBin(serialized)
   }
   let serializedBinChunks = decodeNullDataScript(serialized)
   let contractCode = binToHex(serializedBinChunks[1]!)
   
-  let code = String.fromCharCode(parseInt(contractCode, 16)) as C
-  return contractMap[code].fromOpReturn(serializedBinChunks, network)
+  let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType
+  try{
+    let instance = contractMap[code].fromOpReturn(serialized, network)
+    return instance
+  }catch (e){
+      console.warn(`Couldn't parse serialized contract ${e}`);
+      return
+  }
   
 }
 
-export function stringToInstance(serialized:string, network:string) : InstanceType<constractType>{
-    let code = serialized[0]! as C
-    return contractMap[code].fromString(serialized, network)
+export function opReturnToSerializedString(serialized:string|Uint8Array, network?:string): string|undefined{
+
+  let instance = opReturnToInstance(serialized, network)
+  if(instance){
+    return instance.toString()
+  }else{
+    return 
+  }
+}
+
+export function stringToInstance(serialized:string, network:string) : InstanceType<ContractType>|undefined{
+    let code = serialized[0]! as CodeType
+    try{
+      let instance = contractMap[code].fromString(serialized, network)
+      return instance
+    }catch (e){
+        console.warn(`Couldn't parse serialized contract, ${e}`);
+        return
+    }
+}
+
+export function castConstructorParametersFromArtifact(
+   parameters: string[],
+   artifact: Artifact
+   ) {
+
+   let result = []
+   let inputs = artifact.constructorInputs;
+
+   parameters.forEach(function (value, i) {
+
+       let abiInput = inputs[i]!
+
+       let parsedVal = undefined
+       
+       if (abiInput.type.startsWith("bytes")) {
+          if (typeof value === "string") {
+              if (value.includes(",")) {
+                parsedVal = Uint8Array.from(
+                  value.split(",").map((vStr) => parseInt(vStr))
+              );
+              } else {
+                parsedVal = hexToBin(value);
+              }
+          } else {
+              throw Error(`Couldn't parse ${value} from string to bytes`);
+          }
+       } else if (abiInput.type === "int") {
+         parsedVal = parseInt(value);
+       } else if (abiInput.type === "boolean") {
+         parsedVal = Boolean(value);
+       } else {
+         throw Error(`Couldn't parse type ${abiInput.type}`)
+       }
+
+       result.push({name: abiInput.name, cashScriptType: abiInput.type, value: parsedVal})
+             
+      });
 }

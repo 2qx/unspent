@@ -1,7 +1,10 @@
-export function getV1(numParties:number){
+export function getDivideContract(numParties){
     let indicies = [...Array(numParties).keys()]
     return `pragma cashscript >= 0.7.0;
-  // This is an experimental divider contract 
+  //
+  //  ** AUTOMATICALLY GENEREATED ** see: phi/script/divide.v1.js
+  //
+  // This is an experimental divider contract
   // Splits input across a range of predetermined outputs
   // Alpha stage, tested on regtest and testnet
   contract Divide(

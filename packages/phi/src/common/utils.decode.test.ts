@@ -1,5 +1,5 @@
-import { Record } from "../contract/record/Record";
-import { decodeNullDataScript } from "./util"
+import { Record } from "../contract/record/Record.js";
+import { decodeNullDataScript } from "./util.js"
 
 describe(`Faucet Class Tests`, () => {
 
