@@ -2,7 +2,7 @@ import {
     cashAddressToLockingBytecode,
     hexToBin,
     lockingBytecodeToCashAddress } from "@bitauth/libauth"
-import type { Artifact } from "cashscript"
+import type { Artifact,  Utxo } from "cashscript"
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js"
 import { DefaultOptions,  _PROTOCOL_ID } from "../../common/constant.js"
 import { BaseUtxPhiContract } from "../../common/contract.js"
@@ -126,7 +126,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     }
    
 
-    async execute(exAddress?: string, fee?:number): Promise<string> {
+    async execute(exAddress?: string, fee?:number, utxos?: Utxo[]): Promise<string> {
         let balance = await this.getBalance();
 
         if(balance==0) throw Error("No funds on contract")
@@ -135,10 +135,10 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         let installment = Math.round(balance / this.decay);
         
         let newPrincipal = balance - (installment + this.executorAllowance)
-        let minerFee = fee ? fee : 154;
-        let executorFee = balance - (installment + newPrincipal + minerFee) - 1
+        let minerFee = fee ? fee : 300;
+        let executorFee = balance - (installment + newPrincipal + minerFee) - 2
 
-        let outputs = [
+        let to = [
             { 
                 to: this.address,
                 amount: installment
@@ -149,25 +149,40 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
             }
         ]
     
-        if(typeof(exAddress)==="string" && exAddress) outputs.push(
+        if(typeof(exAddress)==="string" && exAddress) to.push(
             { 
                 to: exAddress,
                 amount: executorFee
             })
     
+        let tx = fn()
+        if( utxos ) tx = tx.from(utxos)
         try{
-            let payTx1 = await fn()
-            .to(outputs)
-            .withAge(this.period)
-            .withoutChange()
-            .build();
-            console.log(payTx1)
-            let payTx = await fn()
-                .to(outputs)
+            let size = await tx!
+                .to(to)
                 .withAge(this.period)
                 .withoutChange()
-                .send();
-            return payTx.txid
+                .build();
+
+                if(exAddress){
+                    minerFee = fee ? fee : size.length/2;
+                    executorFee = balance - (installment + newPrincipal + minerFee) - 2
+                    to.pop();
+                    to.push(
+                        { 
+                            to: exAddress,
+                            amount: executorFee
+                        })
+                } 
+
+                tx = fn()
+                if( utxos ) tx = tx.from(utxos)
+                let payTx = await tx!
+                    .to(to)
+                    .withAge(this.period)
+                    .withoutChange()
+                    .send();
+                return payTx.txid
         }catch(e){
             throw(e)
         }

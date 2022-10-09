@@ -1,5 +1,6 @@
+import { mine, RegTestWallet } from "mainnet-js";
 import { Perpetuity } from "./Perpetuity.js"
-import { derivePublicKeyHashHex, createOpReturnData, decodeNullDataScript } from "../../common/util.js"
+import { derivePublicKeyHashHex} from "../../common/util.js"
 
 describe(`Perpetuity Class Tests`, () => {
 
@@ -36,6 +37,39 @@ describe(`Perpetuity Class Tests`, () => {
         expect(p1.toString()).toEqual(p2.toString())
         expect(p2.isTestnet()).toEqual(true)
         expect(p1.getAddress()).toEqual(p2.getAddress())
+
+    });
+
+    test("Should pay a Perpetuity", async () => {
+        
+
+        const alice = await RegTestWallet.fromId(process.env['ALICE_ID']!);
+        const bob = await RegTestWallet.newRandom();
+        const charlie = await RegTestWallet.newRandom();
+
+        let options = {version:1,network:"regtest"}
+        let p1 = new Perpetuity(1,bob.getDepositAddress(),5000, 5, options)
+
+        // fund the perp contract
+        await alice.send([
+            {
+                cashaddr: p1.getAddress(),
+                value: 1000000,
+                unit: "satoshis",
+            },
+        ]);
+        
+        for (let x = 0; x < 5; x++) {
+            await mine({
+                cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
+                blocks: 2,
+            });
+            await p1.execute(charlie.getDepositAddress())
+        }
+        expect(await charlie.getBalance("sat")).toBeGreaterThan(5000)
+        expect(await bob.getBalance("sat")).toBeGreaterThan(500000)
+        expect(p1.isTestnet()).toEqual(true)
+        expect(await p1.getBalance()).toBeGreaterThan(20000)
 
     });
 

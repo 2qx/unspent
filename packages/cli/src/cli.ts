@@ -1,5 +1,3 @@
-#!/usr/bin/env -S npx ts-node --esm tsconfig.json
-
 import {
   Cli, 
   Command, 
@@ -29,7 +27,6 @@ abstract class NetworkCommand extends Command {
 
 abstract class CustomFeeCommand extends NetworkCommand {
   fee = Option.String('--fee', {required: false, description: "transaction fee override"});
-
 }
 
 class DivideCommand extends CustomFeeCommand {
@@ -158,18 +155,19 @@ class PerpetuityCommand extends CustomFeeCommand {
       if(!this.contract){
         console.log("no contract specified")
         let r =  new Record( maxFeeInt, indexInt,  {version:1, network:network} )
-        await r.info()
         if(await r.isFunded()){
           let tx = await r.broadcast()
           console.log(tx.txid)
          }else{
           console.log("contract is NOT funded, unable to broadcast")
+          await r.info()
          }
       }else{
         let r =  new Record( maxFeeInt, indexInt,  {version:1, network:network} )
         let i = stringToInstance(this.contract, network)
         if(!i) throw Error(`Couldn't parse string ${this.contract}`)
-        await r.info()
+        console.log("broadcasting... ")
+        console.log(i.toOpReturn())
         let tx = await r.broadcast(i.toOpReturn())
         console.log(tx.txid)
       }

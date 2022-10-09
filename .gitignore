@@ -13,3 +13,4 @@ jest/playwright/*
 jest/docker/data
 dist
 *.yarn
+*.yarnrc.yml

@@ -4,8 +4,8 @@
 
 </script>
   
+<button use:copy={address}>
+    📋
+</button>
 {address}
 
-<button use:copy={address}>
-    Copy
-</button>

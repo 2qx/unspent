@@ -1,10 +1,5 @@
 pragma cashscript >= 0.7.0;
-  //
-  //  ** AUTOMATICALLY GENEREATED ** see: phi/script/divide.v1.js
-  //
-  // This is an experimental divider contract
-  // Splits input across a range of predetermined outputs
-  // Alpha stage, tested on regtest and testnet
+
   contract Divide(
       // allowance for party executing the contract
       int executorAllowance,

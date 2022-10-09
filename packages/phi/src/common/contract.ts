@@ -1,5 +1,5 @@
 import { binToHex, hexToBin,lockingBytecodeToCashAddress } from "@bitauth/libauth";
-import { Argument, Artifact, Contract as CashScriptContract } from "cashscript";
+import { Argument, Artifact, Contract as CashScriptContract, Utxo } from "cashscript";
 import { ElectrumNetworkProvider } from 'cashscript';
 import { ElectrumCluster, ClusterOrder, ElectrumTransport } from "electrum-cash";
 import { 
@@ -9,7 +9,6 @@ import {
      deriveLockingBytecode,
      deriveLockingBytecodeHex,
      getPrefixFromNetwork,
-      
       } from "./util.js";
 import { DELIMITER, PROTOCOL_ID, _PROTOCOL_ID } from "./constant.js";
 
@@ -124,6 +123,10 @@ export class BaseUtxPhiContract{
         return this.contract.address
     }
 
+    async getUtxos(): Promise<Utxo[]|undefined> {
+        return await this.provider?.getUtxos(this.getAddress())
+    }
+
     getLockingBytecode(hex=true) : string | Uint8Array{
         if(hex) return deriveLockingBytecodeHex(this.contract.address)
         return deriveLockingBytecode(this.contract.address)
@@ -171,7 +174,7 @@ export class BaseUtxPhiContract{
         let bal = await this.getBalance()
         let info = `# ${this.asText()}\n`+
         `# ${this.toString()}\n`+
-        `address:         ${this.getAddress()}\n`
+        `address:        ${this.getAddress()}\n`
         +
         `balance:        ${bal}\n`
         if(cat){

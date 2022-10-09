@@ -15,6 +15,7 @@
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
+    "app:build": "yarn workspace @unspent/app run build",
     "app:dev": "yarn workspace @unspent/app run dev",
     "build": "npx lerna build",
     "build:phi": "yarn workspace @unspent/phi run build ",

@@ -1,3 +1,4 @@
+import type { Utxo } from "cashscript"
 
 export interface UtxPhiIface {
 
@@ -7,7 +8,7 @@ export interface UtxPhiIface {
     
     toOpReturn(hex:boolean): Uint8Array | string
 
-    execute(exAddress: string, fee:number): Promise<string>
+    execute(exAddress: string, fee:number, utxos?: Utxo[]): Promise<string>
 
     getAddress() : string
 

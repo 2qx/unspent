@@ -61,7 +61,7 @@
 			<hr>
 			<h2>Records</h2>
 			<button on:click={addContracts}>
-				Load
+				Load Contracts
 			</button>
 		</span>
 
@@ -69,7 +69,7 @@
 
 	<br/>
 
-	<ul>
+	<ul class="no-bullets">
 			<!-- open each block -->
 				{#each contractData as cat (cat.opReturn)}
 				<li>
@@ -85,4 +85,7 @@
 </main>
 
 <style>
+	.no-bullets{
+		list-style: none;
+	}
 </style>

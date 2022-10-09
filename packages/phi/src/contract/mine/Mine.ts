@@ -1,5 +1,5 @@
 import { binToHex, hexToBin, bigIntToBinUintLE, instantiateSha256 } from "@bitauth/libauth"
-import type { Artifact } from "cashscript"
+import type { Artifact, Utxo } from "cashscript"
 import type { UtxPhiIface, ContractOptions }  from "../../common/interface.js"
 import { DefaultOptions } from "../../common/constant.js"
 import { BaseUtxPhiContract } from "../../common/contract.js"
@@ -108,7 +108,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     }
 
 
-    async getNonce(): Promise<Uint8Array>{
+    async getNonce(verbose=false): Promise<Uint8Array>{
         let nonce = new Uint8Array([])
         let result = new Uint8Array([])
         let mined = false
@@ -116,7 +116,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
         const sha256 = await instantiateSha256();
 
-        console.log("mining...")
+        if(verbose) console.log("mining...")
         // keep mining 'til the number of zeros are reached
         while(!mined){
             let nonceNumber = getRandomIntWeak(9007199254740991)
@@ -126,7 +126,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
             let newBest = result.slice(0,this.difficulty).reduce(sum)
             if(newBest <= best){
                 best = newBest
-                console.log(newBest, result.slice(0,this.difficulty))
+                if(verbose) console.log(newBest, result.slice(0,this.difficulty))
             }
             if(result.slice(0,this.difficulty).reduce(sum) === 0) mined = true
         }
@@ -136,11 +136,11 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
             let zeros = this.canary.length-nonce.length
             nonce = new Uint8Array( [... nonce, ... new Uint8Array(zeros)])
         }
-        console.log("success: ",binToHex(nonce))
+        if(verbose) console.log("success: ",binToHex(nonce))
         return nonce
     }
 
-    async execute(exAddress?: string, fee?:number, nonceHex?:string): Promise<string> {
+    async execute(exAddress?: string, fee?:number, utxos?:Utxo[], nonceHex?:string): Promise<string> {
         let balance = await this.getBalance();
         let fn = this.getFunction(Mine.fn)!;
         let newPrincipal = balance - this.payout
@@ -174,12 +174,14 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
                 
 
         fn = this.getFunction(Mine.fn)!;
-        let size = await fn(canaryHex)
-        .withOpReturn(chunks)
-        .to(to)
-        .withAge(this.period)
-        .withHardcodedFee(minerFee)
-        .build();
+        let tx = fn(canaryHex)!
+        if( utxos ) tx = tx.from(utxos)
+        let size = await tx
+            .withOpReturn(chunks)
+            .to(to)
+            .withAge(this.period)
+            .withHardcodedFee(minerFee)
+            .build();
         
 
         if(exAddress){
@@ -194,7 +196,9 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
         } 
 
         await this.provider?.connectCluster()
-        let payTx = await fn(canaryHex)
+        tx = fn(canaryHex)!
+        if( utxos ) tx = tx.from(utxos)
+        let payTx = await tx
         .withOpReturn(chunks)
         .to(to)
         .withAge(this.period)
