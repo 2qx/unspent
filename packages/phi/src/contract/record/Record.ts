@@ -1,5 +1,4 @@
-import type { Artifact } from "cashscript"
-import type { TransactionDetails } from "cashscript/dist/module/interfaces"
+import type { Artifact, Utxo } from "cashscript"
 import type { ContractOptions } from "../../common/interface.js"
 import { binToNumber, decodeNullDataScript } from "../../common/util.js"
 import { DefaultOptions } from "../../common/constant.js"
@@ -9,7 +8,7 @@ import {
     hash160, 
     toHex
 } from "../../common/util.js"
-import { binToHex } from "@bitauth/libauth"
+import { binToHex, hexToBin } from "@bitauth/libauth"
 
 export class Record extends BaseUtxPhiContract  {
 
@@ -38,7 +37,7 @@ export class Record extends BaseUtxPhiContract  {
 
         let p = this.parseSerializedString(str, network)
         // if the contract shortcode doesn't match, error
-        if(!(this.c ==p.code)) throw(`non-${this.name} serilaized string passed to ${this.name} constructor`)
+        if(!(this.c ==p.code)) throw(`non-${this.name} serialized string passed to ${this.name} constructor`)
 
         if(p.options.version!=1) throw Error(`${this.name} contract version not recognized`)
         
@@ -88,7 +87,7 @@ export class Record extends BaseUtxPhiContract  {
         // version
         if(p.options.version !==1) throw Error(`Wrong version code passed to ${this.name} class: ${p.options.version}`)
         
-        let [maxFee, index] = [850, 0]
+        let [maxFee, index]:[number?, number?] = [undefined, undefined]
         if(p.options.version==1){
             maxFee = binToNumber(p.args.shift()!)
             index = binToNumber(p.args.shift()!)
@@ -103,34 +102,57 @@ export class Record extends BaseUtxPhiContract  {
         return record
     }
     
-    async broadcast(opReturn?: Uint8Array|string): Promise<TransactionDetails> {
+    async broadcast(opReturn?: Uint8Array|string, utxos?: Utxo[]): Promise<string> {
 
         // Don't attempt to broadcast from an unfunded contract
-        if(!await this.isFunded()) throw(`Record contract is not funded: ${this.getAddress()}`)
+        if(!await this.isFunded()) return  `Record contract is not funded: ${this.getAddress()}`
 
         opReturn = opReturn ? opReturn : this.toOpReturn(false)
 
         // .withOpReturn likes hex to be prefixed with 0x.
         const chunks = decodeNullDataScript(opReturn).map( c => "0x"+binToHex(c))
 
-        let fn = this.getFunction(Record.fn)!;
-        
+        if(!utxos || utxos.length==0) {
+            let allUtxos = await this.getUtxos()
+            if(allUtxos && allUtxos.length>1){
+                utxos = allUtxos.slice(0,2)
+                console.log(JSON.stringify(utxos))
+            }
+        }
+
+
         
         try{            
-            if( typeof opReturn === "string") throw opReturn
+            if( typeof opReturn === "string") opReturn = hexToBin(opReturn)
+            console.log(opReturn.length/2)
             let checkHash = await hash160(opReturn)
-                  
-            let size = (await fn(checkHash)
+            let fn = this.getFunction(Record.fn)!;
+            let tx = fn(checkHash)!
+            let estimator = fn(checkHash)!
+
+            if (utxos && utxos.length>1) {
+                tx = tx.from(utxos)
+                estimator = estimator.from(utxos)
+                console.log(utxos)
+            }
+
+            
+
+
+
+            let size = (await estimator
                 .withOpReturn(chunks)
                 .withHardcodedFee(369)
                 .build()).length;
-            let txn = await fn(checkHash)
+
+            console.log(size/2)
+            let txn = await tx
                 .withOpReturn(chunks)
                 .withHardcodedFee(size/2)
                 .send();
-            return txn
-        }catch(e){
-            throw(e)
+            return txn.txid
+        }catch(e : any){
+            return e
         }
     }
 

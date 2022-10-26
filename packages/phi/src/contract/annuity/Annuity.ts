@@ -58,7 +58,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         let p = this.parseSerializedString(str, network)
         
         // if the contract shortcode doesn't match, error
-        if(!(Annuity.c ==p.code)) throw("non-faucet serilaized string passed to faucet constructor")
+        if(!(Annuity.c ==p.code)) throw("non-faucet serialized string passed to faucet constructor")
 
         if(p.options.version!=1) throw Error(`${this.name} contract version not recognized`)
         if(p.args.length != 4) throw(`invalid number of arguments ${p.args.length}`)
@@ -77,7 +77,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         return annuity
     }
 
-    // Create a Annunity contract from an OpReturn by building a serialized string.
+    // Create a Annuity contract from an OpReturn by building a serialized string.
     static fromOpReturn(opReturn:Uint8Array|string, network="mainnet"): Annuity {
 
         let p = this.parseOpReturn(opReturn, network)
@@ -144,7 +144,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     
     async execute(exAddress?: string, fee?:number, utxos?: Utxo[]): Promise<string> {
         let balance = await this.getBalance();
-        if(balance==0) throw Error("No funds on contract")
+        if(balance==0) return "No funds on contract"
         
         let fn = this.getFunction(Annuity.fn)!;
         
@@ -182,7 +182,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
                         .build();
 
                 let minerFee = fee ? fee : size.length/2;
-                executorFee = balance - (this.installment + newPrincipal + minerFee) - 2
+                executorFee = balance - (this.installment + newPrincipal + minerFee) - 6
                 to.pop();
                 to.push(
                     { 
@@ -198,10 +198,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
                 .withAge(this.period)
                 .withoutChange()
                 .send();
-                return payTx.txid
             return payTx.txid
-        }catch(e){
-            throw(e)
+        }catch(e : any){
+            return e.message
         }
     }
 

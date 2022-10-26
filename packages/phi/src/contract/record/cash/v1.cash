@@ -17,6 +17,7 @@ contract Record(int maxFee, int index) {
         
         // calculate the fee required to propagate the transaction 1 sat/ byte
         int baseFee = 162;
+        
         int fee = baseFee + tx.outputs[0].lockingBytecode.length;
         require(fee<=maxFee);
 

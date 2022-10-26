@@ -16,6 +16,7 @@
   "author": "2qx",
   "scripts": {
     "app:build": "yarn workspace @unspent/app run build",
+    "app:preview": "yarn workspace @unspent/app run build; yarn workspace @unspent/app run preview",
     "app:dev": "yarn workspace @unspent/app run dev",
     "build": "npx lerna build",
     "build:phi": "yarn workspace @unspent/phi run build ",

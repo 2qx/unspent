@@ -27,7 +27,7 @@ export class BaseUtxPhiContract{
     constructor(network :string, artifact:Artifact, constructorArguments:Argument[] ) {
 
         if(network==="mainnet") {
-            let cluster = new ElectrumCluster('UtxPhi', '1.4.1', 1, 1, ClusterOrder.RANDOM);
+            let cluster = new ElectrumCluster('@unspent/phi', '1.4.1', 1, 1, ClusterOrder.RANDOM);
 
             cluster.addServer("bch.imaginary.cash", 50004, ElectrumTransport.WSS.Scheme, false);
             cluster.addServer("electrum.imaginary.cash", 50004, ElectrumTransport.WSS.Scheme, false);
@@ -39,7 +39,7 @@ export class BaseUtxPhiContract{
             this.testnet = true
         }
         else if(network==="regtest"){
-            let cluster = new ElectrumCluster('UtxPhi - regtest', '1.4.1', 1, 1, ClusterOrder.RANDOM);
+            let cluster = new ElectrumCluster('@unspent/phi - regtest', '1.4.1', 1, 1, ClusterOrder.RANDOM);
             cluster.addServer('127.0.0.1', 60003, ElectrumTransport.WS.Scheme, false);
             this.provider = new ElectrumNetworkProvider("regtest",cluster)
             this.testnet = true
@@ -137,7 +137,7 @@ export class BaseUtxPhiContract{
         if(typeof lockingBytecode != "string"){
             lockingBytecode = binToHex(lockingBytecode)
         } 
-        if(lockingBytecode!==this.getLockingBytecode()) throw(`Deserializtion resulted in different contract public key hash`)
+        if(lockingBytecode!==this.getLockingBytecode()) throw(`Deserialization resulted in different contract public key hash`)
         return true
     }
 

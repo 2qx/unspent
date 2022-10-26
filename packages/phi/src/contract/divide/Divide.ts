@@ -200,8 +200,8 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
             .send();
             return (await txn).txid
 
-        }catch(e){
-            throw(e)
+        }catch(e : any){
+            return e.message
         }
     }
 

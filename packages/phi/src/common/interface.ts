@@ -14,7 +14,6 @@ export interface UtxPhiIface {
 
     getBalance(): Promise<number>
 
-
 }
 
 export interface ContractOptions {

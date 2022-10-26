@@ -1,21 +1,35 @@
 import axios from "axios";
 import { PROTOCOL_ID } from "../common/constant.js";
 
-export async function getRecords(host:string, prefix?:string, node?:string){
+export async function getRecords(host:string, prefix?:string, node?:string, limit=25, offset=0){
     prefix = prefix ? prefix : "6a04"+ PROTOCOL_ID
     node = node ? node : "bchn"
     let response = await axios({
         url: host,
         method: 'post',
         data: {
-            query: `query SearchOutputsByLockingBytecodePrefix($prefix: String!, $node: String!) {
-                search_output_prefix(args: {locking_bytecode_prefix_hex: $prefix}, distinct_on: locking_bytecode, where: {transaction: {block_inclusions: {block: {accepted_by: {node: {name: {_eq: $node}}}}}}}) {
-                  locking_bytecode
+            query: `query SearchOutputsByLockingBytecodePrefix($prefix: String!, $node: String!, $limit:Int, $offset:Int) {
+              search_output_prefix(
+                args: { locking_bytecode_prefix_hex: $prefix }
+                distinct_on: locking_bytecode,
+                limit: $limit,
+                offset: $offset,
+                where: {
+                  transaction: {
+                    block_inclusions: {
+                      block: { accepted_by: { node: { name: { _eq: $node } } } }
+                    }
+                  }
                 }
-              }`,
+              ) {
+                locking_bytecode
+              }
+            }`,
               variables:{
                   prefix: prefix,
-                  node:node
+                  node:node,
+                  limit: limit,
+                  offset: offset
               }
         }
       }).catch((e:any) => {

@@ -157,7 +157,7 @@ class PerpetuityCommand extends CustomFeeCommand {
         let r =  new Record( maxFeeInt, indexInt,  {version:1, network:network} )
         if(await r.isFunded()){
           let tx = await r.broadcast()
-          console.log(tx.txid)
+          console.log(tx)
          }else{
           console.log("contract is NOT funded, unable to broadcast")
           await r.info()
@@ -169,7 +169,7 @@ class PerpetuityCommand extends CustomFeeCommand {
         console.log("broadcasting... ")
         console.log(i.toOpReturn())
         let tx = await r.broadcast(i.toOpReturn())
-        console.log(tx.txid)
+        console.log(tx)
       }
     }
   }
