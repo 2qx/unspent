@@ -26,7 +26,6 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: "16.x"
-    - run: yarn plugin import workspace-tools
     - run: npx lerna init
     - run: yarn
     - run: yarn test
