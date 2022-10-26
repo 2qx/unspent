@@ -1,19 +1,18 @@
-import type { Artifact } from "cashscript"
-import type { TransactionDetails } from "cashscript/dist/module/interfaces"
+import type { Artifact, Utxo } from "cashscript"
 import type { ContractOptions } from "../../common/interface.js"
-import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
-import { BaseUtxfiContract } from "../../common/contract.js"
+import { binToNumber, decodeNullDataScript } from "../../common/util.js"
+import { DefaultOptions } from "../../common/constant.js"
+import { BaseUtxPhiContract } from "../../common/contract.js"
 import { artifact as v1 } from "./cash/v1.js"
 import { 
-    createOpReturnData, 
     hash160, 
     toHex
 } from "../../common/util.js"
+import { binToHex, hexToBin } from "@bitauth/libauth"
 
-export class Record extends BaseUtxfiContract  {
+export class Record extends BaseUtxPhiContract  {
 
-    private static c: string = 'R';
-    private static delimiter: string = DELIMITER;
+    static c: string = 'R';
     private static fn: string = "execute";
 
 
@@ -36,25 +35,19 @@ export class Record extends BaseUtxfiContract  {
 
     static fromString(str: string, network="mainnet"): Record {
 
-        let comp = str.split(Record.delimiter)
-        
+        let p = this.parseSerializedString(str, network)
         // if the contract shortcode doesn't match, error
-        if(!(Record.c ==comp.shift())) throw("non-record (contract) serilaized string passed to record (contract) constructor")
-        let version = parseInt(comp.shift()!)
-    
-        if(version!==1)throw Error("record contract version not recognized")
-        let options = {version: version, network: network}
+        if(!(this.c ==p.code)) throw(`non-${this.name} serialized string passed to ${this.name} constructor`)
 
+        if(p.options.version!=1) throw Error(`${this.name} contract version not recognized`)
         
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = comp.splice(-1)[0]
         
-        let maxFee = parseInt(comp.shift()!)
-        let index =  parseInt(comp.shift()!)
-        let record = new Record(maxFee, index, options)
+        let maxFee = parseInt(p.args.shift()!)
+        let index =  parseInt(p.args.shift()!)
+        let record = new Record(maxFee, index, p.options)
 
         // check that the address 
-        if(!(checksum==record.getLockingBytecode())) throw("Divide deserializtion resulted in different contract address")
+        record.checkLockingBytecode(p.lockingBytecode)
         return record
     }
 
@@ -67,42 +60,95 @@ export class Record extends BaseUtxfiContract  {
                `${this.getLockingBytecode()}`].join(Record.delimiter)
     }
 
-    toChunks() :(string)[]{
-        return [
-            PROTOCOL_ID,
+    override asText(): string {
+        return `Recording contract with up to ${this.maxFee} per broadcast, index ${this.index}`
+    }
+
+    toOpReturn(hex=false): string | Uint8Array {
+        const chunks = [
+            Record._PROTOCOL_ID,
             Record.c,
             toHex(this.options!.version!),
             toHex(this.maxFee),
             toHex(this.index),
-            '0x'+this.getLockingBytecode()
+            "0x"+this.getLockingBytecode(true)
         ]
+        return this.asOpReturn(chunks, hex)
     }
 
-    async info(){
-        console.log(`# Recording contract with up to ${this.maxFee} per broadcast, index ${this.index} `)
-        console.log('contract address:     ', this.getAddress());
-        console.log('contract balance:     ', await this.getBalance());
+    // Create a Record contract from an OpReturn by building a serialized string.
+    static fromOpReturn(opReturn:Uint8Array|string, network="mainnet"): Record {
+
+        let p = this.parseOpReturn(opReturn, network)
+
+        // check code
+        if(p.code!==this.c) throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`)
+        
+        // version
+        if(p.options.version !==1) throw Error(`Wrong version code passed to ${this.name} class: ${p.options.version}`)
+        
+        let [maxFee, index]:[number?, number?] = [undefined, undefined]
+        if(p.options.version==1){
+            maxFee = binToNumber(p.args.shift()!)
+            index = binToNumber(p.args.shift()!)
+        }else{
+            throw Error("Record contract version not recognized")
+        }
+
+        let record = new Record(maxFee, index, p.options)
+        
+        // check that the address 
+        record.checkLockingBytecode(p.lockingBytecode)
+        return record
     }
     
-    async broadcast(chunks?: string[]): Promise<TransactionDetails> {
-        chunks = chunks ? chunks : this.toChunks()
-        let fn = this.getFunction(Record.fn)!;
-        let opReturn = createOpReturnData(chunks)
+    async broadcast(opReturn?: Uint8Array|string, utxos?: Utxo[]): Promise<string> {
+
+        // Don't attempt to broadcast from an unfunded contract
+        if(!await this.isFunded()) return  `Record contract is not funded: ${this.getAddress()}`
+
+        opReturn = opReturn ? opReturn : this.toOpReturn(false)
+
+        // .withOpReturn likes hex to be prefixed with 0x.
+        const chunks = decodeNullDataScript(opReturn).map( c => "0x"+binToHex(c))
+
+        if(!utxos || utxos.length==0) {
+            let allUtxos = await this.getUtxos()
+            if(allUtxos && allUtxos.length>1){
+                utxos = allUtxos.slice(0,2)
+            }
+        }
+
+
+        
         try{            
-            if( typeof opReturn === "string") throw opReturn
+            if( typeof opReturn === "string") opReturn = hexToBin(opReturn)
             let checkHash = await hash160(opReturn)
-                  
-            let size = (await fn(checkHash)
+            let fn = this.getFunction(Record.fn)!;
+            let tx = fn(checkHash)!
+            let estimator = fn(checkHash)!
+
+            if (utxos && utxos.length>1) {
+                tx = tx.from(utxos)
+                estimator = estimator.from(utxos)
+            }
+
+            
+
+
+
+            let size = (await estimator
                 .withOpReturn(chunks)
                 .withHardcodedFee(369)
                 .build()).length;
-            let txn = await fn(checkHash)
+
+            let txn = await tx
                 .withOpReturn(chunks)
                 .withHardcodedFee(size/2)
                 .send();
-            return txn
-        }catch(e){
-            throw(e)
+            return txn.txid
+        }catch(e : any){
+            return e
         }
     }
 

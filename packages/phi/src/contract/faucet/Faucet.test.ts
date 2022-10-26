@@ -1,11 +1,11 @@
 import { Faucet } from "./Faucet.js"
-import { createOpReturnData, decodeNullDataScript, deriveLockingBytecodeHex } from "../../common/util.js"
+import { deriveLockingBytecodeHex } from "../../common/util.js"
 
 describe(`Faucet Class Tests`, () => {
 
-    test("Should a serialize a faucet", async () => {
+    test("Should serialize a faucet", async () => {
         let f = new Faucet()
-        let chk = deriveLockingBytecodeHex("bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr")
+        let chk = deriveLockingBytecodeHex(f.getAddress())
         expect(f.toString()).toContain(chk)
         expect(f.toString()).toEqual(`F,1,1,1000,1,${chk}`)
 
@@ -16,7 +16,7 @@ describe(`Faucet Class Tests`, () => {
         expect(f.isTestnet()).toEqual(f2.isTestnet())
     });
 
-    test("Should a deserialize and reserialize a staging faucet", async () => {
+    test("Should deserialize and reserialize a staging faucet", async () => {
         let f = new Faucet(5,3000,2,{version: 1,network: "staging"})
 
         let f2 = Faucet.fromString(f.toString(), "staging")
@@ -26,13 +26,11 @@ describe(`Faucet Class Tests`, () => {
         expect(f.isTestnet()).toEqual(f2.isTestnet())
     });
 
-    test("Should a deserialize and reserialize a regtest Faucet to chunks and from an opreturn", async () => {
+    test("Should deserialize and reserialize a regtest Faucet to chunks and from an opreturn", async () => {
         
         let options = {version:1,network:"regtest"}
         let f1 = new Faucet(5,3000,2,options)
-        let chunks = f1.toChunks()
-        let data = createOpReturnData(chunks)
-        let opReturn = decodeNullDataScript(data)
+        let opReturn = f1.toOpReturn()
         let f2 = Faucet.fromOpReturn(opReturn, "regtest")
         expect(f1.toString()).toEqual(f2.toString())
         expect(f2.isTestnet()).toEqual(true)
@@ -40,5 +38,14 @@ describe(`Faucet Class Tests`, () => {
         
     });
 
+    test("Should return info", async () => {
+        
+        let options = {version:1,network:"regtest"}
+        let f1 = new Faucet(5,3000,2,options)
+        let info = await f1.info(false)
+        expect(info).toContain(f1.toString())
+        expect(info).toContain("balance")
+        
+    });
 
 });
