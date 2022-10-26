@@ -7,15 +7,11 @@ const dev = process.env.NODE_ENV === 'development';
 const config = {
 	kit: {
 		adapter: adapter({
-            pages: "docs",
-            assets: "docs"
+            pages: "../../docs",
+            assets: "../../docs"
         }),
-		paths: {
-            // change below to your repo name
-            base: dev ? "" : "/unspent",
-        },
 
-		appDir: 'internal',
+		appDir: 'a',
 	},
 	extensions: ['.svelte', '.md'],
 
