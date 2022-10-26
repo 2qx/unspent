@@ -12,9 +12,8 @@ const config = {
         }),
 		paths: {
             // change below to your repo name
-            base: dev ? "" : "/unspent",
-        },
-		appDir: 'a',
+            base: dev ? "" : "",
+        }
 	},
 	extensions: ['.svelte', '.md'],
 

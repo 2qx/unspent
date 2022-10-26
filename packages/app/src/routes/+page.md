@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>₿∙ϕ</title>
+</svelte:head>
+
 # Welcome!
 
 Unspent Phi (₿∙ϕ) is an app for creating (and publishing) a set of simple contracts on the Bitcoin Cash (BCH) blockchain that anyone can execute. These contracts lock the value of unspent outputs from earlier transactions (UTXOs), and allow some small reward for any party to call a known contract (if valid according to the rules of BitcoinScript). Although simple, these contracts may be chained together to create complex outcomes.
