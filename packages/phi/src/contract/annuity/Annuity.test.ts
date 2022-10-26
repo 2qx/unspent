@@ -82,7 +82,7 @@ describe(`Annuity Class Tests`, () => {
             });
             await p1.execute(charlie.getDepositAddress())
         }
-        expect(await charlie.getBalance("sat")).toBeGreaterThan(13900)
+        expect(await charlie.getBalance("sat")).toBeGreaterThan(13800)
         expect(await bob.getBalance("sat")).toBe(50000)
         expect(p1.isTestnet()).toEqual(true)
         expect(await p1.getBalance()).toBeGreaterThan(900000)
