@@ -116,7 +116,6 @@ export class Record extends BaseUtxPhiContract  {
             let allUtxos = await this.getUtxos()
             if(allUtxos && allUtxos.length>1){
                 utxos = allUtxos.slice(0,2)
-                console.log(JSON.stringify(utxos))
             }
         }
 
@@ -124,7 +123,6 @@ export class Record extends BaseUtxPhiContract  {
         
         try{            
             if( typeof opReturn === "string") opReturn = hexToBin(opReturn)
-            console.log(opReturn.length/2)
             let checkHash = await hash160(opReturn)
             let fn = this.getFunction(Record.fn)!;
             let tx = fn(checkHash)!
@@ -133,7 +131,6 @@ export class Record extends BaseUtxPhiContract  {
             if (utxos && utxos.length>1) {
                 tx = tx.from(utxos)
                 estimator = estimator.from(utxos)
-                console.log(utxos)
             }
 
             
@@ -145,7 +142,6 @@ export class Record extends BaseUtxPhiContract  {
                 .withHardcodedFee(369)
                 .build()).length;
 
-            console.log(size/2)
             let txn = await tx
                 .withOpReturn(chunks)
                 .withHardcodedFee(size/2)
