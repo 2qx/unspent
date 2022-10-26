@@ -2,8 +2,7 @@ pragma cashscript >= 0.7.1;
 
 // v202205626
 
-// This is an experimental annuity contract 
-// Prelim testing on regtest, just a concept
+// Pay equal payments at regular intervals using input locks
 contract Annuity(
 
     // interval for payouts, in blocks

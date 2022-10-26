@@ -1,0 +1,39 @@
+{
+	"name": "@unspent/app",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "NODE_ENV=\"development\" vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --plugin-search-dir . --check .",
+		"format": "prettier --plugin-search-dir . --write ."
+	},
+	"dependencies": {
+		"@unspent/phi": "*"
+	},
+	"devDependencies": {
+		"@babel/preset-env": "7.19.4",
+		"@fontsource/fira-mono": "^4.5.0",
+    "@macfja/svelte-persistent-store":"2.2.1",
+		"@neoconfetti/svelte": "^1.0.0",
+		"@rollup/plugin-commonjs": "23.0.0",
+		"@rollup/plugin-node-resolve": "15.0.0",
+		"@sveltejs/adapter-static": "next",
+		"@sveltejs/kit": "next",
+		"@types/cookie": "^0.5.1",
+    "@zerodevx/svelte-toast":"0.8.0",
+		"ethereum-blockies-base64": "1.0.2",
+		"mdsvex": "^0.10.6",
+		"prettier": "^2.6.2",
+		"prettier-plugin-svelte": "^2.7.0",
+		"svelte": "^3.46.0",
+		"svelte-check": "^2.7.1",
+		"svelte-copy": "1.2.4",
+		"svelte-preprocess": "^4.10.7",
+		"typescript": "^4.7.4",
+		"vite": "^3.1.0"
+	},
+	"type": "module"
+}

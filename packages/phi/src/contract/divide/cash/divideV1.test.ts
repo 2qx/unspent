@@ -1,9 +1,8 @@
 import { ElectrumCluster, ClusterOrder, ElectrumTransport } from "electrum-cash"
 import { cashAddressToLockingBytecode, binToHex} from "@bitauth/libauth"
-import { Contract, ElectrumNetworkProvider } from "cashscript"
-import { compileString } from "cashc"
+import { Contract as CashScriptContract, ElectrumNetworkProvider } from "cashscript"
 import { RegTestWallet } from "mainnet-js"
-import { getV1 } from "./v1"
+import { artifact as v1_4 } from "./divide.4.js"
 
 describe(`Example Divide Tests`, () => {
 
@@ -17,7 +16,7 @@ describe(`Example Divide Tests`, () => {
 
     const alice = await RegTestWallet.fromId(process.env['ALICE_ID']!);
     let bobs: RegTestWallet[] = []
-    let divisor = 12;
+    let divisor = 4;
     for(let i =0; i<divisor; i++){
         bobs.push(await RegTestWallet.newRandom())
     }
@@ -33,10 +32,10 @@ describe(`Example Divide Tests`, () => {
 
     let exFee = 5000;
 
-    const script = getV1(divisor)
+    const script = v1_4
     //console.log(script)
-    let contract = new Contract(
-      compileString(script),
+    let contract = new CashScriptContract(
+      script,
       [exFee, divisor, ... bobLockingCodes],
       regtestNetwork
     );

@@ -1,85 +1,84 @@
-pragma cashscript >= 0.7.1;
+    pragma cashscript >= 0.7.1;
 
-// v20220727
+    // v20220727
+
+    // A faucet with proof of work.
+    contract Mine(
+
+        // interval for payouts, in blocks
+        int period,
+
+        // amount to be paid by faucet allowance. 
+        int payout,
+
+        // how many leading zeros should the nonce and currenct bytecode have
+        int difficulty,
+
+        // the old nonce, which is replaced each time.
+        bytes7 canary
+    ) {
+        function execute(bytes7 nonce) {
+
+            // Check that time has passed and that time locks are enabled
+            require(tx.age >= period);
+                
+            // Use the old nonce 
+            require(canary.length==7);
+
+            // Check that the new nonce creates a hash with difficulty leading zeros when hashed with the active bytecode
+            bytes version = byte(1);
+            bytes zeros = bytes7(0);
+            bytes hash = sha256(this.activeBytecode + bytes7(nonce));
+            require(hash.split(difficulty)[0] == zeros.split(difficulty)[0]);
+
+            // calculate the new locking bytecode
+            bytes newContract = 0x7 + bytes7(nonce) + this.activeBytecode.split(8)[1];
+            bytes20 contractHash = hash160(newContract);
+            bytes23 lockingCode = new LockingBytecodeP2SH(contractHash);
 
 
+            // Require the first output details the parameters of the mining contract in a zero value OP_RETURN
+            bytes announcement = new LockingBytecodeNullData([
+                // The protocol
+                0x7574786f,
+                // M for mining contract
+                bytes('M'),
+                // version
+                bytes(version),
+                // The period,  
+                bytes(period),
+                // The payout, 
+                bytes(payout),
+                // preceeding zeros on solution
+                bytes(difficulty),
+                // The current nonce (future canary), of the mining contract funds are similtaniously sent to
+                bytes(nonce),
+                // The new bytecode
+                bytes(lockingCode)
+            ]);
 
-// Unfinished, untested.
-contract Mine(
+            // Assure that the first output matches the arguments to the contract
+            require(tx.outputs[0].lockingBytecode == announcement);
 
-    // interval for payouts, in blocks
-    int period,
-
-    // amount to be paid by faucet allowance. 
-    int payout,
-
-    // how many leading zeros should the nonce and currenct bytecode have
-    int difficulty,
-
-    // the old nonce, which is replaced each time.
-    bytes7 canary
-) {
-    function execute(bytes7 nonce) {
-
-        // Check that time has passed and that time locks are enabled
-        require(tx.age >= period);
+            // check that the change output sends to that contract
+            require(tx.outputs[1].lockingBytecode == lockingCode);
             
-        // Use the old nonce 
-        require(canary.length==7);
+            // Get the total value on the contract
+            int currentValue = tx.inputs[this.activeInputIndex].value;
 
-        // Get the total value on the contract
-        bytes version = byte(1);
-        bytes zeros = bytes7(0);
-        bytes hash = sha256(this.activeBytecode + bytes7(nonce));
-        require(hash.split(difficulty)[0] == zeros.split(difficulty)[0]);
+            // Calculate value returned to the contract
+            int returnedValue = currentValue - payout;
 
-        // calculate the new locking bytecode
-        bytes newContract = 0x7 + bytes7(nonce) + this.activeBytecode.split(8)[1];
-        bytes20 contractHash = hash160(newContract);
-        bytes23 lockingCode = new LockingBytecodeP2SH(contractHash);
+            // If the value on the contract exceeds the payout amount
+            //  then assert that the value must return to the contract
+            if(currentValue > payout){
+            require(tx.outputs[1].value >= returnedValue);
+            }
 
 
-        // Require the first output to detail the parameters of the mining contract in a zero value OP_RETURN
-        bytes announcement = new LockingBytecodeNullData([
-            // The protocol
-            0x62616e6b,
-            // M for mining contract
-            bytes('M'),
-            // version
-            bytes(version),
-            // The period,  
-            bytes(period),
-            // The payout, 
-            bytes(payout),
-            // preceeding zeros on solution
-            bytes(difficulty),
-            // The current nonce (future canary), of the mining contract funds are similtaniously sent to
-            bytes(nonce),
-            // The new bytecode
-            bytes(lockingCode)
-        ]);
 
-        // Assure that the first output matches the arguments to the contract
-        require(tx.outputs[0].lockingBytecode == announcement);
-
-        // check that the change output sends to that contract
-        require(tx.outputs[1].lockingBytecode == lockingCode);
-        
-        // Get the total value on the contract
-        int currentValue = tx.inputs[this.activeInputIndex].value;
-
-        // Calculate value returned to the contract
-        int returnedValue = currentValue - payout;
-
-        // If the value on the contract exceeds the payout amount
-        if(currentValue > payout){
-           require(tx.outputs[1].value >= returnedValue);
+            // Assure it has zero value
+            require(tx.outputs[0].value == 0);
         }
 
-
-
-        // Assure it has zero value
-        require(tx.outputs[0].value == 0);
     }
-
-}

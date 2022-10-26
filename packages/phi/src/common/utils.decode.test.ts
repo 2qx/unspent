@@ -1,4 +1,5 @@
-import { decodeNullDataScript } from "./util"
+import { Record } from "../contract/record/Record.js";
+import { decodeNullDataScript } from "./util.js"
 
 describe(`Faucet Class Tests`, () => {
 
@@ -27,12 +28,3 @@ describe(`Faucet Class Tests`, () => {
 });
 
 
-
-
-describe(`Dummy Test Tests`, () => {
-
-    test("Should be the true true", async () => {
-        expect(true).toBe(true)
-        });
-
-});

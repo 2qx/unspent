@@ -1,16 +1,14 @@
 import type { Artifact } from "cashscript"
-import type { UtxfiContract, ContractOptions }  from "../../common/interface.js"
-import { binToHex } from "@bitauth/libauth"
-import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
-import { BaseUtxfiContract } from "../../common/contract.js"
+import type { UtxPhiIface, ContractOptions }  from "../../common/interface.js"
+import { DefaultOptions } from "../../common/constant.js"
+import { BaseUtxPhiContract } from "../../common/contract.js"
 import { toHex, binToNumber } from "../../common/util.js"
 import { artifact as v1 } from "./cash/v1.js"
 
 
-export class Faucet extends BaseUtxfiContract implements UtxfiContract {
+export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
-    private static c: string = 'F'; 
-    private static delimiter: string = DELIMITER;
+    public static c: string = 'F'; 
     private static fn: string = "drip";
 
 
@@ -30,66 +28,45 @@ export class Faucet extends BaseUtxfiContract implements UtxfiContract {
         this.options = options
     }
 
+    refresh(): void {
+        this._refresh([this.period, this.payout, this.index])
+    }
 
     static fromString(str: string, network="mainnet"): Faucet {
-        let comp = str.split(Faucet.delimiter)
+
+        let p = this.parseSerializedString(str, network)
         
         // if the contract shortcode doesn't match, error
-        if(!(Faucet.c ==comp.shift())) throw("non-faucet serilaized string passed to faucet constructor")
+        if(!(Faucet.c ==p.code)) throw("non-faucet serilaized string passed to faucet constructor")
 
-        let version = parseInt(comp.shift()!)
+        if(p.options.version!=1) throw Error("faucet contract version not recognized")
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = comp.splice(-1)[0]
-
-
-        let [period, payout, index] = [1, 1000, 1]
-        if(version==1){
-            period = parseInt(comp.shift()!)
-            payout = parseInt(comp.shift()!)
-            index = parseInt(comp.shift()!)
-        }else{
-            throw Error("faucet contract version not recognized")
-        }
-        let options = {version: version, network: network }
-        let faucet = new Faucet(period, payout, index, options)
+        if(p.args.length != 3) throw(`invalid number of arguments ${p.args.length}`)
+        let [period, payout, index] = [ ... p.args.map( i => parseInt(i) as number) ]
         
-        // check that the address 
-        if(!(checksum==faucet.getLockingBytecode())) throw("faucet deserializtion resulted in different contract address")
+        let faucet = new Faucet(period, payout, index, p.options)
+        faucet.checkLockingBytecode(p.lockingBytecode)
         return faucet
     }
 
 
     // Create a Faucet contract from an OpReturn by building a serialized string.
-    static fromOpReturn(chunks:Uint8Array[], network="mainnet"): Faucet {
+    static fromOpReturn(opReturn:Uint8Array|string, network="mainnet"): Faucet {
 
-        let protocol = "0x"+ binToHex(chunks.shift()!)
-        if(protocol !== PROTOCOL_ID) throw Error(`Protocol specified in OpReturn didn't match the PROTOCOL_ID: ${protocol} v ${PROTOCOL_ID}`)
-        let charArray = chunks.shift()!
-        let c = String.fromCharCode(charArray[0]!)!
-        if(c!==this.c) throw Error(`Wrong short code passed to Faucet class: ${c}`)
-                
-        // version
-        let version = binToNumber(chunks.shift()!);
-        if(version !==1) throw Error(`Wrong version code passed to Annuity class: ${version}`)
-        let options = {version: version, network: network}
+        let p = this.parseOpReturn(opReturn, network)
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = chunks.pop()!
-
-        let [period, payout, index] = [4000, 120, 1]
-        if(version==1){
-            period = binToNumber(chunks.shift()!)
-            payout = binToNumber(chunks.shift()!)
-            index = binToNumber(chunks.shift()!)   
-        }else{
-            throw Error("faucet contract version not recognized")
-        }
-
-        let faucet = new Faucet(period, payout, index, options)
+        // check code
+        if(p.code!==this.c) throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`)
         
-        // check that the address 
-        if(!(binToHex(checksum)==faucet.getLockingBytecode())) throw("Faucet deserializtion resulted in different contract public key hash")
+        // version
+        if(p.options.version !==1) throw Error(`Wrong version code passed to ${this.name} class: ${p.options.version}`)
+       
+        // parse argumnets
+        if(p.args.length != 3) throw(`invalid number of arguments ${p.args.length}`)
+        let [period, payout, index] = [ ... p.args.map( i => binToNumber(i) as number) ]
+
+        let faucet = new Faucet(period, payout, index, p.options)
+        faucet.checkLockingBytecode(p.lockingBytecode)
         return faucet
     }
 
@@ -102,28 +79,29 @@ export class Faucet extends BaseUtxfiContract implements UtxfiContract {
                `${this.getLockingBytecode()}`].join(Faucet.delimiter)
     }
 
-    toChunks(): string[]{
-        return [PROTOCOL_ID,
-               Faucet.c,
-               toHex(this.options!.version!),
-               toHex(this.period),
-               toHex(this.payout),
-               toHex(this.index),
-               '0x'+this.getLockingBytecode()]
+    override asText(){
+        return `A faucet paying ${this.payout} (sat), every ${this.period} blocks`
     }
 
-    async info(){
-        console.log(`# A faucet paying ${this.payout} (sat), every ${this.period} blocks, `)
-        console.log('# ',this.toString());
-        console.log('contract address:          ', this.getAddress());
-        console.log("contract principal:        ", await this.getBalance());
-    }
 
+    toOpReturn(hex=false): string | Uint8Array{
+        let chunks = [
+                Faucet._PROTOCOL_ID,
+                Faucet.c,
+                toHex(this.options!.version!),
+                toHex(this.period),
+                toHex(this.payout),
+                toHex(this.index),
+                '0x'+this.getLockingBytecode(true)
+            ]
+        return this.asOpReturn(chunks, hex)
+    }
+    
     async execute(exAddress?: string, fee?:number): Promise<string> {
         let balance = await this.getBalance();
         let fn = this.getFunction(Faucet.fn)!;
         let newPrincipal = balance - this.payout
-        let minerFee = fee ? fee : 152;
+        let minerFee = fee ? fee : 453;
         let sendAmout = this.payout - minerFee
 
         let to = [
@@ -140,14 +118,32 @@ export class Faucet extends BaseUtxfiContract implements UtxfiContract {
             })
 
         try{
+            let size = await fn()
+            .to(to)
+            .withAge(this.period)
+            .withoutChange()
+            .build();
+            if(exAddress){
+                let minerFee = fee ? fee : size.length/2;
+                sendAmout = this.payout - (minerFee+10)
+                // remove the old executor amount
+                // replace with new fee
+                to.pop();
+                to.push(
+                    { 
+                        to: exAddress,
+                        amount: sendAmout
+                    })
+            } 
+
             let payTx = await fn()
             .to(to)
             .withAge(this.period)
             .withoutChange()
             .send();
             return payTx.txid
-        }catch(e){
-            throw(e)
+        }catch(e : any){
+            return e.message
         }
     }
 

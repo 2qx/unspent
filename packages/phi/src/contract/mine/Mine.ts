@@ -1,17 +1,16 @@
-import { binToHex, hexToBin, bigIntToBinUintLE } from "@bitauth/libauth"
-import type { Artifact } from "cashscript"
-import type { UtxfiContract, ContractOptions }  from "../../common/interface.js"
-import { DELIMITER, DefaultOptions, PROTOCOL_ID } from "../../common/constant.js"
-import { BaseUtxfiContract } from "../../common/contract.js"
-import { toHex, binToNumber, sha256, getRandomIntWeak, sum } from "../../common/util.js"
+import { binToHex, hexToBin, bigIntToBinUintLE, instantiateSha256 } from "@bitauth/libauth"
+import type { Artifact, Utxo } from "cashscript"
+import type { UtxPhiIface, ContractOptions } from "../../common/interface.js"
+import { DefaultOptions } from "../../common/constant.js"
+import { BaseUtxPhiContract } from "../../common/contract.js"
+import { toHex, binToNumber, getRandomIntWeak, sum, decodeNullDataScript } from "../../common/util.js"
 import { artifact as v1 } from "./cash/v1.js"
 
 
 
-export class Mine extends BaseUtxfiContract implements UtxfiContract {
+export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
-    private static c: string = 'M';
-    private static delimiter: string = DELIMITER;
+    public static c: string = 'M';
     private static fn: string = "execute";
 
 
@@ -21,181 +20,194 @@ export class Mine extends BaseUtxfiContract implements UtxfiContract {
         public difficulty: number = 3,
         public canary: Uint8Array = new Uint8Array(7),
         public options: ContractOptions = DefaultOptions
-      ) {
-        let script:Artifact
-        if(options.version===1){
-            script = v1       
-        }else{
+    ) {
+        let script: Artifact
+        if (options.version === 1) {
+            script = v1
+        } else {
             throw Error(`Unrecognized Mine Contract Version`)
         }
-        super(options.network!, script, [period, payout, difficulty, canary] );
+        super(options.network!, script, [period, payout, difficulty, canary]);
         this.options = options
     }
 
 
-    static fromString(str: string, network="mainnet"): Mine {
-        let comp = str.split(this.delimiter)
-        
+    static fromString(str: string, network = "mainnet"): Mine {
+
+        let p = this.parseSerializedString(str, network)
+
         // if the contract shortcode doesn't match, error
-        if(!(this.c ==comp.shift())) throw("non-mine serilaized string passed to mine constructor")
+        if (!(this.c == p.code)) throw (`non-${this.name} serilaized string passed to ${this.name} constructor`)
 
-        let version = parseInt(comp.shift()!)
+        if (p.options.version != 1) throw Error(`${this.name} contract version not recognized`)
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = comp.splice(-1)[0]
+        if (p.args.length != 4) throw (`invalid number of arguments ${p.args.length}`)
+        let period = parseInt(p.args.shift()!)
+        let payout = parseInt(p.args.shift()!)
+        let difficulty = parseInt(p.args.shift()!)
+        let canary = hexToBin(p.args.shift()!)
 
+        let mine = new Mine(period, payout, difficulty, canary, p.options)
 
-        let [period, payout, difficulty, canary] = [5000, 120, 1, new Uint8Array(7)]
-        if(version==1){
-            period = parseInt(comp.shift()!)
-            payout = parseInt(comp.shift()!)
-            difficulty = parseInt(comp.shift()!)
-            canary = hexToBin(comp.shift()!)
-        }else{
-            throw Error("mine contract version not recognized")
-        }
-        let options = {version: version, network: network }
-        let mine = new Mine(period, payout, difficulty, canary, options)
-        
-        // check that the address 
-        if(!(checksum==mine.getLockingBytecode())) throw("mine deserializtion resulted in different contract address")
+        // check that the address is correct
+        mine.checkLockingBytecode(p.lockingBytecode)
         return mine
     }
 
 
     // Create a Mine contract from an OpReturn by building a serialized string.
-    static fromOpReturn(chunks:Uint8Array[], network="mainnet"): Mine {
+    static fromOpReturn(opReturn: Uint8Array | string, network = "mainnet"): Mine {
 
-        let protocol = "0x"+ binToHex(chunks.shift()!)
-        if(protocol !== PROTOCOL_ID) throw Error(`Protocol specified in OpReturn didn't match the PROTOCOL_ID: ${protocol} v ${PROTOCOL_ID}`)
-        let charArray = chunks.shift()!
-        let c = String.fromCharCode(charArray[0]!)!
-        if(c!==Mine.c) throw Error(`Wrong short code passed to Mine class: ${c}`)
-                
+        let p = this.parseOpReturn(opReturn, network)
+
+        // check code
+        if (p.code !== this.c) throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`)
+
         // version
-        let version = binToNumber(chunks.shift()!);
-        if(version !==1) throw Error(`Wrong version code passed to Mine class: ${version}`)
-        let options = {version: version, network: network}
+        if (p.options.version !== 1) throw Error(`Wrong version code passed to ${this.name} class: ${p.options.version}`)
 
-        // split off the last argument, the address pkh, save it as the checksum
-        let checksum = chunks.pop()!
+        const period = binToNumber(p.args.shift()!)
+        const payout = binToNumber(p.args.shift()!)
+        const difficulty = binToNumber(p.args.shift()!)
+        const canary = p.args.shift()!
 
-        let [period, payout, difficulty, canary] = [4000, 120, 1, new Uint8Array(7)]
-        if(version==1){
-            period = binToNumber(chunks.shift()!)
-            payout = binToNumber(chunks.shift()!)
-            difficulty = binToNumber(chunks.shift()!)   
-            canary = chunks.shift()! 
-        }else{
-            throw Error("mine contract version not recognized")
-        }
 
-        let mine = new Mine(period, payout, difficulty, canary, options)
-        
+        let mine = new Mine(period, payout, difficulty, canary, p.options)
+
         // check that the address 
-        if(!(binToHex(checksum)==mine.getLockingBytecode())) throw("Mine deserializtion resulted in different contract locking code")
+        mine.checkLockingBytecode(p.lockingBytecode)
         return mine
     }
 
-    override toString(){
+    override toString() {
         return [`${Mine.c}`,
-               `${this.options!.version}`,
-               `${this.period}`,
-               `${this.payout}`,
-               `${this.difficulty}`,
-               binToHex(this.canary),
-               `${this.getLockingBytecode()}`].join(Mine.delimiter)
+        `${this.options!.version}`,
+        `${this.period}`,
+        `${this.payout}`,
+        `${this.difficulty}`,
+        binToHex(this.canary),
+        `${this.getLockingBytecode()}`].join(Mine.delimiter)
     }
 
-    toChunks(): string[]{
-        return [PROTOCOL_ID,
-               Mine.c,
-               toHex(this.options!.version!),
-               toHex(this.period),
-               toHex(this.payout),
-               toHex(this.difficulty),
-               '0x'+binToHex(this.canary),
-               '0x'+this.getLockingBytecode()]
+    override asText(): string {
+        return `A mineable contract, with difficulty ${this.difficulty}, paying ${this.payout} (sat), every ${this.period} blocks`
     }
 
-    async info(){
-        console.log(`# A mine, with difficulty ${this.difficulty} paying ${this.payout} (sat), every ${this.period} blocks, `)
-        console.log('# ',this.toString());
-        console.log('contract address:          ', this.getAddress());
-        console.log("contract principal:        ", await this.getBalance());
+    toOpReturn(hex = false): string | Uint8Array {
+        const chunks = [
+            Mine._PROTOCOL_ID,
+            Mine.c,
+            toHex(this.options!.version!),
+            toHex(this.period),
+            toHex(this.payout),
+            toHex(this.difficulty),
+            '0x' + binToHex(this.canary),
+            '0x' + this.getLockingBytecode(true)
+        ]
+        return this.asOpReturn(chunks, hex)
     }
 
-    async getNonce(): Promise<Uint8Array>{
+
+    async getNonce(verbose = false): Promise<Uint8Array> {
         let nonce = new Uint8Array([])
         let result = new Uint8Array([])
         let mined = false
-        while(!mined){
+        let best = 9007199254740991
+
+        const sha256 = await instantiateSha256();
+
+        if (verbose) console.log("mining...")
+        // keep mining 'til the number of zeros are reached
+        while (!mined) {
             let nonceNumber = getRandomIntWeak(9007199254740991)
             nonce = bigIntToBinUintLE(BigInt(nonceNumber))
             let msg = new Uint8Array([...hexToBin(this.getRedeemScriptHex()), ...nonce])
-            result = await sha256(msg)
-            if(result.slice(0,this.difficulty).reduce(sum) === 0) mined = true
+            result = sha256.hash(msg)
+            let newBest = result.slice(0, this.difficulty).reduce(sum)
+            if (newBest <= best) {
+                best = newBest
+                if (verbose) console.log(newBest, result.slice(0, this.difficulty))
+            }
+            if (result.slice(0, this.difficulty).reduce(sum) === 0) mined = true
         }
+
+        // if the number is smaller than the space allowed, prepend it by adding zeros to the right
+        if (nonce.length < this.canary.length) {
+            let zeros = this.canary.length - nonce.length
+            nonce = new Uint8Array([...nonce, ... new Uint8Array(zeros)])
+        }
+        if (verbose) console.log("success: ", binToHex(nonce))
         return nonce
     }
 
-    async execute(exAddress?: string, fee?:number): Promise<string> {
+    async execute(exAddress?: string, fee?: number, utxos?: Utxo[], nonceHex?: string): Promise<string> {
         let balance = await this.getBalance();
         let fn = this.getFunction(Mine.fn)!;
         let newPrincipal = balance - this.payout
         let minerFee = fee ? fee : 400;
         let reward = this.payout - minerFee
 
-        this.canary = await this.getNonce()
-        
+        if (nonceHex) {
+            this.canary = hexToBin(nonceHex)
+        } else {
+            this.canary = await this.getNonce()
+        }
 
         let nextContract = new Mine(this.period, this.payout, this.difficulty, this.canary, this.options)
-        let chunks = nextContract.toChunks()
-
+        let opReturn = nextContract.toOpReturn(false)
+        const chunks = decodeNullDataScript(opReturn).map(c => "0x" + binToHex(c))
 
         let to = [
             {
                 to: nextContract.getAddress(),
                 amount: newPrincipal,
             }
-            ]
+        ]
 
-        if(exAddress) to.push(
-            { 
+        if (exAddress) to.push(
+            {
                 to: exAddress,
                 amount: reward
             })
 
-        let canaryHex = '0x'+binToHex(this.canary)
-                
-        try{
-            let size = await fn(canaryHex)
+        let canaryHex = '0x' + binToHex(this.canary)
+
+
+        fn = this.getFunction(Mine.fn)!;
+        let tx = fn(canaryHex)!
+        if (utxos) tx = tx.from(utxos)
+        let size = await tx
             .withOpReturn(chunks)
             .to(to)
             .withAge(this.period)
             .withHardcodedFee(minerFee)
             .build();
-            
-            if(exAddress){
-                let minerFee = fee ? fee : size.length/2;
-                let reward = this.payout - (minerFee+4)
-                to.pop();
-                to.push(
-                    { 
-                        to: exAddress,
-                        amount: reward
-                    })
-            } 
 
-            let payTx = await fn(canaryHex)
-            .withOpReturn(chunks)
-            .to(to)
-            .withAge(this.period)
-            .withoutChange()
-            .send();
+
+        if (exAddress) {
+            let minerFee = fee ? fee : size.length / 2;
+            let reward = this.payout - (minerFee + 10)
+            to.pop();
+            to.push(
+                {
+                    to: exAddress,
+                    amount: reward
+                })
+        }
+        try {
+            // assure cluster is connected
+            await this.provider?.connectCluster()
+            tx = fn(canaryHex)!
+            if (utxos) tx = tx.from(utxos)
+            let payTx = await tx
+                .withOpReturn(chunks)
+                .to(to)
+                .withAge(this.period)
+                .withoutChange()
+                .send();
             return payTx.txid
-        }catch(e){
-            throw(e)
+        } catch (e: any) {
+            return e.message
         }
     }
 

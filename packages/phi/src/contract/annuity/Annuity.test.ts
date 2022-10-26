@@ -1,8 +1,7 @@
+import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js"
 import { 
-    createOpReturnData, 
     derivePublicKeyHashHex, 
-    decodeNullDataScript  
 } from "../../common/util.js"
 
 describe(`Annuity Class Tests`, () => {
@@ -39,9 +38,7 @@ describe(`Annuity Class Tests`, () => {
         
         let options = {version:1,network:"regtest"}
         let a1 = new Annuity(5,process.env['ADDRESS']!,5000, 500, options)
-        let chunks = a1.toChunks()
-        let data = createOpReturnData(chunks)
-        let opReturn = decodeNullDataScript(data)
+        let opReturn = a1.toOpReturn(false)
         let a2 = Annuity.fromOpReturn(opReturn, "regtest")
         expect(a1.toString()).toEqual(a2.toString())
         expect(a2.isTestnet()).toEqual(true)
@@ -49,5 +46,46 @@ describe(`Annuity Class Tests`, () => {
 
     });
 
+    test("Should a return info", async () => {
+        
+        let options = {version:1,network:"regtest"}
+        let c1 = new Annuity(5,process.env['ADDRESS']!,5000, 500, options)
+        let info = await c1.info(false)
+        expect(info).toContain(c1.toString())
+        expect(info).toContain("balance")
+        
+    });
 
+
+    test("Should pay an annuity", async () => {
+        
+        const alice = await RegTestWallet.fromId(process.env['ALICE_ID']!);
+        const bob = await RegTestWallet.newRandom()
+        const charlie = await RegTestWallet.newRandom();
+
+        let options = {version:1,network:"regtest"}
+        let p1 = new Annuity(1,bob.getDepositAddress(),10000, 3000, options)
+
+        // fund the perp contract
+        await alice.send([
+            {
+                cashaddr: p1.getAddress(),
+                value: 1000000,
+                unit: "satoshis",
+            },
+        ]);
+        
+        for (let x = 0; x < 5; x++) {
+            await mine({
+                cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
+                blocks: 2,
+            });
+            await p1.execute(charlie.getDepositAddress())
+        }
+        expect(await charlie.getBalance("sat")).toBeGreaterThan(13800)
+        expect(await bob.getBalance("sat")).toBe(50000)
+        expect(p1.isTestnet()).toEqual(true)
+        expect(await p1.getBalance()).toBeGreaterThan(900000)
+
+    });
 });

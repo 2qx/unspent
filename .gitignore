@@ -4,6 +4,7 @@
 .env.testnet
 .env.mainnet
 node_modules
+packages/app2/*
 *.log
 *.d.ts
 *.js.map
@@ -11,3 +12,6 @@ coverage
 jest/playwright/*
 jest/docker/data
 dist
+app2
+*.yarn
+*.yarnrc.yml
