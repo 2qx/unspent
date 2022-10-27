@@ -18,6 +18,9 @@ Unspent Phi (₿∙ϕ) is an app for creating (and publishing) a set of simple c
   - [Annuity](#annuity)
   - [Divide](#divide)
   - [Faucet](#faucet)
+  - [Minable Faucet](#minable-faucet)
+  - [Perpetuity](#perpetuity)
+  - [Record](#record)
 
 # Definitions
 
@@ -90,46 +93,46 @@ This contract: checks that the first output pays to the beneficiary; checks that
 ```solidity
 pragma cashscript >= 0.7.1;
 
+// v202205626
 
 // Pay equal payments at regular intervals using input locks
 contract Annuity(
 
-    // interval for payouts, in blocks
-    int period,
+  // interval for payouts, in blocks
+  int period,
 
-    // LockingBytecode of the beneficiary, the address receiving payments
-    bytes recipientLockingBytecode,
+  // LockingBytecode of the beneficiary, 
+  // the address receiving payments
+  bytes recipientLockingBytecode,
 
-    // amount paid in each installment
-    int installment,
+  // amount paid in each installment
+  int installment,
 
-    // extra allowance for administration of contract
-    // fees are paid from executors' allowance.
-    int executorAllowance
+  // extra allowance for administration of contract
+  // fees are paid from executors' allowance. 
+  int executorAllowance
 ) {
-    function execute() {
+  function execute() {
 
-        // Check that the first output sends to the recipient
-        require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+    // Check that the first output sends to the recipient
+    require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
 
-        // Check that time has passed and that time locks are enabled
-        require(tx.age >= period);
+    // Check that time has passed and that time locks are enabled
+    require(tx.age >= period);
+        
+    // require the second output to match the active bytecode
+    require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-        // require the second output to match the active bytecode
-        require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
+    // Get the total value on the contract
+    int currentValue = tx.inputs[this.activeInputIndex].value;
 
-        // Get the total value on the contract
-        int currentValue = tx.inputs[this.activeInputIndex].value;
+    // Calculate value returned to the contract
+    int returnedValue = currentValue - installment - executorAllowance;
 
-        // Calculate value returned to the contract
-        int returnedValue = currentValue - installment - executorAllowance;
-
-        // Check that the outputs send the correct amounts
-        require(tx.outputs[0].value >= installment);
-        require(tx.outputs[1].value >= returnedValue);
-
-    }
-
+    // Check that the outputs send the correct amounts
+    require(tx.outputs[0].value >= installment);
+    require(tx.outputs[1].value >= returnedValue);   
+  }
 }
 ```
 
@@ -145,36 +148,39 @@ This contract: checks that each of the output destinations match the predefined 
 ```solidity
 pragma cashscript >= 0.7.0;
 
-  contract Divide(
-      // allowance for party executing the contract
-      int executorAllowance,
-      // number of outputs receiving payout
-      int divisor,
+ contract Divide(
+   // allowance for party executing the contract
+   int executorAllowance,
+   // number of outputs receiving payout
+   int divisor,
 
-      // for each beneficiary, take the LockingBytecode as input
-      bytes r0LockingBytecode,
-      bytes r1LockingBytecode
-  ) {
-      function execute() {
+   // for each beneficiary, 
+   // take the LockingBytecode as input
+   bytes r0LockingBytecode,
+   bytes r1LockingBytecode
+ ) {
+   function execute() {
 
-        // distributes to each output in order
-        require(tx.outputs[0].lockingBytecode == r0LockingBytecode);
-        require(tx.outputs[1].lockingBytecode == r1LockingBytecode);
+    // distributes to each output in order
+    require(tx.outputs[0].lockingBytecode == r0LockingBytecode);
+    require(tx.outputs[1].lockingBytecode == r1LockingBytecode);
 
-        // Get the total value of inputs
-        int currentValue = tx.inputs[this.activeInputIndex].value;
+    // Get the total value of inputs
+    int currentValue = tx.inputs[this.activeInputIndex].value;
 
-        // Total value paid to beneficiaries, minus executor allowance
-        int distributedValue = currentValue - executorAllowance;
+    // Total value paid to beneficiaries, 
+    // minus executor allowance
+    int distributedValue = currentValue - executorAllowance;
 
-        // Value paid to each beneficiary
-        int distribution = distributedValue / divisor;
+    // Value paid to each beneficiary
+    int distribution = distributedValue / divisor;
 
-        // each output must be greater or equal to the distribution amount
-        require(tx.outputs[0].value >= distribution);
-        require(tx.outputs[1].value >= distribution);
-      }
-  }
+    // each output must be greater 
+    // or equal to the distribution amount
+    require(tx.outputs[0].value >= distribution);
+    require(tx.outputs[1].value >= distribution);
+   }
+ }
 ```
 
 ## Faucet
@@ -192,39 +198,244 @@ pragma cashscript >= 0.7.0;
 
 contract Faucet(
 
-    // interval for payouts, in blocks
-    int period,
+  // interval for payouts, in blocks
+  int period,
 
-    // amount to be paid by faucet allowance. 
-    int payout,
+  // amount to be paid by faucet allowance. 
+  int payout,
 
-    // random number input into contract to have more than one
-    int index
+  // random number input into contract to have more than one
+  int index
 ) {
-    function drip() {
+  function drip() {
 
-        // Check that time has passed and that time locks are enabled
-        require(tx.age >= period);
-            
-        // use the index
-        require(index >= 0);
+    // Check that time has passed and that time locks are enabled
+    require(tx.age >= period);
+      
+    // use the index
+    require(index >= 0);
 
-        // require the first output to match the active bytecode
-        require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
+    // require the first output to match the active bytecode
+    require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-        // Get the total value on the contract
-        int currentValue = tx.inputs[this.activeInputIndex].value;
+    // Get the total value on the contract
+    int currentValue = tx.inputs[this.activeInputIndex].value;
 
-        // Calculate value returned to the contract
-        int returnedValue = currentValue - payout;
+    // Calculate value returned to the contract
+    int returnedValue = currentValue - payout;
 
-        // If the value on the contract exceeds the payout amount
-        //  then assert that the value must return to the contract
-        if(currentValue > payout){
-           require(tx.outputs[0].value >= returnedValue);
-        }
-
+    // If the value on the contract exceeds the payout amount
+    // then assert that the value must return to the contract
+    if(currentValue > payout){
+      require(tx.outputs[0].value >= returnedValue);
     }
 
+  }
+
+}
+```
+
+## Minable Faucet
+
+The ₿∙ϕ mining covenant is very much like the faucet, with some additional requirements. 
+
+First, execution of the contract must be called with a `nonce` [a random value used once]
+which when added to the current locking bytecode and hashed results in a value starting with some number of zeros.
+How many zeros is the `difficulty`. 
+
+Finally, prior to spending the the mining `payout`, the spender must announce 
+the winning `nonce` in an OP_RETURN of the first output, and send the balance of the contract to a new mining covenant with the new nonce as a `canary`.
+
+![Replace the canary](canary.png "Look, see, he's alright. He's fine.")
+
+Like an infinite series of Failures to Deliver (FTDs) for a stock, or banging forex futures to manipulate an outcome in currency markets, the canary is always brought back to life with a new copy of itself.
+
+
+```solidity
+pragma cashscript >= 0.7.1;
+
+// v20220727
+
+// A faucet with proof of work.
+contract Mine(
+
+  // interval for payouts, in blocks
+  int period,
+
+  // amount to be paid by faucet allowance. 
+  int payout,
+
+  // how many leading zeros should the hash of the nonce and current bytecode have
+  int difficulty,
+
+  // the old nonce, which is replaced each time.
+  bytes7 canary
+) {
+  function execute(bytes7 nonce) {
+
+    // Check that time has passed and that time locks are enabled
+    require(tx.age >= period);
+      
+    // Use the old nonce 
+    require(canary.length==7);
+
+    // Check that the new nonce creates a hash with 
+    // some D (difficulty) leading zeros when hashed with the active bytecode
+    bytes version = byte(1);
+    bytes zeros = bytes7(0);
+    bytes hash = sha256(this.activeBytecode + bytes7(nonce));
+    require(hash.split(difficulty)[0] == zeros.split(difficulty)[0]);
+
+    // calculate the locking bytecode
+    // of a new mining contract with the nonce as canary
+    bytes newContract = 0x7 + bytes7(nonce) + this.activeBytecode.split(8)[1];
+    bytes20 contractHash = hash160(newContract);
+    bytes23 lockingCode = new LockingBytecodeP2SH(contractHash);
+
+
+    // Require the first output details the parameters 
+    // of the mining contract in a zero value OP_RETURN
+    bytes announcement = new LockingBytecodeNullData([
+      // The protocol
+      0x7574786f,
+      // M for mining contract
+      bytes('M'),
+      // version
+      bytes(version),
+      // The period, 
+      bytes(period),
+      // The payout, 
+      bytes(payout),
+      // preceding zeros on solution
+      bytes(difficulty),
+      // The current nonce (future canary), of the mining contract,
+      // where funds are simultaneously sent to
+      bytes(nonce),
+      // The new bytecode
+      bytes(lockingCode)
+    ]);
+
+    // Assure that the first output matches the arguments to the contract
+    require(tx.outputs[0].lockingBytecode == announcement);
+
+    // check that the change output sends to that contract
+    require(tx.outputs[1].lockingBytecode == lockingCode);
+    
+    // Get the total value on the contract
+    int currentValue = tx.inputs[this.activeInputIndex].value;
+
+    // Calculate value returned to the contract
+    int returnedValue = currentValue - payout;
+
+    // If the value on the contract exceeds the payout amount
+    // then assert that the value must return to the contract
+    if(currentValue > payout){
+    require(tx.outputs[1].value >= returnedValue);
+    }
+
+    // Assure it has zero value
+    require(tx.outputs[0].value == 0);
+  }
+
+}
+```
+
+
+## Perpetuity 
+
+The Perpetuity contract works like an Annuity, however rather than pay a fixed amount, a fixed fraction of the total is paid each period.
+
+The fraction paid is determined by the `decay` parameter. If a `decay` of 10 is specified, then one tenth the value is paid each period.
+
+```solidity
+pragma cashscript >= 0.7.1;
+
+// v20220522
+
+contract Perpetuity(
+
+ // interval for payouts, in blocks
+ int period,
+
+ // lockingBytecode of the beneficiary, 
+ // the address receiving payments
+ bytes recipientLockingBytecode,
+
+ // extra allowance for administration of contract
+ // fees are paid from executors' allowance. 
+ int executorAllowance,
+
+ // divisor for the payout, 
+ // each payout must be greater than 
+ // the total amount held on the contract
+ // divided by this number
+ int decay
+
+) {
+ function execute() {
+
+  // Check that the first output sends to the recipient
+  require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+  // Check that time has passed and that time locks are enabled
+  require(tx.age >= period);
+   
+  // require the second output to match the active bytecode
+  require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
+
+  // Get the total value on the contract
+  int currentValue = tx.inputs[this.activeInputIndex].value;
+
+  // The payout is the current value divided by the decay
+  int installment = currentValue/decay;
+
+  // Calculate value returned to the contract
+  int returnedValue = currentValue - installment - executorAllowance;
+
+  // Check that the outputs send the correct amounts
+  require(tx.outputs[0].value >= installment);
+  require(tx.outputs[1].value >= returnedValue);
+   
+ }
+}
+```
+
+## Record
+
+A utility function to broadcast new contracts as OP_RETURN messages.
+
+```solidity
+pragma cashscript ^0.7.0;
+
+/* Allows publishing some OP_RETURN message,
+ * given that:
+ * 1. the hash160 value of the zero value OP_RETURN message is passed
+ * 2. the first output has zero value
+ * 3. the remaining value is pass back to the contract, mostly.
+ */
+
+ 
+contract Record(int maxFee, int index) {
+ function execute(bytes20 dataHash) {
+
+  // this does nothing
+  // different indices enable different contract addresses
+  require(index >= 0);
+
+  // Check that the first tx output is a zero value opcode matching the provided hash
+  require(hash160(tx.outputs[0].lockingBytecode) == dataHash);
+  require(tx.outputs[0].value == 0);
+  
+  // calculate the fee required to propagate the transaction 1 sat/ byte
+  int baseFee = 162;
+  
+  int fee = baseFee + tx.outputs[0].lockingBytecode.length;
+  require(fee<=maxFee);
+
+  // Check that the second tx output sends the change back
+  int newValue = tx.inputs[this.activeInputIndex].value - fee;
+  require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+  require(tx.outputs[1].value >= newValue);    
+ }
 }
 ```

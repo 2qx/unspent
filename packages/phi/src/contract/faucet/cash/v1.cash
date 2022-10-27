@@ -2,42 +2,40 @@ pragma cashscript >= 0.7.0;
 
 // v20220609
 
-// This is an experimental faucet contract 
-// Prelim testing on regtest, just a concept
 contract Faucet(
 
-    // interval for payouts, in blocks
-    int period,
+  // interval for payouts, in blocks
+  int period,
 
-    // amount to be paid by faucet allowance. 
-    int payout,
+  // amount to be paid by faucet allowance. 
+  int payout,
 
-    // random number input into contract to have more than one
-    int index
+  // random number input into contract to have more than one
+  int index
 ) {
-    function drip() {
+  function drip() {
 
-        // Check that time has passed and that time locks are enabled
-        require(tx.age >= period);
-            
-        // use the index
-        require(index >= 0);
+    // Check that time has passed and that time locks are enabled
+    require(tx.age >= period);
+      
+    // use the index
+    require(index >= 0);
 
-        // require the first output to match the active bytecode
-        require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
+    // require the first output to match the active bytecode
+    require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-        // Get the total value on the contract
-        int currentValue = tx.inputs[this.activeInputIndex].value;
+    // Get the total value on the contract
+    int currentValue = tx.inputs[this.activeInputIndex].value;
 
-        // Calculate value returned to the contract
-        int returnedValue = currentValue - payout;
+    // Calculate value returned to the contract
+    int returnedValue = currentValue - payout;
 
-        // If the value on the contract exceeds the payout amount
-        //  then assert that the value must return to the contract
-        if(currentValue > payout){
-           require(tx.outputs[0].value >= returnedValue);
-        }
-
+    // If the value on the contract exceeds the payout amount
+    // then assert that the value must return to the contract
+    if(currentValue > payout){
+      require(tx.outputs[0].value >= returnedValue);
     }
+
+  }
 
 }

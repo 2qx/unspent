@@ -11,17 +11,17 @@ https://prismjs.com/download.html#themes=prism-coy&languages=markup+css+clike+ja
      color: black;
      background: none;
      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-     font-size: 1em;
+     font-size: 0.9em;
+     font-stretch: ultra-condensed;
      text-align: left;
      white-space: pre;
-     word-spacing: normal;
      word-break: normal;
      word-wrap: normal;
      line-height: 1.5;
  
-     -moz-tab-size: 4;
-     -o-tab-size: 4;
-     tab-size: 4;
+     -moz-tab-size: 2;
+     -o-tab-size: 2;
+     tab-size: 2;
  
      -webkit-hyphens: none;
      -moz-hyphens: none;

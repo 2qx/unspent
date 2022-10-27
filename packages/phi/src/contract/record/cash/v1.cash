@@ -1,29 +1,33 @@
 pragma cashscript ^0.7.0;
 
-/* Publishes a utxfi record under the protocol 0x62616e6b
+/* Allows publishing some OP_RETURN message,
+ * given that:
+ * 1. the hash160 value of the zero value OP_RETURN message is passed
+ * 2. the first output has zero value
+ * 3. the remaining value is pass back to the contract, mostly.
  */
 
  
 contract Record(int maxFee, int index) {
-    function execute(bytes20 dataHash) {
+ function execute(bytes20 dataHash) {
 
-        // this does nothing
-        // different indicies enable different contract addresses
-        require(index >= 0);
+  // this does nothing
+  // different indicies enable different contract addresses
+  require(index >= 0);
 
-        // Check that the first tx output is a zero value opcode matching the provided hash
-        require(hash160(tx.outputs[0].lockingBytecode) == dataHash);
-        require(tx.outputs[0].value == 0);
-        
-        // calculate the fee required to propagate the transaction 1 sat/ byte
-        int baseFee = 162;
-        
-        int fee = baseFee + tx.outputs[0].lockingBytecode.length;
-        require(fee<=maxFee);
+  // Check that the first tx output is a zero value opcode matching the provided hash
+  require(hash160(tx.outputs[0].lockingBytecode) == dataHash);
+  require(tx.outputs[0].value == 0);
+  
+  // calculate the fee required to propagate the transaction 1 sat/ byte
+  int baseFee = 162;
+  
+  int fee = baseFee + tx.outputs[0].lockingBytecode.length;
+  require(fee<=maxFee);
 
-        // Check that the second tx output sends the change back
-        int newValue = tx.inputs[this.activeInputIndex].value - fee;
-        require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
-        require(tx.outputs[1].value >= newValue);                
-    }
+  // Check that the second tx output sends the change back
+  int newValue = tx.inputs[this.activeInputIndex].value - fee;
+  require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+  require(tx.outputs[1].value >= newValue);    
+ }
 }
