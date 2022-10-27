@@ -143,6 +143,10 @@ td {
     border: 1px solid #333;
 }
 
+img {
+  width: 100%;
+}
+
 select {
 -webkit-appearance: none;
 -moz-appearance: none;
