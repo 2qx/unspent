@@ -37,7 +37,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
         let p = this.parseSerializedString(str, network)
 
         // if the contract shortcode doesn't match, error
-        if (!(this.c == p.code)) throw (`non-${this.name} serilaized string passed to ${this.name} constructor`)
+        if (!(this.c == p.code)) throw (`non-${this.name} serialized string passed to ${this.name} constructor`)
 
         if (p.options.version != 1) throw Error(`${this.name} contract version not recognized`)
 

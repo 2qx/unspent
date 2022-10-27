@@ -1,4 +1,4 @@
-import type { Artifact } from "cashscript"
+import type { Artifact, Utxo } from "cashscript"
 import type { UtxPhiIface, ContractOptions }  from "../../common/interface.js"
 import { DefaultOptions } from "../../common/constant.js"
 import { BaseUtxPhiContract } from "../../common/contract.js"
@@ -37,7 +37,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         let p = this.parseSerializedString(str, network)
         
         // if the contract shortcode doesn't match, error
-        if(!(Faucet.c ==p.code)) throw("non-faucet serilaized string passed to faucet constructor")
+        if(!(Faucet.c ==p.code)) throw("non-faucet serialized string passed to faucet constructor")
 
         if(p.options.version!=1) throw Error("faucet contract version not recognized")
 
@@ -97,12 +97,21 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         return this.asOpReturn(chunks, hex)
     }
     
-    async execute(exAddress?: string, fee?:number): Promise<string> {
-        let balance = await this.getBalance();
+    async execute(exAddress?: string, fee?:number, utxos?: Utxo[]): Promise<string> {
+
+        let balance = 0
+        if (utxos && utxos?.length > 0) {
+            balance = utxos.reduce((a, b) => a + b.satoshis, 0)
+        } else {
+            balance = await this.getBalance();
+        }
+        if (balance == 0) return "No funds on contract"
+
+
         let fn = this.getFunction(Faucet.fn)!;
         let newPrincipal = balance - this.payout
         let minerFee = fee ? fee : 453;
-        let sendAmout = this.payout - minerFee
+        let sendAmount = this.payout - minerFee
 
         let to = [
             {
@@ -114,37 +123,34 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         if(exAddress) to.push(
             { 
                 to: exAddress,
-                amount: sendAmout
+                amount: sendAmount
             })
 
-        try{
-            let size = await fn()
-            .to(to)
-            .withAge(this.period)
-            .withoutChange()
-            .build();
-            if(exAddress){
-                let minerFee = fee ? fee : size.length/2;
-                sendAmout = this.payout - (minerFee+10)
-                // remove the old executor amount
-                // replace with new fee
-                to.pop();
-                to.push(
-                    { 
-                        to: exAddress,
-                        amount: sendAmout
-                    })
-            } 
+        let size = await fn()
+        .to(to)
+        .withAge(this.period)
+        .withoutChange()
+        .build();
+        if(exAddress){
+            let minerFee = fee ? fee : size.length/2;
+            sendAmount = this.payout - (minerFee+10)
+            // remove the old executor amount
+            // replace with new fee
+            to.pop();
+            to.push(
+                { 
+                    to: exAddress,
+                    amount: sendAmount
+                })
+        } 
 
-            let payTx = await fn()
-            .to(to)
-            .withAge(this.period)
-            .withoutChange()
-            .send();
-            return payTx.txid
-        }catch(e : any){
-            return e.message
-        }
+        let payTx = await fn()
+        .to(to)
+        .withAge(this.period)
+        .withoutChange()
+        .send();
+        return payTx.txid
+       
     }
 
 }

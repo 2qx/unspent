@@ -105,13 +105,14 @@ export class Record extends BaseUtxPhiContract  {
     async broadcast(opReturn?: Uint8Array|string, utxos?: Utxo[]): Promise<string> {
 
         // Don't attempt to broadcast from an unfunded contract
-        if(!await this.isFunded()) return  `Record contract is not funded: ${this.getAddress()}`
+        if(!await this.isFunded()) throw Error(`Record contract is not funded: ${this.getAddress()}`)
 
         opReturn = opReturn ? opReturn : this.toOpReturn(false)
 
         // .withOpReturn likes hex to be prefixed with 0x.
         const chunks = decodeNullDataScript(opReturn).map( c => "0x"+binToHex(c))
 
+        // regardless of how many inputs, filter to two if more than two utxos are available
         if(!utxos || utxos.length==0) {
             let allUtxos = await this.getUtxos()
             if(allUtxos && allUtxos.length>1){
@@ -121,35 +122,32 @@ export class Record extends BaseUtxPhiContract  {
 
 
         
-        try{            
-            if( typeof opReturn === "string") opReturn = hexToBin(opReturn)
-            let checkHash = await hash160(opReturn)
-            let fn = this.getFunction(Record.fn)!;
-            let tx = fn(checkHash)!
-            let estimator = fn(checkHash)!
-
-            if (utxos && utxos.length>1) {
-                tx = tx.from(utxos)
-                estimator = estimator.from(utxos)
-            }
-
-            
+        if( typeof opReturn === "string") opReturn = hexToBin(opReturn)
+        let checkHash = await hash160(opReturn)
 
 
+        let fn = this.getFunction(Record.fn)!;
+        
+        
+        let tx = fn(checkHash)!
+        let estimator = fn(checkHash)!
 
-            let size = (await estimator
-                .withOpReturn(chunks)
-                .withHardcodedFee(369)
-                .build()).length;
-
-            let txn = await tx
-                .withOpReturn(chunks)
-                .withHardcodedFee(size/2)
-                .send();
-            return txn.txid
-        }catch(e : any){
-            return e
+        if (utxos && utxos.length>1) {
+            tx = tx.from(utxos)
+            estimator = estimator.from(utxos)
         }
+        
+        let size = (await estimator
+            .withOpReturn(chunks)
+            .withHardcodedFee(369)
+            .build()).length;
+
+        let txn = await tx
+            .withOpReturn(chunks)
+            .withHardcodedFee(size/2)
+            .send();
+        return txn.txid
+       
     }
 
 }

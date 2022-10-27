@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
+	import { confetti } from '@neoconfetti/svelte'
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
 	import { load } from '$lib/machinery/loader-store.js';
@@ -13,6 +14,8 @@
 	let opReturnHex = '';
 	let utxos:any = [];
 	let isFunded = false;
+
+	let executedSucess = false;
 
 	let executorAddressValue = '';
 
@@ -38,7 +41,10 @@
 	const execute = async () => {
 		await load({
 			load: async () => {
-				txn = await instance.execute(executorAddressValue, undefined, utxos);
+				executedSucess = false
+				let inUtxos = utxos.filter((u:any) => u.use == true)
+				txn = await instance.execute(executorAddressValue, undefined, inUtxos);
+				executedSucess = true
 			}
 		});
 	};
@@ -98,7 +104,14 @@
 				</tr>
 				<tr>
 					<td class="id-label"><button on:click={execute}>Unlock</button></td>
-					<td class="flex-middle">{txn}</td>
+					<td class="flex-middle">
+						{#if executedSucess}
+						{txn}
+						<div>
+							<div use:confetti />
+						</div>
+						{/if}
+					</td>
 				</tr>
 			{/if}
 		</table>
@@ -112,5 +125,9 @@
 	.flex-middle {
 		font-style: normal;
 		word-break: break-all;
+	}
+	
+	div {
+		justify-content: center;
 	}
 </style>

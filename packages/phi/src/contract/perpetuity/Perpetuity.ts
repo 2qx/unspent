@@ -48,7 +48,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         let p = this.parseSerializedString(str, network)
 
         // if the contract shortcode doesn't match, error
-        if (!(this.c == p.code)) throw (`non-${this.name} serilaized string passed to ${this.name} constructor`)
+        if (!(this.c == p.code)) throw (`non-${this.name} serialized string passed to ${this.name} constructor`)
 
         if (p.options.version != 1) throw Error(`${this.name} contract version not recognized`)
         if (p.args.length != 4) throw (`invalid number of arguments ${p.args.length}`)
@@ -130,9 +130,14 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
 
     async execute(exAddress?: string, fee?: number, utxos?: Utxo[]): Promise<string> {
-        let balance = await this.getBalance();
 
-        if (balance == 0) throw Error("No funds on contract")
+        let balance = 0
+        if (utxos && utxos?.length > 0) {
+            balance = utxos.reduce((a, b) => a + b.satoshis, 0)
+        } else {
+            balance = await this.getBalance();
+        }
+        if (balance == 0) return "No funds on contract"
 
         let fn = this.getFunction(Perpetuity.fn)!;
         let installment = Math.round(balance / this.decay);
