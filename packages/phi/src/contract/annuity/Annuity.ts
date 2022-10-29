@@ -150,9 +150,14 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         } else {
             balance = await this.getBalance();
         }
-        if (balance == 0) return "No funds on contract"
+        if (balance == 0) throw Error("No funds on contract")
+        
+
+        console.log(utxos)
 
         let fn = this.getFunction(Annuity.fn)!;
+
+        if(balance < this.installment) throw Error("Funds selected below installment amount")
 
         let newPrincipal = balance - (this.installment + this.executorAllowance)
         let minerFee = fee ? fee : 500;
@@ -181,36 +186,34 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         if (utxos) estimator = estimator.from(utxos)
 
 
-        try {
+        console.log(to)
 
-            let size = await estimator!
-                .to(to)
-                .withAge(this.period)
-                .withoutChange()
-                .build();
+        let size = await estimator!
+            .to(to)
+            .withAge(this.period)
+            .withoutChange()
+            .build();
 
 
-            let minerFee = fee ? fee : (size.length / 2) + 8;
-            executorFee = balance - (this.installment + newPrincipal + minerFee)
+        minerFee = fee ? fee : (size.length / 2) + 8;
+        executorFee = balance - (this.installment + newPrincipal + minerFee)
 
-            if (exAddress) {
-                to.pop();
-                to.push(
-                    {
-                        to: exAddress,
-                        amount: executorFee
-                    })
-            }
-
-            let payTx = await tx!
-                .to(to)
-                .withAge(this.period)
-                .withoutChange()
-                .send();
-            return payTx.txid
-        } catch (e: any) {
-            return e.message
+        if (exAddress) {
+            to.pop();
+            to.push(
+                {
+                    to: exAddress,
+                    amount: executorFee
+                })
         }
+
+        let payTx = await tx!
+            .to(to)
+            .withAge(this.period)
+            .withoutChange()
+            .send();
+        return payTx.txid
+
     }
 
 }

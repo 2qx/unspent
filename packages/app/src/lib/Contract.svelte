@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
+  import makeBlockie from 'ethereum-blockies-base64';
 	import { confetti } from '@neoconfetti/svelte'
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
@@ -78,7 +79,7 @@
 				>
 			</tr>
 			<tr>
-				<td class="id-label">Address:</td>
+				<td class="id-label">Address: <img src={makeBlockie(instance.getAddress())} /></td>
 				<td class="flex-middle"> <Address address={instance.getAddress()} /></td>
 			</tr>
 			<tr>

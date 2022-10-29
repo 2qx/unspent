@@ -18,7 +18,7 @@ Unspent Phi (₿∙ϕ) is an app for creating (and publishing) a set of simple c
   - [Annuity](#annuity)
   - [Divide](#divide)
   - [Faucet](#faucet)
-  - [Minable Faucet](#minable-faucet)
+  - [Mine-able Faucet](#mine-able-faucet)
   - [Perpetuity](#perpetuity)
   - [Record](#record)
 
@@ -235,7 +235,7 @@ contract Faucet(
 }
 ```
 
-## Minable Faucet
+## Mine-able Faucet
 
 The ₿∙ϕ mining covenant is very much like the faucet, with some additional requirements. 
 
