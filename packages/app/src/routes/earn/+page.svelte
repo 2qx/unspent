@@ -64,7 +64,7 @@
 	<meta name="description" content="Unspent app" />
 </svelte:head>
 <section id="pager">
-    <button on:click={decrementPage} disabled={page == 0}> ← </button>
+    <button id="pagerButton" on:click={decrementPage} disabled={page == 0}> ← </button>
     <select bind:value={pageSize} on:change={loadContracts}>
       {#each pageSizes as pageSize}
         <option value={pageSize}>
@@ -72,7 +72,7 @@
         </option>
       {/each}
     </select>
-    <button on:click={incrementPage}> → </button>
+    <button id="pagerButton" on:click={incrementPage}> → </button>
     <span>
       {#if chaingraphHostValue.length == 0}
         No Chaingraph endpoint specified.
@@ -103,6 +103,9 @@
 		flex-direction: row;
 		justify-content: right;
 	}
+  #pagerButton{
+    max-height: 58px;
+  }
 	li {
 		list-style: none;
 	}
