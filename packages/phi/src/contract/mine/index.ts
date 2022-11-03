@@ -1,1 +1,1 @@
-export { Mine } from "./Mine.js"
+export { Mine } from "./Mine.js";

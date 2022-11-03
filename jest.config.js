@@ -1,9 +1,7 @@
 module.exports = {
-  preset: 'ts-jest',
+  preset: "ts-jest",
   rootDir: "./",
-  roots: [
-    "<rootDir>/packages/phi/src",
-  ],
+  roots: ["<rootDir>/packages/phi/src"],
   collectCoverage: true,
 
   collectCoverageFrom: [
@@ -25,14 +23,14 @@ module.exports = {
   },
   // TODO: This requires Jest 28, but installing Jest 28 runs into other issues
   // Fix ts-jest / ESM issues (https://stackoverflow.com/questions/66154478/jest-ts-jest-typescript-with-es-modules-import-cannot-find-module)
-  extensionsToTreatAsEsm: ['.ts'],
+  extensionsToTreatAsEsm: [".ts"],
   globals: {
-    'ts-jest': {
+    "ts-jest": {
       useESM: true,
     },
   },
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
+    "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   testEnvironment: "node",
   globalSetup: "<rootDir>/jest/node.setup.js",

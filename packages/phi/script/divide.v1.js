@@ -1,6 +1,7 @@
-export function getDivideContract(numParties){
-    let indicies = [...Array(numParties).keys()]
-    return `pragma cashscript >= 0.7.0;
+export function getDivideContract(numParties) {
+  let indicies = [...Array(numParties).keys()];
+  return (
+    `pragma cashscript >= 0.7.0;
   //
   //  ** AUTOMATICALLY GENEREATED ** see: phi/script/divide.v1.js
   //
@@ -14,16 +15,24 @@ export function getDivideContract(numParties){
       int divisor,
 
       // for each beneficiary, take the LockingBytecode as input
-`
-      +
-      indicies.map( (i) => `      bytes r${i}LockingBytecode,`).join("\n").slice(0,-1)
-      +
+` +
+    indicies
+      .map((i) => `      bytes r${i}LockingBytecode,`)
+      .join("\n")
+      .slice(0, -1) +
     `
   ) {
       function execute() {
 
         // distributes to each output in order
-`+indicies.map( (i) => `        require(tx.outputs[${i}].lockingBytecode == r${i}LockingBytecode);`).join("\n")+`
+` +
+    indicies
+      .map(
+        (i) =>
+          `        require(tx.outputs[${i}].lockingBytecode == r${i}LockingBytecode);`
+      )
+      .join("\n") +
+    `
 
         // Get the total value of inputs
         int currentValue = tx.inputs[this.activeInputIndex].value;
@@ -35,7 +44,12 @@ export function getDivideContract(numParties){
         int distribution = distributedValue / divisor;
 
         // each output must be greater or equal to the distribution amount
-`+indicies.map( (i) => `        require(tx.outputs[${i}].value >= distribution);`).join("\n")+`
+` +
+    indicies
+      .map((i) => `        require(tx.outputs[${i}].value >= distribution);`)
+      .join("\n") +
+    `
       }
-  }`;
-  } 
+  }`
+  );
+}

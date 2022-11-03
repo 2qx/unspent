@@ -1,1 +1,1 @@
-export { Divide } from "./Divide.js"
+export { Divide } from "./Divide.js";

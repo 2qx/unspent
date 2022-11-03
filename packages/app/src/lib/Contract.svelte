@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-  import makeBlockie from 'ethereum-blockies-base64';
-	import { confetti } from '@neoconfetti/svelte'
+	import makeBlockie from 'ethereum-blockies-base64';
+	import { confetti } from '@neoconfetti/svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
 	import { load } from '$lib/machinery/loader-store.js';
@@ -13,7 +13,7 @@
 	let balance = NaN;
 	let txn = '';
 	let opReturnHex = '';
-	let utxos:any = [];
+	let utxos: any = [];
 	let isFunded = false;
 
 	let executedSucess = false;
@@ -42,10 +42,10 @@
 	const execute = async () => {
 		await load({
 			load: async () => {
-				executedSucess = false
-				let inUtxos = utxos.filter((u:any) => u.use == true)
+				executedSucess = false;
+				let inUtxos = utxos.filter((u: any) => u.use == true);
 				txn = await instance.execute(executorAddressValue, undefined, inUtxos);
-				executedSucess = true
+				executedSucess = true;
 			}
 		});
 	};
@@ -54,7 +54,7 @@
 		await load({
 			load: async () => {
 				utxos = await instance.getUtxos();
-				utxos = utxos.map((u:any) => {
+				utxos = utxos.map((u: any) => {
 					u.key = u.txid + ':' + u.vout;
 					u.use = true;
 					return u;
@@ -73,26 +73,26 @@
 		<p>{instance.asText()}</p>
 		<table>
 			<tr>
-				<td class="id-label">Record:</td>
+				<td class="id-label">Record</td>
 				<td class="flex-middle"
 					><BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction></td
 				>
 			</tr>
 			<tr>
-				<td class="id-label">Address: <img src={makeBlockie(instance.getAddress())} /></td>
+				<td class="id-label"> <img alt={instance.getLockingBytecode()} src={makeBlockie(instance.getLockingBytecode())} /></td>
 				<td class="flex-middle"> <Address address={instance.getAddress()} /></td>
 			</tr>
 			<tr>
-				<td class="id-label">String:</td>
+				<td class="id-label">String</td>
 				<td class="flex-middle"><SerializedString str={instance.toString()} /></td>
 			</tr>
 			<tr>
-				<td class="id-label">Balance:</td>
+				<td class="id-label">Balance</td>
 				<td class="flex-middle">{balance} sats <button on:click={updateBalance}>Update</button></td>
 			</tr>
 			{#if isFunded}
 				<tr>
-					<td class="id-label">Inputs:</td>
+					<td class="id-label">Inputs</td>
 					<td class="flex-middle">
 						{#if utxos.length == 0}
 							<button on:click={getUtxos}>Select Inputs</button>
@@ -107,10 +107,10 @@
 					<td class="id-label"><button on:click={execute}>Unlock</button></td>
 					<td class="flex-middle">
 						{#if executedSucess}
-						{txn}
-						<div>
-							<div use:confetti />
-						</div>
+							{txn}
+							<div>
+								<div use:confetti />
+							</div>
 						{/if}
 					</td>
 				</tr>
@@ -127,7 +127,7 @@
 		font-style: normal;
 		word-break: break-all;
 	}
-	
+
 	div {
 		justify-content: center;
 	}

@@ -64,21 +64,20 @@
 	<meta name="description" content="Unspent app" />
 </svelte:head>
 <section id="pager">
-    <button id="pagerButton" on:click={decrementPage} disabled={page == 0}> ← </button>
-    <select bind:value={pageSize} on:change={loadContracts}>
-      {#each pageSizes as pageSize}
-        <option value={pageSize}>
-          {pageSize}
-        </option>
-      {/each}
-    </select>
-    <button id="pagerButton" on:click={incrementPage}> → </button>
-    <span>
-      {#if chaingraphHostValue.length == 0}
-        No Chaingraph endpoint specified.
-      {/if}
-    </span>
-	
+	<button id="pagerButton" on:click={decrementPage} disabled={page == 0}> ← </button>
+	<select bind:value={pageSize} on:change={loadContracts}>
+		{#each pageSizes as pageSize}
+			<option value={pageSize}>
+				{pageSize}
+			</option>
+		{/each}
+	</select>
+	<button id="pagerButton" on:click={incrementPage}> → </button>
+	<span>
+		{#if chaingraphHostValue.length == 0}
+			No Chaingraph endpoint specified.
+		{/if}
+	</span>
 </section>
 <section id="results">
 	<ul class="no-bullets">
@@ -103,9 +102,9 @@
 		flex-direction: row;
 		justify-content: right;
 	}
-  #pagerButton{
-    max-height: 58px;
-  }
+	#pagerButton {
+		max-height: 58px;
+	}
 	li {
 		list-style: none;
 	}

@@ -1,37 +1,34 @@
 <script lang="ts">
 	import { Record } from '@unspent/phi';
-    import { toast } from '@zerodevx/svelte-toast';
+	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 
 	let showHelp = false;
 
-    let maxFee = 850
-	let index = 0
+	let maxFee = 850;
+	let index = 0;
 
-    function newIndex(){
-        index = Math.floor(Math.random()*100)
-    }
-
+	function newIndex() {
+		index = Math.floor(Math.random() * 100);
+	}
 
 	function createContract() {
-		
-        try{
+		try {
 			contract = new Record(maxFee, index);
-		}catch (e:Error){
-			toast.push(e, { classes: ['warn'] })
+		} catch (e: Error) {
+			toast.push(e, { classes: ['warn'] });
 		}
 	}
 
 	function toggleHelp() {
 		showHelp = !showHelp;
 	}
-
-
 </script>
+
 {#if !showHelp}
-<button class="help-button" on:click={toggleHelp}> Show Help </button>
+	<button class="help-button" on:click={toggleHelp}> Show Help </button>
 {:else}
-<button on:click={toggleHelp}> Hide Help </button>
+	<button on:click={toggleHelp}> Hide Help </button>
 {/if}
 
 <table>
@@ -40,7 +37,13 @@
 			<label for="payout">Max Fee (satoshis):</label>
 		</td>
 		<td>
-			<input type="number" on:change={() => createContract()} bind:value={maxFee} min=600 required />
+			<input
+				type="number"
+				on:change={() => createContract()}
+				bind:value={maxFee}
+				min="600"
+				required
+			/>
 		</td>
 	</tr>
 	{#if showHelp}
@@ -51,20 +54,20 @@
 			<label for="index">Index:</label>
 		</td>
 
-		<td><input type="number"  
-            bind:value={index} 
-            on:change={() => createContract()} 
-            required /><button on:click={newIndex}> random </button></td>
+		<td
+			><input type="number" bind:value={index} on:change={() => createContract()} required /><button
+				on:click={newIndex}
+			>
+				random
+			</button></td
+		>
 	</tr>
 	{#if showHelp}
-    <tr class="help">
-        <td colspan="2">
-            A value to make the faucet unique.
-            </td>
-    </tr>
-		
+		<tr class="help">
+			<td colspan="2"> A value to make the faucet unique. </td>
+		</tr>
 	{/if}
 </table>
-<br>
+<br />
 
 <button on:click={createContract}> Calculate Locking Script</button>

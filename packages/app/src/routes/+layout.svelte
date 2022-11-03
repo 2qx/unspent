@@ -1,7 +1,7 @@
 <script>
 	import Header from './Header.svelte';
 	import './styles.css';
-	import { SvelteToast } from '@zerodevx/svelte-toast'
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	// Optionally set default options here
 	// const options = {
@@ -17,7 +17,7 @@
 	</main>
 
 	<footer>
-		<p></p>
+		<p />
 	</footer>
 </div>
 
@@ -47,15 +47,13 @@
 		padding: 12px;
 	}
 
-
 	@media (min-width: 480px) {
 		footer {
 			padding: 12px 0;
 		}
 	}
 
-	main{
+	main {
 		background-color: rgba(244, 244, 244, 0.2);
 	}
-
 </style>

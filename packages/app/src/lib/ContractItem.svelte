@@ -1,6 +1,7 @@
 <script>
 	import { afterUpdate } from 'svelte';
-  import makeBlockie from 'ethereum-blockies-base64';
+	import makeBlockie from 'ethereum-blockies-base64';
+  import { binToHex } from '@bitauth/libauth';
 	import { opReturnToInstance } from '@unspent/phi';
 	import { load } from '$lib/machinery/loader-store.js';
 	import Contract from '$lib/Contract.svelte';
@@ -12,7 +13,7 @@
 		await load({
 			load: async () => {
 				instance = opReturnToInstance(data.opReturn);
-        console.log(JSON.stringify(data))
+				console.log(JSON.stringify(data));
 			}
 		});
 	};
@@ -27,16 +28,13 @@
 </script>
 
 <div id="flex-container">
-
-  
 	<span class="icon">
-		<img alt={data.address} src={makeBlockie(data.address)} />
+		<img alt={data.lockingBytecode} src={makeBlockie(binToHex(data.lockingBytecode))} />
 	</span>
 	<span class="cashaddr">
 		<Address address={data.address} />
-    {data.name}
+		{data.name}
 		{data.options.version}
-    
 	</span>
 	<span class="loader">
 		{#if !instance}

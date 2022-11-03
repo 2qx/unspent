@@ -6,30 +6,29 @@ const config = {
 	optimizeDeps: {
 		// linked modules in a monorepo must be explicitly included
 		include: ['@unspent/phi']
-	  },
-	build:{
-		commonjsOptions:{
-				transformMixedEsModules: true,
-				// linked modules in a monorepo must be explicitly included
-				include: [/@unspent\/phi/, /node_modules/]
+	},
+	build: {
+		commonjsOptions: {
+			transformMixedEsModules: true,
+			// linked modules in a monorepo must be explicitly included
+			include: [/@unspent\/phi/, /node_modules/]
 		},
-		rollupOptions:{
+		rollupOptions: {
 			output: {
 				sourcemap: true,
 				name: 'app',
 				globals: {
-					"events":"Event",
-					"tls": "undefined",
-					"net":"undefined"
+					events: 'Event',
+					tls: 'undefined',
+					net: 'undefined'
 				}
 			},
 			context: 'window'
 		}
-
 	},
 	define: {
 		'process.env': process.env
-	  }
+	}
 };
 
 export default config;

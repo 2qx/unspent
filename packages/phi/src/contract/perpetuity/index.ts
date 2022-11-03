@@ -1,1 +1,1 @@
-export { Perpetuity } from "./Perpetuity.js"
+export { Perpetuity } from "./Perpetuity.js";

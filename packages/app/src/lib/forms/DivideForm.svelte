@@ -1,47 +1,43 @@
 <script lang="ts">
 	import AddressOptional from '$lib/AddressOptional.svelte';
-    import { Divide } from '@unspent/phi';
-    import { toast } from '@zerodevx/svelte-toast'
+	import { Divide } from '@unspent/phi';
+	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 	let isPublished = false;
-    let showHelp = false;
+	let showHelp = false;
 
-	let payees:string[] = ["",""]
+	let payees: string[] = ['', ''];
 	let executorAllowance = 1200;
 	function createContract() {
-		
-		try{
-			contract = new Divide(executorAllowance, payees );
-		}catch (e:Error){
-			toast.push(e, { classes: ['warn'] })
+		try {
+			contract = new Divide(executorAllowance, payees);
+		} catch (e: Error) {
+			toast.push(e, { classes: ['warn'] });
 		}
 	}
 
+	function addPayee() {
+		if (payees.length < 4) {
+			payees.push('');
+			payees = payees;
+		} else {
+			toast.push('Maximum of four (4) addresses.');
+		}
+	}
 
-    function addPayee(){
-        if(payees.length<4) {
-            payees.push("")
-			payees=payees
-        }else{
-            toast.push('Maximum of four (4) addresses.')
-        }
-
-    }
-
-    function handleRemoval(event){
-        if(payees.length>2) {
-           payees.splice(event.detail.addressIdx, 1);
-		   payees=payees
-        }else{
-            toast.push('Minimum of two addresses required.')
-        }
-    }
+	function handleRemoval(event) {
+		if (payees.length > 2) {
+			payees.splice(event.detail.addressIdx, 1);
+			payees = payees;
+		} else {
+			toast.push('Minimum of two addresses required.');
+		}
+	}
 
 	function toggleHelp() {
 		showHelp = !showHelp;
 	}
 </script>
-
 
 {#if !showHelp}
 	<button class="help-button" on:click={toggleHelp}> Show Help </button>
@@ -56,7 +52,14 @@
 		</td>
 
 		<td
-			><input type="number" bind:value={executorAllowance} on:change={() => createContract()} min="843" max="12000"  required /></td
+			><input
+				type="number"
+				bind:value={executorAllowance}
+				on:change={() => createContract()}
+				min="843"
+				max="12000"
+				required
+			/></td
 		>
 	</tr>
 	{#if showHelp}
@@ -64,18 +67,22 @@
 			<td colspan="2"> Remainder for the execution of the contract and miner fees.</td>
 		</tr>
 	{/if}
-    <tr>
+	<tr>
 		<td>
 			<label for="payees">Payees:</label>
-			{#if payees.length<4}
-			<button on:click={addPayee}>+</button>
+			{#if payees.length < 4}
+				<button on:click={addPayee}>+</button>
 			{/if}
 		</td>
-        <td>
-        {#each payees as payee, i}
-            <AddressOptional bind:address={payee} index={i} on:message={handleRemoval} on:change={() => createContract()}></AddressOptional>
-        {/each}
-
+		<td>
+			{#each payees as payee, i}
+				<AddressOptional
+					bind:address={payee}
+					index={i}
+					on:message={handleRemoval}
+					on:change={() => createContract()}
+				/>
+			{/each}
 		</td>
 	</tr>
 	{#if showHelp}
@@ -89,7 +96,7 @@
 <button on:click={createContract}> Calculate Locking Script</button>
 
 <style>
-    #table-1 {
-        width: 100%;
-    }
+	#table-1 {
+		width: 100%;
+	}
 </style>

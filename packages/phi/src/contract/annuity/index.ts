@@ -1,1 +1,1 @@
-export { Annuity } from "./Annuity.js"
+export { Annuity } from "./Annuity.js";

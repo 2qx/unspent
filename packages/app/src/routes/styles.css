@@ -32,8 +32,8 @@ body {
 }
 
 h1,
-h2{
-	font-weight:800;
+h2 {
+	font-weight: 800;
 }
 
 p {
@@ -77,9 +77,8 @@ pre {
 	margin: 0 auto;
 }
 
-
 .help {
-font-size: small;
+	font-size: small;
 }
 
 #help-button::before {
@@ -99,21 +98,21 @@ font-size: small;
 	top: -0.05em;
 }
 button {
-    background: #E2E8F0;
-    color: #50928c;
-    border: unset;
-    border-radius: 6px;
-    padding: .75rem 1.5rem;
-    cursor: pointer;
+	background: #e2e8f0;
+	color: #50928c;
+	border: unset;
+	border-radius: 6px;
+	padding: 0.75rem 1.5rem;
+	cursor: pointer;
 	word-break: break-all;
 }
 button:hover {
-    background: #CBD5E1;
-    color: #475569;
+	background: #cbd5e1;
+	color: #475569;
 }
 button:focus {
-    background: #94A3B8;
-    color: #F1F5F9;
+	background: #94a3b8;
+	color: #f1f5f9;
 }
 
 button {
@@ -125,45 +124,45 @@ button:focus:not(:focus-visible) {
 	outline: none;
 }
 
-button:disabled{
-	background: #94A3B8;
-    color: #647775;
+button:disabled {
+	background: #94a3b8;
+	color: #647775;
 }
 
-.hit-me{
+.hit-me {
 	background: #ce27f0;
-    color: #27cfc1;
+	color: #27cfc1;
 	font-weight: bolder;
 }
-  
+
 table {
 	width: 100%;
 }
 td {
-    border: 1px solid #333;
+	border: 1px solid #333;
 }
 
 img {
-  width: 100%;
+	width: 100%;
 }
 
 select {
--webkit-appearance: none;
--moz-appearance: none;
-appearance: none;
-/* Add some styling */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	/* Add some styling */
 
-display: block;
-max-width: 320px;
-height: 50px;
-margin: 5px 0px;
-padding: 0px 24px;
-font-size: 16px;
-line-height: 1.75;
-color: #333;
-background-color: #ffffff;
-background-image: none;
-border: 1px solid #cccccc;
--ms-word-break: normal;
-word-break: normal;
+	display: block;
+	max-width: 320px;
+	height: 50px;
+	margin: 5px 0px;
+	padding: 0px 24px;
+	font-size: 16px;
+	line-height: 1.75;
+	color: #333;
+	background-color: #ffffff;
+	background-image: none;
+	border: 1px solid #cccccc;
+	-ms-word-break: normal;
+	word-break: normal;
 }

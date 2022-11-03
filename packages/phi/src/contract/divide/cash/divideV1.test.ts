@@ -1,42 +1,54 @@
-import { ElectrumCluster, ClusterOrder, ElectrumTransport } from "electrum-cash"
-import { cashAddressToLockingBytecode, binToHex} from "@bitauth/libauth"
-import { Contract as CashScriptContract, ElectrumNetworkProvider } from "cashscript"
-import { RegTestWallet } from "mainnet-js"
-import { artifact as v1_4 } from "./divide.4.js"
+import {
+  ElectrumCluster,
+  ClusterOrder,
+  ElectrumTransport,
+} from "electrum-cash";
+import { cashAddressToLockingBytecode, binToHex } from "@bitauth/libauth";
+import {
+  Contract as CashScriptContract,
+  ElectrumNetworkProvider,
+} from "cashscript";
+import { RegTestWallet } from "mainnet-js";
+import { artifact as v1_4 } from "./divide.4.js";
 
 describe(`Example Divide Tests`, () => {
-
-  
   test("Should pay a divisor contract", async () => {
-  
-    let regTest = new ElectrumCluster('CashScript Application', '1.4.1', 1, 1, ClusterOrder.PRIORITY);
-    regTest.addServer('127.0.0.1', 60003, ElectrumTransport.WS.Scheme, false);
-  
-    let regtestNetwork  = new ElectrumNetworkProvider("regtest",regTest, false)
+    let regTest = new ElectrumCluster(
+      "CashScript Application",
+      "1.4.1",
+      1,
+      1,
+      ClusterOrder.PRIORITY
+    );
+    regTest.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
 
-    const alice = await RegTestWallet.fromId(process.env['ALICE_ID']!);
-    let bobs: RegTestWallet[] = []
+    let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
+
+    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    let bobs: RegTestWallet[] = [];
     let divisor = 4;
-    for(let i =0; i<divisor; i++){
-        bobs.push(await RegTestWallet.newRandom())
+    for (let i = 0; i < divisor; i++) {
+      bobs.push(await RegTestWallet.newRandom());
     }
-    let bobLockingCodes: string[] = []
-    for(let i =0; i<divisor; i++){
-      let lockingBytecodeResult = cashAddressToLockingBytecode(bobs[i]!.getDepositAddress())
-      if(typeof(lockingBytecodeResult)==="string") throw (lockingBytecodeResult)
-      bobLockingCodes.push(binToHex(lockingBytecodeResult.bytecode) as string)
-  }
+    let bobLockingCodes: string[] = [];
+    for (let i = 0; i < divisor; i++) {
+      let lockingBytecodeResult = cashAddressToLockingBytecode(
+        bobs[i]!.getDepositAddress()
+      );
+      if (typeof lockingBytecodeResult === "string")
+        throw lockingBytecodeResult;
+      bobLockingCodes.push(binToHex(lockingBytecodeResult.bytecode) as string);
+    }
 
-    let charlie =  await RegTestWallet.newRandom()
-
+    let charlie = await RegTestWallet.newRandom();
 
     let exFee = 5000;
 
-    const script = v1_4
+    const script = v1_4;
     //console.log(script)
     let contract = new CashScriptContract(
       script,
-      [exFee, divisor, ... bobLockingCodes],
+      [exFee, divisor, ...bobLockingCodes],
       regtestNetwork
     );
 
@@ -52,28 +64,21 @@ describe(`Example Divide Tests`, () => {
 
     let contracts = [contract];
     let balance = await contracts.slice(-1)[0]!.getBalance();
-    let installment = Math.round((balance-exFee) / divisor);
+    let installment = Math.round((balance - exFee) / divisor);
     let fn = contracts.slice(-1)[0]!.functions["execute"]!();
 
-    let to:any = []
-    for(let i=0; i<divisor; i++){
-      to.push({ to: bobs[i]!.getDepositAddress(), amount: installment  })
+    let to: any = [];
+    for (let i = 0; i < divisor; i++) {
+      to.push({ to: bobs[i]!.getDepositAddress(), amount: installment });
     }
-    to.push(
-      { to: charlie.getDepositAddress(), amount: exFee - 2000 }
-    )
-    
-    await fn
-      .to(to)
-      .withoutChange()
-      .send();
+    to.push({ to: charlie.getDepositAddress(), amount: exFee - 2000 });
 
-    
-    for(let i =0; i<divisor; i++){
-      expect(await bobs[i]!.getBalance("sat")).toBeGreaterThanOrEqual(installment);
+    await fn.to(to).withoutChange().send();
+
+    for (let i = 0; i < divisor; i++) {
+      expect(await bobs[i]!.getBalance("sat")).toBeGreaterThanOrEqual(
+        installment
+      );
     }
-    
   });
-
-  
 });

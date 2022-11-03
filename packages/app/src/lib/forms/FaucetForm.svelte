@@ -1,37 +1,35 @@
 <script lang="ts">
 	import { Faucet } from '@unspent/phi';
-    import { toast } from '@zerodevx/svelte-toast'
+	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 
 	let showHelp = false;
 
-	let period = 1
-    let payout = 1200
-	let index = 1
+	let period = 1;
+	let payout = 1200;
+	let index = 1;
 
-    function newIndex(){
-        index = Math.floor(Math.random()*100)
-    }
-
+	function newIndex() {
+		index = Math.floor(Math.random() * 100);
+	}
 
 	function createContract() {
-        try{
-            contract = new Faucet(period, payout, index);
-		}catch (e:Error){
-			toast.push(e, { classes: ['warn'] })
+		try {
+			contract = new Faucet(period, payout, index);
+		} catch (e: Error) {
+			toast.push(e, { classes: ['warn'] });
 		}
 	}
 
 	function toggleHelp() {
 		showHelp = !showHelp;
 	}
-
-
 </script>
+
 {#if !showHelp}
-<button class="help-button" on:click={toggleHelp}> Show Help </button>
+	<button class="help-button" on:click={toggleHelp}> Show Help </button>
 {:else}
-<button on:click={toggleHelp}> Hide Help </button>
+	<button on:click={toggleHelp}> Hide Help </button>
 {/if}
 
 <table>
@@ -53,7 +51,7 @@
 		<td>
 			<input
 				type="number"
-                on:change={() => createContract()} 
+				on:change={() => createContract()}
 				required
 				bind:value={period}
 				min="1"
@@ -62,12 +60,9 @@
 		</td>
 	</tr>
 	{#if showHelp}
-    <tr class="help">
-        <td colspan="2">
-            How often (in blocks) the contract can pay.
-            </td>
-    </tr>
-		
+		<tr class="help">
+			<td colspan="2"> How often (in blocks) the contract can pay. </td>
+		</tr>
 	{/if}
 
 	<tr>
@@ -75,20 +70,20 @@
 			<label for="index">Index:</label>
 		</td>
 
-		<td><input type="number"  
-            bind:value={index} 
-            on:change={() => createContract()} 
-            required /><button on:click={newIndex}> random </button></td>
+		<td
+			><input type="number" bind:value={index} on:change={() => createContract()} required /><button
+				on:click={newIndex}
+			>
+				random
+			</button></td
+		>
 	</tr>
 	{#if showHelp}
-    <tr class="help">
-        <td colspan="2">
-            A value to make the faucet unique.
-            </td>
-    </tr>
-		
+		<tr class="help">
+			<td colspan="2"> A value to make the faucet unique. </td>
+		</tr>
 	{/if}
 </table>
-<br>
+<br />
 
 <button on:click={createContract}> Calculate Locking Script</button>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-	import { confetti } from '@neoconfetti/svelte'
+	import { confetti } from '@neoconfetti/svelte';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, Record } from '@unspent/phi';
 	import { chaingraphHost, node } from '$lib/store.js';
@@ -8,7 +8,7 @@
 	export let opReturnHex: string;
 
 	let isPublished: boolean;
-    let executedSuccess = false
+	let executedSuccess = false;
 	let result = '';
 
 	let chaingraphHostValue = '';
@@ -22,7 +22,7 @@
 	});
 
 	beforeUpdate(async () => {
-        executedSuccess = false;
+		executedSuccess = false;
 		await check();
 	});
 
@@ -40,15 +40,15 @@
 	const broadcast = async () => {
 		let r = new Record();
 		let result = await r.broadcast(opReturnHex);
-        executedSuccess = true
+		executedSuccess = true;
 		return result;
 	};
 </script>
 
 {#if executedSuccess}
-<div>
-    <div use:confetti />
-</div>
+	<div>
+		<div use:confetti />
+	</div>
 {/if}
 
 {#if isPublished == undefined}

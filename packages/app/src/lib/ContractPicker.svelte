@@ -1,32 +1,29 @@
 <script lang="ts">
-    import { Annuity, Divide, Faucet, Mine, Perpetuity, Record } from "@unspent/phi";
-    import ContractSwitch from "$lib/ContractSwitch.svelte";
-    let selected:any;
-    export let instanceType;
+	import { Annuity, Divide, Faucet, Mine, Perpetuity, Record } from '@unspent/phi';
+	import ContractSwitch from '$lib/ContractSwitch.svelte';
+	let selected: any;
+	export let instanceType;
 
-    let contractTypes = [
-	
-        { id: "A", name: 'Annuity'},
-		{ id: "D", name: 'Divide'},
-		{ id: "F", name: 'Faucet' },
+	let contractTypes = [
+		{ id: 'A', name: 'Annuity' },
+		{ id: 'D', name: 'Divide' },
+		{ id: 'F', name: 'Faucet' },
 		//{ id: "L", name: 'Lock' },
-		{ id: "M", name: 'Mine' },
-		{ id: "P", name: 'Perpetuity' },
-		{ id: "R", name: 'Record' },
+		{ id: 'M', name: 'Mine' },
+		{ id: 'P', name: 'Perpetuity' },
+		{ id: 'R', name: 'Record' }
 	];
-
 </script>
 
-    <select bind:value={selected} on:change="{() => instanceType = selected.name}">
-        <option value="" disabled selected>Select a Contact Type</option>
-        {#each contractTypes as c (c.id) }
-            <option value={c}>
-                {c.name}
-            </option>
-        {/each}
-    </select>
-
+<select bind:value={selected} on:change={() => (instanceType = selected.name)}>
+	<option value="" disabled selected>Select a Contact Type</option>
+	{#each contractTypes as c (c.id)}
+		<option value={c}>
+			{c.name}
+		</option>
+	{/each}
+</select>
 
 {#if instanceType}
-<ContractSwitch bind:instanceType={instanceType}></ContractSwitch>
+	<ContractSwitch bind:instanceType />
 {/if}

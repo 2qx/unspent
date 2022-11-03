@@ -1,15 +1,9 @@
-
-
-import { artifact as v1_2 } from "./divide.2.js"
-import { artifact as v1_4 } from "./divide.4.js"
+import { artifact as v1_2 } from "./divide.2.js";
+import { artifact as v1_4 } from "./divide.4.js";
 
 describe(`Example Divide Tests`, () => {
-
-    
-  
   test("Should generate a contract with two outputs", async () => {
-
-    let generated = v1_2
+    let generated = v1_2;
 
     let expected = `pragma cashscript >= 0.7.0;
   //
@@ -47,16 +41,13 @@ describe(`Example Divide Tests`, () => {
         require(tx.outputs[0].value >= distribution);
         require(tx.outputs[1].value >= distribution);
       }
-  }`
+  }`;
 
-        expect(expected).toBe(generated.source)
-
+    expect(expected).toBe(generated.source);
   });
 
-  
   test("Should generate a contract with 4 outputs", async () => {
-
-    let generated = v1_4
+    let generated = v1_4;
 
     let expected = `pragma cashscript >= 0.7.0;
   //
@@ -100,9 +91,8 @@ describe(`Example Divide Tests`, () => {
         require(tx.outputs[2].value >= distribution);
         require(tx.outputs[3].value >= distribution);
       }
-  }`
+  }`;
 
-        expect(expected).toBe(generated.source)
-
+    expect(expected).toBe(generated.source);
   });
 });

@@ -13,9 +13,8 @@
 </svelte:head>
 
 <section>
-<br>
-<ContractPicker />
-
+	<br />
+	<ContractPicker />
 </section>
 
 {#if isPublished}

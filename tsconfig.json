@@ -1,12 +1,12 @@
 {
-    "extends": "./tsconfig.build.json",
-  
-    "compilerOptions": {
-      "baseUrl": "./packages",
-      "paths": {
-        "phi": ["phi/src"],
-        "cli": ["cli/src"],
-        "app": ["app/src"],
-      },
-    },
+  "extends": "./tsconfig.build.json",
+
+  "compilerOptions": {
+    "baseUrl": "./packages",
+    "paths": {
+      "phi": ["phi/src"],
+      "cli": ["cli/src"],
+      "app": ["app/src"]
+    }
   }
+}

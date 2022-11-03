@@ -1,43 +1,37 @@
 <script lang="ts">
+	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
 
+	let executorAddressValue: string;
+	let chaingraphHostValue: string;
+	let nodeValue: string;
+	let protocolValue: string;
 
-    import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
+	chaingraphHost.subscribe((value) => {
+		chaingraphHostValue = value;
+	});
+	executorAddress.subscribe((value) => {
+		executorAddressValue = value;
+	});
+	node.subscribe((value) => {
+		nodeValue = value;
+	});
+	protocol.subscribe((value) => {
+		protocolValue = value;
+	});
 
-    let executorAddressValue:string;
-    let chaingraphHostValue: string;
-    let nodeValue: string;
-    let protocolValue: string;
+	function updateChaingraphHost() {
+		chaingraphHost.set(chaingraphHostValue);
+	}
 
-
-    chaingraphHost.subscribe(value => {
-        chaingraphHostValue = value;
-    });
-    executorAddress.subscribe(value => {
-        executorAddressValue = value;
-    });
-    node.subscribe(value => {
-        nodeValue = value;
-    });
-    protocol.subscribe(value => {
-        protocolValue = value;
-    });
-
-    function updateChaingraphHost(){
-        chaingraphHost.set(chaingraphHostValue)
-    }
-
-    function updateExAddress(){
-        executorAddress.set(executorAddressValue)
-    }
-    function updateNode(){
-        node.set(nodeValue)
-    }
-    function updateProtocol(){
-        protocol.set(protocolValue)
-    }
-
-
-
+	function updateExAddress() {
+		executorAddress.set(executorAddressValue);
+	}
+	function updateNode() {
+		node.set(nodeValue);
+	}
+	function updateProtocol() {
+		protocol.set(protocolValue);
+	}
 </script>
 
 <svelte:head>
@@ -46,35 +40,31 @@
 </svelte:head>
 
 <div>
+	<span>
+		<h1>Settings</h1>
 
-    <span>
+		<h2>Executor Address</h2>
+		<label for="executorAddressValue">Cash address to recieve executor fees</label>
+		<input on:change={updateExAddress} bind:value={executorAddressValue} style="width: 100%" />
+		<hr />
+		<h2>Unspent Output Index</h2>
 
-        <h1>Settings</h1>
+		<label for="protocol">Protocol filter</label>
+		<input on:change={updateProtocol} bind:value={protocolValue} style="width: 100%" /><br />
 
-        <h2>Executor Address</h2>
-        <label for="executorAddressValue">Cash address to recieve executor fees</label>
-         <input on:change={updateExAddress} bind:value={executorAddressValue} style="width: 100%">
-        <hr>
-        <h2>Unspent Output Index</h2>
-        
+		<label for="host">Chaingraph Index service</label>
+		<input on:change={updateChaingraphHost} bind:value={chaingraphHostValue} style="width: 100%" />
 
-        <label for="protocol">Protocol filter</label>
-        <input on:change={updateProtocol}  bind:value={protocolValue} style="width: 100%"><br>
-
-        <label for="host">Chaingraph Index service</label>
-        <input on:change={updateChaingraphHost} bind:value={chaingraphHostValue} style="width: 100%">
-
-        <label for="node">Node type</label>
-        <input on:change={updateNode} bind:value={nodeValue} style="width: 100%" >
-    </span>
-
+		<label for="node">Node type</label>
+		<input on:change={updateNode} bind:value={nodeValue} style="width: 100%" />
+	</span>
 </div>
 
 <style>
-    h2 {
-        font-weight: bold;
-    }
-    input {
+	h2 {
+		font-weight: bold;
+	}
+	input {
 		align-items: center;
 		justify-content: left;
 		text-align: left;

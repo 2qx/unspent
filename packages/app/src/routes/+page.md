@@ -1,5 +1,6 @@
 <svelte:head>
-	<title>₿∙ϕ</title>
+
+<title>₿∙ϕ</title>
 </svelte:head>
 
 # Welcome!
@@ -12,7 +13,7 @@ Unspent Phi (₿∙ϕ) is an app for creating (and publishing) a set of simple c
 - [Definitions](#definitions)
 - [Contract Types](#contract-types)
   - [Beneficiary Contracts](#beneficiary-contracts)
-  - ["Free" contracts](#free-contracts)
+  - [Distributive Contracts](#distributive-contracts)
   - [Timelock v non-timelocked](#timelock-v-non-timelocked)
 - [Implemented Contracts](#implemented-contracts)
   - [Annuity](#annuity)
@@ -28,7 +29,7 @@ Unspent Phi (₿∙ϕ) is an app for creating (and publishing) a set of simple c
 
 **satoshis**: A unit of account (on the Bitcoin Cash fork of the initial bitcoin blockchain). A hundred million satoshi are equal to 1 Bitcoin Cash.
 
-**blocks (timescale)**: The base unit of time on bitcoin, about 10 minutes on average. 
+**blocks (timescale)**: The base unit of time on bitcoin, about 10 minutes on average.
 
 | Blocks | Minutes | Days  | Years |
 | ------ | ------- | ----- | ----- |
@@ -44,12 +45,11 @@ Unspent Phi (₿∙ϕ) is an app for creating (and publishing) a set of simple c
 
 **OP_RETURN**: A code (106) in BitcoinScript for transaction outputs which can store arbitrary data.
 
-**OP_RETURN data**: Data in OP_RETURNs is commonly encoded by pushing the total number of bytes, followed by the data bytes. For example `04` followed by `7574786f` (4 bytes of in two letter hex). This format is used to "broadcast" ₿∙ϕ contracts. 
+**OP_RETURN data**: Data in OP_RETURNs is commonly encoded by pushing the total number of bytes, followed by the data bytes. For example `04` followed by `7574786f` (4 bytes of in two letter hex). This format is used to "broadcast" ₿∙ϕ contracts.
 
 **published**: In the context of an unspent contract, a contract is published if the parameters to construct and spend it are recorded on the blockchain, either in an OP_RETURN or by reference to the spent output.
 
-**Unspent Transaction Output (UTXO)**: some value, defined by the output of a previous transaction, which is locked by some code, either the hash of a public key (cashaddr), or a script. 
-
+**Unspent Transaction Output (UTXO)**: some value, defined by the output of a previous transaction, which is locked by some code, either the hash of a public key (cashaddr), or a script.
 
 # Contract Types
 
@@ -65,7 +65,7 @@ Some contracts control value on behalf of the contract creator. They all have an
 | Divide     | Divide money into equal payments, up to four addresses |
 | Perpetuity | Pay a fixed fraction of total value at intervals       |
 
-## "Free" contracts
+## Distributive Contracts
 
 Contracts with locked value that can be spent by anyone can be characterized as "free". At present these include faucets, mining covenants, and a contract providing the facility to record data for free.
 
@@ -77,18 +77,17 @@ Contracts with locked value that can be spent by anyone can be characterized as 
 
 ## Timelock v non-timelocked
 
-The Divide and Record contracts are not timelocked, they may be called at anytime. 
+The Divide and Record contracts are not timelocked, they may be called at anytime.
 
 # Implemented Contracts
 
 ## Annuity
 
-The annuity contract pays a fixed amount (in satoshis) to a predefined locking bytecode (i.e. address). 
+The annuity contract pays a fixed amount (in satoshis) to a predefined locking bytecode (i.e. address).
 
 To prevent the contract from being called successively (thus paying out all at once), a timelock is added restricting input be of a certain age (in blocks), this parameter is called the `period`. The beneficiary address (or contract) is denoted by the `recipientLockingBytecode`. The amount paid in each period is the `installment`. To aid in execution, a small fee is left as `executorAllowance` for each execution of the contract, it may be paid to anyone.
 
 This contract: checks that the first output pays to the beneficiary; checks that the timelock is satisfied; checks that the second output pays back to the contract; gets the total value being spent; calculates the amount to be returned, and finally, checks that both the installment amount of the first output & the total returned to the contract exceed the required amounts.
-
 
 ```solidity
 pragma cashscript >= 0.7.1;
@@ -101,7 +100,7 @@ contract Annuity(
   // interval for payouts, in blocks
   int period,
 
-  // LockingBytecode of the beneficiary, 
+  // LockingBytecode of the beneficiary,
   // the address receiving payments
   bytes recipientLockingBytecode,
 
@@ -109,7 +108,7 @@ contract Annuity(
   int installment,
 
   // extra allowance for administration of contract
-  // fees are paid from executors' allowance. 
+  // fees are paid from executors' allowance.
   int executorAllowance
 ) {
   function execute() {
@@ -119,7 +118,7 @@ contract Annuity(
 
     // Check that time has passed and that time locks are enabled
     require(tx.age >= period);
-        
+
     // require the second output to match the active bytecode
     require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
@@ -131,7 +130,7 @@ contract Annuity(
 
     // Check that the outputs send the correct amounts
     require(tx.outputs[0].value >= installment);
-    require(tx.outputs[1].value >= returnedValue);   
+    require(tx.outputs[1].value >= returnedValue);
   }
 }
 ```
@@ -144,7 +143,6 @@ Each output is denoted by `r#LockingBytecode`, where `#` is the index of the out
 
 This contract: checks that each of the output destinations match the predefined output; calculates the total value on the contract; calculates the amount to be paid to each receipt (`distribution`), and finally calculates that each receipt receives an output greater than, or equal to, the distribution amount.
 
-
 ```solidity
 pragma cashscript >= 0.7.0;
 
@@ -154,7 +152,7 @@ pragma cashscript >= 0.7.0;
    // number of outputs receiving payout
    int divisor,
 
-   // for each beneficiary, 
+   // for each beneficiary,
    // take the LockingBytecode as input
    bytes r0LockingBytecode,
    bytes r1LockingBytecode
@@ -168,14 +166,14 @@ pragma cashscript >= 0.7.0;
     // Get the total value of inputs
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
-    // Total value paid to beneficiaries, 
+    // Total value paid to beneficiaries,
     // minus executor allowance
     int distributedValue = currentValue - executorAllowance;
 
     // Value paid to each beneficiary
     int distribution = distributedValue / divisor;
 
-    // each output must be greater 
+    // each output must be greater
     // or equal to the distribution amount
     require(tx.outputs[0].value >= distribution);
     require(tx.outputs[1].value >= distribution);
@@ -187,9 +185,9 @@ pragma cashscript >= 0.7.0;
 
 The faucet contract pays "free" bitcoin.
 
-To prevent the faucet from being drained by successive calls, a `period` timeout is set to specify the minimum age of the input being spent. The amount available to be spent is defined by a `payout`.  As a convenience, and to have multiple faucets with the same payout, an `index` parameter is added to distinguish identical contracts.
+To prevent the faucet from being drained by successive calls, a `period` timeout is set to specify the minimum age of the input being spent. The amount available to be spent is defined by a `payout`. As a convenience, and to have multiple faucets with the same payout, an `index` parameter is added to distinguish identical contracts.
 
-The steps of this contract are as follows: first, it requires that the transaction be called with an age that is greater than the current `period`; the `index` is used so that it is not unused; next the first output must return all value to the faucet contract, and finally the returned value is calculate and must be returned to the faucet if the current value exceeds the payout.  
+The steps of this contract are as follows: first, it requires that the transaction be called with an age that is greater than the current `period`; the `index` is used so that it is not unused; next the first output must return all value to the faucet contract, and finally the returned value is calculate and must be returned to the faucet if the current value exceeds the payout.
 
 ```solidity
 pragma cashscript >= 0.7.0;
@@ -201,7 +199,7 @@ contract Faucet(
   // interval for payouts, in blocks
   int period,
 
-  // amount to be paid by faucet allowance. 
+  // amount to be paid by faucet allowance.
   int payout,
 
   // random number input into contract to have more than one
@@ -211,7 +209,7 @@ contract Faucet(
 
     // Check that time has passed and that time locks are enabled
     require(tx.age >= period);
-      
+
     // use the index
     require(index >= 0);
 
@@ -237,18 +235,17 @@ contract Faucet(
 
 ## Mine-able Faucet
 
-The ₿∙ϕ mining covenant is very much like the faucet, with some additional requirements. 
+The ₿∙ϕ mining covenant is very much like the faucet, with some additional requirements.
 
 First, execution of the contract must be called with a `nonce` [a random value used once]
 which when added to the current locking bytecode and hashed results in a value starting with some number of zeros.
-How many zeros is the `difficulty`. 
+How many zeros is the `difficulty`.
 
-Finally, prior to spending the the mining `payout`, the spender must announce 
+Finally, prior to spending the the mining `payout`, the spender must announce
 the winning `nonce` in an OP_RETURN of the first output, and send the balance of the contract to a new mining covenant with the new nonce as a `canary`.
 
 ![Replace the canary](canary.png "Look, see, he's alright. He's fine.")
 Like an infinite series of Failures to Deliver (FTDs) for a stock, or banging forex futures to manipulate an outcome in currency markets, the canary is always brought back to life with a new copy of itself.
-
 
 ```solidity
 pragma cashscript >= 0.7.1;
@@ -261,7 +258,7 @@ contract Mine(
   // interval for payouts, in blocks
   int period,
 
-  // amount to be paid by faucet allowance. 
+  // amount to be paid by faucet allowance.
   int payout,
 
   // how many leading zeros should the hash of the nonce and current bytecode have
@@ -274,11 +271,11 @@ contract Mine(
 
     // Check that time has passed and that time locks are enabled
     require(tx.age >= period);
-      
-    // Use the old nonce 
+
+    // Use the old nonce
     require(canary.length==7);
 
-    // Check that the new nonce creates a hash with 
+    // Check that the new nonce creates a hash with
     // some D (difficulty) leading zeros when hashed with the active bytecode
     bytes version = byte(1);
     bytes zeros = bytes7(0);
@@ -292,7 +289,7 @@ contract Mine(
     bytes23 lockingCode = new LockingBytecodeP2SH(contractHash);
 
 
-    // Require the first output details the parameters 
+    // Require the first output details the parameters
     // of the mining contract in a zero value OP_RETURN
     bytes announcement = new LockingBytecodeNullData([
       // The protocol
@@ -301,9 +298,9 @@ contract Mine(
       bytes('M'),
       // version
       bytes(version),
-      // The period, 
+      // The period,
       bytes(period),
-      // The payout, 
+      // The payout,
       bytes(payout),
       // preceding zeros on solution
       bytes(difficulty),
@@ -319,7 +316,7 @@ contract Mine(
 
     // check that the change output sends to that contract
     require(tx.outputs[1].lockingBytecode == lockingCode);
-    
+
     // Get the total value on the contract
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
@@ -339,8 +336,7 @@ contract Mine(
 }
 ```
 
-
-## Perpetuity 
+## Perpetuity
 
 The Perpetuity contract works like an Annuity, however rather than pay a fixed amount, a fixed fraction of the total is paid each period.
 
@@ -356,16 +352,16 @@ contract Perpetuity(
  // interval for payouts, in blocks
  int period,
 
- // lockingBytecode of the beneficiary, 
+ // lockingBytecode of the beneficiary,
  // the address receiving payments
  bytes recipientLockingBytecode,
 
  // extra allowance for administration of contract
- // fees are paid from executors' allowance. 
+ // fees are paid from executors' allowance.
  int executorAllowance,
 
- // divisor for the payout, 
- // each payout must be greater than 
+ // divisor for the payout,
+ // each payout must be greater than
  // the total amount held on the contract
  // divided by this number
  int decay
@@ -378,7 +374,7 @@ contract Perpetuity(
 
   // Check that time has passed and that time locks are enabled
   require(tx.age >= period);
-   
+
   // require the second output to match the active bytecode
   require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
@@ -394,7 +390,7 @@ contract Perpetuity(
   // Check that the outputs send the correct amounts
   require(tx.outputs[0].value >= installment);
   require(tx.outputs[1].value >= returnedValue);
-   
+
  }
 }
 ```
@@ -413,7 +409,7 @@ pragma cashscript ^0.7.0;
  * 3. the remaining value is pass back to the contract, mostly.
  */
 
- 
+
 contract Record(int maxFee, int index) {
  function execute(bytes20 dataHash) {
 
@@ -424,17 +420,17 @@ contract Record(int maxFee, int index) {
   // Check that the first tx output is a zero value opcode matching the provided hash
   require(hash160(tx.outputs[0].lockingBytecode) == dataHash);
   require(tx.outputs[0].value == 0);
-  
+
   // calculate the fee required to propagate the transaction 1 sat/ byte
   int baseFee = 162;
-  
+
   int fee = baseFee + tx.outputs[0].lockingBytecode.length;
   require(fee<=maxFee);
 
   // Check that the second tx output sends the change back
   int newValue = tx.inputs[this.activeInputIndex].value - fee;
   require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
-  require(tx.outputs[1].value >= newValue);    
+  require(tx.outputs[1].value >= newValue);
  }
 }
 ```

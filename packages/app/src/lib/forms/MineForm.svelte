@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Mine } from '@unspent/phi';
-    import { toast } from '@zerodevx/svelte-toast';
+	import { toast } from '@zerodevx/svelte-toast';
 	import { binToHex } from '@bitauth/libauth';
 
 	export let contract;
@@ -16,10 +16,10 @@
 	let canaryHex = binToHex(canary);
 
 	function createContract() {
-        try{
-            contract = new Mine(period, payout, difficulty, canary);
-		}catch (e:Error){
-			toast.push(e, { classes: ['warn'] })
+		try {
+			contract = new Mine(period, payout, difficulty, canary);
+		} catch (e: Error) {
+			toast.push(e, { classes: ['warn'] });
 		}
 	}
 
@@ -33,10 +33,11 @@
 		createContract();
 	}
 </script>
+
 {#if !showHelp}
 	<button class="help-button" on:click={toggleHelp}> Show Help </button>
 {:else}
-	<button  on:click={toggleHelp}> Hide Help </button>
+	<button on:click={toggleHelp}> Hide Help </button>
 {/if}
 <table>
 	<tr>
@@ -55,7 +56,14 @@
 			<label for="difficulty">Difficulty:</label>
 		</td>
 		<td>
-			<input type="number" on:change={() => createContract()} bind:value={difficulty} required min="1" max="5" />
+			<input
+				type="number"
+				on:change={() => createContract()}
+				bind:value={difficulty}
+				required
+				min="1"
+				max="5"
+			/>
 		</td>
 	</tr>
 	{#if showHelp}
@@ -75,7 +83,7 @@
 				type="number"
 				required
 				bind:value={period}
-                on:change={() => createContract()}
+				on:change={() => createContract()}
 				min="1"
 				placeholder="e.g. 1 blocks, ~10 minutes"
 			/>

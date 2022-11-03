@@ -1,22 +1,20 @@
-import type { Utxo } from "cashscript"
+import type { Utxo } from "cashscript";
 
 export interface UtxPhiIface {
+  toString(): string;
 
-    toString(): string
+  asText(): string;
 
-    asText(): string
-    
-    toOpReturn(hex:boolean): Uint8Array | string
+  toOpReturn(hex: boolean): Uint8Array | string;
 
-    execute(exAddress: string, fee:number, utxos?: Utxo[]): Promise<string>
+  execute(exAddress: string, fee: number, utxos?: Utxo[]): Promise<string>;
 
-    getAddress() : string
+  getAddress(): string;
 
-    getBalance(): Promise<number>
-
+  getBalance(): Promise<number>;
 }
 
 export interface ContractOptions {
-    version?: number,
-    network?: string
+  version?: number;
+  network?: string;
 }
