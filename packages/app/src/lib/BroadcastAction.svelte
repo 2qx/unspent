@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
+  import { base } from "$app/paths";
 	import { confetti } from '@neoconfetti/svelte';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, Record } from '@unspent/phi';
@@ -9,7 +10,7 @@
 
 	let isPublished: boolean;
 	let executedSuccess = false;
-	let result = '';
+	let txid = '';
 
 	let chaingraphHostValue = '';
 	let nodeValue = '';
@@ -39,9 +40,8 @@
 	};
 	const broadcast = async () => {
 		let r = new Record();
-		let result = await r.broadcast(opReturnHex);
+		txid = await r.broadcast(opReturnHex);
 		executedSuccess = true;
-		return result;
 	};
 </script>
 
@@ -55,6 +55,7 @@
 	checking records ...
 {:else if isPublished == true}
 	<button disabled>Published</button>
+  <a href="{base}/tx/{txid}">tx</a>
 {:else}
 	<button class="hit-me" id="opreturn" on:click={broadcast}>{opReturnHex}</button>
 {/if}

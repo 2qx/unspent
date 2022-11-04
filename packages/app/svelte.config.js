@@ -13,7 +13,14 @@ const config = {
 		paths: {
 			// change below to your repo name
 			base: dev ? '' : ''
-		}
+		},
+    prerender:{
+      crawl: true,
+      entries:[
+        "*",
+        "/tx/*"
+      ]
+    }
 	},
 	extensions: ['.svelte', '.md'],
 
