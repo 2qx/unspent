@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
+  import { base } from '$app/paths';
 	import makeBlockie from 'ethereum-blockies-base64';
 	import { confetti } from '@neoconfetti/svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -11,7 +12,7 @@
 	export let instance: any;
 	export let instanceType = '';
 	let balance = NaN;
-	let txn = '';
+	let txid = '';
 	let opReturnHex = '';
 	let utxos: any = [];
 	let isFunded = false;
@@ -44,7 +45,7 @@
 			load: async () => {
 				executedSucess = false;
 				let inUtxos = utxos.filter((u: any) => u.use == true);
-				txn = await instance.execute(executorAddressValue, undefined, inUtxos);
+				txid = await instance.execute(executorAddressValue, undefined, inUtxos);
 				executedSucess = true;
 			}
 		});
@@ -107,7 +108,9 @@
 					<td class="id-label"><button on:click={execute}>Unlock</button></td>
 					<td class="flex-middle">
 						{#if executedSucess}
-							{txn}
+							{#if txid}
+              <a href="{base}/explorer?tx={txid}">{txid}</a>
+              {/if}
 							<div>
 								<div use:confetti />
 							</div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { beforeUpdate } from 'svelte';
+  
 	import Contract from '$lib/Contract.svelte';
 	import AnnuityForm from '$lib/forms/AnnuityForm.svelte';
 	import DivideForm from '$lib/forms/DivideForm.svelte';

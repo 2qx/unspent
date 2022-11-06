@@ -46,7 +46,8 @@ export class BaseUtxPhiContract {
         "1.4.1",
         1,
         1,
-        ClusterOrder.RANDOM
+        ClusterOrder.RANDOM,
+        2000
       );
 
       cluster.addServer(

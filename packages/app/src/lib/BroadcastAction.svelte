@@ -23,8 +23,9 @@
 	});
 
 	beforeUpdate(async () => {
-		executedSuccess = false;
-		await check();
+    if(!executedSuccess){
+      await check();
+    }
 	});
 
 	const check = async () => {
@@ -41,6 +42,7 @@
 	const broadcast = async () => {
 		let r = new Record();
 		txid = await r.broadcast(opReturnHex);
+    isPublished = true
 		executedSuccess = true;
 	};
 </script>
@@ -55,7 +57,9 @@
 	checking records ...
 {:else if isPublished == true}
 	<button disabled>Published</button>
-  <a href="{base}/tx/{txid}">tx</a>
+  {#if txid}
+  <a href="{base}/explorer?tx={txid}">{txid}</a>
+  {/if}
 {:else}
 	<button class="hit-me" id="opreturn" on:click={broadcast}>{opReturnHex}</button>
 {/if}

@@ -1,4 +1,5 @@
 <script lang="ts">
+
 	import { Annuity } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
@@ -8,11 +9,14 @@
 	let period, receiptAddress, installment;
 	let executorAllowance = 1200;
 	function createContract() {
-		try {
-			contract = new Annuity(period, receiptAddress, installment, executorAllowance);
-		} catch (e: Error) {
-			console.log(e);
-			toast.push(e, { classes: ['warn'] });
+
+		if (receiptAddress) {
+			try {
+				contract = new Annuity(period, receiptAddress, installment, executorAllowance);
+			} catch (e: Error) {
+				console.log(e);
+				toast.push(e, { classes: ['warn'] });
+			}
 		}
 	}
 

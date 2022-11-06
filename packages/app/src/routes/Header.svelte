@@ -5,6 +5,9 @@
 	import github from '$lib/images/github.svg';
 </script>
 
+<div class="alpha">
+This app is very Alpha! Keep value small and create a backup of any information used to create contracts that hold value.
+</div>
 <header>
 	<div class="corner">
 		<a href="{base}/">
@@ -43,6 +46,15 @@
 	header {
 		display: flex;
 		justify-content: space-between;
+	}
+
+  .alpha {
+		width: 100%;
+		height: 2em;
+    background-color: deeppink;
+    font-weight: 900;
+    color: white;
+    text-align: center;
 	}
 
 	.corner {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Annuity, Divide, Faucet, Mine, Perpetuity, Record } from '@unspent/phi';
+
 	import ContractSwitch from '$lib/ContractSwitch.svelte';
 	let selected: any;
 	export let instanceType;
