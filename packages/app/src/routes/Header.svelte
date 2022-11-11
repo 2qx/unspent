@@ -50,7 +50,6 @@ This app is very Alpha! Keep value small and create a backup of any information 
 
   .alpha {
 		width: 100%;
-		height: 2em;
     background-color: deeppink;
     font-weight: 900;
     color: white;

@@ -5,6 +5,5 @@ export let executorAddress = persist(writable(''), createLocalStorage(true), 'ex
 
 export let protocol = persist(writable('utxo'), createLocalStorage(true), 'protocol');
 
-// https://demo.chaingraph.cash/v1/graphql
-export let chaingraphHost = persist(writable(''), createLocalStorage(true), 'chaingraphHost');
+export let chaingraphHost = persist(writable('https://demo.chaingraph.cash/v1/graphql'), createLocalStorage(true), 'chaingraphHost');
 export let node = persist(writable('bchn'), createLocalStorage(true), 'node');
