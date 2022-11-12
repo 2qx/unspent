@@ -27,24 +27,28 @@
 	});
 </script>
 
-<div id="flex-container">
-	<span class="icon">
-		<img alt={data.lockingBytecode} src={makeBlockie(binToHex(data.lockingBytecode))} />
-	</span>
-	<span class="cashaddr">
-		<Address address={data.address} />
-		{data.name}
-		{data.options.version}
-	</span>
-	<span class="loader">
-		{#if !instance}
-			<button on:click={init}> v </button>
-		{/if}
-		{#if instance}
-			<button on:click={collapse}> ^ </button>
-		{/if}
-	</span>
-</div>
+<table>
+  <tr>
+    <td class="icon">
+      <img alt={data.lockingBytecode} src={makeBlockie(binToHex(data.lockingBytecode))} />
+    </td>
+    <td class="cashaddr">
+      <Address address={data.address} />
+      <br>
+      <b>{data.name}</b><br>
+      lock:{binToHex(data.lockingBytecode)}
+    </td>
+    <td class="loader">
+      {#if !instance}
+        <button on:click={init}> v </button>
+      {/if}
+      {#if instance}
+        <button on:click={collapse}> ^ </button>
+      {/if}
+    </td>
+  </tr>
+
+</table>
 
 {#if instance}
 	<Contract bind:instance />
@@ -52,20 +56,14 @@
 <hr />
 
 <style>
-	#flex-container {
-		display: flex;
-		flex-direction: row;
-	}
 
-	#flex-container > .loader {
-	}
 
-	#flex-container > .cashaddr {
+	 .cashaddr {
 		flex: auto;
 		font-size: small;
 	}
 
-	#flex-container > .icon {
-		width: 6rem;
+	.icon {
+		width: 4rem;
 	}
 </style>

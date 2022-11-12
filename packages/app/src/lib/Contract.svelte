@@ -18,6 +18,7 @@
 	let isFunded = false;
 
 	let executedSucess = false;
+  let executeError = '';
 
 	let executorAddressValue = '';
 
@@ -44,9 +45,15 @@
 		await load({
 			load: async () => {
 				executedSucess = false;
-				let inUtxos = utxos.filter((u: any) => u.use == true);
-				txid = await instance.execute(executorAddressValue, undefined, inUtxos);
-				executedSucess = true;
+        try{
+          let inUtxos = utxos.filter((u: any) => u.use == true);
+          txid = await instance.execute(executorAddressValue, undefined, inUtxos);
+          executedSucess = true;
+          executeError = "";
+        } catch(e){
+          executeError = JSON.stringify(e)
+        }
+				
 			}
 		});
 	};
@@ -69,7 +76,7 @@
 	}
 </script>
 
-<div>
+<div class="contract-list">
 	{#if instance}
 		<p>{instance.asText()}</p>
 		<table>
@@ -107,6 +114,9 @@
 				<tr>
 					<td class="id-label"><button on:click={execute}>Unlock</button></td>
 					<td class="flex-middle">
+            {#if executeError}
+            {executeError}
+            {/if}
 						{#if executedSucess}
 							{#if txid}
               <a href="{base}/explorer?tx={txid}">{txid}</a>
@@ -123,6 +133,10 @@
 </div>
 
 <style>
+  .contract-list{
+    width: 100%
+  }
+  
 	.id-label {
 		width: 100px;
 	}

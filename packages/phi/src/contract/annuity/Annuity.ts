@@ -185,9 +185,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Funds selected below installment amount");
 
     let newPrincipal = balance - (this.installment + this.executorAllowance);
-    let minerFee = fee ? fee : 500;
+    let minerFee = fee ? fee : 1000;
     let executorFee =
-      balance - (this.installment + newPrincipal + minerFee) - 4;
+      balance - (this.installment + newPrincipal + minerFee) - 2;
 
     let to = [
       {
@@ -217,7 +217,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       .withoutChange()
       .build();
 
-    minerFee = fee ? fee : size.length / 2 + 8;
+    minerFee = fee ? fee : size.length / 2 + 2;
     executorFee = balance - (this.installment + newPrincipal + minerFee);
 
     if (exAddress) {

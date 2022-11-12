@@ -17,8 +17,9 @@
 
 	function createContract() {
 		try {
-			contract = new Mine(period, payout, difficulty, canary);
-		} catch (e: Error) {
+			contract = new Mine(period, payout, difficulty, canaryHex);
+		} catch (e:any) {
+      console.log(e)
 			toast.push(e, { classes: ['warn'] });
 		}
 	}
@@ -114,5 +115,6 @@
 	{/if}
 </table>
 <br />
-
+{#if !contract}
 <button on:click={createContract}> Calculate Locking Script</button>
+{/if}

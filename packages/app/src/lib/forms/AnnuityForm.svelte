@@ -116,7 +116,9 @@
 </table>
 <br />
 
+{#if !contract}
 <button on:click={createContract}> Calculate Locking Script</button>
+{/if}
 
 <style>
 	#table-1 {
