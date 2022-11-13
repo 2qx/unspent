@@ -1,4 +1,8 @@
 <script lang="ts">
+	import Card from '@smui/card';
+	import Textfield from '@smui/textfield';
+	import HelperText from '@smui/textfield/helper-text';
+
 	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
 
 	let executorAddressValue: string;
@@ -38,43 +42,89 @@
 	<title>Settings</title>
 	<meta name="description" content="Settings" />
 </svelte:head>
-
-<div>
-	<span>
-		<h1>Settings</h1>
-
-		<h2>Executor Address</h2>
-		<label for="executorAddressValue">Cash address to recieve executor fees</label>
-		<input on:change={updateExAddress} bind:value={executorAddressValue} style="width: 100%" />
-		<hr />
-		<h2>Unspent Output Index</h2>
-
-		<label for="protocol">Protocol filter</label>
-		<input on:change={updateProtocol} bind:value={protocolValue} style="width: 100%" /><br />
-
-		<label for="host">Chaingraph Index service</label>
-		<input on:change={updateChaingraphHost} bind:value={chaingraphHostValue} style="width: 100%" />
-
-		<label for="node">Node type</label>
-		<input on:change={updateNode} bind:value={nodeValue} style="width: 100%" />
-	</span>
+<h1>Settings</h1>
+<div class="card-display">
+	<div class="card-container">
+		<Card class="demo-spaced">
+			<div class="margins">
+				<h2>Executor Cash Address</h2>
+				<div>
+					<Textfield
+						bind:value={executorAddressValue}
+						on:change={updateExAddress}
+						style="width: 100%;"
+						helperLine$style="width: 100%;"
+						label="Cash address to recieve executor fees"
+					>
+						<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
+					</Textfield>
+				</div>
+			</div>
+		</Card>
+	</div>
 </div>
 
+<div class="card-display">
+	<div class="card-container">
+		<Card class="demo-spaced">
+			<div class="margins">
+				<h2>Unspent Contract Index</h2>
+				<div>
+					<Textfield
+						bind:value={chaingraphHostValue}
+            on:change={updateChaingraphHost}
+						style="width: 100%;"
+						helperLine$style="width: 100%;"
+						label="Chaingraph Service"
+					>
+						<HelperText slot="helper">https://... chaingraph host... /v1/graphql</HelperText>
+					</Textfield>
+				</div>
+				<div>
+					<Textfield on:change={updateNode} bind:value={nodeValue} label="Node Filter">
+						<HelperText slot="helper" />
+					</Textfield>
+				</div>
+				<div>
+					<Textfield on:change={updateProtocol} bind:value={protocolValue} label="Protocol">
+						<HelperText slot="helper">Protocol filter</HelperText>
+					</Textfield>
+				</div>
+			</div>
+		</Card>
+	</div>
+</div>
+
+
+
 <style>
-	h2 {
-		font-weight: bold;
+	* :global(.margins) {
+		margin: 18px 10px 24px;
 	}
-	input {
-		align-items: center;
-		justify-content: left;
-		text-align: left;
-		box-sizing: border-box;
-		text-transform: lowercase;
-		border: none;
-		font-size: calc(0.08 * var(--width));
-		border-radius: 2px;
-		background: white;
-		margin: 0;
-		color: rgba(0, 0, 0, 0.7);
+
+	* :global(.columns) {
+		display: flex;
+		flex-wrap: wrap;
 	}
+
+	* :global(.columns > *) {
+		flex-basis: 0;
+		min-width: 245px;
+		margin-right: 12px;
+	}
+	* :global(.columns > *:last-child) {
+		margin-right: 0;
+	}
+
+	* :global(.columns .mdc-text-field),
+	* :global(.columns .mdc-text-field + .mdc-text-field-helper-line) {
+		width: 218px;
+	}
+
+	* :global(.columns .status) {
+		width: auto;
+		word-break: break-all;
+		overflow-wrap: break-word;
+	}
+
 </style>

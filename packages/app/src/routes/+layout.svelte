@@ -1,8 +1,10 @@
-<script>
+<script lang="ts">
 	import Header from './Header.svelte';
 	import './styles.css';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
+  import { assets } from '$app/paths';
 
+  let lightTheme=true;
 	// Optionally set default options here
 	// const options = {
 	// ...
@@ -10,6 +12,45 @@
 </script>
 
 <div class="app">
+  {#if lightTheme === true}
+    <!-- SMUI Styles -->
+    <link rel="stylesheet" href="{assets}/smui.css" />
+
+    <!-- Site Styles -->
+    <link rel="stylesheet" href="{assets}/site.css" />
+  {:else if lightTheme === false}
+    <!-- SMUI Styles -->
+    <link rel="stylesheet" href="{assets}/smui.css" />
+    <link rel="stylesheet" href="{assets}/smui-dark.css" media="screen" />
+
+    <!-- Site Styles -->
+    <link rel="stylesheet" href="{assets}/site.css" />
+    <link rel="stylesheet" href="{assets}/site-dark.css" media="screen" />
+  {:else}
+    <!-- SMUI Styles -->
+    <link
+      rel="stylesheet"
+      href="{assets}/smui.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="{assets}/smui-dark.css"
+      media="screen and (prefers-color-scheme: dark)"
+    />
+
+    <!-- Site Styles -->
+    <link
+      rel="stylesheet"
+      href="{assets}/site.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="{assets}/site-dark.css"
+      media="screen and (prefers-color-scheme: dark)"
+    />
+  {/if}
 	<Header />
 	<SvelteToast />
 	<main>

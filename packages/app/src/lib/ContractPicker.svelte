@@ -1,5 +1,6 @@
 <script lang="ts">
 
+import Select, { Option } from '@smui/select';
 	import ContractSwitch from '$lib/ContractSwitch.svelte';
 	let selected: any;
 	export let instanceType;
@@ -14,6 +15,7 @@
 		{ id: 'R', name: 'Record' }
 	];
 </script>
+
 
 <select bind:value={selected} on:change={() => (instanceType = selected.name)}>
 	<option value="" disabled selected>Select a Contact Type</option>
