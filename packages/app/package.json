@@ -83,6 +83,7 @@
 		"@sveltejs/kit": "next",
 		"@types/cookie": "^0.5.1",
 		"@zerodevx/svelte-toast": "0.8.0",
+    "easyqrcodejs":"4.4.13",
 		"ethereum-blockies-base64": "1.0.2",
 		"mdsvex": "^0.10.6",
 		"prettier": "^2.6.2",

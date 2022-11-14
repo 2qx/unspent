@@ -6005,6 +6005,11 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
+easyqrcodejs@4.4.13:
+  version "4.4.13"
+  resolved "https://registry.yarnpkg.com/easyqrcodejs/-/easyqrcodejs-4.4.13.tgz#466c5e807751ae41d5f65cab08e4359f27c28b8e"
+  integrity sha512-NulfMl+bhx/gAjZcBjgNd99jqPE5wEho1Z3nZwnKNISu0STnVq0xFQ28SVhcnOwt+47BJ80dULVNzpGIwYi66A==
+
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"

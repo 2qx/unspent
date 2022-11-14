@@ -25,12 +25,12 @@
 	/>
 {/if}
 <section>
-  <h1>Create a new contract</h1>
 	<div class="card-display">
 		<div class="card-container">
 			<Card class="demo-spaced">
 				<div class="margins">
-					<ContractPicker />
+				  <h1>Create a new contract</h1>
+          <ContractPicker />
 				</div>
 			</Card>
 		</div>

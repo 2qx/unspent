@@ -886,6 +886,10 @@ code:not([class]) {
   padding: 0 3px;
 }
 
+:global(body) {
+  overflow: hidden;
+}
+
 section.markdown h1 {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;

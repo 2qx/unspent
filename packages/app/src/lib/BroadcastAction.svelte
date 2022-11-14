@@ -66,6 +66,6 @@
 
 <style>
 	#opreturn {
-		font-size: xx-small;
+		font-size: x-small;
 	}
 </style>

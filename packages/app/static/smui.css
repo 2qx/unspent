@@ -1406,6 +1406,11 @@ svg.mdc-button__icon {
   pointer-events: none;
   pointer-events: none;
 }
+@media screen and (forced-colors: active) {
+  .mdc-card::after {
+    border-color: CanvasText;
+  }
+}
 
 .mdc-card--outlined {
   /* @alternate */
@@ -1708,6 +1713,11 @@ svg.mdc-button__icon {
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+@media screen and (forced-colors: active) {
+  .mdc-card__primary-action.mdc-ripple-upgraded--background-focused::after, .mdc-card__primary-action:not(.mdc-ripple-upgraded):focus::after {
+    border-color: CanvasText;
+  }
 }
 
 .mdc-icon-button {
@@ -4146,6 +4156,11 @@ svg.mdc-button__icon {
     pointer-events: none;
   }
 }
+@media screen and (forced-colors: active) and (forced-colors: active), screen and (-ms-high-contrast: active) and (forced-colors: active) {
+  .mdc-select__menu::before {
+    border-color: CanvasText;
+  }
+}
 .mdc-select__menu .mdc-deprecated-list .mdc-select__icon,
 .mdc-select__menu .mdc-list .mdc-select__icon {
   /* @noflip */ /*rtl:ignore*/
@@ -5217,6 +5232,11 @@ svg.mdc-button__icon {
   content: "";
   pointer-events: none;
 }
+@media screen and (forced-colors: active) {
+  .mdc-deprecated-list-item:not(.mdc-deprecated-list-item--selected):focus::before, .mdc-deprecated-list-item.mdc-ripple-upgraded--background-focused::before {
+    border-color: CanvasText;
+  }
+}
 .mdc-deprecated-list-item.mdc-deprecated-list-item--selected::before {
   position: absolute;
   box-sizing: border-box;
@@ -5228,6 +5248,11 @@ svg.mdc-button__icon {
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+@media screen and (forced-colors: active) {
+  .mdc-deprecated-list-item.mdc-deprecated-list-item--selected::before {
+    border-color: CanvasText;
+  }
 }
 [dir=rtl] .mdc-deprecated-list-item, .mdc-deprecated-list-item[dir=rtl] {
   /*rtl:begin:ignore*/
@@ -6348,6 +6373,11 @@ a.mdc-deprecated-list-item {
   content: "";
   pointer-events: none;
 }
+@media screen and (forced-colors: active) {
+  .mdc-list-item:not(.mdc-list-item--selected):focus::before, .mdc-list-item.mdc-ripple-upgraded--background-focused::before {
+    border-color: CanvasText;
+  }
+}
 .mdc-list-item.mdc-list-item--selected::before {
   position: absolute;
   box-sizing: border-box;
@@ -6360,6 +6390,11 @@ a.mdc-deprecated-list-item {
   content: "";
   pointer-events: none;
 }
+@media screen and (forced-colors: active) {
+  .mdc-list-item.mdc-list-item--selected::before {
+    border-color: CanvasText;
+  }
+}
 .mdc-list-item.mdc-list-item--selected:focus::before {
   position: absolute;
   box-sizing: border-box;
@@ -6371,6 +6406,11 @@ a.mdc-deprecated-list-item {
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+@media screen and (forced-colors: active) {
+  .mdc-list-item.mdc-list-item--selected:focus::before {
+    border-color: CanvasText;
+  }
 }
 
 a.mdc-list-item {
@@ -10030,6 +10070,11 @@ https://github.com/material-components/material-components-web/issues/31
   content: "";
   pointer-events: none;
 }
+@media screen and (forced-colors: active) {
+  .mdc-dialog__surface::before {
+    border-color: CanvasText;
+  }
+}
 @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
   .mdc-dialog__surface::before {
     content: none;
@@ -10884,6 +10929,11 @@ https://github.com/material-components/material-components-web/issues/31
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+@media screen and (forced-colors: active) {
+  .mdc-fab::before {
+    border-color: CanvasText;
+  }
 }
 
 .mdc-fab__label {
@@ -13444,6 +13494,11 @@ a.smui-fab--color-primary, a.smui-fab--color-primary:not(:disabled) .mdc-fab__ic
   content: "";
   pointer-events: none;
 }
+@media screen and (forced-colors: active) {
+  .mdc-slider .mdc-slider__track--inactive::before {
+    border-color: CanvasText;
+  }
+}
 .mdc-slider .mdc-slider__track--active_fill {
   border-color: #ff3e00;
   /* @alternate */
@@ -13522,6 +13577,11 @@ a.smui-fab--color-primary, a.smui-fab--color-primary:not(:disabled) .mdc-fab__ic
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+@media screen and (forced-colors: active) {
+  .mdc-slider .mdc-slider__value-indicator::after {
+    border-color: CanvasText;
+  }
 }
 .mdc-slider .mdc-slider__thumb--with-indicator .mdc-slider__value-indicator-container {
   pointer-events: auto;
@@ -13840,6 +13900,11 @@ a.smui-fab--color-primary, a.smui-fab--color-primary:not(:disabled) .mdc-fab__ic
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+@media screen and (forced-colors: active) {
+  .mdc-snackbar__surface::before {
+    border-color: CanvasText;
+  }
 }
 [dir=rtl] .mdc-snackbar__surface, .mdc-snackbar__surface[dir=rtl] {
   /*rtl:begin:ignore*/
@@ -17173,6 +17238,11 @@ a.smui-fab--color-primary, a.smui-fab--color-primary:not(:disabled) .mdc-fab__ic
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+@media screen and (forced-colors: active) {
+  .mdc-tooltip__surface::before {
+    border-color: CanvasText;
+  }
 }
 .mdc-tooltip--rich .mdc-tooltip__surface {
   /* @alternate */

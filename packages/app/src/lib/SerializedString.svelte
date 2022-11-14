@@ -4,7 +4,9 @@
 	export let str: string;
 </script>
 
-<button use:copy={str} on:svelte-copy={() => toast.push('String copied to clipboard')}>
+<button 
+use:copy={{ text: str , events: ['touchstart', 'mouseenter']}}
+ on:svelte-copy={() => toast.push('String copied to clipboard')}>
 	{str}
 </button>
 

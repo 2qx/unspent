@@ -113,6 +113,10 @@ code:not([class]) {
   padding: 0 3px;
 }
 
+:global(body) {
+  overflow: hidden;
+}
+
 section.markdown {
   h1 {
     @include typography.typography('headline2');
