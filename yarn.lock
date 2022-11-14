@@ -2143,13 +2143,6 @@
     sjcl-codec-hex "^1.0.0"
     sjcl-es "^2.0.0"
 
-"@material/animation@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/animation/-/animation-13.0.0.tgz#42ec7aee6548ba27edb49063c7a7ae431e4ef450"
-  integrity sha512-YR0/u4u56qXDjKYolQ7F+IvlPkaSBhMl/dZv8DK0FbD6PH4ckOPd3bEXNRndXtprsxwknQQP2pttjPImylkl0g==
-  dependencies:
-    tslib "^2.1.0"
-
 "@material/animation@^14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@material/animation/-/animation-14.0.0.tgz#f23fbe38deb6a48829dcdb0b7580017a4217e94b"
@@ -2173,13 +2166,6 @@
     "@material/theme" "^14.0.0"
     "@material/tokens" "^14.0.0"
     "@material/typography" "^14.0.0"
-    tslib "^2.1.0"
-
-"@material/base@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/base/-/base-13.0.0.tgz#18f7f5ac112bf67e66c1ade6ab543ea9df9d3836"
-  integrity sha512-vFx0JryRfcvUNX3cZ2u32wUMvxzd+c/YW0LFOXNgqCDWlubHcMm0Y6Wz371LhfQo80/NE69u+/4Joo99yKnVeg==
-  dependencies:
     tslib "^2.1.0"
 
 "@material/base@^14.0.0":
@@ -2325,14 +2311,6 @@
     "@material/typography" "^14.0.0"
     tslib "^2.1.0"
 
-"@material/dom@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/dom/-/dom-13.0.0.tgz#3f3cc935f6e59fa99e3dafe118d3e48091118c0e"
-  integrity sha512-M9HLAYBZtkTUvf66FL+jAEvUOdhji1HkGA1mV6oyE+HY9gkCkmso+mngvzlLd5+uaAVE9I3WQFhSb9gp0cpXnw==
-  dependencies:
-    "@material/feature-targeting" "^13.0.0"
-    tslib "^2.1.0"
-
 "@material/dom@^14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@material/dom/-/dom-14.0.0.tgz#dad6908ea26f7cb21b1078f58ec04bd897c615c4"
@@ -2357,18 +2335,6 @@
     "@material/shape" "^14.0.0"
     "@material/theme" "^14.0.0"
     "@material/typography" "^14.0.0"
-    tslib "^2.1.0"
-
-"@material/elevation@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/elevation/-/elevation-13.0.0.tgz#ae3eabc20e864240144fdf5c16b09a1e7a52852c"
-  integrity sha512-hzdblgamVRbC0UwKafcvUVDvKzMiOSveDiwGgFk+EAg/tZRdwMlQPyf/9I6Lr8Cw/pNGnEOPhmCDOYPOHimr0w==
-  dependencies:
-    "@material/animation" "^13.0.0"
-    "@material/base" "^13.0.0"
-    "@material/feature-targeting" "^13.0.0"
-    "@material/rtl" "^13.0.0"
-    "@material/theme" "^13.0.0"
     tslib "^2.1.0"
 
 "@material/elevation@^14.0.0":
@@ -2400,13 +2366,6 @@
     "@material/tokens" "^14.0.0"
     "@material/touch-target" "^14.0.0"
     "@material/typography" "^14.0.0"
-    tslib "^2.1.0"
-
-"@material/feature-targeting@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/feature-targeting/-/feature-targeting-13.0.0.tgz#7bc7840b40930b6831101a22882acdd0329591c0"
-  integrity sha512-QJClfeaA4EMyAxKJy9WR0Nx+/VwSZCkhGLUVBG9NhxqYGfl/LtaeaidrNm32vYEoNZAofN92VD2RwQTRwp/dMQ==
-  dependencies:
     tslib "^2.1.0"
 
 "@material/feature-targeting@^14.0.0":
@@ -2607,14 +2566,6 @@
     "@material/theme" "^14.0.0"
     tslib "^2.1.0"
 
-"@material/rtl@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/rtl/-/rtl-13.0.0.tgz#c8dbdc2b63d122450ff456572d08a9f5639704ab"
-  integrity sha512-nFGy3iQg7k+xLs67eb86mRFVLwa0yi7MusqRK4OM8DXcLO5yoVfUTPKpdSykcbRryp9imVHsxutox2tZawR4og==
-  dependencies:
-    "@material/theme" "^13.0.0"
-    tslib "^2.1.0"
-
 "@material/rtl@^14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@material/rtl/-/rtl-14.0.0.tgz#6be5adf56dcbab0d4a7dabd9ab724fbcc5c63d6b"
@@ -2660,16 +2611,6 @@
     "@material/theme" "^14.0.0"
     "@material/tokens" "^14.0.0"
     "@material/typography" "^14.0.0"
-    tslib "^2.1.0"
-
-"@material/shape@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/shape/-/shape-13.0.0.tgz#42751ceb4c709c87026f14340aed1831106fdfda"
-  integrity sha512-exk96+iCjzCujk3aSrvIMhmW773s1Tc0h+MbQKbt6Iv3nHJCyLSiRbxclCHXWHrVwG/9KZRkrt/g2qk7P3VRBg==
-  dependencies:
-    "@material/feature-targeting" "^13.0.0"
-    "@material/rtl" "^13.0.0"
-    "@material/theme" "^13.0.0"
     tslib "^2.1.0"
 
 "@material/shape@^14.0.0":
@@ -2813,14 +2754,6 @@
     "@material/typography" "^14.0.0"
     tslib "^2.1.0"
 
-"@material/theme@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/theme/-/theme-13.0.0.tgz#dad25ca7c3427d5d35f074343c7f7957cbc1eb8c"
-  integrity sha512-KAe1s0MvvfCGAwJliDVTvgAKuD3ESwhl7F7br4Iam4IPdqME2rWl8NPhKHFfaWqTG7PyCgMMngYEYuA8cLNTsA==
-  dependencies:
-    "@material/feature-targeting" "^13.0.0"
-    tslib "^2.1.0"
-
 "@material/theme@^14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@material/theme/-/theme-14.0.0.tgz#cbcd7b2116220c44ef8a89c43b068b29d23456ea"
@@ -2875,15 +2808,6 @@
     "@material/base" "^14.0.0"
     "@material/feature-targeting" "^14.0.0"
     "@material/rtl" "^14.0.0"
-    tslib "^2.1.0"
-
-"@material/typography@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@material/typography/-/typography-13.0.0.tgz#da40615bddea8c56496a89b3a6f8f71c1fccce96"
-  integrity sha512-UfaK4vT3LmGiiySf2RVIrf7fJZa6EJadFwo4YUMJx9bvUMRlBm1oI8Vo9fYpKdLfuSTeA+2BlgbwYVObj3laFw==
-  dependencies:
-    "@material/feature-targeting" "^13.0.0"
-    "@material/theme" "^13.0.0"
     tslib "^2.1.0"
 
 "@material/typography@^14.0.0":
@@ -3237,15 +3161,6 @@
     "@smui/common" "^7.0.0-beta.0"
     svelte2tsx "^0.5.12"
 
-"@smui/common@^6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@smui/common/-/common-6.1.4.tgz#2e15eda0c5907d1192806311123978ad466d3f66"
-  integrity sha512-l6c4gJH+qP9HdM9RhTP07Gl8eewVbYWT7QfVSAF+wwji32ndjgZLlP5P2Jl/GmsQOOlDoNB3VPy/o4Z/kab31g==
-  dependencies:
-    "@material/dom" "^13.0.0"
-    "@tsconfig/svelte" "^3.0.0"
-    svelte2tsx "^0.5.12"
-
 "@smui/common@^7.0.0-beta.0":
   version "7.0.0-beta.0"
   resolved "https://registry.yarnpkg.com/@smui/common/-/common-7.0.0-beta.0.tgz#5c4e6d9ed194be45ca9e9e2dc18a9bf73c4ec130"
@@ -3410,19 +3325,6 @@
     "@material/notched-outline" "^14.0.0"
     "@smui/common" "^7.0.0-beta.0"
     "@smui/floating-label" "^7.0.0-beta.0"
-    svelte2tsx "^0.5.12"
-
-"@smui/paper@^6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@smui/paper/-/paper-6.1.4.tgz#297cc0af636f97562658585c5d6734d5496ab81d"
-  integrity sha512-mKfbF5Hr5yUsUL8tGmKHfkV6bxkE50EJwZmCw0t1+CSOfHTD/96klVNDVKh4Tgr7tfK8g0yJ14Ra8fJwV/V6jA==
-  dependencies:
-    "@material/elevation" "^13.0.0"
-    "@material/feature-targeting" "^13.0.0"
-    "@material/shape" "^13.0.0"
-    "@material/theme" "^13.0.0"
-    "@material/typography" "^13.0.0"
-    "@smui/common" "^6.1.4"
     svelte2tsx "^0.5.12"
 
 "@smui/paper@^7.0.0-beta.0":

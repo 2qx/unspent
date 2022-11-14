@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Paper, { Title, Subtitle, Content } from '@smui/paper';
 	import { beforeUpdate } from 'svelte';
   import { base } from '$app/paths';
 	import makeBlockie from 'ethereum-blockies-base64';
@@ -78,7 +79,10 @@
 
 <div class="contract-list">
 	{#if instance}
-		<p>{instance.asText()}</p>
+  <h1>{instanceType}</h1>
+  <p>{instance.asText()}</p>
+  <p><a href="{base}/explorer?lockingBytecode={instance.getLockingBytecode()}">{instance.getLockingBytecode()}</a></p>
+		
 		<table>
 			<tr>
 				<td class="id-label">Record</td>

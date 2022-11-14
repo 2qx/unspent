@@ -2,6 +2,7 @@
 
 import Select, { Option } from '@smui/select';
 	import ContractSwitch from '$lib/ContractSwitch.svelte';
+	import { mdiDetails } from '@mdi/js';
 	let selected: any;
 	export let instanceType;
 
@@ -16,15 +17,27 @@ import Select, { Option } from '@smui/select';
 	];
 </script>
 
+<Select 
+key={(c) => `${c ? c.name : ''}`}
+on:MDCSelect:change={(e) => (instanceType = e.detail.value.name)}
+bind:value={selected}  label="Contact Type">
+  {#each contractTypes as c (c.name)}
+    <Option value={c}>{c.name} </Option>
+  {/each}
+</Select>
 
-<select bind:value={selected} on:change={() => (instanceType = selected.name)}>
+<!-- this wan't so bad -->
+<!--
+  <select bind:value={selected} on:change={() => (instanceType = selected.name)}>
 	<option value="" disabled selected>Select a Contact Type</option>
 	{#each contractTypes as c (c.id)}
 		<option value={c}>
 			{c.name}
 		</option>
 	{/each}
-</select>
+</select> 
+-->
+<br>
 
 {#if instanceType}
 	<ContractSwitch bind:instanceType />

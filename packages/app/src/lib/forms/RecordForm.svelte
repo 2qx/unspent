@@ -1,6 +1,14 @@
 <script lang="ts">
+  import Icon from '@smui/textfield/icon';
+	import Fab, { Icon as FabIcon } from '@smui/fab';
+  import { Svg } from '@smui/common';
+	import { mdiShuffle } from '@mdi/js';
+
+	import Textfield from '@smui/textfield';
+	import HelperText from '@smui/textfield/helper-text';
 	import { Record } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
+  import { onMount } from 'svelte';
 	export let contract;
 
 	let showHelp = false;
@@ -10,6 +18,7 @@
 
 	function newIndex() {
 		index = Math.floor(Math.random() * 100);
+    createContract() ;
 	}
 
 	function createContract() {
@@ -20,56 +29,39 @@
 		}
 	}
 
-	function toggleHelp() {
-		showHelp = !showHelp;
-	}
+  onMount(async () => {
+		createContract()
+	});
+
 </script>
 
-{#if !showHelp}
-	<button class="help-button" on:click={toggleHelp}> Show Help </button>
-{:else}
-	<button on:click={toggleHelp}> Hide Help </button>
-{/if}
+<div class="columns margins">
+	<Textfield
+		bind:value={maxFee}
+		on:change={() => createContract()}
+		type="number"
+		min="600"
+		required
+		label="Max Fee (satoshis)"
+	>
+		<HelperText slot="helper">Amount available to broadcast transaction.</HelperText>
+	</Textfield>
 
-<table>
-	<tr>
-		<td>
-			<label for="payout">Max Fee (satoshis):</label>
-		</td>
-		<td>
-			<input
-				type="number"
-				on:change={() => createContract()}
-				bind:value={maxFee}
-				min="600"
-				required
-			/>
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help"><td colspan="2"> Amount available to broadcast transaction. </td></tr>
-	{/if}
-	<tr>
-		<td>
-			<label for="index">Index:</label>
-		</td>
-
-		<td
-			><input type="number" bind:value={index} on:change={() => createContract()} required /><button
-				on:click={newIndex}
-			>
-				random
-			</button></td
-		>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> A value to make the faucet unique. </td>
-		</tr>
-	{/if}
-</table>
-<br />
-
-{#if !contract}
-<button on:click={createContract}> Calculate Locking Script</button>
-{/if}
+	<Textfield
+	bind:value={index}
+	on:change={() => createContract()}
+	type="number"
+	min="0"
+	required
+	label="Index"
+>
+	<HelperText slot="helper">A value to make the contract unique.</HelperText>
+  <Icon class="material-icons" tabindex="1"  slot="trailingIcon"  >
+    <Fab  on:click={newIndex}>
+      <FabIcon component={Svg} viewBox="2 2 20 20">
+        <path d={mdiShuffle} />
+      </FabIcon>
+    </Fab>
+  </Icon>
+</Textfield>
+</div>

@@ -1,10 +1,14 @@
 <script lang="ts">
+  import { mdiPlus } from '@mdi/js';
+  import Fab, { Icon } from '@smui/fab';
+  import { Svg } from '@smui/common';
+ 	import Textfield from '@smui/textfield';
+	import HelperText from '@smui/textfield/helper-text';
 	import AddressOptional from '$lib/AddressOptional.svelte';
 	import { Divide } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 	let isPublished = false;
-	let showHelp = false;
 
 	let payees: string[] = ['', ''];
 	let executorAllowance = 1200;
@@ -34,71 +38,39 @@
 		}
 	}
 
-	function toggleHelp() {
-		showHelp = !showHelp;
-	}
+
 </script>
 
-{#if !showHelp}
-	<button class="help-button" on:click={toggleHelp}> Show Help </button>
-{:else}
-	<button on:click={toggleHelp}> Hide Help </button>
+<div class="margins">
+
+<Textfield
+  bind:value={executorAllowance}
+  on:change={() => createContract()}
+  type="number"
+  input$min="543"
+  input$max="12000"
+  required
+  label="Executor Allowance"
+>
+  <HelperText slot="helper"
+    >Remainder for the execution of the contract and miner fees.</HelperText
+  >
+</Textfield>
+
+{#each payees as payee, i}
+  <AddressOptional
+    bind:address={payee}
+    index={i}
+    on:message={handleRemoval}
+    on:change={() => createContract()}
+  />
+{/each}
+{#if payees.length < 4}
+  <Fab on:click={addPayee}>
+    <Icon component={Svg} viewBox="2 2 20 20">
+      <path fill="currentColor" d={mdiPlus} />
+    </Icon>
+  </Fab>
 {/if}
 
-<table id="table-1">
-	<tr>
-		<td>
-			<label for="executorAllowance">Executor Allowance:</label>
-		</td>
-
-		<td
-			><input
-				type="number"
-				bind:value={executorAllowance}
-				on:change={() => createContract()}
-				min="843"
-				max="12000"
-				required
-			/></td
-		>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> Remainder for the execution of the contract and miner fees.</td>
-		</tr>
-	{/if}
-	<tr>
-		<td>
-			<label for="payees">Payees:</label>
-			{#if payees.length < 4}
-				<button on:click={addPayee}>+</button>
-			{/if}
-		</td>
-		<td>
-			{#each payees as payee, i}
-				<AddressOptional
-					bind:address={payee}
-					index={i}
-					on:message={handleRemoval}
-					on:change={() => createContract()}
-				/>
-			{/each}
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> Addresses to recieve equal (roughly) payouts minus executor fee.</td>
-		</tr>
-	{/if}
-</table>
-<br />
-
-{#if !contract}
-<button on:click={createContract}> Calculate Locking Script</button>
-{/if}
-
-<style>
-	#table-1 {
-		width: 100%;
-	}
-</style>
+</div>
