@@ -1,7 +1,7 @@
 <script>
 	import Card from '@smui/card';
 
-	import { confetti } from '@neoconfetti/svelte';
+  import { Confetti } from "svelte-confetti";
 	import ContractPicker from '$lib/ContractPicker.svelte';
 
 	let isPublished = false;
@@ -14,15 +14,7 @@
 	<meta name="description" content="Create unspent contracts" />
 </svelte:head>
 {#if isPublished}
-	<div
-		style="position: absolute; left: 50%; top: 50%"
-		use:confetti={{
-			force: 0.2,
-			stageWidth: window.innerWidth,
-			stageHeight: window.innerHeight,
-			colors: ['#F0F', '#000000', '#f0f']
-		}}
-	/>
+<Confetti colorRange={[75, 175]} />
 {/if}
 <section>
 	<div class="card-display">

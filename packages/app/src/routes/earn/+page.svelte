@@ -9,7 +9,7 @@
 	let contractData = [];
 
 	let pageSizes = [5, 10, 25, 50];
-	let pageSize = 25;
+	let pageSize = 5;
 	let page = 0;
 
 	let executorAddressValue = '';

@@ -3,7 +3,7 @@
 	import { base } from '$app/paths';
   import Button, { Label, Icon } from '@smui/button';
 
-	import { confetti } from '@neoconfetti/svelte';
+  import { Confetti } from "svelte-confetti";
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
 	import { load } from '$lib/machinery/loader-store.js';
@@ -86,7 +86,7 @@
 		<p>{instance.asText()}</p>
 		{#if executedSucess}
 			{#if txid}
-				<div id="confetti" use:confetti />
+        <Confetti colorRange={[75, 175]} />
 			{/if}
 		{/if}
 		<h2>Locking Bytecode</h2>

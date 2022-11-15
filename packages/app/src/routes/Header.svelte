@@ -6,7 +6,7 @@
 </script>
 
 <div class="alpha">
-This app is very Alpha! Keep value small and create a backup of any information used to create contracts that hold value.
+This app is in active development! Keep value small and create a backup of any information used to create contracts that hold value.
 </div>
 <header>
 	<div class="corner">

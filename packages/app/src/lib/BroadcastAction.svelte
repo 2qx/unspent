@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
   import { base } from "$app/paths";
-	import { confetti } from '@neoconfetti/svelte';
+	import { Confetti } from "svelte-confetti";
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, Record } from '@unspent/phi';
 	import { chaingraphHost, node } from '$lib/store.js';
@@ -48,9 +48,7 @@
 </script>
 
 {#if executedSuccess}
-	<div>
-		<div use:confetti />
-	</div>
+  <Confetti colorRange={[75, 175]} />
 {/if}
 
 {#if isPublished == undefined}

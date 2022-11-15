@@ -689,11 +689,6 @@ a:visited {
   --mdc-ripple-fg-opacity: var(--mdc-ripple-press-opacity, 0.24);
 }
 
-html {
-  height: 100vh;
-  width: 100vw;
-}
-
 body,
 #smui-app {
   display: flex;
