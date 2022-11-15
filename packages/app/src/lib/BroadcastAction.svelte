@@ -61,6 +61,7 @@
   <a href="{base}/explorer?tx={txid}">{txid}</a>
   {/if}
 {:else}
+  <p>The following record has not been included in a block:</p>
 	<button class="hit-me" id="opreturn" on:click={broadcast}>{opReturnHex}</button>
 {/if}
 

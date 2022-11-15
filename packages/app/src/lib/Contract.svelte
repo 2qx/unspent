@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
+  import Button, { Label, Icon } from '@smui/button';
 
 	import { confetti } from '@neoconfetti/svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -32,6 +33,9 @@
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
 		await updateBalance();
+    executeError = '';
+    let executedSucess = false;
+    let txid = '';
 	});
 
 	const updateBalance = async () => {
@@ -77,31 +81,41 @@
 	}
 </script>
 
-<div class="contract-list">
 	{#if instance}
 		<h1>{instanceType}</h1>
 		<p>{instance.asText()}</p>
-
+		{#if executedSucess}
+			{#if txid}
+				<div id="confetti" use:confetti />
+			{/if}
+		{/if}
 		<h2>Locking Bytecode</h2>
-    <div>
-      <AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
-      <AddressQrCode codeValue={instance.getAddress()} />
-    </div>
-    
-    <p>Locking Bytecode Hex:
-			<a href="{base}/explorer?lockingBytecode={instance.getLockingBytecode()}">{instance.getLockingBytecode()}</a>
+		<div>
+			<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
+			<AddressQrCode codeValue={instance.getAddress()} />
+		</div>
+
+		<h3>Hex code:</h3>
+		<p>
+			<a
+				style="line-break:anywhere;"
+				href="{base}/explorer?lockingBytecode={instance.getLockingBytecode()}"
+				>{instance.getLockingBytecode()}</a
+			>
 		</p>
 		<p>Cashaddress: <Address address={instance.getAddress()} /></p>
-		
+
 		<h2>Unlocking Bytecode</h2>
-    <h3>Phi Contract Parameters</h3>
+		<h3>Phi Contract Parameters</h3>
 		<p>String: <SerializedString str={instance.toString()} /></p>
-		<p>OpReturn: <BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction></p>
- 
+		<p>
+			OpReturn: <BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction>
+		</p>
+
 		<h2>Unspent Transaction Outputs</h2>
 
 		<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
-    <br>
+		<br />
 		{#if isFunded}
 			Inputs
 			{#if utxos.length == 0}
@@ -111,33 +125,28 @@
 				<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
 				<UtxosSelect bind:utxos />
 			{/if}
-      <br>
-      <h2>Unlock</h2>
-			<button on:click={execute}>Execute</button>
-      <div>
-        
-      </div>
+			<br />
+			<h2>Unlock</h2>
+      <Button touch on:click={execute}>
+        <Label>Execute</Label>
+        <Icon class="material-icons">lock_open</Icon>
+      </Button>
+			<div />
 			{#if executeError}
 				{executeError}
 			{/if}
 			{#if executedSucess}
 				{#if txid}
-          <div use:confetti />
-					<a href="{base}/explorer?tx={txid}">{txid}</a>
+					<a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
 				{/if}
-				
 			{/if}
 		{/if}
 	{/if}
-</div>
 
 <style>
-	.contract-list {
-		width: 100%;
-	}
 
 
-	div {
-		justify-content: center;
-	}
+
+
+
 </style>

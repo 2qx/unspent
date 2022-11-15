@@ -13,22 +13,27 @@
 	export let address: string;
 	export let index: number;
 	function rmAddress() {
+    console.log("remove Address")
 		dispatch('message', {
 			addressIdx: index
 		});
 	}
+
+  function change() {
+		dispatch('message', {});
+	}
 </script>
 
 {#if index <= 1}
-<Textfield bind:value={address} style="width: 100%;" helperLine$style="width: 100%;" type="text">
+<Textfield bind:value={address} on:change={() => change()} style="width: 100%;" helperLine$style="width: 100%;" type="text">
 	<HelperText slot="helper">A cashaddress (P2PHK or P2SH).</HelperText>
 </Textfield>
 {/if}
 
 {#if index > 1}
-<Textfield bind:value={address} style="width: 100%;" type="text">
+<Textfield bind:value={address} on:change={() => change()} style="width: 100%;" type="text">
   <Icon class="material-icons" tabindex="1"  slot="trailingIcon"  >
-    <Fab  on:click={rmAddress}>
+    <Fab on:click={rmAddress}>
       <FabIcon component={Svg} viewBox="2 2 20 20">
         <path d={mdiDelete} />
       </FabIcon>

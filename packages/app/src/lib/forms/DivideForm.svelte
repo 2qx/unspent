@@ -29,13 +29,16 @@
 		}
 	}
 
-	function handleRemoval(event) {
-		if (payees.length > 2) {
+	function handleMsg(event) {
+    console.log(event.detail)
+		if (event.detail.addressIdx && payees.length > 2) {
 			payees.splice(event.detail.addressIdx, 1);
 			payees = payees;
+
 		} else {
 			toast.push('Minimum of two addresses required.');
 		}
+    createContract()
 	}
 
 
@@ -61,7 +64,7 @@
   <AddressOptional
     bind:address={payee}
     index={i}
-    on:message={handleRemoval}
+    on:message={handleMsg}
     on:change={() => createContract()}
   />
 {/each}

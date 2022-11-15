@@ -1,8 +1,10 @@
 <script>
+	import Card from '@smui/card';
 	import { onMount } from 'svelte';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, parseOpReturn } from '@unspent/phi';
-	import ContractItem from '$lib/ContractItem.svelte';
+	//import ContractItem from '$lib/ContractItem.svelte';
+	import ContractAccordian from '$lib/ContractAccordian.svelte';
 	import { protocol, chaingraphHost, node, executorAddress } from '$lib/store.js';
 	let contractData = [];
 
@@ -10,15 +12,14 @@
 	let pageSize = 25;
 	let page = 0;
 
-  let executorAddressValue = "";
+	let executorAddressValue = '';
 	let protocolValue = '';
 	let chaingraphHostValue = '';
 	let nodeValue = '';
 
-  executorAddress.subscribe((value) => {
+	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
 	});
-
 
 	protocol.subscribe((value) => {
 		protocolValue = value;
@@ -70,37 +71,44 @@
 	<meta name="description" content="Unspent app" />
 </svelte:head>
 <section>
-  {#if !executorAddressValue}
-  <p><b>No cashaddress specified, fee will go to miners.</b></p>
-  {/if}
+	{#if !executorAddressValue}
+		<p><b>No cashaddress specified, fee will go to miners.</b></p>
+	{/if}
 </section>
-<section id="pager">
-	<button id="pagerButton" on:click={decrementPage} disabled={page == 0}> ← </button>
-	<select bind:value={pageSize} on:change={loadContracts}>
-		{#each pageSizes as pageSize}
-			<option value={pageSize}>
-				{pageSize}
-			</option>
-		{/each}
-	</select>
-	<button id="pagerButton" on:click={incrementPage}> → </button>
-	<span>
-		{#if chaingraphHostValue.length == 0}
-			No Chaingraph endpoint specified.
-		{/if}
-	</span>
-</section>
-<section id="results">
-	<ul class="no-bullets">
-		{#each contractData as cat (cat.opReturn)}
-			<li>
-				<ContractItem bind:data={cat} />
-			</li>
-		{/each}
-	</ul>
+<section>
+	<div class="card-display">
+		<div class="card-container">
+			<Card class="demo-spaced">
+				<div class="margins">
+					<div id="pager">
+						<button id="pagerButton" on:click={decrementPage} disabled={page == 0}> ← </button>
+						<select bind:value={pageSize} on:change={loadContracts}>
+							{#each pageSizes as pageSize}
+								<option value={pageSize}>
+									{pageSize}
+								</option>
+							{/each}
+						</select>
+						<button id="pagerButton" on:click={incrementPage}> → </button>
+						<span>
+							{#if chaingraphHostValue.length == 0}
+								No Chaingraph endpoint specified.
+							{/if}
+						</span>
+					</div>
+					<h1>Spend Unspent Contracts</h1>
+					<ContractAccordian bind:contractData />
+				</div>
+			</Card>
+		</div>
+	</div>
 </section>
 
 <style>
+	* :global(.margins) {
+		margin: 18px 10px 24px;
+	}
+
 	#results {
 		display: flex;
 		flex-direction: column;
@@ -115,13 +123,5 @@
 	}
 	#pagerButton {
 		max-height: 58px;
-	}
-	li {
-		list-style: none;
-	}
-
-	ul {
-		padding-left: 0rem;
-		list-style-type: none;
 	}
 </style>
