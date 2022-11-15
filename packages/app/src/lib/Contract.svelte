@@ -84,11 +84,6 @@
 	{#if instance}
 		<h1>{instanceType}</h1>
 		<p>{instance.asText()}</p>
-		{#if executedSucess}
-			{#if txid}
-        <Confetti colorRange={[75, 175]} />
-			{/if}
-		{/if}
 		<h2>Locking Bytecode</h2>
 		<div>
 			<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
@@ -137,6 +132,7 @@
 			{/if}
 			{#if executedSucess}
 				{#if txid}
+          <Confetti colorRange={[75, 175]} />
 					<a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
 				{/if}
 			{/if}

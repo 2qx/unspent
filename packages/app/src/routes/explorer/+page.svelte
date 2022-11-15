@@ -23,18 +23,20 @@
 	<Title style="display: flex; justify-content: space-between; ">
 		<span>
 			{#if data.tx}
-				{data.tx}
+				Transaction
 			{/if}
 			{#if data.lockingBytecode}
-				{data.lockingBytecode}
+				Locking Bytecode
 			{/if}
 		</span>
 	</Title>
 	<Content>
 		{#if data.tx}
+    <pre>{data.tx}</pre>
 			<TransactionDetail bind:txid={data.tx} />
 		{/if}
 		{#if data.lockingBytecode}
+    <pre>{data.lockingBytecode}</pre>
 			<LockingBytecodeDetail bind:lockingBytecode={data.lockingBytecode} />
 		{/if}
 	</Content>

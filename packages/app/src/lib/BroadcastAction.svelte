@@ -47,10 +47,10 @@
 	};
 </script>
 
+
 {#if executedSuccess}
   <Confetti colorRange={[75, 175]} />
 {/if}
-
 {#if isPublished == undefined}
 	checking records ...
 {:else if isPublished == true}

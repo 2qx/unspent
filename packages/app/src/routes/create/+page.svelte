@@ -1,21 +1,15 @@
 <script>
 	import Card from '@smui/card';
 
-  import { Confetti } from "svelte-confetti";
 	import ContractPicker from '$lib/ContractPicker.svelte';
 
-	let isPublished = false;
-
-	import { base } from '$app/paths';
 </script>
 
 <svelte:head>
 	<title>Create</title>
 	<meta name="description" content="Create unspent contracts" />
 </svelte:head>
-{#if isPublished}
-<Confetti colorRange={[75, 175]} />
-{/if}
+
 <section>
 	<div class="card-display">
 		<div class="card-container">

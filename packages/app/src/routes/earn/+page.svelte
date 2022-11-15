@@ -109,13 +109,6 @@
 		margin: 18px 10px 24px;
 	}
 
-	#results {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
 	#pager {
 		display: flex;
 		flex-direction: row;
