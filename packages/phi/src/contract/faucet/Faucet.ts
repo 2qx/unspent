@@ -120,7 +120,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
     let fn = this.getFunction(Faucet.fn)!;
     let newPrincipal = balance - this.payout;
-    let minerFee = fee ? fee : 653;
+    let minerFee = fee ? fee : 253;
     let sendAmount = this.payout - minerFee;
 
     let to = [
@@ -133,7 +133,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress)
       to.push({
         to: exAddress,
-        amount: sendAmount,
+        amount: 546,
       });
 
     let size = await fn().to(to).withAge(this.period).withoutChange().build();
