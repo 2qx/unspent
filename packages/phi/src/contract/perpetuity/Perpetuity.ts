@@ -192,25 +192,23 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
-    try {
-      let size = await tx!.to(to).withAge(this.period).withoutChange().build();
 
-      if (exAddress) {
-        minerFee = fee ? fee : size.length / 2;
-        executorFee = balance - (installment + newPrincipal + minerFee) - 2;
-        to.pop();
-        to.push({
-          to: exAddress,
-          amount: executorFee,
-        });
-      }
+    let size = await tx!.to(to).withAge(this.period).withoutChange().build();
 
-      tx = fn();
-      if (utxos) tx = tx.from(utxos);
-      let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
-      return payTx.txid;
-    } catch (e: any) {
-      return e.message;
+    if (exAddress) {
+      minerFee = fee ? fee : size.length / 2;
+      executorFee = balance - (installment + newPrincipal + minerFee) - 2;
+      to.pop();
+      to.push({
+        to: exAddress,
+        amount: executorFee,
+      });
     }
+
+    tx = fn();
+    if (utxos) tx = tx.from(utxos);
+    let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
+    return payTx.txid;
+
   }
 }
