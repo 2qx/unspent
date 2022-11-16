@@ -180,8 +180,9 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       to.push({ to: this.payees[i], amount: installment });
     }
 
-    let feeEstimate = fee ? fee : 186 + this.payees.length * 64;
+    let feeEstimate = fee ? fee : 386 + this.payees.length * 64;
 
+    console.log(feeEstimate)
     if (exAddress) {
       to.push({
         to: exAddress,
@@ -191,14 +192,18 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       let size = await fn().to(to).withoutChange().build();
 
       let fee = size.length / 2;
+
       to.pop();
-      to.push({
-        to: exAddress,
-        amount: this.executorAllowance - (fee + 20),
-      });
+      let executorPayout = this.executorAllowance - (fee + 2)
+      if (executorPayout > 546)
+        to.push({
+          to: exAddress,
+          amount: executorPayout,
+        });
     }
 
-    let txn = fn().to(to).withoutChange().send();
-    return (await txn).txid;
+    let txn = await fn().to(to).withoutChange().send();
+    console.log(txn.txid)
+    return txn.txid;
   }
 }

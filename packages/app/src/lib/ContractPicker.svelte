@@ -2,7 +2,6 @@
 
 import Select, { Option } from '@smui/select';
 	import ContractSwitch from '$lib/ContractSwitch.svelte';
-	import { mdiDetails } from '@mdi/js';
 	let selected: any;
 	export let instanceType;
 

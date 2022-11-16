@@ -33,9 +33,6 @@
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
 		await updateBalance();
-    executeError = '';
-    let executedSucess = false;
-    let txid = '';
 	});
 
 	const updateBalance = async () => {
@@ -57,7 +54,7 @@
 					executedSucess = true;
 					executeError = '';
 				} catch (e) {
-					executeError = JSON.stringify(e);
+					executeError = e;
 				}
 			}
 		});
@@ -128,7 +125,7 @@
       </Button>
 			<div />
 			{#if executeError}
-				{executeError}
+				<pre>{executeError}</pre>
 			{/if}
 			{#if executedSucess}
 				{#if txid}

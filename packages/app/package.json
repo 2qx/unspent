@@ -19,6 +19,7 @@
 		"@unspent/phi": "*"
 	},
 	"devDependencies": {
+    "@cashscript/utils": "0.7.3",
 		"@babel/preset-env": "7.19.4",
 		"@fontsource/fira-mono": "^4.5.0",
     "@jsdevtools/rehype-toc": "3.0.2",

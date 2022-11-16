@@ -140,7 +140,7 @@ export class Record extends BaseUtxPhiContract {
     }
 
     let size = (
-      await estimator.withOpReturn(chunks).withHardcodedFee(369).build()
+      await estimator.withOpReturn(chunks).withHardcodedFee(669).build()
     ).length;
 
     let txn = await tx

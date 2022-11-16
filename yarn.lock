@@ -1032,6 +1032,14 @@
   resolved "https://registry.yarnpkg.com/@bitauth/libauth/-/libauth-1.19.1.tgz#713751bbc09815b667f8fe00a1cc5b0f3bf45dd1"
   integrity sha512-R524tD5VwOt3QRHr7N518nqTVR/HKgfWL4LypekcGuNQN8R4PWScvuRcRzrY39A28kLztMv+TJdiKuMNbkU1ug==
 
+"@cashscript/utils@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@cashscript/utils/-/utils-0.7.3.tgz#e80b72183d4a20e0d6ab703457d61cde8e7aa24c"
+  integrity sha512-axQyNmHnn7n6lB1wBu/8M6DW/P15iF4wFylHu9Mc9oaWepMMk2BVMlcEPARCHLCPMb626uoP5oMalKLPZ6/xnQ==
+  dependencies:
+    "@bitauth/libauth" "^1.18.1"
+    hash.js "^1.1.7"
+
 "@cashscript/utils@^0.7.2":
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/@cashscript/utils/-/utils-0.7.2.tgz#aa060b68c05707b091428cdbe1e9fcbcfc7d5629"

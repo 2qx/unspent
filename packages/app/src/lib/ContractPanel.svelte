@@ -8,7 +8,6 @@
 	import { binToHex } from '@bitauth/libauth';
 	import { opReturnToInstance } from '@unspent/phi';
 	import { load } from '$lib/machinery/loader-store.js';
-	import Address from '$lib/Address.svelte';
 	export let data;
 	let instance;
   let panelOpen = false;
@@ -23,7 +22,6 @@
 
 	afterUpdate(async () => {
     if(panelOpen){
-      console.log("open")
       if(!instance){
         await init();
       }

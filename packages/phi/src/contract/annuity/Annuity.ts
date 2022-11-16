@@ -185,9 +185,8 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Funds selected below installment amount");
 
     let newPrincipal = balance - (this.installment + this.executorAllowance);
-    let minerFee = fee ? fee : 1000;
-    let executorFee =
-      balance - (this.installment + newPrincipal + minerFee) - 2;
+
+
 
     let to = [
       {
@@ -200,16 +199,17 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       },
     ];
 
-    if (typeof exAddress === "string")
-      to.push({
-        to: exAddress,
-        amount: executorFee,
-      });
 
+    console.log(JSON.stringify(to, undefined, 2))
     let estimator = fn();
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
     if (utxos) estimator = estimator.from(utxos);
+    
+    if (exAddress) to.push({
+      to: exAddress,
+      amount: 546,
+    });
 
     let size = await estimator!
       .to(to)
@@ -217,16 +217,19 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       .withoutChange()
       .build();
 
-    minerFee = fee ? fee : size.length / 2 + 2;
-    executorFee = balance - (this.installment + newPrincipal + minerFee);
+    console.log(size)
+    let minerFee = fee ? fee : size.length / 2 +5 ;
+    let executorFee = balance - (this.installment + newPrincipal + minerFee) - 4;
 
     if (exAddress) {
       to.pop();
+      if (executorFee < 546) throw Error(`inputs would result in executor fee below dust limit ${executorFee}`)
       to.push({
         to: exAddress,
         amount: executorFee,
       });
     }
+    console.log(JSON.stringify(to, undefined, 2))
 
     let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;

@@ -18,7 +18,11 @@
 	import TransactionDetail from '$lib/TransactionDetail.svelte';
 	export let data: any;
 </script>
-
+<svelte:head>
+	<title>Explorer</title>
+	<meta name="description" content="View Blockchain Data" />
+</svelte:head>
+<section>
 <Paper class="box">
 	<Title style="display: flex; justify-content: space-between; ">
 		<span>
@@ -41,3 +45,4 @@
 		{/if}
 	</Content>
 </Paper>
+</section>

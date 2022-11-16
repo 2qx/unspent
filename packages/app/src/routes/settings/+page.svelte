@@ -1,20 +1,25 @@
 <script lang="ts">
+  import { base } from '$app/paths';
 	import Card from '@smui/card';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-
+  import {deriveLockingBytecodeHex} from '@unspent/phi'
+  import AddressQrCode from '$lib/AddressQrCode.svelte';
+	import AddressBlockie from '$lib/AddressBlockie.svelte';
 	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
 
 	let executorAddressValue: string;
 	let chaingraphHostValue: string;
 	let nodeValue: string;
 	let protocolValue: string;
+  let lockingBytecode: string;
 
 	chaingraphHost.subscribe((value) => {
 		chaingraphHostValue = value;
 	});
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
+    lockingBytecode = deriveLockingBytecodeHex(executorAddressValue)
 	});
 	node.subscribe((value) => {
 		nodeValue = value;
@@ -29,6 +34,7 @@
 
 	function updateExAddress() {
 		executorAddress.set(executorAddressValue);
+    lockingBytecode = deriveLockingBytecodeHex(executorAddressValue)
 	}
 	function updateNode() {
 		node.set(nodeValue);
@@ -59,6 +65,10 @@
 						<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
 					</Textfield>
 				</div>
+        <p>Locking Bytecode</p>
+        <a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}">{lockingBytecode}</a>
+        <AddressBlockie lockingBytecode={lockingBytecode} />
+			  <AddressQrCode codeValue={executorAddressValue} />
 			</div>
 		</Card>
 	</div>
