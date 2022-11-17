@@ -6,7 +6,7 @@
 </script>
 
 <div
-	use:copy={{ text: str, events: ['touchstart', 'mouseenter'] }}
+	use:copy={str}
 	on:svelte-copy={() => toast.push('String copied to clipboard')}
 >
 	<Button touch color="secondary">

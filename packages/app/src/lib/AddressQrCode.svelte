@@ -11,13 +11,15 @@
 			qr.clear();
 		}
 
-		const options = {
-			text: codeValue,
-			width: 100,
-			height: 100,
-			quietZone: 10
-		};
-		qr = new QRCode(node, options);
+		if (codeValue) {
+			const options = {
+				text: codeValue,
+				width: 100,
+				height: 100,
+				quietZone: 10
+			};
+			qr = new QRCode(node, options);
+		}
 	});
 </script>
 
@@ -25,7 +27,7 @@
 
 <style>
 	div {
-    float: right;
+		float: right;
 		padding: 25px;
 		z-index: 1;
 	}

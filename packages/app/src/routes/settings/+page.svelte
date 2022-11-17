@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { base } from '$app/paths';
+	import { base } from '$app/paths';
 	import Card from '@smui/card';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-  import {deriveLockingBytecodeHex} from '@unspent/phi'
-  import AddressQrCode from '$lib/AddressQrCode.svelte';
+	import { deriveLockingBytecodeHex } from '@unspent/phi';
+	import AddressQrCode from '$lib/AddressQrCode.svelte';
 	import AddressBlockie from '$lib/AddressBlockie.svelte';
 	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
 
@@ -12,14 +12,21 @@
 	let chaingraphHostValue: string;
 	let nodeValue: string;
 	let protocolValue: string;
-  let lockingBytecode: string;
+	let lockingBytecode: string;
 
 	chaingraphHost.subscribe((value) => {
 		chaingraphHostValue = value;
 	});
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
-    lockingBytecode = deriveLockingBytecodeHex(executorAddressValue)
+    if(executorAddressValue) {
+      try{
+        lockingBytecode = deriveLockingBytecodeHex(executorAddressValue);
+      }
+      catch{
+        console.error("error decoding provided cashaddr, in settings.")
+      }
+    }
 	});
 	node.subscribe((value) => {
 		nodeValue = value;
@@ -34,7 +41,14 @@
 
 	function updateExAddress() {
 		executorAddress.set(executorAddressValue);
-    lockingBytecode = deriveLockingBytecodeHex(executorAddressValue)
+    if(executorAddressValue) {
+      try{
+        lockingBytecode = deriveLockingBytecodeHex(executorAddressValue);
+      }
+      catch{
+        console.error("error decoding provided cashaddr, in settings.")
+      }
+    }
 	}
 	function updateNode() {
 		node.set(nodeValue);
@@ -65,10 +79,14 @@
 						<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
 					</Textfield>
 				</div>
-        <p>Locking Bytecode</p>
-        <a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}">{lockingBytecode}</a>
-        <AddressBlockie lockingBytecode={lockingBytecode} />
-			  <AddressQrCode codeValue={executorAddressValue} />
+				{#if lockingBytecode}
+					<p>Locking Bytecode</p>
+					<a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}"
+						>{lockingBytecode}</a
+					>
+					<AddressBlockie {lockingBytecode} />
+					<AddressQrCode codeValue={executorAddressValue} />
+				{/if}
 			</div>
 		</Card>
 	</div>
@@ -82,7 +100,7 @@
 				<div>
 					<Textfield
 						bind:value={chaingraphHostValue}
-            on:change={updateChaingraphHost}
+						on:change={updateChaingraphHost}
 						style="width: 100%;"
 						helperLine$style="width: 100%;"
 						label="Chaingraph Service"
@@ -104,8 +122,6 @@
 		</Card>
 	</div>
 </div>
-
-
 
 <style>
 	* :global(.margins) {
@@ -136,5 +152,4 @@
 		word-break: break-all;
 		overflow-wrap: break-word;
 	}
-
 </style>

@@ -1,13 +1,15 @@
 <script>
 
-   import makeBlockie from 'ethereum-blockies-base64';
+  import makeBlockie from 'ethereum-blockies-base64';
 	export let lockingBytecode;
 
 
 </script>
 
 <div>
+  {#if lockingBytecode}
   <img alt={lockingBytecode} src={makeBlockie(lockingBytecode)} />
+  {/if}
 </div>
 
 <style>
