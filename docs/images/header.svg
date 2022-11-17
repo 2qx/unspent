@@ -99,9 +99,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.52577382"
-     inkscape:cx="940.67739"
-     inkscape:cy="371.55753"
+     inkscape:zoom="0.56224334"
+     inkscape:cx="939.13375"
+     inkscape:cy="355.73981"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -149,12 +149,12 @@
        x="0"
        y="0" />
     <rect
-       style="fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:7.9375;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:7.95432;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect1111"
-       width="316.15906"
+       width="317.5"
        height="63.180889"
-       x="1.0146182"
-       y="0.053076286" />
+       x="0"
+       y="6.9388939e-18" />
     <g
        id="g1121"
        transform="matrix(0.7060429,0,0,0.7060429,53.964159,-11.125382)">

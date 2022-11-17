@@ -1,0 +1,95 @@
+import{w as De}from"./paths-29b9bd04.js";import{e as D,f as X,S as T,u as Te,R as pe,g as Le,s as de,t as Ne}from"./AddressBlockie-9abc88af.js";import{S as z,i as V,s as G,v as L,w as v,e as E,x as N,y as C,b as y,T as Y,U as B,g as Z,t as p,z as S,d as $,f as h,h as g,a9 as P,aa as x,ah as H,K as k,ac as R,ae as ee,a2 as te,a3 as ne,a4 as ae,a5 as se,C as je,D as Re,m as w,at as ye,a8 as fe,J as Ie,O as Be,ab as ke,k as Q,a as _e,l as W,c as me,n as Pe,q as be,r as ge,G as ue,N as we,u as ze}from"./index-b178c6c3.js";import{t as Ve}from"./SvelteToast.svelte_svelte_type_style_lang-00edd4a9.js";function Ge(n){let e;const a=n[10].default,s=te(a,n,n[12],null);return{c(){s&&s.c()},l(l){s&&s.l(l)},m(l,i){s&&s.m(l,i),e=!0},p(l,i){s&&s.p&&(!e||i&4096)&&ne(s,a,l,l[12],e?se(a,l[12],i,null):ae(l[12]),null)},i(l){e||(h(s,l),e=!0)},o(l){p(s,l),e=!1},d(l){s&&s.d(l)}}}function Je(n){let e,a,s;const l=[{tag:n[3]},{use:[n[5],...n[0]]},{class:D({[n[1]]:!0,"mdc-button__label":n[6]==="button","mdc-fab__label":n[6]==="fab","mdc-tab__text-label":n[6]==="tab","mdc-image-list__label":n[6]==="image-list","mdc-snackbar__label":n[6]==="snackbar","mdc-banner__text":n[6]==="banner","mdc-segmented-button__label":n[6]==="segmented-button","mdc-data-table__pagination-rows-per-page-label":n[6]==="data-table:pagination","mdc-data-table__header-cell-label":n[6]==="data-table:sortable-header-cell"})},n[6]==="snackbar"?{"aria-atomic":"false"}:{},{tabindex:n[7]},n[8]];var i=n[2];function c(t){let o={$$slots:{default:[Ge]},$$scope:{ctx:t}};for(let u=0;u<l.length;u+=1)o=k(o,l[u]);return{props:o}}return i&&(e=L(i,c(n)),n[11](e)),{c(){e&&v(e.$$.fragment),a=E()},l(t){e&&N(e.$$.fragment,t),a=E()},m(t,o){e&&C(e,t,o),y(t,a,o),s=!0},p(t,[o]){const u=o&491?Y(l,[o&8&&{tag:t[3]},o&33&&{use:[t[5],...t[0]]},o&66&&{class:D({[t[1]]:!0,"mdc-button__label":t[6]==="button","mdc-fab__label":t[6]==="fab","mdc-tab__text-label":t[6]==="tab","mdc-image-list__label":t[6]==="image-list","mdc-snackbar__label":t[6]==="snackbar","mdc-banner__text":t[6]==="banner","mdc-segmented-button__label":t[6]==="segmented-button","mdc-data-table__pagination-rows-per-page-label":t[6]==="data-table:pagination","mdc-data-table__header-cell-label":t[6]==="data-table:sortable-header-cell"})},o&64&&B(t[6]==="snackbar"?{"aria-atomic":"false"}:{}),o&128&&{tabindex:t[7]},o&256&&B(t[8])]):{};if(o&4096&&(u.$$scope={dirty:o,ctx:t}),i!==(i=t[2])){if(e){Z();const r=e;p(r.$$.fragment,1,0,()=>{S(r,1)}),$()}i?(e=L(i,c(t)),t[11](e),v(e.$$.fragment),h(e.$$.fragment,1),C(e,a.parentNode,a)):e=null}else i&&e.$set(u)},i(t){s||(e&&h(e.$$.fragment,t),s=!0)},o(t){e&&p(e.$$.fragment,t),s=!1},d(t){n[11](null),t&&g(a),e&&S(e,t)}}}function Ke(n,e,a){const s=["use","class","component","tag","getElement"];let l=P(e,s),{$$slots:i={},$$scope:c}=e;const t=X(x());let{use:o=[]}=e,{class:u=""}=e,r,{component:d=T}=e,{tag:_=d===T?"span":void 0}=e;const A=H("SMUI:label:context"),q=H("SMUI:label:tabindex");function U(){return r.getElement()}function M(b){ee[b?"unshift":"push"](()=>{r=b,a(4,r)})}return n.$$set=b=>{e=k(k({},e),R(b)),a(8,l=P(e,s)),"use"in b&&a(0,o=b.use),"class"in b&&a(1,u=b.class),"component"in b&&a(2,d=b.component),"tag"in b&&a(3,_=b.tag),"$$scope"in b&&a(12,c=b.$$scope)},[o,u,d,_,r,t,A,q,l,U,i,M,c]}class Fe extends z{constructor(e){super(),V(this,e,Ke,Je,G,{use:0,class:1,component:2,tag:3,getElement:9})}get getElement(){return this.$$.ctx[9]}}function He(n){let e;const a=n[11].default,s=te(a,n,n[13],null);return{c(){s&&s.c()},l(l){s&&s.l(l)},m(l,i){s&&s.m(l,i),e=!0},p(l,i){s&&s.p&&(!e||i&8192)&&ne(s,a,l,l[13],e?se(a,l[13],i,null):ae(l[13]),null)},i(l){e||(h(s,l),e=!0)},o(l){p(s,l),e=!1},d(l){s&&s.d(l)}}}function Qe(n){let e,a,s;const l=[{tag:n[4]},{use:[n[6],...n[0]]},{class:D({[n[1]]:!0,"mdc-button__icon":n[8]==="button","mdc-fab__icon":n[8]==="fab","mdc-icon-button__icon":n[8]==="icon-button","mdc-icon-button__icon--on":n[8]==="icon-button"&&n[2],"mdc-tab__icon":n[8]==="tab","mdc-banner__icon":n[8]==="banner","mdc-segmented-button__icon":n[8]==="segmented-button"})},{"aria-hidden":"true"},n[7]?{focusable:"false",tabindex:"-1"}:{},n[9]];var i=n[3];function c(t){let o={$$slots:{default:[He]},$$scope:{ctx:t}};for(let u=0;u<l.length;u+=1)o=k(o,l[u]);return{props:o}}return i&&(e=L(i,c(n)),n[12](e)),{c(){e&&v(e.$$.fragment),a=E()},l(t){e&&N(e.$$.fragment,t),a=E()},m(t,o){e&&C(e,t,o),y(t,a,o),s=!0},p(t,[o]){const u=o&983?Y(l,[o&16&&{tag:t[4]},o&65&&{use:[t[6],...t[0]]},o&262&&{class:D({[t[1]]:!0,"mdc-button__icon":t[8]==="button","mdc-fab__icon":t[8]==="fab","mdc-icon-button__icon":t[8]==="icon-button","mdc-icon-button__icon--on":t[8]==="icon-button"&&t[2],"mdc-tab__icon":t[8]==="tab","mdc-banner__icon":t[8]==="banner","mdc-segmented-button__icon":t[8]==="segmented-button"})},l[3],o&128&&B(t[7]?{focusable:"false",tabindex:"-1"}:{}),o&512&&B(t[9])]):{};if(o&8192&&(u.$$scope={dirty:o,ctx:t}),i!==(i=t[3])){if(e){Z();const r=e;p(r.$$.fragment,1,0,()=>{S(r,1)}),$()}i?(e=L(i,c(t)),t[12](e),v(e.$$.fragment),h(e.$$.fragment,1),C(e,a.parentNode,a)):e=null}else i&&e.$set(u)},i(t){s||(e&&h(e.$$.fragment,t),s=!0)},o(t){e&&p(e.$$.fragment,t),s=!1},d(t){n[12](null),t&&g(a),e&&S(e,t)}}}function We(n,e,a){const s=["use","class","on","component","tag","getElement"];let l=P(e,s),{$$slots:i={},$$scope:c}=e;const t=X(x());let{use:o=[]}=e,{class:u=""}=e,{on:r=!1}=e,d,{component:_=T}=e,{tag:A=_===T?"i":void 0}=e;const q=_===$e,U=H("SMUI:icon:context");function M(){return d.getElement()}function b(m){ee[m?"unshift":"push"](()=>{d=m,a(5,d)})}return n.$$set=m=>{e=k(k({},e),R(m)),a(9,l=P(e,s)),"use"in m&&a(0,o=m.use),"class"in m&&a(1,u=m.class),"on"in m&&a(2,r=m.on),"component"in m&&a(3,_=m.component),"tag"in m&&a(4,A=m.tag),"$$scope"in m&&a(13,c=m.$$scope)},[o,u,r,_,A,d,t,q,U,l,M,i,b,c]}class Xe extends z{constructor(e){super(),V(this,e,We,Qe,G,{use:0,class:1,on:2,component:3,tag:4,getElement:10})}get getElement(){return this.$$.ctx[10]}}function Ye(n){let e,a,s,l,i;const c=n[6].default,t=te(c,n,n[5],null);let o=[n[3]],u={};for(let r=0;r<o.length;r+=1)u=k(u,o[r]);return{c(){e=je("svg"),t&&t.c(),this.h()},l(r){e=Re(r,"svg",{});var d=w(e);t&&t.l(d),d.forEach(g),this.h()},h(){ye(e,u)},m(r,d){y(r,e,d),t&&t.m(e,null),n[7](e),s=!0,l||(i=[fe(a=Te.call(null,e,n[0])),fe(n[2].call(null,e))],l=!0)},p(r,[d]){t&&t.p&&(!s||d&32)&&ne(t,c,r,r[5],s?se(c,r[5],d,null):ae(r[5]),null),ye(e,u=Y(o,[d&8&&r[3]])),a&&Ie(a.update)&&d&1&&a.update.call(null,r[0])},i(r){s||(h(t,r),s=!0)},o(r){p(t,r),s=!1},d(r){r&&g(e),t&&t.d(r),n[7](null),l=!1,Be(i)}}}function Ze(n,e,a){const s=["use","getElement"];let l=P(e,s),{$$slots:i={},$$scope:c}=e,{use:t=[]}=e;const o=X(x());let u;function r(){return u}function d(_){ee[_?"unshift":"push"](()=>{u=_,a(1,u)})}return n.$$set=_=>{e=k(k({},e),R(_)),a(3,l=P(e,s)),"use"in _&&a(0,t=_.use),"$$scope"in _&&a(5,c=_.$$scope)},[t,u,o,l,r,c,i,d]}class $e extends z{constructor(e){super(),V(this,e,Ze,Ye,G,{use:0,getElement:4})}get getElement(){return this.$$.ctx[4]}}function Ee(n){let e;return{c(){e=Q("div"),this.h()},l(a){e=W(a,"DIV",{class:!0}),w(e).forEach(g),this.h()},h(){Pe(e,"class","mdc-button__touch")},m(a,s){y(a,e,s)},d(a){a&&g(e)}}}function xe(n){let e,a,s,l;const i=n[28].default,c=te(i,n,n[30],null);let t=n[6]&&Ee();return{c(){e=Q("div"),a=_e(),c&&c.c(),t&&t.c(),s=E(),this.h()},l(o){e=W(o,"DIV",{class:!0}),w(e).forEach(g),a=me(o),c&&c.l(o),t&&t.l(o),s=E(),this.h()},h(){Pe(e,"class","mdc-button__ripple")},m(o,u){y(o,e,u),y(o,a,u),c&&c.m(o,u),t&&t.m(o,u),y(o,s,u),l=!0},p(o,u){c&&c.p&&(!l||u[0]&1073741824)&&ne(c,i,o,o[30],l?se(i,o[30],u,null):ae(o[30]),null),o[6]?t||(t=Ee(),t.c(),t.m(s.parentNode,s)):t&&(t.d(1),t=null)},i(o){l||(h(c,o),l=!0)},o(o){p(c,o),l=!1},d(o){o&&g(e),o&&g(a),c&&c.d(o),t&&t.d(o),o&&g(s)}}}function et(n){let e,a,s;const l=[{tag:n[10]},{use:[[pe,{ripple:n[3],unbounded:!1,color:n[4],disabled:!!n[23].disabled,addClass:n[19],removeClass:n[20],addStyle:n[21]}],n[17],...n[0]]},{class:D({[n[1]]:!0,"mdc-button":!0,"mdc-button--raised":n[5]==="raised","mdc-button--unelevated":n[5]==="unelevated","mdc-button--outlined":n[5]==="outlined","smui-button--color-secondary":n[4]==="secondary","mdc-button--touch":n[6],"mdc-card__action":n[18]==="card:action","mdc-card__action--button":n[18]==="card:action","mdc-dialog__button":n[18]==="dialog:action","mdc-top-app-bar__navigation-icon":n[18]==="top-app-bar:navigation","mdc-top-app-bar__action-item":n[18]==="top-app-bar:action","mdc-snackbar__action":n[18]==="snackbar:actions","mdc-banner__secondary-action":n[18]==="banner"&&n[8],"mdc-banner__primary-action":n[18]==="banner"&&!n[8],"mdc-tooltip__action":n[18]==="tooltip:rich-actions",...n[12]})},{style:Object.entries(n[13]).map(ve).concat([n[2]]).join(" ")},n[16],n[15],n[14],{href:n[7]},n[23]];var i=n[9];function c(t){let o={$$slots:{default:[xe]},$$scope:{ctx:t}};for(let u=0;u<l.length;u+=1)o=k(o,l[u]);return{props:o}}return i&&(e=L(i,c(n)),n[29](e),e.$on("click",n[22])),{c(){e&&v(e.$$.fragment),a=E()},l(t){e&&N(e.$$.fragment,t),a=E()},m(t,o){e&&C(e,t,o),y(t,a,o),s=!0},p(t,o){const u=o[0]&12580351?Y(l,[o[0]&1024&&{tag:t[10]},o[0]&12189721&&{use:[[pe,{ripple:t[3],unbounded:!1,color:t[4],disabled:!!t[23].disabled,addClass:t[19],removeClass:t[20],addStyle:t[21]}],t[17],...t[0]]},o[0]&266610&&{class:D({[t[1]]:!0,"mdc-button":!0,"mdc-button--raised":t[5]==="raised","mdc-button--unelevated":t[5]==="unelevated","mdc-button--outlined":t[5]==="outlined","smui-button--color-secondary":t[4]==="secondary","mdc-button--touch":t[6],"mdc-card__action":t[18]==="card:action","mdc-card__action--button":t[18]==="card:action","mdc-dialog__button":t[18]==="dialog:action","mdc-top-app-bar__navigation-icon":t[18]==="top-app-bar:navigation","mdc-top-app-bar__action-item":t[18]==="top-app-bar:action","mdc-snackbar__action":t[18]==="snackbar:actions","mdc-banner__secondary-action":t[18]==="banner"&&t[8],"mdc-banner__primary-action":t[18]==="banner"&&!t[8],"mdc-tooltip__action":t[18]==="tooltip:rich-actions",...t[12]})},o[0]&8196&&{style:Object.entries(t[13]).map(ve).concat([t[2]]).join(" ")},o[0]&65536&&B(t[16]),o[0]&32768&&B(t[15]),o[0]&16384&&B(t[14]),o[0]&128&&{href:t[7]},o[0]&8388608&&B(t[23])]):{};if(o[0]&1073741888&&(u.$$scope={dirty:o,ctx:t}),i!==(i=t[9])){if(e){Z();const r=e;p(r.$$.fragment,1,0,()=>{S(r,1)}),$()}i?(e=L(i,c(t)),t[29](e),e.$on("click",t[22]),v(e.$$.fragment),h(e.$$.fragment,1),C(e,a.parentNode,a)):e=null}else i&&e.$set(u)},i(t){s||(e&&h(e.$$.fragment,t),s=!0)},o(t){e&&p(e.$$.fragment,t),s=!1},d(t){n[29](null),t&&g(a),e&&S(e,t)}}}const ve=([n,e])=>`${n}: ${e};`;function tt(n,e,a){let s,l,i;const c=["use","class","style","ripple","color","variant","touch","href","action","defaultAction","secondary","component","tag","getElement"];let t=P(e,c),{$$slots:o={},$$scope:u}=e;const r=X(x());let{use:d=[]}=e,{class:_=""}=e,{style:A=""}=e,{ripple:q=!0}=e,{color:U="primary"}=e,{variant:M="text"}=e,{touch:b=!1}=e,{href:m=void 0}=e,{action:J="close"}=e,{defaultAction:oe=!1}=e,{secondary:le=!1}=e,K,I={},O={},j=H("SMUI:button:context"),{component:ie=T}=e,{tag:he=ie===T?m==null?"button":"a":void 0}=e,ce=t.disabled;ke("SMUI:label:context","button"),ke("SMUI:icon:context","button");function Ae(f){I[f]||a(12,I[f]=!0,I)}function qe(f){(!(f in I)||I[f])&&a(12,I[f]=!1,I)}function Ue(f,F){O[f]!=F&&(F===""||F==null?(delete O[f],a(13,O)):a(13,O[f]=F,O))}function Me(){j==="banner"&&Le(re(),le?"SMUIBannerButton:secondaryActionClick":"SMUIBannerButton:primaryActionClick")}function re(){return K.getElement()}function Oe(f){ee[f?"unshift":"push"](()=>{K=f,a(11,K)})}return n.$$set=f=>{a(31,e=k(k({},e),R(f))),a(23,t=P(e,c)),"use"in f&&a(0,d=f.use),"class"in f&&a(1,_=f.class),"style"in f&&a(2,A=f.style),"ripple"in f&&a(3,q=f.ripple),"color"in f&&a(4,U=f.color),"variant"in f&&a(5,M=f.variant),"touch"in f&&a(6,b=f.touch),"href"in f&&a(7,m=f.href),"action"in f&&a(24,J=f.action),"defaultAction"in f&&a(25,oe=f.defaultAction),"secondary"in f&&a(8,le=f.secondary),"component"in f&&a(9,ie=f.component),"tag"in f&&a(10,he=f.tag),"$$scope"in f&&a(30,u=f.$$scope)},n.$$.update=()=>{if(a(16,s=j==="dialog:action"&&J!=null?{"data-mdc-dialog-action":J}:{action:e.action}),a(15,l=j==="dialog:action"&&oe?{"data-mdc-dialog-button-default":""}:{default:e.default}),a(14,i=j==="banner"?{}:{secondary:e.secondary}),ce!==t.disabled){const f=re();"blur"in f&&f.blur(),a(27,ce=t.disabled)}},e=R(e),[d,_,A,q,U,M,b,m,le,ie,he,K,I,O,i,l,s,r,j,Ae,qe,Ue,Me,t,J,oe,re,ce,o,Oe,u]}class nt extends z{constructor(e){super(),V(this,e,tt,et,G,{use:0,class:1,style:2,ripple:3,color:4,variant:5,touch:6,href:7,action:24,defaultAction:25,secondary:8,component:9,tag:10,getElement:26},null,[-1,-1])}get getElement(){return this.$$.ctx[26]}}const Ce=De(void 0);async function mt(n){Ce.set(n),setTimeout(async()=>await n.load().then(()=>Ce.set(void 0)),500)}async function bt(n,e,a,s=25,l=0){e=e||"6a04"+Ne,a=a||"bchn";let i=await de({url:n,method:"post",data:{query:`query SearchOutputsByLockingBytecodePrefix($prefix: String!, $node: String!, $limit:Int, $offset:Int) {
+              search_output_prefix(
+                args: { locking_bytecode_prefix_hex: $prefix }
+                distinct_on: locking_bytecode,
+                limit: $limit,
+                offset: $offset,
+                where: {
+                  transaction: {
+                    block_inclusions: {
+                      block: { accepted_by: { node: { name: { _eq: $node } } } }
+                    }
+                  }
+                }
+              ) {
+                locking_bytecode
+              }
+            }`,variables:{prefix:e,node:a,limit:s,offset:l}}}).catch(t=>{throw t});if(i.data.error||i.data.errors)throw i.data.error?Error(i.data.error):Error(i.data.errors[0].message);let c=i.data.data.search_output_prefix;return c=c.map(t=>t.locking_bytecode),c=c.map(t=>t.replace("\\x","")),c}async function gt(n,e){let a=await de({url:n,method:"post",data:{query:`query GetTransactionDetails($txid: bytea!) {
+        transaction(where: { hash: { _eq:
+          $txid
+        } } ) {
+          block_inclusions {
+            transaction_index
+            block {
+              height # etc.
+            }
+          }
+          data_carrier_outputs {
+            locking_bytecode # etc.
+          }
+          encoded_hex
+          fee_satoshis
+          hash
+          identity_output {
+            spent_by {
+              input_index # etc.
+              transaction {
+                hash
+              }
+            }
+          }
+          input_count
+          input_value_satoshis
+          inputs {
+            input_index
+            outpoint_index
+            outpoint_transaction_hash
+            redeem_bytecode_pattern
+            sequence_number
+            unlocking_bytecode
+            unlocking_bytecode_pattern
+            value_satoshis
+          }
+          is_coinbase
+          locktime
+          node_validations {
+            validated_at
+            node {
+              name
+            }
+          }
+          output_count
+          output_value_satoshis
+          outputs {
+            locking_bytecode
+            locking_bytecode_pattern
+            output_index
+            spent_by {
+              input_index
+              transaction {
+                hash
+              }
+            }
+          }
+          signing_output {
+            spent_by {
+              input_index # etc.
+              transaction {
+                hash
+              }
+            }
+          }
+          size_bytes
+          version
+        }
+      }`,variables:{txid:`\\x${e}`}}}).catch(s=>{throw s});if(a.data.error||a.data.errors)throw a.data.error?Error(a.data.error):Error(a.data.errors[0].message);return a.data.data}async function ht(n,e){let a=await de({url:n,method:"post",data:{query:`query SearchUnspentOutputsByLockingBytecode($lockingBytecode_literal: _text!) {
+        search_output(
+          args: { locking_bytecode_hex: $lockingBytecode_literal},
+          where: {_not:{spent_by:{value_satoshis:{_gt:0}}}}
+        ) {
+          output_index
+          transaction_hash
+          value_satoshis
+        }
+      }`,variables:{lockingBytecode_literal:`{${e}}`}}}).catch(s=>{throw s});if(a.data.error||a.data.errors)throw a.data.error?Error(a.data.error):Error(a.data.errors[0].message);return a.data.data}const at=async n=>{if("clipboard"in navigator)await navigator.clipboard.writeText(n);else{const e=document.createElement("input");e.type="text",e.disabled=!0,e.style.setProperty("position","fixed"),e.style.setProperty("z-index","-100"),e.style.setProperty("pointer-events","none"),e.style.setProperty("opacity","0"),e.value=n,document.body.appendChild(e),e.click(),e.select(),document.execCommand("copy"),document.body.removeChild(e)}},st=(n,e)=>{async function a(){if(e)try{await at(e),n.dispatchEvent(new CustomEvent("svelte-copy",{detail:e}))}catch(s){n.dispatchEvent(new CustomEvent("svelte-copy:error",{detail:s}))}}return n.addEventListener("click",a,!0),{update:s=>e=s,destroy:()=>n.removeEventListener("click",a,!0)}};function Se(n){let e,a,s,l,i,c,t,o,u;return a=new nt({props:{touch:!0,color:"secondary",$$slots:{default:[it]},$$scope:{ctx:n}}}),{c(){e=Q("div"),v(a.$$.fragment),s=_e(),l=Q("pre"),i=be(n[0])},l(r){e=W(r,"DIV",{});var d=w(e);N(a.$$.fragment,d),s=me(d),l=W(d,"PRE",{});var _=w(l);i=ge(_,n[0]),_.forEach(g),d.forEach(g)},m(r,d){y(r,e,d),C(a,e,null),ue(e,s),ue(e,l),ue(l,i),t=!0,o||(u=[fe(c=st.call(null,e,n[0])),we(e,"svelte-copy",n[1])],o=!0)},p(r,d){const _={};d&4&&(_.$$scope={dirty:d,ctx:r}),a.$set(_),(!t||d&1)&&ze(i,r[0]),c&&Ie(c.update)&&d&1&&c.update.call(null,r[0])},i(r){t||(h(a.$$.fragment,r),t=!0)},o(r){p(a.$$.fragment,r),t=!1},d(r){r&&g(e),S(a),o=!1,Be(u)}}}function ot(n){let e;return{c(){e=be("copy")},l(a){e=ge(a,"copy")},m(a,s){y(a,e,s)},d(a){a&&g(e)}}}function lt(n){let e;return{c(){e=be("content_copy")},l(a){e=ge(a,"content_copy")},m(a,s){y(a,e,s)},d(a){a&&g(e)}}}function it(n){let e,a,s,l;return e=new Fe({props:{$$slots:{default:[ot]},$$scope:{ctx:n}}}),s=new Xe({props:{class:"material-icons",$$slots:{default:[lt]},$$scope:{ctx:n}}}),{c(){v(e.$$.fragment),a=_e(),v(s.$$.fragment)},l(i){N(e.$$.fragment,i),a=me(i),N(s.$$.fragment,i)},m(i,c){C(e,i,c),y(i,a,c),C(s,i,c),l=!0},p(i,c){const t={};c&4&&(t.$$scope={dirty:c,ctx:i}),e.$set(t);const o={};c&4&&(o.$$scope={dirty:c,ctx:i}),s.$set(o)},i(i){l||(h(e.$$.fragment,i),h(s.$$.fragment,i),l=!0)},o(i){p(e.$$.fragment,i),p(s.$$.fragment,i),l=!1},d(i){S(e,i),i&&g(a),S(s,i)}}}function ct(n){let e,a,s=n[0]&&Se(n);return{c(){s&&s.c(),e=E()},l(l){s&&s.l(l),e=E()},m(l,i){s&&s.m(l,i),y(l,e,i),a=!0},p(l,[i]){l[0]?s?(s.p(l,i),i&1&&h(s,1)):(s=Se(l),s.c(),h(s,1),s.m(e.parentNode,e)):s&&(Z(),p(s,1,1,()=>{s=null}),$())},i(l){a||(h(s),a=!0)},o(l){p(s),a=!1},d(l){s&&s.d(l),l&&g(e)}}}function rt(n,e,a){let{address:s}=e;const l=()=>Ve.push("Address copied to clipboard");return n.$$set=i=>{"address"in i&&a(0,s=i.address)},[s,l]}class pt extends z{constructor(e){super(),V(this,e,rt,ct,G,{address:0})}}export{pt as A,nt as B,Xe as C,$e as S,Fe as a,ht as b,st as c,gt as d,bt as g,mt as l};
+//# sourceMappingURL=Address-a4c84e14.js.map
