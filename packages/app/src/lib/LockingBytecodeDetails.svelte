@@ -38,12 +38,10 @@
           }
 
         })
-        console.log(JSON.stringify(results))
         let cashaddrResponse = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), 'bitcoincash')
         if(typeof cashaddrResponse === "string") cashaddr = cashaddrResponse
         const sha256 = await sha256Promise;
         let legacyResponse = lockingBytecodeToBase58Address(sha256, hexToBin(lockingBytecode), 'mainnet')
-        console.log(legacyResponse)
         if(typeof legacyResponse === "string") legacy = legacyResponse
 			}
 		});

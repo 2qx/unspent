@@ -171,7 +171,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     let fn = this.getFunction(Divide.fn)!;
     let distributedValue = balance - this.executorAllowance;
     let divisor = this.payees.length;
-    let installment = Math.round(distributedValue / divisor) + 2;
+    let installment = Math.round(distributedValue / divisor) + 1;
 
     if (installment < 546) throw "Installment less than dust limit... bailing";
 
@@ -192,7 +192,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       let feeEstimate = fee ? fee : size.length / 2;
 
       to.pop();
-      let executorPayout = this.executorAllowance - (feeEstimate + 5)
+      let executorPayout = this.executorAllowance - (feeEstimate + (2*divisor)+8)
       if (executorPayout > 546)
         to.push({
           to: exAddress,

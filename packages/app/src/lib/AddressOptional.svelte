@@ -13,7 +13,6 @@
 	export let address: string;
 	export let index: number;
 	function rmAddress() {
-    console.log("remove Address")
 		dispatch('message', {
 			addressIdx: index
 		});
