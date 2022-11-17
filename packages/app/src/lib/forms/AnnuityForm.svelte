@@ -44,6 +44,7 @@
   on:change={() => createContract()}
   type="number"
   input$min="1"
+  input$max="65535"
   required
   label="Period"
 >

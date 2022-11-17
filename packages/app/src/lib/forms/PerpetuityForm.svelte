@@ -37,7 +37,8 @@
 	bind:value={period}
 	on:change={() => createContract()}
 	type="number"
-	min="1"
+  input$min="1"
+  input$max="65535"
 	required
 	label="Period"
 >
