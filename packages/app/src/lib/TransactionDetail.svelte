@@ -1,13 +1,14 @@
 <script lang="ts">
  	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
-	import { binToHex, binToBigIntUint64LE, parseBytecode, OpcodesBCH } from '@bitauth/libauth';
-	import { bytecodeToScript, bytecodeToAsm, asmToScript } from '@cashscript/utils';
+	import { binToHex, binToBigIntUint64LE} from '@bitauth/libauth';
+	import { bytecodeToAsm } from '@cashscript/utils';
 	import List, { Item, Graphic, Meta, Text, PrimaryText, SecondaryText } from '@smui/list';
-
 	import { hexToBin, decodeTransaction } from '@bitauth/libauth';
-	import { load } from '$lib/machinery/loader-store.js';
 	import { getTransaction } from '@unspent/phi';
+
+	import AddressBlockie from './AddressBlockie.svelte';
+  import { load } from '$lib/machinery/loader-store.js';
 
 	import { chaingraphHost } from '$lib/store.js';
 
@@ -45,7 +46,7 @@
 					return {
             asm: asm,
             vout: i.outpointIndex,
-            txid: binToHex(i.outpointTransactionHash)
+            outpointTransactionHash: binToHex(i.outpointTransactionHash)
 					};
 				});
 			}
@@ -66,21 +67,20 @@
 
 	<p>fee: {transaction.fee_satoshis}</p>
 	<h3>Inputs:</h3>
+  <p>Input Total Value: {transaction.input_value_satoshis}</p>
 	{#if inputs}
 		{#each inputs as i}
 			<p>asm:</p><pre>{ i.asm}</pre> 
-			<p>txid:<a style="line-break:anywhere;" href="{base}/explorer?tx={i.txid}">{i.txid}</a></p>
+			<p>outpoint:<a style="line-break:anywhere;" href="{base}/explorer?tx={i.outpointTransactionHash}">{i.outpointTransactionHash}</a></p>
 			<p>vout:{ i.vout}</p>
 		{/each}
 	{/if}
 	{#if outputs}
 		<h3>Outputs:</h3>
 		{#each outputs as o}
-			<p>{o.lockingBytecode}</p>
-			<b>{o.satoshis}</b>
+      <AddressBlockie size={40} lockingBytecode={o.lockingBytecode} />
+			<p><a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={o.lockingBytecode}">{o.lockingBytecode}</a></p>
+			<p>+&nbsp;{o.satoshis}</p>
 		{/each}
 	{/if}
-  <pre>
-    <pre>{JSON.stringify(txObject, undefined, 2)}</pre>
-  </pre>
 {/if}

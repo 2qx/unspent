@@ -1,13 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+  import { base } from '$app/paths';
 	import { load } from '$lib/machinery/loader-store.js';
-	import { getLockingBytecode } from '@unspent/phi';
+	import { getUnspentOutputs } from '@unspent/phi';
+  import Address from './Address.svelte';
 	import AddressBlockie from './AddressBlockie.svelte';
-	import { chaingraphHost } from '$lib/store.js';
-	import { resourceLimits } from 'worker_threads';
+	import { chaingraphHost } from '$lib/store.js';;
+	import { instantiateSha256, hexToBin, lockingBytecodeToCashAddress, lockingBytecodeToBase58Address } from '@bitauth/libauth';
 
 	export let lockingBytecode;
 	let results;
+  let cashaddr= '';
+  let bytecodeDetails 
+  let legacy=""
 	let chaingraphHostValue = '';
 
 	chaingraphHost.subscribe((value) => {
@@ -23,28 +28,45 @@
 	const loadTx = async () => {
 		await load({
 			load: async () => {
-				results = (await getLockingBytecode(chaingraphHostValue, lockingBytecode)).search_output;
-        
+        const sha256Promise = instantiateSha256();
+				results = (await getUnspentOutputs(chaingraphHostValue, lockingBytecode)).search_output;
+        results = results.map(r => {
+          return{
+            txid : r.transaction_hash.slice(2),
+            vout : r.output_index,
+            satoshis : r.value_satoshis
+          }
+
+        })
+        console.log(JSON.stringify(results))
+        let cashaddrResponse = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), 'bitcoincash')
+        if(typeof cashaddrResponse === "string") cashaddr = cashaddrResponse
+        const sha256 = await sha256Promise;
+        let legacyResponse = lockingBytecodeToBase58Address(sha256, hexToBin(lockingBytecode), 'mainnet')
+        console.log(legacyResponse)
+        if(typeof legacyResponse === "string") legacy = legacyResponse
 			}
 		});
 	};
 </script>
+<AddressBlockie size={35} lockingBytecode={lockingBytecode} />
+{#if cashaddr} 
+<p>Cashaddress: <Address address={cashaddr} /></p>
+{/if}
+{#if legacy} 
+<p>Legacy: </p>
+<pre>{legacy}</pre>
+{/if}
+
 
 {#if lockingBytecode}
-	<AddressBlockie {lockingBytecode} />
+<h3>Unspent Transaction Outputs</h3>
 	{#if results}
 		{#each results as txo}
-			<div>
-				<b>{txo.value_satoshis}</b>
-				{#if txo.spent_by.length > 0}
-					{#each txo.spent_by as spent}
-						{spent.transaction.hash}{spent.input_index}
-					{/each}
-				{/if}
+			<div> 
+        <p><a style="line-break:anywhere;" href="{base}/explorer?tx={txo.txid}">{txo.txid}</a>:{ txo.vout}</p>
+        <p>+&nbsp;{txo.satoshis}</p>
 			</div>
 		{/each}
 	{/if}
-	<pre>
-	{JSON.stringify(results, undefined, 2)}
-</pre>
 {/if}

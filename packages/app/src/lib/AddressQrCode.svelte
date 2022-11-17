@@ -28,7 +28,7 @@
 <style>
 	div {
 		float: right;
-		padding: 25px;
+		padding: 10px;
 		z-index: 1;
 	}
 	div :global(canvas) {
