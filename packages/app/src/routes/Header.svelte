@@ -1,8 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
-	import logo from '$lib/images/android-chrome-192x192.png';
-	import github from '$lib/images/github.svg';
+  import { assets } from '$app/paths';
 </script>
 
 <div class="alpha">
@@ -11,7 +10,7 @@ This app is in active development! Keep value small and create a backup of any i
 <header>
 	<div class="corner">
 		<a href="{base}/">
-			<img src={logo} alt="Unspent" />
+			<img src='{assets}/images/android-chrome-192x192.png' alt="Unspent" />
 		</a>
 	</div>
 
@@ -37,7 +36,7 @@ This app is in active development! Keep value small and create a backup of any i
 
 	<div class="corner">
 		<a href="https://github.com/2qx/unspent">
-			<img src={github} alt="GitHub" />
+			<img src='{base}/images/github.svg' alt="GitHub" />
 		</a>
 	</div>
 </header>
@@ -50,7 +49,7 @@ This app is in active development! Keep value small and create a backup of any i
 
   .alpha {
 		width: 100%;
-    background-color: deeppink;
+    background-color: #F0F;
     font-weight: 900;
     color: white;
     text-align: center;

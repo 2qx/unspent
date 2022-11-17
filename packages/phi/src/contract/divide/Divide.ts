@@ -200,9 +200,8 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
         });
     }
 
-    console.log(to)
     let txn = await fn().to(to).withoutChange().send();
-    console.log(txn.txid)
+    
     return txn.txid;
   }
 }

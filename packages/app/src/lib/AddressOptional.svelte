@@ -31,7 +31,7 @@
 
 {#if index > 1}
 <Textfield bind:value={address} on:change={() => change()} style="width: 100%;" type="text">
-  <Icon class="material-icons" tabindex="1"  slot="trailingIcon"  >
+  <Icon class="material-icons" tabindex="0"  slot="trailingIcon"  >
     <Fab on:click={rmAddress}>
       <FabIcon component={Svg} viewBox="2 2 20 20">
         <path d={mdiDelete} />

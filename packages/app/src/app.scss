@@ -93,7 +93,7 @@ body,
   margin-bottom: 0;
 }
 
-@include paper.paper-color(svelte-pink, #ff40e6, #fff);
+@include paper.paper-color(svelte-pink, #F0F, #fff);
 
 @media (max-width: 460px) {
   .demo-main-content > section {

@@ -217,7 +217,6 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       .withoutChange()
       .build();
 
-    console.log(size)
     let minerFee = fee ? fee : size.length / 2 +5 ;
     let executorFee = balance - (this.installment + newPrincipal + minerFee) - 4;
 
@@ -229,7 +228,6 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         amount: executorFee,
       });
     }
-    console.log(JSON.stringify(to, undefined, 2))
 
     let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;

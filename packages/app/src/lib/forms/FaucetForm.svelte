@@ -67,7 +67,7 @@
 	label="Index"
 >
 	<HelperText slot="helper">A value to make the contract unique.</HelperText>
-  <Icon class="material-icons" tabindex="1"  slot="trailingIcon"  >
+  <Icon class="material-icons" tabindex="0" slot="trailingIcon"  >
     <Fab  on:click={newIndex}>
       <FabIcon component={Svg} viewBox="2 2 20 20">
         <path d={mdiShuffle} />
