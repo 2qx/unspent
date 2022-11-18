@@ -217,7 +217,7 @@ How many zeros is the `difficulty`.
 Finally, prior to spending the the mining `payout`, the spender must announce
 the winning `nonce` in an OP_RETURN of the first output, and send the balance of the contract to a new mining covenant with the new nonce as a `canary`.
 
-![Replace the canary](canary.png "Look, see, he's alright. He's fine.")
+![Replace the canary](images/canary.jpeg "Look, see, he's alright. He's fine.")
 Like an infinite series of Failures to Deliver (FTDs) for a stock, or banging forex futures to manipulate an outcome in currency markets, the canary is always brought back to life with a new copy of itself. You don't have to take over a whole blockchain to create a market for your energy, just mine a covenant—there will be far less idiosyncratic risk.
 
 ```solidity

@@ -10,7 +10,7 @@ This app is in active development! Keep value small and create a backup of any i
 <header>
 	<div class="corner">
 		<a href="{base}/">
-			<img src='{assets}/images/android-chrome-192x192.png' alt="Unspent" />
+			<img src='{assets}/images/favicon-32x32.png' alt="Logo" />
 		</a>
 	</div>
 
@@ -51,7 +51,7 @@ This app is in active development! Keep value small and create a backup of any i
 
   .alpha {
 		width: 100%;
-    background-color: #F0F;
+    background-color: rgb(171, 0, 171);
     font-weight: 900;
     color: white;
     text-align: center;
