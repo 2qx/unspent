@@ -23,18 +23,20 @@
     />
     <meta
       property="og:description"
-      content="Unspent Phi - give, earn, lock and mine."
+      content="Decentralized finance using unspent transaction unlocking script. Open source, on-chain, running nativiely & directly on Bitcoin Cash (BCH)."
     />
     <meta property="og:type" content="website" />
-
+    <!--  Progressive Web App Service Worker -->
+    <link rel="manifest" href="%sveltekit.assets%/site.webmanifest" type="application/manifest+json">
+    <script src="%sveltekit.assets%/pwa.js"></script>
+    <link rel="apple-touch-icon" href="%sveltekit.assets%/images/apple-touch-icon.png">
     
-    <link rel="manifest" href="%sveltekit.assets%/manifest.json" />
-    <meta name="msapplication-TileColor" content="#ff40e6" />
-    <meta name="theme-color" content="#ff40e6" />
+    <meta name="msapplication-TileColor" content="#ff00ff" />
+    <meta name="theme-color" content="#ff00ff" />
   %sveltekit.head%
 </head>
 
-<body class="ukraine">
+<body >
   <div id="smui-app">%sveltekit.body%</div>
 </body>
 

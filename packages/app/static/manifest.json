@@ -2,8 +2,8 @@
   "name": "Unspent Phi",
   "short_name": "₿∙ϕ",
   "background_color": "#ffffff",
-  "theme_color": "#333333",
-  "display": "unspent-phi",
+  "theme_color": "#F0F",
+  "display": "minimal-ui",
   "start_url": "/",
   "icons": [
     {
@@ -13,10 +13,15 @@
       "density": "4.0"
     },
     {
-      "src": "/images/android-icon-512x612.png",
-      "sizes": "192x192",
+      "src": "/images/android-icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "density": "10.6"
+    },
+    {
+      "src": "/images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ]
 }

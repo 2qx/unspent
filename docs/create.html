@@ -23,25 +23,27 @@
     />
     <meta
       property="og:description"
-      content="Unspent Phi - give, earn, lock and mine."
+      content="Decentralized finance using unspent transaction unlocking script. Open source, on-chain, running nativiely & directly on Bitcoin Cash (BCH)."
     />
     <meta property="og:type" content="website" />
-
+    <!--  Progressive Web App Service Worker -->
+    <link rel="manifest" href="./site.webmanifest" type="application/manifest+json">
+    <script src="./pwa.js"></script>
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
     
-    <link rel="manifest" href="./manifest.json" />
-    <meta name="msapplication-TileColor" content="#ff40e6" />
-    <meta name="theme-color" content="#ff40e6" />
+    <meta name="msapplication-TileColor" content="#ff00ff" />
+    <meta name="theme-color" content="#ff00ff" />
   <meta http-equiv="content-security-policy" content="">
-		<link rel="modulepreload" href="./_app/immutable/start-089999fb.js">
+		<link rel="modulepreload" href="./_app/immutable/start-48fa4380.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/index-ae8bb011.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/singletons-7cf1e2cf.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons-7c679dc8.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/paths-377945e6.js">
 </head>
 
-<body class="ukraine">
+<body >
   <div id="smui-app">
 		<script type="module" data-sveltekit-hydrate="45h">
-			import { start } from "./_app/immutable/start-089999fb.js";
+			import { start } from "./_app/immutable/start-48fa4380.js";
 
 			start({
 				env: {},
