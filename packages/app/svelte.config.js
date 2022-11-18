@@ -27,6 +27,9 @@ const config = {
 	preprocess: [
 		sveltePreprocess({ sourceMap: false, handleMixedImports: true, reportDiagnostics: true }),
 		mdsvex({
+      layout: {
+        splash: "./src/routes/splash.svelte"
+      },
 			extensions: ['.md'],
       rehypePlugins: [rehypeSlug, [toc, {headings: ["h1", "h2"]}]],
 			highlight: {

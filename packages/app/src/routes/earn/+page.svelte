@@ -72,7 +72,7 @@
 </svelte:head>
 <section>
 	{#if !executorAddressValue}
-		<p><b>No cashaddress specified, fee will go to miners.</b></p>
+		<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
 	{/if}
 </section>
 <section>
