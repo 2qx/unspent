@@ -12,6 +12,7 @@
 	import AddressQrCode from './AddressQrCode.svelte';
 	import AddressBlockie from './AddressBlockie.svelte';
 	import SerializedString from './SerializedString.svelte';
+	import { opReturn } from '@bitauth/libauth';
 	export let instance: any;
 	export let instanceType = '';
 	let balance = NaN;
@@ -104,6 +105,7 @@
 			OpReturn: <BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction>
 		</p>
 
+    <a href="{base}/contract?opReturn={instance.toOpReturn(true)}">Share Link</a>
 		<h2>Unspent Transaction Outputs</h2>
 
 		<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
@@ -119,7 +121,7 @@
 			{/if}
 			<br />
 			<h2>Unlock</h2>
-      <Button touch on:click={execute}>
+      <Button variant="raised" touch on:click={execute}>
         <Label>Execute</Label>
         <Icon class="material-icons">lock_open</Icon>
       </Button>

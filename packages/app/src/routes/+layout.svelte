@@ -48,7 +48,7 @@
 	<Header />
 	<SvelteToast />
 	{#if data && data.splash}
-		<img src="{assets}/images/header.svg" alt="Unspent" />
+  <img id="banner" src="{assets}/images/banner.svg"  alt="Unspent" />
     <div id="description">
       <b>Decentralized finance using unspent transaction unlocking script. Open source, on-chain, running nativiely & directly on Bitcoin Cash (BCH).</b>
     </div>
@@ -69,6 +69,17 @@
 		flex-direction: column;
 		min-height: 100vh;
 	}
+
+  #banner {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: 5px;
+		width: 100%;
+		max-width: 44rem;
+		margin: 0 auto;
+		box-sizing: border-box;
+  }
 
   #description {
 		flex: 1;
