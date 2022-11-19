@@ -70,11 +70,7 @@
 	<title>Contracts</title>
 	<meta name="description" content="Unspent app" />
 </svelte:head>
-<section>
-	{#if !executorAddressValue}
-		<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
-	{/if}
-</section>
+
 <section>
 	<div class="card-display">
 		<div class="card-container">

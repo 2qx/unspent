@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
-  import Button, { Label, Icon } from '@smui/button';
+	import Button, { Label, Icon } from '@smui/button';
 
-  import { Confetti } from "svelte-confetti";
+	import { Confetti } from 'svelte-confetti';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
 	import { load } from '$lib/machinery/loader-store.js';
@@ -79,69 +79,67 @@
 	}
 </script>
 
-	{#if instance}
-		<h1>{instanceType}</h1>
-		<p>{instance.asText()}</p>
-		<h2>Locking Bytecode</h2>
-		<div>
-			<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
-			<AddressQrCode codeValue={instance.getAddress()} />
-		</div>
+{#if instance}
+	<h1>{instanceType}</h1>
+	<p>{instance.asText()}</p>
+	<h2>Locking Bytecode</h2>
+	<div>
+		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
+		<AddressQrCode codeValue={instance.getAddress()} />
+	</div>
 
-		<h3>Hex code:</h3>
-		<p>
-			<a
-				style="line-break:anywhere;"
-				href="{base}/explorer?lockingBytecode={instance.getLockingBytecode()}"
-				>{instance.getLockingBytecode()}</a
-			>
-		</p>
-		<p>Cashaddress: <Address address={instance.getAddress()} /></p>
+	<h3>Hex code:</h3>
+	<p>
+		<a
+			style="line-break:anywhere;"
+			href="{base}/explorer?lockingBytecode={instance.getLockingBytecode()}"
+			>{instance.getLockingBytecode()}</a
+		>
+	</p>
+	<p>Cashaddress: <Address address={instance.getAddress()} /></p>
 
-		<h2>Unlocking Bytecode</h2>
-		<h3>Phi Contract Parameters</h3>
-		<p>String: <SerializedString str={instance.toString()} /></p>
-		<p>
-			OpReturn: <BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction>
-		</p>
+	<h2>Unlocking Bytecode</h2>
+	<h3>Phi Contract Parameters</h3>
+	<p>String: <SerializedString str={instance.toString()} /></p>
+	<p>
+		OpReturn: <BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction>
+	</p>
 
-    <a href="{base}/contract?opReturn={instance.toOpReturn(true)}">Share Link</a>
-		<h2>Unspent Transaction Outputs</h2>
+	<a href="{base}/contract?opReturn={instance.toOpReturn(true)}">Share Link</a>
+	<h2>Unspent Transaction Outputs</h2>
 
-		<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
+	<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
+	<br />
+	{#if isFunded}
+		Inputs
+		{#if utxos.length == 0}
+			<button on:click={getUtxos}>Select Inputs</button>
+		{/if}
+		{#if utxos.length > 0}
+			<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
+			<UtxosSelect bind:utxos />
+		{/if}
 		<br />
-		{#if isFunded}
-			Inputs
-			{#if utxos.length == 0}
-				<button on:click={getUtxos}>Select Inputs</button>
-			{/if}
-			{#if utxos.length > 0}
-				<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
-				<UtxosSelect bind:utxos />
-			{/if}
-			<br />
-			<h2>Unlock</h2>
-      <Button variant="raised" touch on:click={execute}>
-        <Label>Execute</Label>
-        <Icon class="material-icons">lock_open</Icon>
-      </Button>
-			<div />
-			{#if executeError}
-				<pre>{executeError}</pre>
-			{/if}
-			{#if executedSucess}
-				{#if txid}
-          <Confetti colorRange={[75, 175]} />
-					<a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
-				{/if}
+		<h2>Unlock</h2>
+		<Button variant="raised" touch on:click={execute}>
+			<Label>Execute</Label>
+			<Icon class="material-icons">lock_open</Icon>
+		</Button>
+		{#if !executorAddressValue}
+			<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
+		{/if}
+		<div />
+		{#if executeError}
+			<pre>{executeError}</pre>
+		{/if}
+		{#if executedSucess}
+			{#if txid}
+				<Confetti colorRange={[75, 175]} />
+				<a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
 			{/if}
 		{/if}
 	{/if}
+{/if}
 
 <style>
-
-
-
-
-
 </style>
