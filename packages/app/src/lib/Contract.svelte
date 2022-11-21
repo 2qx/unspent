@@ -2,6 +2,7 @@
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
 	import Button, { Label, Icon } from '@smui/button';
+  import CircularProgress from '@smui/circular-progress';
 
 	import { Confetti } from 'svelte-confetti';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -12,7 +13,7 @@
 	import AddressQrCode from './AddressQrCode.svelte';
 	import AddressBlockie from './AddressBlockie.svelte';
 	import SerializedString from './SerializedString.svelte';
-	import { opReturn } from '@bitauth/libauth';
+	
 	export let instance: any;
 	export let instanceType = '';
 	let balance = NaN;
@@ -21,6 +22,9 @@
 	let utxos: any = [];
 	let isFunded = false;
 
+  let executionProgress = 0;
+  let executionProgressId;
+  let executionProgressClosed = true;
 	let executedSucess = false;
 	let executeError = '';
 
@@ -48,14 +52,17 @@
 	const execute = async () => {
 		await load({
 			load: async () => {
+        setProgress()
 				executedSucess = false;
 				try {
 					let inUtxos = utxos.filter((u: any) => u.use == true);
 					txid = await instance.execute(executorAddressValue, undefined, inUtxos);
 					executedSucess = true;
 					executeError = '';
+          clearProgress()
 				} catch (e) {
 					executeError = e;
+          clearProgress()
 				}
 			}
 		});
@@ -77,6 +84,22 @@
 	function dropUtxos() {
 		utxos = [];
 	}
+
+  function setProgress() {
+    executionProgress = 0;
+    executionProgressClosed = false;
+  
+    executionProgressId = setInterval(() => {
+      executionProgress += 0.01;
+      console.log(executionProgress)
+    }, 100);
+  }
+
+  function clearProgress(){
+    executionProgressClosed = true;
+    clearTimeout(executionProgressId)
+  }
+
 </script>
 
 {#if instance}
@@ -129,12 +152,20 @@
 			<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
 		{/if}
 		<div />
+    {#if !executionProgressClosed}
+    <div style="display: flex; justify-content: center">
+      <CircularProgress style="height: 48px; width: 48px;" progress={executionProgress} closed={executionProgressClosed} />
+    </div>
+    {/if}
 		{#if executeError}
 			<pre>{executeError}</pre>
 		{/if}
 		{#if executedSucess}
 			{#if txid}
-				<Confetti colorRange={[75, 175]} />
+      <div style="display: flex; justify-content: center">
+        <Confetti colorRange={[75, 175]} />
+      </div>
+				
 				<a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
 			{/if}
 		{/if}

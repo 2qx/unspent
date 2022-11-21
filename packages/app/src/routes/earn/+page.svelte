@@ -1,5 +1,6 @@
 <script>
 	import Card from '@smui/card';
+	import CircularProgress from '@smui/circular-progress';
 	import { onMount } from 'svelte';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, parseOpReturn } from '@unspent/phi';
@@ -9,7 +10,7 @@
 	let contractData = [];
 
 	let pageSizes = [5, 10, 25, 50];
-	let pageSize = 5;
+	let pageSize = 25;
 	let page = 0;
 
 	let executorAddressValue = '';
@@ -93,6 +94,11 @@
 						</span>
 					</div>
 					<h1>Spend Unspent Contracts</h1>
+					{#if contractData.length==0}
+						<div style="display: flex; justify-content: center">
+							<CircularProgress style="height: 48px; width: 48px;" indeterminate />
+						</div>
+					{/if}
 					<ContractAccordian bind:contractData />
 				</div>
 			</Card>
