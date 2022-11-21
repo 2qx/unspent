@@ -1,8 +1,9 @@
 {
   "name": "@unspent/cli",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A command line utility for unspent contracts",
-  "bin": "dist/cli.js",
+  "type": "module",
+  "bin": "npx.cjs",
   "dependencies": {
     "@bitauth/libauth": "^1.19.1",
     "@swc/core": "latest",
@@ -20,9 +21,9 @@
     "@rollup/plugin-typescript": "9.0.2"
   },
   "scripts": {
-    "cli": "node --experimental-modules dist/cli.mjs",
+    "cli": "node --experimental-modules cli.cjs",
     "clean": "rm -fr dist/*",
-    "build": "yarn clean && tsc && rollup -c rollup.config.js"
+    "build": "yarn clean && tsc "
   },
   "exclude": [
     "exclude/"
@@ -45,10 +46,5 @@
     "cashscript",
     "testnet",
     "perpetuity"
-  ],
-  "publishConfig": {
-    "bin": {
-      "unspent": "dist/cli.mjs"
-    }
-  }
+  ]
 }
