@@ -1,6 +1,6 @@
 {
   "name": "@unspent/cli",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "A command line utility for unspent contracts",
   "type": "module",
   "bin": "npx.cjs",
