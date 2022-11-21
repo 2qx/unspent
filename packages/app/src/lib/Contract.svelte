@@ -91,7 +91,6 @@
   
     executionProgressId = setInterval(() => {
       executionProgress += 0.01;
-      console.log(executionProgress)
     }, 100);
   }
 
