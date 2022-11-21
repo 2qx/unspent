@@ -1,9 +1,9 @@
 {
   "name": "@unspent/cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A command line utility for unspent contracts",
   "type": "module",
-  "bin": "npx.cjs",
+  "bin": "dist/main/cli.js",
   "dependencies": {
     "@bitauth/libauth": "^1.19.1",
     "@swc/core": "latest",
