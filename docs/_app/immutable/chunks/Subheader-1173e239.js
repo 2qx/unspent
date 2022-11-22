@@ -1,2 +1,0 @@
-import{g as e}from"./classAdderBuilder-fc21e0e3.js";e({class:"mdc-deprecated-list-item__text",tag:"span"});e({class:"mdc-deprecated-list-item__primary-text",tag:"span"});e({class:"mdc-deprecated-list-item__secondary-text",tag:"span"});e({class:"mdc-deprecated-list-item__meta",tag:"span"});e({class:"mdc-deprecated-list-group",tag:"div"});e({class:"mdc-deprecated-list-group__subheader",tag:"h3"});
-//# sourceMappingURL=Subheader-1173e239.js.map

@@ -1,5 +1,8 @@
 <script>
 	import Card from '@smui/card';
+	import Select, { Option } from '@smui/select';
+	import IconButton from '@smui/icon-button';
+	import { Label } from '@smui/common';
 	import CircularProgress from '@smui/circular-progress';
 	import { onMount } from 'svelte';
 	import { load } from '$lib/machinery/loader-store.js';
@@ -32,7 +35,13 @@
 		nodeValue = value;
 	});
 
-	const incrementPage = () => {
+	const zeroPage = () => {
+		page = 0;
+    contractData = []
+		loadContracts();
+	};
+
+  const incrementPage = () => {
 		page += 1;
 		loadContracts();
 	};
@@ -77,29 +86,86 @@
 		<div class="card-container">
 			<Card class="demo-spaced">
 				<div class="margins">
-					<div id="pager">
-						<button id="pagerButton" on:click={decrementPage} disabled={page == 0}> ← </button>
-						<select bind:value={pageSize} on:change={loadContracts}>
+					
+					<h1>Spend Unspent Contracts</h1>
+          <div id="pager">
+						<Select variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
 							{#each pageSizes as pageSize}
-								<option value={pageSize}>
+								<Option value={pageSize}>
 									{pageSize}
-								</option>
+								</Option>
 							{/each}
-						</select>
-						<button id="pagerButton" on:click={incrementPage}> → </button>
+						</Select>
+						<IconButton
+							class="material-icons"
+							action="first-page"
+							title="First page"
+							on:click={zeroPage}
+							disabled={page === 0}>first_page</IconButton
+						>
+						<IconButton
+							class="material-icons"
+							action="prev-page"
+							title="Prev page"
+							on:click={decrementPage}
+							disabled={page === 0}>chevron_left</IconButton
+						>
+
+						<IconButton
+							class="material-icons"
+							action="next-page"
+							title="Next page"
+							on:click={incrementPage}>chevron_right</IconButton
+						>
 						<span>
 							{#if chaingraphHostValue.length == 0}
 								No Chaingraph endpoint specified.
 							{/if}
 						</span>
 					</div>
-					<h1>Spend Unspent Contracts</h1>
-					{#if contractData.length==0}
+          <br>
+					{#if contractData.length == 0}
 						<div style="display: flex; justify-content: center">
 							<CircularProgress style="height: 48px; width: 48px;" indeterminate />
 						</div>
 					{/if}
 					<ContractAccordian bind:contractData />
+          <br>
+          <div id="pager">
+						<Select variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
+							{#each pageSizes as pageSize}
+								<Option value={pageSize} >
+									{pageSize}
+								</Option>
+							{/each}
+						</Select>
+						<IconButton
+							class="material-icons"
+							action="first-page"
+							title="First page"
+							on:click={zeroPage}
+							disabled={page === 0}>first_page</IconButton
+						>
+						<IconButton
+							class="material-icons"
+							action="prev-page"
+							title="Prev page"
+							on:click={decrementPage}
+							disabled={page === 0}>chevron_left</IconButton
+						>
+
+						<IconButton
+							class="material-icons"
+							action="next-page"
+							title="Next page"
+							on:click={incrementPage}>chevron_right</IconButton
+						>
+						<span>
+							{#if chaingraphHostValue.length == 0}
+								No Chaingraph endpoint specified.
+							{/if}
+						</span>
+					</div>
 				</div>
 			</Card>
 		</div>
@@ -116,7 +182,5 @@
 		flex-direction: row;
 		justify-content: right;
 	}
-	#pagerButton {
-		max-height: 58px;
-	}
+
 </style>

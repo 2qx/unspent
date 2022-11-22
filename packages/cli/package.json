@@ -1,7 +1,7 @@
 {
   "name": "unspent",
   "version": "0.0.14",
-  "description": "A command line utility for unspent contracts",
+  "description": "A command line utility for Unspent Phi (₿∙ϕ) contracts",
   "type": "module",
   "bin": "cli.cjs",
   "dependencies": {
