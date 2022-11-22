@@ -1,11 +1,9 @@
 {
   "name": "unspent",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "A command line utility for unspent contracts",
   "type": "module",
-  "bin": {
-    "unspent": "npx.cjs"
-  },
+  "bin": "npx.cjs",
   "dependencies": {
     "@bitauth/libauth": "^1.19.1",
     "@swc/core": "latest",
