@@ -19,7 +19,7 @@ import Select, { Option } from '@smui/select';
 <Select 
 key={(c) => `${c ? c.name : ''}`}
 on:MDCSelect:change={(e) => (instanceType = e.detail.value.name)}
-bind:value={selected}  label="Contact Type">
+bind:value={selected}  label="Contract Type">
   {#each contractTypes as c (c.name)}
     <Option value={c}>{c.name} </Option>
   {/each}
@@ -28,7 +28,7 @@ bind:value={selected}  label="Contact Type">
 <!-- this wan't so bad -->
 <!--
   <select bind:value={selected} on:change={() => (instanceType = selected.name)}>
-	<option value="" disabled selected>Select a Contact Type</option>
+	<option value="" disabled selected>Select a Contract Type</option>
 	{#each contractTypes as c (c.id)}
 		<option value={c}>
 			{c.name}
