@@ -44,7 +44,7 @@
 		await load({
 			load: async () => {
 				if (instance) balance = await instance.getBalance();
-				isFunded = (balance > 0) ? true : false;
+				isFunded = balance > 0 ? true : false;
 			}
 		});
 	};
@@ -167,11 +167,10 @@
 				<div style="display: flex; justify-content: center">
 					<Confetti colorRange={[75, 175]} />
 				</div>
-
-				<a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
+				<div style="max-width=30em; line-break:anywhere;">
+					<a  style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
+				</div>
 			{/if}
 		{/if}
 	{/if}
 {/if}
-
-

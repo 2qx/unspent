@@ -38,11 +38,7 @@
 			executedSuccess = false;
 			executeError = '';
 			txid = '';
-		}
-		if (!executedSuccess) {
-			if (executionProgressClosed) {
-				await check();
-			}
+			await check();
 		}
 	});
 
@@ -97,7 +93,12 @@
 		<Icon class="material-icons">check</Icon>
 	</Button>
 	{#if txid}
-		<a href="{base}/explorer?tx={txid}">{txid}</a>
+		<div style="display: flex; justify-content: center">
+			<Confetti colorRange={[75, 174]} />
+		</div>
+		Transaction:<a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}"
+			>{txid}</a
+		>
 	{/if}
 {:else}
 	<Button variant="raised" touch on:click={broadcast}>
@@ -115,14 +116,6 @@
 	{/if}
 	{#if executeError}
 		<pre>{executeError}</pre>
-	{/if}
-	{#if executedSuccess}
-		<div style="display: flex; justify-content: center">
-			<Confetti colorRange={[75, 174]} />
-		</div>
-		{#if txid}
-			Broadcasting tx: <a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
-		{/if}
 	{/if}
 {/if}
 
