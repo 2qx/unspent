@@ -2,7 +2,7 @@
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
 	import Button, { Label, Icon } from '@smui/button';
-  import CircularProgress from '@smui/circular-progress';
+	import CircularProgress from '@smui/circular-progress';
 
 	import { Confetti } from 'svelte-confetti';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -13,7 +13,7 @@
 	import AddressQrCode from './AddressQrCode.svelte';
 	import AddressBlockie from './AddressBlockie.svelte';
 	import SerializedString from './SerializedString.svelte';
-	
+
 	export let instance: any;
 	export let instanceType = '';
 	let balance = NaN;
@@ -22,10 +22,10 @@
 	let utxos: any = [];
 	let isFunded = false;
 
-  let executionProgress = 0;
-  let executionProgressId;
-  let executionProgressClosed = true;
-	let executedSucess = false;
+	let executionProgress = 0;
+	let executionProgressId;
+	let executionProgressClosed = true;
+	let executedSuccess = false;
 	let executeError = '';
 
 	let executorAddressValue = '';
@@ -44,7 +44,7 @@
 		await load({
 			load: async () => {
 				if (instance) balance = await instance.getBalance();
-				if (balance > 0) isFunded = true;
+				isFunded = (balance > 0) ? true : false;
 			}
 		});
 	};
@@ -52,17 +52,17 @@
 	const execute = async () => {
 		await load({
 			load: async () => {
-        setProgress()
-				executedSucess = false;
+				setProgress();
+				executedSuccess = false;
 				try {
 					let inUtxos = utxos.filter((u: any) => u.use == true);
 					txid = await instance.execute(executorAddressValue, undefined, inUtxos);
-					executedSucess = true;
+					executedSuccess = true;
 					executeError = '';
-          clearProgress()
+					clearProgress();
 				} catch (e) {
 					executeError = e;
-          clearProgress()
+					clearProgress();
 				}
 			}
 		});
@@ -85,49 +85,48 @@
 		utxos = [];
 	}
 
-  function setProgress() {
-    executionProgress = 0;
-    executionProgressClosed = false;
-  
-    executionProgressId = setInterval(() => {
-      executionProgress += 0.01;
-    }, 100);
-  }
+	function setProgress() {
+		executionProgress = 0;
+		executionProgressClosed = false;
 
-  function clearProgress(){
-    executionProgressClosed = true;
-    clearTimeout(executionProgressId)
-  }
+		executionProgressId = setInterval(() => {
+			executionProgress += 0.01;
+		}, 100);
+	}
 
+	function clearProgress() {
+		executionProgressClosed = true;
+		clearTimeout(executionProgressId);
+	}
 </script>
 
 {#if instance}
 	<h1>{instanceType}</h1>
 	<p>{instance.asText()}</p>
+
+	<a href="{base}/contract?opReturn={instance.toOpReturn(true)}" target="_blank">Permalink</a>
+
 	<h2>Locking Bytecode</h2>
 	<div>
 		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 		<AddressQrCode codeValue={instance.getAddress()} />
 	</div>
 
-	<h3>Hex code:</h3>
-	<p>
-		<a
-			style="line-break:anywhere;"
-			href="{base}/explorer?lockingBytecode={instance.getLockingBytecode()}"
-			>{instance.getLockingBytecode()}</a
-		>
-	</p>
-	<p>Cashaddress: <Address address={instance.getAddress()} /></p>
+	<p>Cashaddress:</p>
+	<p><Address address={instance.getAddress()} /></p>
+	<p>Hex:</p>
+
+	<pre>{instance.getLockingBytecode()}</pre>
 
 	<h2>Unlocking Bytecode</h2>
 	<h3>Phi Contract Parameters</h3>
-	<p>String: <SerializedString str={instance.toString()} /></p>
-	<p>
-		OpReturn: <BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction>
-	</p>
 
-	<a href="{base}/contract?opReturn={instance.toOpReturn(true)}">Share Link</a>
+	<BroadcastAction opReturnHex={instance.toOpReturn(true)} />
+
+	<p>Serialized String: <SerializedString str={instance.toString()} /></p>
+	<p>Serialized OpReturn:</p>
+	<pre>{instance.toOpReturn(true)}</pre>
+
 	<h2>Unspent Transaction Outputs</h2>
 
 	<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
@@ -151,25 +150,28 @@
 			<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
 		{/if}
 		<div />
-    {#if !executionProgressClosed}
-    <div style="display: flex; justify-content: center">
-      <CircularProgress style="height: 48px; width: 48px;" progress={executionProgress} closed={executionProgressClosed} />
-    </div>
-    {/if}
+		{#if !executionProgressClosed}
+			<div style="display: flex; justify-content: center">
+				<CircularProgress
+					style="height: 48px; width: 48px;"
+					progress={executionProgress}
+					closed={executionProgressClosed}
+				/>
+			</div>
+		{/if}
 		{#if executeError}
 			<pre>{executeError}</pre>
 		{/if}
-		{#if executedSucess}
+		{#if executedSuccess}
 			{#if txid}
-      <div style="display: flex; justify-content: center">
-        <Confetti colorRange={[75, 175]} />
-      </div>
-				
+				<div style="display: flex; justify-content: center">
+					<Confetti colorRange={[75, 175]} />
+				</div>
+
 				<a style="line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
 			{/if}
 		{/if}
 	{/if}
 {/if}
 
-<style>
-</style>
+

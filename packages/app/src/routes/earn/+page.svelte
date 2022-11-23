@@ -89,7 +89,7 @@
 					
 					<h1>Spend Unspent Contracts</h1>
           <div id="pager">
-						<Select variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
+						<Select style="max-width: 100px"  variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
 							{#each pageSizes as pageSize}
 								<Option value={pageSize}>
 									{pageSize}
@@ -132,7 +132,7 @@
 					<ContractAccordian bind:contractData />
           <br>
           <div id="pager">
-						<Select variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
+						<Select style="max-width: 100px" variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
 							{#each pageSizes as pageSize}
 								<Option value={pageSize} >
 									{pageSize}
@@ -183,4 +183,7 @@
 		justify-content: right;
 	}
 
+#pageSizeSelect {
+  width: 100px;
+}
 </style>
