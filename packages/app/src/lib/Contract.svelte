@@ -21,6 +21,7 @@
 	let opReturnHex = '';
 	let utxos: any = [];
 	let isFunded = false;
+	let outputs: string[] = [];
 
 	let executionProgress = 0;
 	let executionProgressId;
@@ -38,6 +39,7 @@
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
 		await updateBalance();
+    getOutputLockingBytecodes();
 	});
 
 	const updateBalance = async () => {
@@ -85,6 +87,8 @@
 		utxos = [];
 	}
 
+
+
 	function setProgress() {
 		executionProgress = 0;
 		executionProgressClosed = false;
@@ -127,50 +131,59 @@
 	<p>Serialized OpReturn:</p>
 	<pre>{instance.toOpReturn(true)}</pre>
 
+	{#if instance.getOutputLockingBytecodes().length > 0}
+		<h3>Output Locking Bytecodes</h3>
+    <table>
+      {#each instance.getOutputLockingBytecodes() as output}
+			<tr>
+				<td class="right"><a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?lockingBytecode={output} "> {output} </a> </td>
+				<td> <AddressBlockie size={30} lockingBytecode={output} /> </td>
+			</tr>
+		{/each}
+    </table>
+	{/if}
 	<h2>Unspent Transaction Outputs</h2>
 
 	<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
 	<br />
-	{#if isFunded}
-		Inputs
-		{#if utxos.length == 0}
-			<button on:click={getUtxos}>Select Inputs</button>
-		{/if}
-		{#if utxos.length > 0}
-			<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
-			<UtxosSelect bind:utxos />
-		{/if}
-		<br />
-		<h2>Unlock</h2>
-		<Button variant="raised" touch on:click={execute}>
-			<Label>Execute</Label>
-			<Icon class="material-icons">lock_open</Icon>
-		</Button>
-		{#if !executorAddressValue}
-			<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
-		{/if}
-		<div />
-		{#if !executionProgressClosed}
+	Inputs
+	{#if utxos.length == 0}
+		<button on:click={getUtxos}>Select Inputs</button>
+	{/if}
+	{#if utxos.length > 0}
+		<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
+		<UtxosSelect bind:utxos />
+	{/if}
+	<br />
+	<h2>Unlock</h2>
+	<Button variant="raised" touch on:click={execute}>
+		<Label>Execute</Label>
+		<Icon class="material-icons">lock_open</Icon>
+	</Button>
+
+	{#if !executorAddressValue}
+		<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
+	{/if}
+	{#if !executionProgressClosed}
+		<div style="display: flex; justify-content: center">
+			<CircularProgress
+				style="height: 48px; width: 48px;"
+				progress={executionProgress}
+				closed={executionProgressClosed}
+			/>
+		</div>
+	{/if}
+	{#if executeError}
+		<pre>{executeError}</pre>
+	{/if}
+	{#if executedSuccess}
+		{#if txid}
 			<div style="display: flex; justify-content: center">
-				<CircularProgress
-					style="height: 48px; width: 48px;"
-					progress={executionProgress}
-					closed={executionProgressClosed}
-				/>
+				<Confetti colorRange={[75, 175]} />
 			</div>
-		{/if}
-		{#if executeError}
-			<pre>{executeError}</pre>
-		{/if}
-		{#if executedSuccess}
-			{#if txid}
-				<div style="display: flex; justify-content: center">
-					<Confetti colorRange={[75, 175]} />
-				</div>
-				<div style="max-width=30em; line-break:anywhere;">
-					<a  style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
-				</div>
-			{/if}
+			<div style="max-width=30em; line-break:anywhere;">
+				<a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
+			</div>
 		{/if}
 	{/if}
 {/if}

@@ -103,6 +103,11 @@ export class Record extends BaseUtxPhiContract {
     return record;
   }
 
+  getOutputLockingBytecodes(hex=true){
+    hex
+    return []
+  }
+
   async broadcast(
     opReturn?: Uint8Array | string,
     utxos?: Utxo[]

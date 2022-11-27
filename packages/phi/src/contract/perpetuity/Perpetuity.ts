@@ -1,4 +1,5 @@
 import {
+  binToHex,
   cashAddressToLockingBytecode,
   hexToBin,
   lockingBytecodeToCashAddress,
@@ -18,6 +19,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
   private static fn: string = "execute";
+  public recipientLockingBytecode: Uint8Array;
 
   constructor(
     public period: number = 4000,
@@ -42,6 +44,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       executorAllowance,
       decay,
     ]);
+    this.recipientLockingBytecode = lock.bytecode;
     this.options = options;
   }
 
@@ -151,6 +154,14 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       "0x" + this.getLockingBytecode(),
     ];
     return this.asOpReturn(chunks, hex);
+  }
+
+  getOutputLockingBytecodes(hex=true){
+    if(hex){
+      return [binToHex(this.recipientLockingBytecode)]
+    } else{
+      return [this.recipientLockingBytecode]
+    }
   }
 
   async execute(

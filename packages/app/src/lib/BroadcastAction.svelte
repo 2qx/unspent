@@ -120,7 +120,5 @@
 {/if}
 
 <style>
-	#opreturn {
-		font-size: x-small;
-	}
+
 </style>

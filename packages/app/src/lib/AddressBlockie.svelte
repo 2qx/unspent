@@ -13,7 +13,6 @@
   <img style="width:{size}px; height:{size}px;" alt={lockingBytecode} src={makeBlockie(lockingBytecode)} />
   {:else if lockingBytecode }
   <img style="width:100px; height:100px;" alt={lockingBytecode} src={makeBlockie(lockingBytecode)} />
-  {:else}
   {/if}
 </div>
 

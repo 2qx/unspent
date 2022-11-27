@@ -25,17 +25,6 @@ bind:value={selected}  label="Contract Type">
   {/each}
 </Select>
 
-<!-- this wan't so bad -->
-<!--
-  <select bind:value={selected} on:change={() => (instanceType = selected.name)}>
-	<option value="" disabled selected>Select a Contract Type</option>
-	{#each contractTypes as c (c.id)}
-		<option value={c}>
-			{c.name}
-		</option>
-	{/each}
-</select> 
--->
 <br>
 
 {#if instanceType}

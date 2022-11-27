@@ -105,6 +105,11 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
+  getOutputLockingBytecodes(hex=true){
+    hex
+    return []
+  }
+
   async execute(
     exAddress?: string,
     fee?: number,

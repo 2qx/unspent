@@ -1,4 +1,5 @@
 import {
+  binToHex,
   hexToBin,
   cashAddressToLockingBytecode,
   lockingBytecodeToCashAddress,
@@ -19,7 +20,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "A"; //A
   private static fn: string = "execute";
 
-  public recipientLockingBytecode: any;
+  public recipientLockingBytecode: Uint8Array;
 
   constructor(
     public period: number = 4000,
@@ -166,6 +167,15 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
+  getOutputLockingBytecodes(hex=true){
+    if(hex){
+      return [binToHex(this.recipientLockingBytecode)]
+    } else{
+      return [this.recipientLockingBytecode]
+    }
+  }
+
+
   async execute(
     exAddress?: string,
     fee?: number,
@@ -200,7 +210,6 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     ];
 
 
-    console.log(JSON.stringify(to, undefined, 2))
     let estimator = fn();
     let tx = fn();
     if (utxos) tx = tx.from(utxos);

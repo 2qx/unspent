@@ -1,5 +1,6 @@
 import type { Artifact, Utxo } from "cashscript";
 import {
+  binToHex,
   cashAddressToLockingBytecode,
   hexToBin,
   lockingBytecodeToCashAddress,
@@ -153,6 +154,14 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       "0x" + this.getLockingBytecode(true),
     ];
     return this.asOpReturn(chunks, hex);
+  }
+
+  getOutputLockingBytecodes(hex=true){
+    if(hex){
+      return this.payeeLocks.map(b => binToHex(b))
+    } else{
+      return this.payeeLocks
+    }
   }
 
   async execute(

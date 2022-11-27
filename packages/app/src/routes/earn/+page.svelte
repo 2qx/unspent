@@ -183,7 +183,4 @@
 		justify-content: right;
 	}
 
-#pageSizeSelect {
-  width: 100px;
-}
 </style>

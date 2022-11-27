@@ -163,6 +163,11 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     return nonceHex;
   }
 
+  getOutputLockingBytecodes(hex=true){
+    hex
+    return []
+  }
+
   async execute(
     exAddress?: string,
     fee?: number,
