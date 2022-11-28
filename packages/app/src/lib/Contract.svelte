@@ -39,7 +39,6 @@
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
 		await updateBalance();
-    getOutputLockingBytecodes();
 	});
 
 	const updateBalance = async () => {
