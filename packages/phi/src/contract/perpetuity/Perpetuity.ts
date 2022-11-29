@@ -6,7 +6,7 @@ import {
 } from "@bitauth/libauth";
 import type { Artifact, Utxo } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions, _PROTOCOL_ID } from "../../common/constant.js";
+import { DefaultOptions, _PROTOCOL_ID, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   binToNumber,
@@ -37,6 +37,9 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     let lock = cashAddressToLockingBytecode(address);
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
+
+    if(executorAllowance<DUST_UTXO_THRESHOLD) throw Error("Executor Allowance below dust threshold")
+
 
     super(options.network!, script, [
       period,

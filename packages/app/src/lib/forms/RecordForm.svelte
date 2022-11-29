@@ -1,14 +1,14 @@
 <script lang="ts">
-  import Icon from '@smui/textfield/icon';
+	import Icon from '@smui/textfield/icon';
 	import Fab, { Icon as FabIcon } from '@smui/fab';
-  import { Svg } from '@smui/common';
+	import { Svg } from '@smui/common';
 	import { mdiShuffle } from '@mdi/js';
 
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import { Record } from '@unspent/phi';
+	import { Record, DUST_UTXO_THRESHOLD } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
-  import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	export let contract;
 
 	let showHelp = false;
@@ -18,21 +18,25 @@
 
 	function newIndex() {
 		index = Math.floor(Math.random() * 100);
-    createContract() ;
+		createContract();
 	}
 
 	function createContract() {
 		try {
 			contract = new Record(maxFee, index);
 		} catch (e: Error) {
-			toast.push(e, { classes: ['warn'] });
+      contract = undefined
+			if (e.message) {
+				toast.push(e.message, { classes: ['warn'] });
+			} else {
+				toast.push(e, { classes: ['warn'] });
+			}
 		}
 	}
 
-  onMount(async () => {
-		createContract()
+	onMount(async () => {
+		createContract();
 	});
-
 </script>
 
 <div class="columns margins">
@@ -40,7 +44,7 @@
 		bind:value={maxFee}
 		on:change={() => createContract()}
 		type="number"
-		min="600"
+		input$min={DUST_UTXO_THRESHOLD}
 		required
 		label="Max Fee (satoshis)"
 	>
@@ -48,20 +52,20 @@
 	</Textfield>
 
 	<Textfield
-	bind:value={index}
-	on:change={() => createContract()}
-	type="number"
-	min="0"
-	required
-	label="Index"
->
-	<HelperText slot="helper">A value to make the contract unique.</HelperText>
-  <Icon class="material-icons" tabindex="0"  slot="trailingIcon"  >
-    <Fab  on:click={newIndex}>
-      <FabIcon component={Svg} viewBox="2 2 20 20">
-        <path d={mdiShuffle} />
-      </FabIcon>
-    </Fab>
-  </Icon>
-</Textfield>
+		bind:value={index}
+		on:change={() => createContract()}
+		type="number"
+		min="0"
+		required
+		label="Index"
+	>
+		<HelperText slot="helper">A value to make the contract unique.</HelperText>
+		<Icon class="material-icons" tabindex="0" slot="trailingIcon">
+			<Fab on:click={newIndex}>
+				<FabIcon component={Svg} viewBox="2 2 20 20">
+					<path d={mdiShuffle} />
+				</FabIcon>
+			</Fab>
+		</Icon>
+	</Textfield>
 </div>

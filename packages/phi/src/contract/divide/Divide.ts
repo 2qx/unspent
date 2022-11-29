@@ -6,7 +6,7 @@ import {
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   deriveLockingBytecodeHex,
@@ -37,6 +37,9 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       throw Error("Unrecognized Divide Contract Version");
     }
+
+    if(executorAllowance<DUST_UTXO_THRESHOLD) throw Error("Executor Allowance below dust threshold")
+
     let divisor = payees.length;
     if (!(divisor >= 2 && divisor <= 4))
       throw Error(`Divide contract range must be 2-4, ${divisor} out of range`);

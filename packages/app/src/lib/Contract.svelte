@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
+  import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
 	import Button, { Label, Icon } from '@smui/button';
 	import CircularProgress from '@smui/circular-progress';
 
@@ -138,6 +139,11 @@
 				<td class="right"><a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?lockingBytecode={output} "> {output} </a> </td>
 				<td> <AddressBlockie size={30} lockingBytecode={output} /> </td>
 			</tr>
+      <tr>
+        <td colspan="2">
+         <Address address={lockingBytecodeToCashAddress(hexToBin(output),'bitcoincash')}/>
+        </td>
+      </tr>
 		{/each}
     </table>
 	{/if}

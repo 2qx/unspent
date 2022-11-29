@@ -10,12 +10,21 @@
 	import { load } from '$lib/machinery/loader-store.js';
 	export let data;
 	let instance;
+  let error = "";
   let panelOpen = false;
 
 	const init = async () => {
 		await load({
 			load: async () => {
-				instance = opReturnToInstance(data.opReturn);
+        try{
+          instance = opReturnToInstance(data.opReturn);
+        }catch (e){
+          if(e.message){
+            error = e
+          } else{
+            error = JSON.stringify(e)
+          }
+        }
 			}
 		});
 	};
@@ -25,7 +34,6 @@
       if(!instance){
         await init();
       }
-
      
     }
 	});
@@ -46,5 +54,8 @@
 		{#if instance}
 			<Contract bind:instance />
 		{/if}
+    {#if error}
+    <pre>{error}</pre>
+    {/if}
 	</Content>
 </Panel>

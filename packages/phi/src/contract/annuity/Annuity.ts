@@ -6,7 +6,7 @@ import {
 } from "@bitauth/libauth";
 import type { Artifact, Utxo } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   getPrefixFromNetwork,
@@ -35,6 +35,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       throw Error("Unrecognized Annuity Version");
     }
+
+    if(installment<DUST_UTXO_THRESHOLD) throw Error("Installment below dust threshold")
+    if(executorAllowance<DUST_UTXO_THRESHOLD) throw Error("Executor Allowance below dust threshold")
 
     let lock = cashAddressToLockingBytecode(recipientAddress);
     if (typeof lock === "string") throw lock;

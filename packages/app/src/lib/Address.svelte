@@ -10,10 +10,9 @@
 		use:copy={address}
 		on:svelte-copy={() => toast.push('Address copied to clipboard')}
 	>
-		<Button touch color="secondary">
-			<Label>copy</Label>
+		<Button touch color="secondary"  variant="outlined">
+			<Label>{address}</Label>
 			<Icon class="material-icons">content_copy</Icon>
 		</Button>
-		<pre>{address}</pre>
 	</div>
 {/if}

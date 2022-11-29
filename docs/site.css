@@ -1018,3 +1018,7 @@ section.markdown h5 {
 section.markdown pre {
   padding-left: 2em;
 }
+
+.mdc-button {
+  text-transform: none;
+}

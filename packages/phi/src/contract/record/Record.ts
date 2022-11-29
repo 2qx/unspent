@@ -1,7 +1,7 @@
 import type { Artifact, Utxo } from "cashscript";
 import type { ContractOptions } from "../../common/interface.js";
 import { binToNumber, decodeNullDataScript } from "../../common/util.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { artifact as v1 } from "./cash/v1.js";
 import { hash160, toHex } from "../../common/util.js";
@@ -22,6 +22,7 @@ export class Record extends BaseUtxPhiContract {
     } else {
       throw Error("Unrecognized Divide Contract Version");
     }
+    if(maxFee<DUST_UTXO_THRESHOLD) throw Error("Allowance may result in unusable outputs")
 
     super(options.network!, script, [maxFee, index]);
     this.options = options;

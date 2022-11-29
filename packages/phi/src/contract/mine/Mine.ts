@@ -6,7 +6,7 @@ import {
 } from "@bitauth/libauth";
 import type { Artifact, Utxo } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   toHex,
@@ -34,6 +34,9 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       throw Error(`Unrecognized Mine Contract Version`);
     }
+
+    if(payout<DUST_UTXO_THRESHOLD) throw Error("Payout below dust threshold")
+
 
     super(options.network!, script, [
       period,

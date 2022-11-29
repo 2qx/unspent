@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Annuity } from '@unspent/phi';
+	import { Annuity, DUST_UTXO_THRESHOLD } from '@unspent/phi';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 
@@ -16,9 +16,13 @@
 		if (receiptAddress && installment && period) {
 			try {
 				contract = new Annuity(period, receiptAddress, installment, executorAllowance);
-			} catch (e: Error) {
-				console.log(e);
-				toast.push(e, { classes: ['warn'] });
+			} catch (e: any) {
+        contract = undefined
+				if(e.message) {
+          toast.push(e.message, { classes: ['warn'] });
+        }else{
+          toast.push(e, { classes: ['warn'] });
+        }
 			}
 		}
 	}
@@ -55,7 +59,7 @@
 		bind:value={installment}
 		on:change={() => createContract()}
 		type="number"
-		input$min="543"
+		input$min="{DUST_UTXO_THRESHOLD}"
 		required
 		label="Installment"
 	>
@@ -67,8 +71,8 @@
 		bind:value={executorAllowance}
 		on:change={() => createContract()}
 		type="number"
-		min="543"
-		max="12000"
+		input$min="{DUST_UTXO_THRESHOLD}"
+		input$max="12000"
 		required
 		label="Executor Allowance"
 	>

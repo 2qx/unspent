@@ -1,5 +1,6 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js";
+import { DUST_UTXO_THRESHOLD } from "../../common/constant.js" 
 import { derivePublicKeyHashHex } from "../../common/util.js";
 
 describe(`Annuity Class Tests`, () => {
@@ -8,14 +9,14 @@ describe(`Annuity Class Tests`, () => {
       4000,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
       5000,
-      500
+      DUST_UTXO_THRESHOLD
     );
     let chk = derivePublicKeyHashHex(
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr"
     );
     expect(a.toString()).toContain(chk);
     expect(a.toString()).toEqual(
-      "A,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,5000,500,a914b12dbd2e135db366bfd15620aad82e9ded28bdca87"
+      "A,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,5000,546,a914a26ecd629778d007d042dd82a35f6dc8db6ce62c87"
     );
     let a2 = Annuity.fromString(a.toString());
     expect(a.toString()).toEqual(a2.toString());
@@ -24,7 +25,7 @@ describe(`Annuity Class Tests`, () => {
   });
 
   test("Should deserialize and reserialize a staging Annuity", async () => {
-    let a = new Annuity(5, process.env["ADDRESS"]!, 5000, 500, {
+    let a = new Annuity(5, process.env["ADDRESS"]!, 5000, DUST_UTXO_THRESHOLD, {
       version: 1,
       network: "regtest",
     });
@@ -36,7 +37,7 @@ describe(`Annuity Class Tests`, () => {
 
   test("Should error on next version ", async () => {
     try {
-      new Annuity(5, process.env["ADDRESS"]!, 5000, 500, {
+      new Annuity(5, process.env["ADDRESS"]!, 5000, DUST_UTXO_THRESHOLD, {
         version: 22,
         network: "regtest",
       });
@@ -47,7 +48,7 @@ describe(`Annuity Class Tests`, () => {
 
   test("Should deserialize and reserialize a staging Annuity to chunks and opreturn", async () => {
     let options = { version: 1, network: "regtest" };
-    let a1 = new Annuity(5, process.env["ADDRESS"]!, 5000, 500, options);
+    let a1 = new Annuity(5, process.env["ADDRESS"]!, 5000, DUST_UTXO_THRESHOLD, options);
     let opReturn = a1.toOpReturn(false);
     let a2 = Annuity.fromOpReturn(opReturn, "regtest");
     expect(a1.toString()).toEqual(a2.toString());
@@ -57,7 +58,7 @@ describe(`Annuity Class Tests`, () => {
 
   test("Should a return info", async () => {
     let options = { version: 1, network: "regtest" };
-    let c1 = new Annuity(5, process.env["ADDRESS"]!, 5000, 500, options);
+    let c1 = new Annuity(5, process.env["ADDRESS"]!, 5000, DUST_UTXO_THRESHOLD, options);
     let info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");

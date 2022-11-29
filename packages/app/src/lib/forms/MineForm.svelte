@@ -1,15 +1,15 @@
 <script lang="ts">
 	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import Fab, { Icon } from '@smui/fab';
-  import { Svg } from '@smui/common';
+	import { Svg } from '@smui/common';
 	import { mdiShuffle } from '@mdi/js';
 
-  import Textfield from '@smui/textfield';
+	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import { Mine } from '@unspent/phi';
+	import { Mine, DUST_UTXO_THRESHOLD } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { binToHex } from '@bitauth/libauth';
-  import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	export let contract;
 
 	let period = 1;
@@ -24,8 +24,12 @@
 		try {
 			contract = new Mine(period, payout, difficulty, canaryHex);
 		} catch (e: any) {
-			console.log(e);
-			toast.push(e, { classes: ['warn'] });
+      contract = undefined
+			if (e.message) {
+				toast.push(e.message, { classes: ['warn'] });
+			} else {
+				toast.push(e, { classes: ['warn'] });
+			}
 		}
 	}
 
@@ -35,66 +39,62 @@
 		createContract();
 	}
 
-  onMount(async () => {
-		createContract()
+	onMount(async () => {
+		createContract();
 	});
-
 </script>
 
-<div class="margins"> 
-<Textfield
-	bind:value={payout}
-	on:change={() => createContract()}
-	type="number"
-	min="543"
-	required
-	label="Payout (satoshis)"
->
-	<HelperText slot="helper">Amount contract will payout per period.</HelperText>
-</Textfield>
-
-<Textfield
-	on:change={() => createContract()}
-	type="number"
-	bind:value={difficulty}
-	required
-	min="1"
-	max="5"
-	label="Difficulty"
->
-	<HelperText slot="helper"
-		>How many zeros should the solution require. Hint: three is somewhat hard for a browser, one is
-		trival, five is probably too hard.</HelperText
+<div class="margins">
+	<Textfield
+		bind:value={payout}
+		on:change={() => createContract()}
+		type="number"
+		input$min={DUST_UTXO_THRESHOLD}
+		required
+		label="Payout (satoshis)"
 	>
-</Textfield>
+		<HelperText slot="helper">Amount contract will payout per period.</HelperText>
+	</Textfield>
 
-<Textfield
-	bind:value={period}
-	on:change={() => createContract()}
-	type="number"
-  input$min="1"
-  input$max="65535"
-	required
-	label="Period"
->
-	<HelperText slot="helper">
-		How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+	<Textfield
+		on:change={() => createContract()}
+		type="number"
+		bind:value={difficulty}
+		required
+		min="1"
+		max="5"
+		label="Difficulty"
 	>
-</Textfield>
+		<HelperText slot="helper"
+			>How many zeros should the solution require. Hint: three is somewhat hard for a browser, one
+			is trival, five is probably too hard.</HelperText
+		>
+	</Textfield>
 
-<Textfield bind:value={canaryHex} disabled label="Canary">
-	<HelperText slot="helper">A random value to begin the covenant from.</HelperText>
-</Textfield>
+	<Textfield
+		bind:value={period}
+		on:change={() => createContract()}
+		type="number"
+		input$min="1"
+		input$max="65535"
+		required
+		label="Period"
+	>
+		<HelperText slot="helper">
+			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+		>
+	</Textfield>
 
+	<Textfield bind:value={canaryHex} disabled label="Canary">
+		<HelperText slot="helper">A random value to begin the covenant from.</HelperText>
+	</Textfield>
 
-<Wrapper>
-	<Fab on:click={newNonce}>
-		<Icon component={Svg} viewBox="2 2 20 20">
-			<path fill="currentColor" d={mdiShuffle} />
-		</Icon>
-	</Fab>
-	<Tooltip>Random Nonce.</Tooltip>
-</Wrapper>
-
+	<Wrapper>
+		<Fab on:click={newNonce}>
+			<Icon component={Svg} viewBox="2 2 20 20">
+				<path fill="currentColor" d={mdiShuffle} />
+			</Icon>
+		</Fab>
+		<Tooltip>Random Nonce.</Tooltip>
+	</Wrapper>
 </div>
-

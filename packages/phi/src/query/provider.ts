@@ -21,11 +21,18 @@ export async function getRecords(
                 limit: $limit,
                 offset: $offset,
                 where: {
-                  transaction: {
-                    block_inclusions: {
-                      block: { accepted_by: { node: { name: { _eq: $node } } } }
+                  _or: [
+                    {
+                      transaction: {
+                        block_inclusions: {
+                          block: { accepted_by: { node: { name: { _eq: $node } } } }
+                        }
+                      }
                     }
-                  }
+                    {
+                      transaction: { node_validations: { node: { name: { _eq: $node } } } }
+                    }
+                  ]
                 }
               ) {
                 locking_bytecode
