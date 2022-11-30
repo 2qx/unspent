@@ -1,11 +1,12 @@
 import type { Artifact, Utxo } from "cashscript";
 import {
+  binToHex,
   cashAddressToLockingBytecode,
   hexToBin,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   deriveLockingBytecodeHex,
@@ -24,6 +25,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static fn: string = "execute";
   private payeeLocks: Uint8Array[];
   public divisor: number;
+  public static minAllowance = 227+DUST_UTXO_THRESHOLD+10
 
   constructor(
     public executorAllowance: number = 1200,
@@ -36,6 +38,10 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       throw Error("Unrecognized Divide Contract Version");
     }
+
+    const usableThreshold = Divide.minAllowance+(66*payees.length)
+    if(executorAllowance<usableThreshold) throw Error(`Executor Allowance below usable threshold (${usableThreshold}) for ${payees.length} addresses`)
+
     let divisor = payees.length;
     if (!(divisor >= 2 && divisor <= 4))
       throw Error(`Divide contract range must be 2-4, ${divisor} out of range`);
@@ -155,6 +161,14 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
+  getOutputLockingBytecodes(hex=true){
+    if(hex){
+      return this.payeeLocks.map(b => binToHex(b))
+    } else{
+      return this.payeeLocks
+    }
+  }
+
   async execute(
     exAddress?: string,
     fee?: number,
@@ -171,7 +185,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     let fn = this.getFunction(Divide.fn)!;
     let distributedValue = balance - this.executorAllowance;
     let divisor = this.payees.length;
-    let installment = Math.round(distributedValue / divisor) + 2;
+    let installment = Math.round(distributedValue / divisor) + 1;
 
     if (installment < 546) throw "Installment less than dust limit... bailing";
 
@@ -180,25 +194,27 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       to.push({ to: this.payees[i], amount: installment });
     }
 
-    let feeEstimate = fee ? fee : 186 + this.payees.length * 64;
-
     if (exAddress) {
       to.push({
         to: exAddress,
-        amount: this.executorAllowance - feeEstimate,
+        amount: 546,
       });
 
       let size = await fn().to(to).withoutChange().build();
 
-      let fee = size.length / 2;
+      let feeEstimate = fee ? fee : size.length / 2;
+
       to.pop();
-      to.push({
-        to: exAddress,
-        amount: this.executorAllowance - (fee + 20),
-      });
+      let executorPayout = this.executorAllowance - (feeEstimate + (2*divisor)+8)
+      if (executorPayout > 546)
+        to.push({
+          to: exAddress,
+          amount: executorPayout,
+        });
     }
 
-    let txn = fn().to(to).withoutChange().send();
-    return (await txn).txid;
+    let txn = await fn().to(to).withoutChange().send();
+    
+    return txn.txid;
   }
 }

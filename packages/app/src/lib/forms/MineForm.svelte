@@ -1,11 +1,16 @@
 <script lang="ts">
-	import { Mine } from '@unspent/phi';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
+	import Fab, { Icon } from '@smui/fab';
+	import { Svg } from '@smui/common';
+	import { mdiShuffle } from '@mdi/js';
+
+	import Textfield from '@smui/textfield';
+	import HelperText from '@smui/textfield/helper-text';
+	import { Mine, DUST_UTXO_THRESHOLD } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { binToHex } from '@bitauth/libauth';
-
+	import { onMount } from 'svelte';
 	export let contract;
-
-	let showHelp = false;
 
 	let period = 1;
 	let payout = 5000;
@@ -17,14 +22,15 @@
 
 	function createContract() {
 		try {
-			contract = new Mine(period, payout, difficulty, canary);
-		} catch (e: Error) {
-			toast.push(e, { classes: ['warn'] });
+			contract = new Mine(period, payout, difficulty, canaryHex);
+		} catch (e: any) {
+      contract = undefined
+			if (e.message) {
+				toast.push(e.message, { classes: ['warn'] });
+			} else {
+				toast.push(e, { classes: ['warn'] });
+			}
 		}
-	}
-
-	function toggleHelp() {
-		showHelp = !showHelp;
 	}
 
 	function newNonce() {
@@ -32,87 +38,63 @@
 		canaryHex = binToHex(canary);
 		createContract();
 	}
+
+	onMount(async () => {
+		createContract();
+	});
 </script>
 
-{#if !showHelp}
-	<button class="help-button" on:click={toggleHelp}> Show Help </button>
-{:else}
-	<button on:click={toggleHelp}> Hide Help </button>
-{/if}
-<table>
-	<tr>
-		<td>
-			<label for="payout">Payout (satoshis):</label>
-		</td>
-		<td>
-			<input type="number" on:change={() => createContract()} bind:value={payout} required />
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help"><td colspan="2"> Maximum value the contract can payout per period. </td></tr>
-	{/if}
-	<tr>
-		<td>
-			<label for="difficulty">Difficulty:</label>
-		</td>
-		<td>
-			<input
-				type="number"
-				on:change={() => createContract()}
-				bind:value={difficulty}
-				required
-				min="1"
-				max="5"
-			/>
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2">
-				How many zeros should the solution require. Hint: three is somewhat hard for a browser, one
-				is trival, five is probably too hard.
-			</td>
-		</tr>
-	{/if}
-	<tr>
-		<td>
-			<label for="period">Period (blocks):</label>
-		</td>
-		<td>
-			<input
-				type="number"
-				required
-				bind:value={period}
-				on:change={() => createContract()}
-				min="1"
-				placeholder="e.g. 1 blocks, ~10 minutes"
-			/>
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> How often (in blocks) the covenant may be "mined". </td>
-		</tr>
-	{/if}
+<div class="margins">
+	<Textfield
+		bind:value={payout}
+		on:change={() => createContract()}
+		type="number"
+		input$min={Mine.minPayout}
+		required
+		label="Payout (satoshis)"
+	>
+		<HelperText slot="helper">Amount contract will payout per period.</HelperText>
+	</Textfield>
 
-	<tr>
-		<td>
-			<label for="period">Canary:</label>
-		</td>
+	<Textfield
+		on:change={() => createContract()}
+		type="number"
+		bind:value={difficulty}
+		required
+		min="1"
+		max="5"
+		label="Difficulty"
+	>
+		<HelperText slot="helper"
+			>How many zeros should the solution require. Hint: three is somewhat hard for a browser, one
+			is trival, five is probably too hard.</HelperText
+		>
+	</Textfield>
 
-		<td>
-			<i>
-				{canaryHex}
-			</i>
-			<button on:change={() => createContract()} on:click={newNonce}> random </button>
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> A random value to begin the covenant from. </td>
-		</tr>
-	{/if}
-</table>
-<br />
+	<Textfield
+		bind:value={period}
+		on:change={() => createContract()}
+		type="number"
+		input$min="1"
+		input$max="65535"
+		required
+		label="Period"
+	>
+		<HelperText slot="helper">
+			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+		>
+	</Textfield>
 
-<button on:click={createContract}> Calculate Locking Script</button>
+	<Textfield bind:value={canaryHex} disabled label="Canary">
+		<HelperText slot="helper">A random value to begin the covenant from.</HelperText>
+	</Textfield>
+
+	<Wrapper>
+		<Fab on:click={newNonce}>
+			<Icon component={Svg} viewBox="2 2 20 20">
+				<path fill="currentColor" d={mdiShuffle} />
+			</Icon>
+		</Fab>
+		<Tooltip>Random Nonce.</Tooltip>
+	</Wrapper>
+</div>

@@ -130,7 +130,37 @@ describe(`Divide Class Tests`, () => {
 
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
-    let response = await d1.execute();
+    let response = await d1.execute(alice.getDepositAddress());
+
+    let receipt = await RegTestWallet.watchOnly(payees[0]);
+
+    expect(await receipt.getBalance("sat")).toBeGreaterThan(10000);
+    // ...
+  });
+
+  test("Should pay division contract to two P2SH addresses", async () => {
+    let options = { version: 1, network: "regtest" };
+
+    // faucets 0-3
+    let payees = [
+      "bchreg:pzqsz2t07725tp0x5s88pufmzapr3n39rsr7s0sgq4",
+      "bchreg:pr9ye5xfn0kqd3cvsvpsjnhnp6y8ytv87uvrsactvf",
+    ];
+    let d1 = new Divide(1200, payees, options);
+
+    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+
+    await alice.send([
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+    ]);
+
+    expect(await d1.getBalance()).toBeGreaterThan(100);
+
+    let response = await d1.execute(alice.getDepositAddress());
 
     let receipt = await RegTestWallet.watchOnly(payees[0]);
 

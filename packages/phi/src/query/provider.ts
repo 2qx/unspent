@@ -21,11 +21,18 @@ export async function getRecords(
                 limit: $limit,
                 offset: $offset,
                 where: {
-                  transaction: {
-                    block_inclusions: {
-                      block: { accepted_by: { node: { name: { _eq: $node } } } }
+                  _or: [
+                    {
+                      transaction: {
+                        block_inclusions: {
+                          block: { accepted_by: { node: { name: { _eq: $node } } } }
+                        }
+                      }
                     }
-                  }
+                    {
+                      transaction: { node_validations: { node: { name: { _eq: $node } } } }
+                    }
+                  ]
                 }
               ) {
                 locking_bytecode
@@ -142,6 +149,45 @@ export async function getTransaction(
       }`,
       variables: {
         txid: `\\x${txid}`,
+      },
+    },
+  }).catch((e: any) => {
+    throw e;
+  });
+
+  // raise errors from chaingraph
+  if (response.data.error || response.data.errors) {
+    if (response.data.error) {
+      throw Error(response.data.error);
+    } else {
+      throw Error(response.data.errors[0].message);
+    }
+  }
+
+  return response.data.data;
+}
+
+export async function getUnspentOutputs(
+  host: string,
+  lockingBytecode: string
+) {
+
+  let response = await axios({
+    url: host,
+    method: "post",
+    data: {
+      query: `query SearchUnspentOutputsByLockingBytecode($lockingBytecode_literal: _text!) {
+        search_output(
+          args: { locking_bytecode_hex: $lockingBytecode_literal},
+          where: {_not:{spent_by:{value_satoshis:{_gt:0}}}}
+        ) {
+          output_index
+          transaction_hash
+          value_satoshis
+        }
+      }`,
+      variables: {
+        lockingBytecode_literal: `{${lockingBytecode}}`,
       },
     },
   }).catch((e: any) => {

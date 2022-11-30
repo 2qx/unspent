@@ -1,2 +1,0 @@
-- [Annuity](#annuity)
-- [Divide](#divide)

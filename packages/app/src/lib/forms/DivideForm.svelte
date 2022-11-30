@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { mdiPlus } from '@mdi/js';
+	import Fab, { Icon } from '@smui/fab';
+	import { Svg } from '@smui/common';
+	import Textfield from '@smui/textfield';
+	import HelperText from '@smui/textfield/helper-text';
 	import AddressOptional from '$lib/AddressOptional.svelte';
-	import { Divide } from '@unspent/phi';
+	import { Divide, DUST_UTXO_THRESHOLD } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 	let isPublished = false;
-	let showHelp = false;
 
 	let payees: string[] = ['', ''];
 	let executorAllowance = 1200;
@@ -12,7 +16,12 @@
 		try {
 			contract = new Divide(executorAllowance, payees);
 		} catch (e: Error) {
-			toast.push(e, { classes: ['warn'] });
+      contract = undefined
+			if (e.message) {
+				toast.push(e.message, { classes: ['warn'] });
+			} else {
+				toast.push(e, { classes: ['warn'] });
+			}
 		}
 	}
 
@@ -25,78 +34,48 @@
 		}
 	}
 
-	function handleRemoval(event) {
-		if (payees.length > 2) {
+	function handleMsg(event) {
+		console.log(event.detail);
+		if (event.detail.addressIdx && payees.length > 2) {
 			payees.splice(event.detail.addressIdx, 1);
 			payees = payees;
-		} else {
+      createContract();
+		} else if(payees.length < 2){
 			toast.push('Minimum of two addresses required.');
 		}
-	}
-
-	function toggleHelp() {
-		showHelp = !showHelp;
+    createContract();
+		
 	}
 </script>
 
-{#if !showHelp}
-	<button class="help-button" on:click={toggleHelp}> Show Help </button>
-{:else}
-	<button on:click={toggleHelp}> Hide Help </button>
-{/if}
-
-<table id="table-1">
-	<tr>
-		<td>
-			<label for="executorAllowance">Executor Allowance:</label>
-		</td>
-
-		<td
-			><input
-				type="number"
-				bind:value={executorAllowance}
-				on:change={() => createContract()}
-				min="843"
-				max="12000"
-				required
-			/></td
+<div class="margins">
+	<Textfield
+		bind:value={executorAllowance}
+		on:change={() => createContract()}
+		type="number"
+		input$min="{Divide.minAllowance+(66*payees.length)}"
+		input$max="12000"
+		required
+		label="Executor Allowance"
+	>
+		<HelperText slot="helper"
+			>Remainder for the execution of the contract and miner fees.</HelperText
 		>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> Remainder for the execution of the contract and miner fees.</td>
-		</tr>
-	{/if}
-	<tr>
-		<td>
-			<label for="payees">Payees:</label>
-			{#if payees.length < 4}
-				<button on:click={addPayee}>+</button>
-			{/if}
-		</td>
-		<td>
-			{#each payees as payee, i}
-				<AddressOptional
-					bind:address={payee}
-					index={i}
-					on:message={handleRemoval}
-					on:change={() => createContract()}
-				/>
-			{/each}
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> Addresses to recieve equal (roughly) payouts minus executor fee.</td>
-		</tr>
-	{/if}
-</table>
-<br />
+	</Textfield>
 
-<button on:click={createContract}> Calculate Locking Script</button>
-
-<style>
-	#table-1 {
-		width: 100%;
-	}
-</style>
+	{#each payees as payee, i}
+		<AddressOptional
+			bind:address={payee}
+			index={i}
+			on:message={handleMsg}
+			on:change={() => createContract()}
+		/>
+	{/each}
+	{#if payees.length < 4}
+		<Fab on:click={addPayee}>
+			<Icon component={Svg} viewBox="2 2 20 20">
+				<path fill="currentColor" d={mdiPlus} />
+			</Icon>
+		</Fab>
+	{/if}
+</div>

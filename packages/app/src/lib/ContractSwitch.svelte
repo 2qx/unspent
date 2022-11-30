@@ -28,7 +28,9 @@
 	{:else}
 		<p>Couldn't find contract form for {instanceType}</p>
 	{/if}
-	<hr />
+	<br />
+
+
 	{#if contract}
 		<Contract bind:instance={contract} {instanceType} />
 	{/if}

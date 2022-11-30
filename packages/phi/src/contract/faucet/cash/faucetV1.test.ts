@@ -35,7 +35,7 @@ describe(`Faucet Contract Tests`, () => {
       regtestNetwork
     );
 
-    // fund the perp contract
+    // fund the faucet contract
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -66,6 +66,7 @@ describe(`Faucet Contract Tests`, () => {
             .withHardcodedFee(153)
             .build()
         ).length / 2;
+      //console.log(size)
       await contract!.functions
         .drip()
         .to([

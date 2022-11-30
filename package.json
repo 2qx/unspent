@@ -11,16 +11,18 @@
       "**/jest-runner/**"
     ]
   },
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
     "app:build": "yarn workspace @unspent/app run build",
+    "app:prepare": "yarn workspace @unspent/app prepare",
     "app:preview": "yarn workspace @unspent/app run build; yarn workspace @unspent/app run preview",
     "app:dev": "yarn workspace @unspent/app run dev",
     "build": "npx lerna build",
     "build:phi": "yarn workspace @unspent/phi run build ",
-    "cli": "yarn workspace @unspent/cli run cli",
+    "phi:publish": "yarn workspace @unspent/phi run publish ",
+    "cli": "yarn workspace unspent run cli",
     "postinstall": "lerna bootstrap && lerna run build",
     "nuke": "rm -fr jest/playwright/* && rm -fr node_modules && yarn remove:packages",
     "remove:packages": "rm -fr packages/*/node_modules && rm -fr packages/*/dist",

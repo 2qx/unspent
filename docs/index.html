@@ -1,20 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="./favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta http-equiv="content-security-policy" content="">
-		<link rel="modulepreload" href="./_app/immutable/start-016133b2.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index-2c07c0a5.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/singletons-52643be3.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index-6f2bdc3b.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/paths-69dfee94.js">
-	</head>
-	<body data-sveltekit-prefetch>
-		<div>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" defer async href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="icon" href="./favicon.ico" />
+  <meta name="viewport" content="width=device-width" />
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Unspent Phi - give, earn, lock and mine."
+    />
+
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Unspent Phi" />
+    <meta property="og:url" content="https://unspent.app/" />
+    <meta
+      property="og:image"
+      content="https://unspent.app/images/header.png"
+    />
+    <meta
+      property="og:description"
+      content="Decentralized finance using unspent transaction unlocking script. Open source, on-chain, running nativiely & directly on Bitcoin Cash (BCH)."
+    />
+    <meta property="og:type" content="website" />
+    <!--  Progressive Web App Service Worker -->
+    <link rel="manifest" href="./site.webmanifest" type="application/manifest+json">
+    <script src="./pwa.js"></script>
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    
+    <meta name="msapplication-TileColor" content="#ff00ff" />
+    <meta name="theme-color" content="#ff00ff" />
+  <meta http-equiv="content-security-policy" content="">
+		<link rel="modulepreload" href="./_app/immutable/start-b0edfc24.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index-ebd277a9.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons-de5b3a92.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/paths-1e836c43.js">
+</head>
+
+<body >
+  <div id="smui-app">
 		<script type="module" data-sveltekit-hydrate="45h">
-			import { start } from "./_app/immutable/start-016133b2.js";
+			import { start } from "./_app/immutable/start-b0edfc24.js";
 
 			start({
 				env: {},
@@ -24,5 +53,6 @@
 				trailing_slash: "never"
 			});
 		</script></div>
-	</body>
+</body>
+
 </html>

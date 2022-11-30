@@ -1,6 +1,6 @@
 {
   "name": "@unspent/phi",
-  "version": "0.0.1",
+  "version": "0.0.16",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
@@ -11,6 +11,10 @@
     "test": "npx jest --runInBand  --logHeapUsage --forceExit"
   },
   "type": "module",
+  "exclude": [
+    ".yarn",
+    "node_modules"
+  ],
   "main": "dist/main/index.js",
   "types": "dist/main/index.d.ts",
   "keywords": [

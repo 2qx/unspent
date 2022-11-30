@@ -1,6 +1,6 @@
 import type { Artifact, Utxo } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { toHex, binToNumber } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
@@ -8,6 +8,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "F";
   private static fn: string = "drip";
+  public static minPayout: number = 158+DUST_UTXO_THRESHOLD+10;
 
   constructor(
     public period: number = 1,
@@ -21,6 +22,9 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       throw Error("Unrecognized Faucet Version");
     }
+
+    if(payout<Faucet.minPayout) throw Error("Payout below dust threshold")
+
     super(options.network!, script, [period, payout, index]);
     this.options = options;
   }
@@ -105,6 +109,11 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
+  getOutputLockingBytecodes(hex=true){
+    hex
+    return []
+  }
+
   async execute(
     exAddress?: string,
     fee?: number,
@@ -120,7 +129,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
     let fn = this.getFunction(Faucet.fn)!;
     let newPrincipal = balance - this.payout;
-    let minerFee = fee ? fee : 453;
+    let minerFee = fee ? fee : 253;
     let sendAmount = this.payout - minerFee;
 
     let to = [
@@ -133,7 +142,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress)
       to.push({
         to: exAddress,
-        amount: sendAmount,
+        amount: 546,
       });
 
     let size = await fn().to(to).withAge(this.period).withoutChange().build();

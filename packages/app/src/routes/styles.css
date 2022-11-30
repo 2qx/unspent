@@ -18,11 +18,9 @@
 }
 
 body {
-	min-height: 100vh;
 	margin: 0;
 	background-attachment: fixed;
 	background-color: var(--color-bg-1);
-	background-size: 100vw 100vh;
 	background-image: radial-gradient(
 			50% 50% at 50% 50%,
 			rgba(255, 255, 255, 0.75) 0%,
@@ -31,14 +29,7 @@ body {
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
 }
 
-h1,
-h2 {
-	font-weight: 800;
-}
 
-p {
-	line-height: 1.5;
-}
 
 a {
 	color: var(--color-theme-1);
@@ -49,13 +40,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-h1 {
-	font-size: 2rem;
-}
 
-h2 {
-	font-size: 1.5rem;
-}
 
 pre {
 	font-size: 16px;
@@ -102,7 +87,7 @@ button {
 	color: #50928c;
 	border: unset;
 	border-radius: 6px;
-	padding: 0.75rem 1.5rem;
+	padding: 0.25rem 0.25rem;
 	cursor: pointer;
 	word-break: break-all;
 }
@@ -130,7 +115,7 @@ button:disabled {
 }
 
 .hit-me {
-	background: #ce27f0;
+	background: #F0F;
 	color: #27cfc1;
 	font-weight: bolder;
 }
@@ -138,9 +123,7 @@ button:disabled {
 table {
 	width: 100%;
 }
-td {
-	border: 1px solid #333;
-}
+
 
 img {
 	width: 100%;

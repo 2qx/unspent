@@ -1,11 +1,12 @@
 import {
+  binToHex,
   hexToBin,
   cashAddressToLockingBytecode,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import type { Artifact, Utxo } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   getPrefixFromNetwork,
@@ -18,8 +19,9 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "A"; //A
   private static fn: string = "execute";
+  public static minAllowance: number = DUST_UTXO_THRESHOLD+222+10;
 
-  public recipientLockingBytecode: any;
+  public recipientLockingBytecode: Uint8Array;
 
   constructor(
     public period: number = 4000,
@@ -34,6 +36,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       throw Error("Unrecognized Annuity Version");
     }
+
+    if(installment<DUST_UTXO_THRESHOLD) throw Error("Installment below dust threshold")
+    if(executorAllowance<Annuity.minAllowance) throw Error("Executor Allowance below usable threshold")
 
     let lock = cashAddressToLockingBytecode(recipientAddress);
     if (typeof lock === "string") throw lock;
@@ -166,6 +171,15 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
+  getOutputLockingBytecodes(hex=true){
+    if(hex){
+      return [binToHex(this.recipientLockingBytecode)]
+    } else{
+      return [this.recipientLockingBytecode]
+    }
+  }
+
+
   async execute(
     exAddress?: string,
     fee?: number,
@@ -185,9 +199,8 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Funds selected below installment amount");
 
     let newPrincipal = balance - (this.installment + this.executorAllowance);
-    let minerFee = fee ? fee : 500;
-    let executorFee =
-      balance - (this.installment + newPrincipal + minerFee) - 4;
+
+
 
     let to = [
       {
@@ -200,16 +213,16 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       },
     ];
 
-    if (typeof exAddress === "string")
-      to.push({
-        to: exAddress,
-        amount: executorFee,
-      });
 
     let estimator = fn();
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
     if (utxos) estimator = estimator.from(utxos);
+    
+    if (exAddress) to.push({
+      to: exAddress,
+      amount: 546,
+    });
 
     let size = await estimator!
       .to(to)
@@ -217,11 +230,12 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       .withoutChange()
       .build();
 
-    minerFee = fee ? fee : size.length / 2 + 8;
-    executorFee = balance - (this.installment + newPrincipal + minerFee);
+    let minerFee = fee ? fee : size.length / 2 +5 ;
+    let executorFee = balance - (this.installment + newPrincipal + minerFee) - 4;
 
     if (exAddress) {
       to.pop();
+      if (executorFee < 546) throw Error(`inputs would result in executor fee below dust limit ${executorFee}`)
       to.push({
         to: exAddress,
         amount: executorFee,

@@ -9,7 +9,7 @@ import {
   instantiateSha256,
   instantiateRipemd160,
   utf8ToBin,
-  numberToBinUintLE,
+  numberToBinUintLE
 } from "@bitauth/libauth";
 
 import { Op, encodeNullDataScript } from "@cashscript/utils";
@@ -53,6 +53,8 @@ export function deriveLockingBytecode(address: string): Uint8Array {
   if (typeof lock === "string") throw lock;
   return lock.bytecode;
 }
+
+
 
 export function getPrefixFromNetwork(
   network: string
