@@ -1,11 +1,10 @@
 <script lang="ts">
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import { Perpetuity, DUST_UTXO_THRESHOLD } from '@unspent/phi';
+	import { Perpetuity } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 	let isPublished = false;
-	let showHelp = false;
 
 	let period = NaN;
 	let receiptAddress = '';
@@ -42,7 +41,7 @@
 		bind:value={period}
 		on:change={() => createContract()}
 		type="number"
-		input$min={DUST_UTXO_THRESHOLD}
+		input$min=1
 		input$max="65535"
 		required
 		label="Period"
@@ -56,7 +55,7 @@
 		bind:value={decay}
 		on:change={() => createContract()}
 		type="number"
-		min="2"
+		input$min="2"
 		required
 		label="Decay"
 	>
@@ -70,8 +69,8 @@
 		bind:value={executorAllowance}
 		on:change={() => createContract()}
 		type="number"
-		min={DUST_UTXO_THRESHOLD}
-		max="12000"
+		input$min={Perpetuity.minAllowance}
+		input$max="12000"
 		required
 		label="Executor Allowance"
 	>

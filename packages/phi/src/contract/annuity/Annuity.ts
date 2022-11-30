@@ -19,6 +19,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "A"; //A
   private static fn: string = "execute";
+  public static minAllowance: number = DUST_UTXO_THRESHOLD+222+10;
 
   public recipientLockingBytecode: Uint8Array;
 
@@ -37,7 +38,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     }
 
     if(installment<DUST_UTXO_THRESHOLD) throw Error("Installment below dust threshold")
-    if(executorAllowance<DUST_UTXO_THRESHOLD) throw Error("Executor Allowance below dust threshold")
+    if(executorAllowance<Annuity.minAllowance) throw Error("Executor Allowance below usable threshold")
 
     let lock = cashAddressToLockingBytecode(recipientAddress);
     if (typeof lock === "string") throw lock;

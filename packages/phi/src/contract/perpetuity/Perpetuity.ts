@@ -20,6 +20,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
+  public static minAllowance: number = DUST_UTXO_THRESHOLD + 220 + 10;
 
   constructor(
     public period: number = 4000,
@@ -38,8 +39,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
 
-    if(executorAllowance<DUST_UTXO_THRESHOLD) throw Error("Executor Allowance below dust threshold")
-
+    if (executorAllowance < Perpetuity.minAllowance) throw Error(`Executor Allowance below usable threshold ${Perpetuity.minAllowance}`)
 
     super(options.network!, script, [
       period,
@@ -159,10 +159,10 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
-  getOutputLockingBytecodes(hex=true){
-    if(hex){
+  getOutputLockingBytecodes(hex = true) {
+    if (hex) {
       return [binToHex(this.recipientLockingBytecode)]
-    } else{
+    } else {
       return [this.recipientLockingBytecode]
     }
   }
@@ -172,20 +172,21 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     fee?: number,
     utxos?: Utxo[]
   ): Promise<string> {
-    let balance = 0;
+    let currentValue = 0;
     if (utxos && utxos?.length > 0) {
-      balance = utxos.reduce((a, b) => a + b.satoshis, 0);
+      currentValue = utxos.reduce((a, b) => a + b.satoshis, 0);
     } else {
-      balance = await this.getBalance();
+      currentValue = await this.getBalance();
     }
-    if (balance == 0) return "No funds on contract";
+    if (currentValue == 0) return "No funds on contract";
 
     let fn = this.getFunction(Perpetuity.fn)!;
-    let installment = Math.round(balance / this.decay);
+    let installment = Math.round(currentValue / this.decay)+1;
+    let newPrincipal = currentValue - (installment + this.executorAllowance);
 
-    let newPrincipal = balance - (installment + this.executorAllowance);
-    let minerFee = fee ? fee : 300;
-    let executorFee = balance - (installment + newPrincipal + minerFee) - 2;
+    // round up
+    installment += 2;
+    newPrincipal += 3;
 
     let to = [
       {
@@ -198,6 +199,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       },
     ];
 
+    let executorFee = DUST_UTXO_THRESHOLD;
     if (typeof exAddress === "string" && exAddress)
       to.push({
         to: exAddress,
@@ -209,15 +211,22 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     let size = await tx!.to(to).withAge(this.period).withoutChange().build();
 
+    //console.log(size.length / 2)
     if (exAddress) {
-      minerFee = fee ? fee : size.length / 2;
-      executorFee = balance - (installment + newPrincipal + minerFee) - 2;
+      let minerFee = fee ? fee : size.length / 2;
+
+      executorFee = this.executorAllowance - minerFee - 7
       to.pop();
       to.push({
         to: exAddress,
         amount: executorFee,
       });
     }
+
+    // // Calculate value returned to the contract
+    // int returnedValue = currentValue - installment - executorAllowance;
+    //console.log(newPrincipal, currentValue, installment, executorFee)
+    
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);

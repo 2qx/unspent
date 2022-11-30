@@ -1,4 +1,5 @@
 import { Faucet } from "./Faucet.js";
+import { RegTestWallet, mine } from "mainnet-js";
 import { deriveLockingBytecodeHex } from "../../common/util.js";
 
 describe(`Faucet Class Tests`, () => {

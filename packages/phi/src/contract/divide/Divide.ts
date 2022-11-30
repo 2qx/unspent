@@ -25,6 +25,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static fn: string = "execute";
   private payeeLocks: Uint8Array[];
   public divisor: number;
+  public static minAllowance = 227+DUST_UTXO_THRESHOLD+10
 
   constructor(
     public executorAllowance: number = 1200,
@@ -38,7 +39,8 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Divide Contract Version");
     }
 
-    if(executorAllowance<DUST_UTXO_THRESHOLD) throw Error("Executor Allowance below dust threshold")
+    const usableThreshold = Divide.minAllowance+(66*payees.length)
+    if(executorAllowance<usableThreshold) throw Error(`Executor Allowance below usable threshold (${usableThreshold}) for ${payees.length} addresses`)
 
     let divisor = payees.length;
     if (!(divisor >= 2 && divisor <= 4))
@@ -200,7 +202,6 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
       let size = await fn().to(to).withoutChange().build();
 
-      console.log(size.length/2)
       let feeEstimate = fee ? fee : size.length / 2;
 
       to.pop();

@@ -6,7 +6,7 @@
 
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import { Faucet, DUST_UTXO_THRESHOLD } from '@unspent/phi';
+	import { Faucet } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 	export let contract;
@@ -44,7 +44,7 @@
 		bind:value={payout}
 		on:change={() => createContract()}
 		type="number"
-		input$min={DUST_UTXO_THRESHOLD}
+		input$min={Faucet.minPayout}
 		required
 		label="Payout (satoshis)"
 	>

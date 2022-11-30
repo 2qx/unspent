@@ -20,6 +20,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "M";
   private static fn: string = "execute";
+  public static minPayout: number = DUST_UTXO_THRESHOLD + 392+10;
 
   constructor(
     public period: number = 1,
@@ -35,7 +36,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Unrecognized Mine Contract Version`);
     }
 
-    if(payout<DUST_UTXO_THRESHOLD) throw Error("Payout below dust threshold")
+    if(payout<Mine.minPayout) throw Error(`Payout below minimum usable level ${Mine.minPayout}`)
 
 
     super(options.network!, script, [
@@ -229,6 +230,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (exAddress) {
       let minerFee = fee ? fee : size.length / 2;
+      console.log(minerFee)
       let reward = this.payout - (minerFee + 10);
       to.pop();
       to.push({

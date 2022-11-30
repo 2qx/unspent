@@ -71,7 +71,7 @@
 		bind:value={executorAllowance}
 		on:change={() => createContract()}
 		type="number"
-		input$min="{DUST_UTXO_THRESHOLD}"
+		input$min="{Annuity.minAllowance}"
 		input$max="12000"
 		required
 		label="Executor Allowance"

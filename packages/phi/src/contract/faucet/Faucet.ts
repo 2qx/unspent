@@ -8,6 +8,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "F";
   private static fn: string = "drip";
+  public static minPayout: number = 158+DUST_UTXO_THRESHOLD+10;
 
   constructor(
     public period: number = 1,
@@ -22,7 +23,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Faucet Version");
     }
 
-    if(payout<DUST_UTXO_THRESHOLD) throw Error("Payout below dust threshold")
+    if(payout<Faucet.minPayout) throw Error("Payout below dust threshold")
 
     super(options.network!, script, [period, payout, index]);
     this.options = options;

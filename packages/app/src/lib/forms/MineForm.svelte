@@ -49,7 +49,7 @@
 		bind:value={payout}
 		on:change={() => createContract()}
 		type="number"
-		input$min={DUST_UTXO_THRESHOLD}
+		input$min={Mine.minPayout}
 		required
 		label="Payout (satoshis)"
 	>

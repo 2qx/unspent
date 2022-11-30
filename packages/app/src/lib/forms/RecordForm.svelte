@@ -44,7 +44,7 @@
 		bind:value={maxFee}
 		on:change={() => createContract()}
 		type="number"
-		input$min={DUST_UTXO_THRESHOLD}
+		input$min={Record.minMaxFee}
 		required
 		label="Max Fee (satoshis)"
 	>
@@ -55,7 +55,7 @@
 		bind:value={index}
 		on:change={() => createContract()}
 		type="number"
-		min="0"
+		input$min="0"
 		required
 		label="Index"
 	>
