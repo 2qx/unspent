@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import Card from '@smui/card';
+  import IconButton, { Icon } from '@smui/icon-button';
+  import Button, { Label } from '@smui/button';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 	import { deriveLockingBytecodeHex } from '@unspent/phi';
@@ -37,6 +39,12 @@
 
 	function updateChaingraphHost() {
 		chaingraphHost.set(chaingraphHostValue);
+	}
+
+  function clearExAddress() {
+		lockingBytecode = "";
+    executorAddressValue = "";
+    executorAddress.set("");
 	}
 
 	function updateExAddress() {
@@ -78,14 +86,23 @@
 					>
 						<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
 					</Textfield>
+          {#if executorAddressValue}
+          <div style="display: flex; align-items: center;">
+            <IconButton class="material-icons" on:click={clearExAddress}
+              >delete</IconButton
+            >
+          </div>
+          {/if}
 				</div>
 				{#if lockingBytecode}
+        <div>
+					<AddressQrCode codeValue={executorAddressValue} />
+					<AddressBlockie {lockingBytecode} />
+        </div>
 					<p>Locking Bytecode</p>
 					<a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}"
 						>{lockingBytecode}</a
 					>
-					<AddressBlockie {lockingBytecode} />
-					<AddressQrCode codeValue={executorAddressValue} />
 				{/if}
 			</div>
 		</Card>
