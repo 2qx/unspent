@@ -12,6 +12,8 @@ export interface UtxPhiIface {
   getAddress(): string;
 
   getBalance(): Promise<number>;
+
+  getOutputLockingBytecodes(hex: boolean): string[]| Uint8Array[]
 }
 
 export interface ContractOptions {

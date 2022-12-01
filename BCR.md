@@ -230,7 +230,7 @@ As some controversy in the memo/member protocol(s) has shown, it may be best to 
 
 ### OP_Return length
 
-- Presently, OP_RETURN is limited to 223 bytes, so if lockingBytecodes are stored in the contract announcement, the number of addresses involved is limited to five (or four plus the contract lockingBytecode shortcut/checksum).
+- Presently, OP_RETURN is limited to 223 bytes (by relay rules), so if lockingBytecodes are stored in the contract announcement, the number of addresses involved is limited to five (or four plus the contract lockingBytecode shortcut/checksum).
 - Current OP_RETURN size shouldn't be a limitation with current signature sizes. I.e. If inputs should, be divided by 4, they can be divided to 64 in three more steps―it is not worth a consensus change.
 
 ## Cleanup the dust as you go

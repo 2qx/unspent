@@ -10,6 +10,7 @@ import { binToHex, hexToBin } from "@bitauth/libauth";
 export class Record extends BaseUtxPhiContract {
   static c: string = "R";
   private static fn: string = "execute";
+  public static minMaxFee: number =  310;
 
   constructor(
     public maxFee: number = 850,
@@ -22,6 +23,7 @@ export class Record extends BaseUtxPhiContract {
     } else {
       throw Error("Unrecognized Divide Contract Version");
     }
+    if(maxFee<Record.minMaxFee) throw Error(`Allowed fee < ${Record.minMaxFee} may result in unusable outputs`)
 
     super(options.network!, script, [maxFee, index]);
     this.options = options;
@@ -103,6 +105,11 @@ export class Record extends BaseUtxPhiContract {
     return record;
   }
 
+  getOutputLockingBytecodes(hex=true){
+    hex
+    return []
+  }
+
   async broadcast(
     opReturn?: Uint8Array | string,
     utxos?: Utxo[]
@@ -140,7 +147,7 @@ export class Record extends BaseUtxPhiContract {
     }
 
     let size = (
-      await estimator.withOpReturn(chunks).withHardcodedFee(369).build()
+      await estimator.withOpReturn(chunks).withHardcodedFee(669).build()
     ).length;
 
     let txn = await tx

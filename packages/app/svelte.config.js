@@ -7,6 +7,9 @@ import sveltePreprocess from 'svelte-preprocess';
 const dev = process.env.NODE_ENV === 'development';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
+  ssr: {
+    noExternal: [/^@material\//],
+  },
 	kit: {
 		adapter: adapter({
 			pages: '../../docs',
@@ -18,7 +21,9 @@ const config = {
 		}
 	},
 	extensions: ['.svelte', '.md'],
-
+  css: {
+   postcss: {},
+  },
 	preprocess: [
 		sveltePreprocess({ sourceMap: false, handleMixedImports: true, reportDiagnostics: true }),
 		mdsvex({

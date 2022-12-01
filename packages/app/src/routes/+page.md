@@ -1,3 +1,6 @@
+---
+layout: splash
+---
 <svelte:head>
 <title>Unspent Phi</title>
 </svelte:head>
@@ -49,7 +52,7 @@ The Divide and Record contracts are not time-locked, they may be called at anyti
 
 
 
-# Implemented Contracts
+# Contracts
 
 ## Annuity
 
@@ -214,7 +217,7 @@ How many zeros is the `difficulty`.
 Finally, prior to spending the the mining `payout`, the spender must announce
 the winning `nonce` in an OP_RETURN of the first output, and send the balance of the contract to a new mining covenant with the new nonce as a `canary`.
 
-![Replace the canary](canary.png "Look, see, he's alright. He's fine.")
+![Replace the canary](images/canary.jpeg "Look, see, he's alright. He's fine.")
 Like an infinite series of Failures to Deliver (FTDs) for a stock, or banging forex futures to manipulate an outcome in currency markets, the canary is always brought back to life with a new copy of itself. You don't have to take over a whole blockchain to create a market for your energy, just mine a covenant—there will be far less idiosyncratic risk.
 
 ```solidity
@@ -410,7 +413,7 @@ contract Record(int maxFee, int index) {
 
 ## Units
 
-bitcoin has it's own units of value and time. Although there are whole coins and it's possible to use epoch time (seconds since 1970) in some cases, we'll stick to two here.
+bitcoin has it's own units of value and time. Although there are whole coins and it's possible to use epoch time (seconds since 1970) in some cases, we'll stick to two here to steer clear of the politics surrounding "leap seconds" and what is a *unit of account*.
 
 ### satoshis
 
@@ -432,6 +435,7 @@ The base unit of time on bitcoin is called a block, blocktimes very, but are abo
 | 26280  | -       | -     | 0.499 |
 | 52560  | -       | -     | 0.999 |
 
+The largest value specified by the timelock upgrade [(BIP68)](https://reference.cash/protocol/forks/bip-0068) is a 16-bit value. Contracts with locking periods larger than the maximum value (65536) have **not** been tested, and should not be expected to work.
 
 ## Languages
 
@@ -443,7 +447,7 @@ A procedural, stack-oriented programming language (Forth-like) with different ru
 
 [CashScript is a high-level programming language for smart contracts on Bitcoin Cash](https://cashscript.org/docs/basics/about) that transpiles to BitcoinScript.
 
-## Script 
+## Script Components
 
 ### Unlocking Script
 

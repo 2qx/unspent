@@ -1,14 +1,20 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-  import { base } from '$app/paths';
-	import makeBlockie from 'ethereum-blockies-base64';
-	import { confetti } from '@neoconfetti/svelte';
+	import { base } from '$app/paths';
+  import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
+	import Button, { Label, Icon } from '@smui/button';
+	import CircularProgress from '@smui/circular-progress';
+
+	import { Confetti } from 'svelte-confetti';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { executorAddress } from './store.js';
 	import Address from './Address.svelte';
+	import AddressQrCode from './AddressQrCode.svelte';
+	import AddressBlockie from './AddressBlockie.svelte';
 	import SerializedString from './SerializedString.svelte';
+
 	export let instance: any;
 	export let instanceType = '';
 	let balance = NaN;
@@ -16,9 +22,13 @@
 	let opReturnHex = '';
 	let utxos: any = [];
 	let isFunded = false;
+	let outputs: string[] = [];
 
-	let executedSucess = false;
-  let executeError = '';
+	let executionProgress = 0;
+	let executionProgressId;
+	let executionProgressClosed = true;
+	let executedSuccess = false;
+	let executeError = '';
 
 	let executorAddressValue = '';
 
@@ -36,7 +46,7 @@
 		await load({
 			load: async () => {
 				if (instance) balance = await instance.getBalance();
-				if (balance > 0) isFunded = true;
+				isFunded = balance > 0 ? true : false;
 			}
 		});
 	};
@@ -44,16 +54,18 @@
 	const execute = async () => {
 		await load({
 			load: async () => {
-				executedSucess = false;
-        try{
-          let inUtxos = utxos.filter((u: any) => u.use == true);
-          txid = await instance.execute(executorAddressValue, undefined, inUtxos);
-          executedSucess = true;
-          executeError = "";
-        } catch(e){
-          executeError = JSON.stringify(e)
-        }
-				
+				setProgress();
+				executedSuccess = false;
+				try {
+					let inUtxos = utxos.filter((u: any) => u.use == true);
+					txid = await instance.execute(executorAddressValue, undefined, inUtxos);
+					executedSuccess = true;
+					executeError = '';
+					clearProgress();
+				} catch (e) {
+					executeError = e;
+					clearProgress();
+				}
 			}
 		});
 	};
@@ -74,78 +86,110 @@
 	function dropUtxos() {
 		utxos = [];
 	}
+
+
+
+	function setProgress() {
+		executionProgress = 0;
+		executionProgressClosed = false;
+
+		executionProgressId = setInterval(() => {
+			executionProgress += 0.01;
+		}, 100);
+	}
+
+	function clearProgress() {
+		executionProgressClosed = true;
+		clearTimeout(executionProgressId);
+	}
 </script>
 
-<div class="contract-list">
-	{#if instance}
-		<p>{instance.asText()}</p>
-		<table>
+{#if instance}
+	<h1>{instanceType}</h1>
+	<p>{instance.asText()}</p>
+
+	<a href="{base}/contract?opReturn={instance.toOpReturn(true)}" target="_blank">Permalink</a>
+
+	<h2>Locking Bytecode</h2>
+  <p>Cashaddress:</p>
+	<p><Address address={instance.getAddress()} /></p>
+	<div>
+		<AddressQrCode codeValue={instance.getAddress()} />
+    <AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
+	</div>
+
+
+	<p>Hex:</p>
+
+	<pre>{instance.getLockingBytecode()}</pre>
+
+	<h2>Unlocking Bytecode</h2>
+	<h3>Phi Contract Parameters</h3>
+
+	<BroadcastAction opReturnHex={instance.toOpReturn(true)} />
+
+	<p>Serialized String: <SerializedString str={instance.toString()} /></p>
+	<p>Serialized OpReturn:</p>
+	<pre>{instance.toOpReturn(true)}</pre>
+
+	{#if instance.getOutputLockingBytecodes().length > 0}
+		<h3>Predefined outputs:</h3>
+    <table>
+      {#each instance.getOutputLockingBytecodes() as output}
 			<tr>
-				<td class="id-label">Record</td>
-				<td class="flex-middle"
-					><BroadcastAction opReturnHex={instance.toOpReturn(true)}>Broadcast</BroadcastAction></td
-				>
+				<td class="right"><a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?lockingBytecode={output} "> {output} </a> </td>
+				<td> <AddressBlockie size={30} lockingBytecode={output} /> </td>
 			</tr>
-			<tr>
-				<td class="id-label"> <img alt={instance.getLockingBytecode()} src={makeBlockie(instance.getLockingBytecode())} /></td>
-				<td class="flex-middle"> <Address address={instance.getAddress()} /></td>
-			</tr>
-			<tr>
-				<td class="id-label">String</td>
-				<td class="flex-middle"><SerializedString str={instance.toString()} /></td>
-			</tr>
-			<tr>
-				<td class="id-label">Balance</td>
-				<td class="flex-middle">{balance} sats <button on:click={updateBalance}>Update</button></td>
-			</tr>
-			{#if isFunded}
-				<tr>
-					<td class="id-label">Inputs</td>
-					<td class="flex-middle">
-						{#if utxos.length == 0}
-							<button on:click={getUtxos}>Select Inputs</button>
-						{/if}
-						{#if utxos.length > 0}
-							<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
-							<UtxosSelect bind:utxos />
-						{/if}
-					</td>
-				</tr>
-				<tr>
-					<td class="id-label"><button on:click={execute}>Unlock</button></td>
-					<td class="flex-middle">
-            {#if executeError}
-            {executeError}
-            {/if}
-						{#if executedSucess}
-							{#if txid}
-              <a href="{base}/explorer?tx={txid}">{txid}</a>
-              {/if}
-							<div>
-								<div use:confetti />
-							</div>
-						{/if}
-					</td>
-				</tr>
-			{/if}
-		</table>
+      <tr>
+        <td colspan="2">
+         <Address address={lockingBytecodeToCashAddress(hexToBin(output),'bitcoincash')}/>
+        </td>
+      </tr>
+		{/each}
+    </table>
 	{/if}
-</div>
+	<h2>Unspent Transaction Outputs</h2>
 
-<style>
-  .contract-list{
-    width: 100%
-  }
-  
-	.id-label {
-		width: 100px;
-	}
-	.flex-middle {
-		font-style: normal;
-		word-break: break-all;
-	}
+	<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
+	<br />
+	Inputs
+	{#if utxos.length == 0}
+		<button on:click={getUtxos}>Select Inputs</button>
+	{/if}
+	{#if utxos.length > 0}
+		<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
+		<UtxosSelect bind:utxos />
+	{/if}
+	<br />
+	<h2>Unlock</h2>
+	<Button variant="raised" touch on:click={execute}>
+		<Label>Execute</Label>
+		<Icon class="material-icons">lock_open</Icon>
+	</Button>
 
-	div {
-		justify-content: center;
-	}
-</style>
+	{#if !executorAddressValue}
+		<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
+	{/if}
+	{#if !executionProgressClosed}
+		<div style="display: flex; justify-content: center">
+			<CircularProgress
+				style="height: 48px; width: 48px;"
+				progress={executionProgress}
+				closed={executionProgressClosed}
+			/>
+		</div>
+	{/if}
+	{#if executeError}
+		<pre>{executeError}</pre>
+	{/if}
+	{#if executedSuccess}
+		{#if txid}
+			<div style="display: flex; justify-content: center">
+				<Confetti colorRange={[75, 175]} />
+			</div>
+			<div style="max-width=30em; line-break:anywhere;">
+				<a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
+			</div>
+		{/if}
+	{/if}
+{/if}

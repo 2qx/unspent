@@ -1,6 +1,14 @@
 <script lang="ts">
+	import Icon from '@smui/textfield/icon';
+	import Fab, { Icon as FabIcon } from '@smui/fab';
+	import { Svg } from '@smui/common';
+	import { mdiShuffle } from '@mdi/js';
+
+	import Textfield from '@smui/textfield';
+	import HelperText from '@smui/textfield/helper-text';
 	import { Faucet } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
+	import { onMount } from 'svelte';
 	export let contract;
 
 	let showHelp = false;
@@ -11,81 +19,76 @@
 
 	function newIndex() {
 		index = Math.floor(Math.random() * 100);
+		createContract();
 	}
 
 	function createContract() {
 		try {
 			contract = new Faucet(period, payout, index);
 		} catch (e: Error) {
-			toast.push(e, { classes: ['warn'] });
+      contract = undefined
+			if (e.message) {
+				toast.push(e.message, { classes: ['warn'] });
+			} else {
+				toast.push(e, { classes: ['warn'] });
+			}
 		}
 	}
-
-	function toggleHelp() {
-		showHelp = !showHelp;
-	}
+	onMount(async () => {
+		createContract();
+	});
 </script>
 
-{#if !showHelp}
-	<button class="help-button" on:click={toggleHelp}> Show Help </button>
-{:else}
-	<button on:click={toggleHelp}> Hide Help </button>
-{/if}
+<div class="margins">
+	<Textfield
+		bind:value={payout}
+		on:change={() => createContract()}
+		type="number"
+		input$min={Faucet.minPayout}
+		required
+		label="Payout (satoshis)"
+	>
+		<HelperText slot="helper">Amount contract will payout per period.</HelperText>
+	</Textfield>
 
-<table>
-	<tr>
-		<td>
-			<label for="payout">Payout (satoshis):</label>
-		</td>
-		<td>
-			<input type="number" on:change={() => createContract()} bind:value={payout} required />
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help"><td colspan="2"> Amount contract will payout per period. </td></tr>
-	{/if}
-	<tr>
-		<td>
-			<label for="period">Period:</label>
-		</td>
-		<td>
-			<input
-				type="number"
-				on:change={() => createContract()}
-				required
-				bind:value={period}
-				min="1"
-				placeholder="e.g. 1 block, ~10 minutes"
-			/>
-		</td>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> How often (in blocks) the contract can pay. </td>
-		</tr>
-	{/if}
-
-	<tr>
-		<td>
-			<label for="index">Index:</label>
-		</td>
-
-		<td
-			><input type="number" bind:value={index} on:change={() => createContract()} required /><button
-				on:click={newIndex}
-			>
-				random
-			</button></td
+	<Textfield
+		bind:value={period}
+		on:change={() => createContract()}
+		type="number"
+		input$min="1"
+		input$max="65535"
+		required
+		label="Period"
+	>
+		<HelperText slot="helper">
+			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
 		>
-	</tr>
-	{#if showHelp}
-		<tr class="help">
-			<td colspan="2"> A value to make the faucet unique. </td>
-		</tr>
-	{/if}
-</table>
-<br />
+	</Textfield>
 
-{#if !contract}
-<button on:click={createContract}> Calculate Locking Script</button>
-{/if}
+	<Textfield
+		bind:value={index}
+		on:change={() => createContract()}
+		type="number"
+		min="0"
+		required
+		label="Index"
+	>
+		<HelperText slot="helper">A value to make the contract unique.</HelperText>
+		<Icon class="material-icons" tabindex="0" slot="trailingIcon">
+			<Fab on:click={newIndex}>
+				<FabIcon component={Svg} viewBox="2 2 20 20">
+					<path d={mdiShuffle} />
+				</FabIcon>
+			</Fab>
+		</Icon>
+	</Textfield>
+
+	<!-- <Wrapper>
+	<Fab on:click={newIndex}>
+		<Icon component={Svg} viewBox="2 2 20 20">
+			<path fill="currentColor" d={mdiShuffle} />
+		</Icon>
+	</Fab>
+	<Tooltip>Random Index.</Tooltip>
+</Wrapper> -->
+</div>

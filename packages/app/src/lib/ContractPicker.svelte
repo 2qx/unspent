@@ -1,5 +1,6 @@
 <script lang="ts">
 
+import Select, { Option } from '@smui/select';
 	import ContractSwitch from '$lib/ContractSwitch.svelte';
 	let selected: any;
 	export let instanceType;
@@ -15,14 +16,16 @@
 	];
 </script>
 
-<select bind:value={selected} on:change={() => (instanceType = selected.name)}>
-	<option value="" disabled selected>Select a Contact Type</option>
-	{#each contractTypes as c (c.id)}
-		<option value={c}>
-			{c.name}
-		</option>
-	{/each}
-</select>
+<Select 
+key={(c) => `${c ? c.name : ''}`}
+on:MDCSelect:change={(e) => (instanceType = e.detail.value.name)}
+bind:value={selected}  label="Contract Type">
+  {#each contractTypes as c (c.name)}
+    <Option value={c}>{c.name} </Option>
+  {/each}
+</Select>
+
+<br>
 
 {#if instanceType}
 	<ContractSwitch bind:instanceType />

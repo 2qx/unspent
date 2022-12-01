@@ -1,16 +1,25 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-  import { base } from "$app/paths";
-	import { confetti } from '@neoconfetti/svelte';
+	import { base } from '$app/paths';
+	import { Confetti } from 'svelte-confetti';
+	import Button, { Label, Icon } from '@smui/button';
+	import CircularProgress from '@smui/circular-progress';
+
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, Record } from '@unspent/phi';
 	import { chaingraphHost, node } from '$lib/store.js';
 
 	export let opReturnHex: string;
 
+	let preRecord = '';
 	let isPublished: boolean;
-	let executedSuccess = false;
 	let txid = '';
+
+	let executionProgress = 0;
+	let executionProgressId: any;
+	let executionProgressClosed = true;
+	let executedSuccess = false;
+	let executeError = '';
 
 	let chaingraphHostValue = '';
 	let nodeValue = '';
@@ -23,10 +32,29 @@
 	});
 
 	beforeUpdate(async () => {
-    if(!executedSuccess){
-      await check();
-    }
+		if (opReturnHex !== preRecord) {
+			preRecord = opReturnHex;
+			executionProgressClosed = true;
+			executedSuccess = false;
+			executeError = '';
+			txid = '';
+			await check();
+		}
 	});
+
+	function setProgress() {
+		executionProgress = 0;
+		executionProgressClosed = false;
+
+		executionProgressId = setInterval(() => {
+			executionProgress += 0.01;
+		}, 100);
+	}
+
+	function clearProgress() {
+		executionProgressClosed = true;
+		clearTimeout(executionProgressId);
+	}
 
 	const check = async () => {
 		await load({
@@ -39,33 +67,58 @@
 			}
 		});
 	};
+
 	const broadcast = async () => {
-		let r = new Record();
-		txid = await r.broadcast(opReturnHex);
-    isPublished = true
-		executedSuccess = true;
+		try {
+			setProgress();
+			executedSuccess = false;
+			let r = new Record();
+			txid = await r.broadcast(opReturnHex);
+			isPublished = true;
+			executedSuccess = true;
+			executeError = '';
+			clearProgress();
+		} catch (e) {
+			executeError = e;
+			clearProgress();
+		}
 	};
 </script>
-
-{#if executedSuccess}
-	<div>
-		<div use:confetti />
-	</div>
-{/if}
 
 {#if isPublished == undefined}
 	checking records ...
 {:else if isPublished == true}
-	<button disabled>Published</button>
-  {#if txid}
-  <a href="{base}/explorer?tx={txid}">{txid}</a>
-  {/if}
+	<Button disabled>
+		<Label>Published</Label>
+		<Icon class="material-icons">check</Icon>
+	</Button>
+	{#if txid}
+		<div style="display: flex; justify-content: center">
+			<Confetti colorRange={[75, 174]} />
+		</div>
+		Transaction:<a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}"
+			>{txid}</a
+		>
+	{/if}
 {:else}
-	<button class="hit-me" id="opreturn" on:click={broadcast}>{opReturnHex}</button>
+	<Button variant="raised" touch on:click={broadcast}>
+		<Label>Broadcast</Label>
+		<Icon class="material-icons">send</Icon>
+	</Button>
+	{#if !executionProgressClosed}
+		<div style="display: flex; justify-content: center">
+			<CircularProgress
+				style="height: 48px; width: 48px;"
+				progress={executionProgress}
+				closed={executionProgressClosed}
+			/>
+		</div>
+	{/if}
+	{#if executeError}
+		<pre>{executeError}</pre>
+	{/if}
 {/if}
 
 <style>
-	#opreturn {
-		font-size: xx-small;
-	}
+
 </style>

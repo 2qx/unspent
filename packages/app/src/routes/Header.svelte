@@ -1,17 +1,16 @@
 <script>
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
-	import logo from '$lib/images/android-chrome-192x192.png';
-	import github from '$lib/images/github.svg';
+  import { assets } from '$app/paths';
 </script>
 
 <div class="alpha">
-This app is very Alpha! Keep value small and create a backup of any information used to create contracts that hold value.
+This app is in active development! Keep value small and create a backup of any information used to create contracts that hold value.
 </div>
 <header>
 	<div class="corner">
 		<a href="{base}/">
-			<img src={logo} alt="Unspent" />
+			<img src='{assets}/images/favicon-32x32.png' alt="Logo" />
 		</a>
 	</div>
 
@@ -37,9 +36,11 @@ This app is very Alpha! Keep value small and create a backup of any information 
 
 	<div class="corner">
 		<a href="https://github.com/2qx/unspent">
-			<img src={github} alt="GitHub" />
+			<img src='{base}/images/github.svg' alt="GitHub" />
 		</a>
 	</div>
+
+
 </header>
 
 <style>
@@ -50,7 +51,7 @@ This app is very Alpha! Keep value small and create a backup of any information 
 
   .alpha {
 		width: 100%;
-    background-color: deeppink;
+    background-color: rgb(171, 0, 171);
     font-weight: 900;
     color: white;
     text-align: center;

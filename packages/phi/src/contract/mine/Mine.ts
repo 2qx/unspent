@@ -6,7 +6,7 @@ import {
 } from "@bitauth/libauth";
 import type { Artifact, Utxo } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   toHex,
@@ -20,6 +20,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "M";
   private static fn: string = "execute";
+  public static minPayout: number = DUST_UTXO_THRESHOLD + 392+10;
 
   constructor(
     public period: number = 1,
@@ -34,6 +35,9 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       throw Error(`Unrecognized Mine Contract Version`);
     }
+
+    if(payout<Mine.minPayout) throw Error(`Payout below minimum usable level ${Mine.minPayout}`)
+
 
     super(options.network!, script, [
       period,
@@ -163,6 +167,11 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     return nonceHex;
   }
 
+  getOutputLockingBytecodes(hex=true){
+    hex
+    return []
+  }
+
   async execute(
     exAddress?: string,
     fee?: number,
@@ -221,6 +230,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (exAddress) {
       let minerFee = fee ? fee : size.length / 2;
+      console.log(minerFee)
       let reward = this.payout - (minerFee + 10);
       to.pop();
       to.push({

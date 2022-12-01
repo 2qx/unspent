@@ -1,7 +1,6 @@
 import { binToHex, hexToBin } from "@bitauth/libauth";
 import { getRecords } from "./provider.js";
 import { opReturnToInstance } from "../common/map.js";
-import { createOpReturnData } from "../common/util.js";
 import { PROTOCOL_ID } from "../common/constant.js";
 
 describe(`Record Class Tests`, () => {

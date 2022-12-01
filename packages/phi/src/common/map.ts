@@ -30,13 +30,10 @@ export function opReturnToInstance(
   let contractCode = binToHex(serializedBinChunks[1]!);
 
   let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
-  try {
-    let instance = contractMap[code].fromOpReturn(serialized, network);
-    return instance;
-  } catch (e) {
-    console.warn(`Couldn't parse serialized contract ${e}`);
-    return;
-  }
+
+  let instance = contractMap[code].fromOpReturn(serialized, network);
+  return instance;
+
 }
 
 export function opReturnToSerializedString(

@@ -1,9 +1,10 @@
-import { opReturn } from "@bitauth/libauth";
 import { Record } from "./Record.js";
+import { Divide } from "../divide/Divide.js";
 import { Faucet } from "../faucet/index.js";
 import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
+
 
 describe(`Record Class Tests`, () => {
   test("Should announce itself and Faucet", async () => {
@@ -61,16 +62,7 @@ describe(`Record Class Tests`, () => {
   });
 
   test("Should announce itself and Faucet", async () => {
-    // let payees = [
-    //     "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
-    //     "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
-    //     "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
-    //     "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss",
-    //     "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
-    //     "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
-    //     "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
-    //     "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss"
-    // ]
+
     let options = { version: 1, network: "regtest" };
     let f = new Faucet(1, 1000, 0, options);
     let r = new Record(850, 1, options);
@@ -86,6 +78,49 @@ describe(`Record Class Tests`, () => {
     ]);
 
     let tx = await r.broadcast(f.toOpReturn());
+    let tx2 = await r.broadcast();
+    // expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array(
+    //     [
+    //         106,
+    //         4, 117, 116, 120, 111,
+    //         1, 82,
+    //         1, 1,
+    //         2, 82, 3,
+    //         1, 1,
+    //         23,
+    //         169, 20,
+    //         228, 166, 133, 142, 156,
+    //         50, 186, 76, 216, 44,
+    //         200, 94, 39, 43, 228,
+    //         113, 71, 191, 226, 12,
+    //         135
+
+    //     ]
+    // ))
+  });
+
+  test("Should announce itself and Faucet", async () => {
+    let payees = [
+        "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+        "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+        "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
+        "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss"
+    ]
+    let options = { version: 1, network: "regtest" };
+    let d = new Divide(1047, payees, options);
+    let r = new Record(Record.minMaxFee, 1, options);
+
+    // fund the contract
+    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    await alice.send([
+      {
+        cashaddr: r.getAddress(),
+        value: 50000,
+        unit: "satoshis",
+      },
+    ]);
+
+    let tx = await r.broadcast(d.toOpReturn());
     let tx2 = await r.broadcast();
     // expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array(
     //     [
