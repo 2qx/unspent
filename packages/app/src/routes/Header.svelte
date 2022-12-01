@@ -1,16 +1,32 @@
 <script>
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
-  import { assets } from '$app/paths';
+	import { assets } from '$app/paths';
+	export let data;
 </script>
 
-<div class="alpha">
-This app is in active development! Keep value small and create a backup of any information used to create contracts that hold value.
-</div>
+{#if data && data.isLocal}
+	<div class="local">This is a local development instance</div>
+{:else if data && data.isDevelopment}
+	<div class="dev">
+		This is an <b>unstable</b> development version of the unspent app. Funds may be lost using new
+		features. Please go to <a href="https://unspent.app">unspent.app</a> instead
+	</div>
+{:else}
+	<div class="alpha">
+		This app is in development! Keep value small and create a backup of any information used to
+		create contracts that hold value.
+	</div>
+{/if}
+
 <header>
 	<div class="corner">
 		<a href="{base}/">
-			<img src='{assets}/images/favicon-32x32.png' alt="Logo" />
+			{#if data && (data.isLocal || data.isDevelopment)}
+				<img src="{assets}/dev/favicon-32x32.png" alt="Dev Logo" />
+			{:else}
+				<img src="{assets}/images/favicon-32x32.png" alt="Logo" />
+			{/if}
 		</a>
 	</div>
 
@@ -36,11 +52,9 @@ This app is in active development! Keep value small and create a backup of any i
 
 	<div class="corner">
 		<a href="https://github.com/2qx/unspent">
-			<img src='{base}/images/github.svg' alt="GitHub" />
+			<img src="{base}/images/github.svg" alt="GitHub" />
 		</a>
 	</div>
-
-
 </header>
 
 <style>
@@ -49,12 +63,29 @@ This app is in active development! Keep value small and create a backup of any i
 		justify-content: space-between;
 	}
 
-  .alpha {
+	.alpha {
 		width: 100%;
-    background-color: rgb(171, 0, 171);
-    font-weight: 900;
-    color: white;
-    text-align: center;
+		background-color: rgb(171, 0, 171);
+		font-weight: 900;
+		color: white;
+		text-align: center;
+	}
+
+	.dev {
+		background-color: rgb(255, 225, 0);
+		font-weight: 900;
+		min-height: 50px;
+		color: rgb(0, 0, 0);
+		text-align: center;
+	}
+
+	.local {
+		width: 100%;
+		background-color: rgb(0, 254, 0);
+		font-weight: 900;
+		min-height: 50px;
+		color: white;
+		text-align: center;
 	}
 
 	.corner {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Header from './Header.svelte';
+	import Footer from './Footer.svelte';
 	import './styles.css';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import { assets } from '$app/paths';
@@ -45,7 +46,7 @@
 			media="screen and (prefers-color-scheme: dark)"
 		/>
 	{/if}
-	<Header />
+	<Header bind:data={data}/>
 	<SvelteToast />
 	{#if data && data.splash}
   <img id="banner" src="{assets}/images/banner.svg"  alt="Unspent" />
@@ -58,9 +59,7 @@
 		<slot />
 	</main>
 
-	<footer>
-		<p />
-	</footer>
+	<Footer bind:data={data}/>
 </div>
 
 <style>
