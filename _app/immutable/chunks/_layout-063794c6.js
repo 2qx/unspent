@@ -1,0 +1,2 @@
+const l=!0,o=!1;async function a({url:e}){let s=!1;e.pathname==="/"&&(s=!0);let t=!!(e.hostname.includes("localhost")||e.hostname.includes("127.0.0.1")),n=!!e.hostname.includes("unspent.dev");return{splash:s,isLocal:t,isDevelopment:n}}const r=Object.freeze(Object.defineProperty({__proto__:null,prerender:!0,ssr:!1,load:a},Symbol.toStringTag,{value:"Module"}));export{r as _,a as l,l as p,o as s};
+//# sourceMappingURL=_layout-063794c6.js.map

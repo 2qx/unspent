@@ -1,0 +1,1 @@
+{"version":3,"file":"_page-5bbc1f4b.js","sources":["../../../../../../src/routes/earn/+page.js"],"sourcesContent":["// since there's no dynamic data here, we can prerender\n// it so that it gets served as a static asset in production\nexport const prerender = true;\nexport const ssr = false;\n"],"names":["prerender","ssr"],"mappings":"AAEY,MAACA,EAAY,GACZC,EAAM"}
