@@ -7,7 +7,12 @@
 <div class="uc-image">
   <img src="{assets}/dev/under_construction.gif" alt="Whao!" />
 </div>
+{/if}
 
+{#if data && data.isLocal}
+<div class="uc-image">
+  <img src="{assets}/dev/localhost.png" alt="local" />
+</div>
 {/if}
 
 <style>
@@ -18,5 +23,6 @@
     top: 10em;
     z-index: 1;
     width:100%;
+    pointer-events: none;
 	}
   </style>

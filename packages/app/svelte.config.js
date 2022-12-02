@@ -5,20 +5,17 @@ import rehypeSlug from 'rehype-slug';
 import sveltePreprocess from 'svelte-preprocess';
 
 const dev = process.env.NODE_ENV === 'development';
+const buildDir = process.env.NODE_ENV === 'production' ? '../../docs' : "";
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   ssr: {
     noExternal: [/^@material\//],
   },
 	kit: {
-		adapter: adapter({
-			pages: '../../docs',
-			assets: '../../docs'
-		}),
-		paths: {
-			// change below to your repo name
-			base: dev ? '' : ''
-		}
+    adapter: adapter({
+      pages: buildDir,
+      assets: buildDir
+    })
 	},
 	extensions: ['.svelte', '.md'],
   css: {
