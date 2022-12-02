@@ -12,6 +12,7 @@ coverage
 jest/playwright/*
 jest/docker/data
 dist
+docs/
 app2
 *.yarn
 *.yarnrc.yml
