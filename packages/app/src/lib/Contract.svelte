@@ -111,13 +111,14 @@
 	<a href="{base}/contract?opReturn={instance.toOpReturn(true)}" target="_blank">Permalink</a>
 
 	<h2>Locking Bytecode</h2>
+  <p>Cashaddress:</p>
+	<p><Address address={instance.getAddress()} /></p>
 	<div>
-		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 		<AddressQrCode codeValue={instance.getAddress()} />
+    <AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 	</div>
 
-	<p>Cashaddress:</p>
-	<p><Address address={instance.getAddress()} /></p>
+
 	<p>Hex:</p>
 
 	<pre>{instance.getLockingBytecode()}</pre>
@@ -132,7 +133,7 @@
 	<pre>{instance.toOpReturn(true)}</pre>
 
 	{#if instance.getOutputLockingBytecodes().length > 0}
-		<h3>Output Locking Bytecodes</h3>
+		<h3>Predefined outputs:</h3>
     <table>
       {#each instance.getOutputLockingBytecodes() as output}
 			<tr>

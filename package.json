@@ -17,6 +17,7 @@
   "scripts": {
     "app:build": "yarn workspace @unspent/app run build",
     "app:prepare": "yarn workspace @unspent/app prepare",
+    "app:publish": "yarn workspace @unspent/app run publish;",
     "app:preview": "yarn workspace @unspent/app run build; yarn workspace @unspent/app run preview",
     "app:dev": "yarn workspace @unspent/app run dev",
     "build": "npx lerna build",
