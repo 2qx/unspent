@@ -689,6 +689,33 @@ a:visited {
   --mdc-ripple-fg-opacity: var(--mdc-ripple-press-opacity, 0.12);
 }
 
+.my-image-list-masonry {
+  column-count: 3;
+  column-gap: 16px;
+  max-width: 680px;
+}
+.my-image-list-masonry .mdc-image-list__item {
+  margin-bottom: 16px;
+}
+.my-image-list-masonry .mdc-image-list__image {
+  border-radius: 10px;
+}
+.my-image-list-masonry.mdc-image-list--with-text-protection .mdc-image-list__supporting {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+@media (max-width: 599px) {
+  .my-image-list-masonry {
+    column-count: 2;
+    column-gap: 16px;
+  }
+  .my-image-list-masonry .mdc-image-list__item {
+    margin-bottom: 16px;
+  }
+}
 body,
 #smui-app {
   display: flex;
