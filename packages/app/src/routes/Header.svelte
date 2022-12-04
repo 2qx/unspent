@@ -67,7 +67,7 @@
 
 	.alpha {
 		width: 100%;
-		background-color: rgb(171, 0, 171);
+		background-color: rgba(117, 40, 117, 0.631);
 		font-weight: 900;
 		color: white;
 		text-align: center;
@@ -83,7 +83,7 @@
 
 	.local {
 		width: 100%;
-		background-color: rgb(0, 254, 0);
+		background-color: rgb(255, 0, 255);
 		font-weight: 900;
 		min-height: 50px;
 		color: white;

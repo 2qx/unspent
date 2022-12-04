@@ -20,9 +20,10 @@
 
 	.uc-image {
     position:fixed;
-    top: 10em;
+    top: 6em;
     z-index: 1;
-    width:100%;
+    width:400px;
+    align-items: center;
     pointer-events: none;
 	}
   </style>
