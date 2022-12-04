@@ -6,16 +6,17 @@
 </script>
 
 {#if data && data.isLocal}
-	<div class="local">This is a local development instance</div>
+	<div class="local">This is a local development instance,  <a href="{base}/202212_fundraiser"> 🤠 🍊</a></div>
 {:else if data && data.isDevelopment}
 	<div class="dev">
 		This is an <b>unstable</b> development version of the unspent app. Funds may be lost using new
-		features. Please go to <a href="https://unspent.app">unspent.app</a> instead
+		features. Please go to <a href="https://unspent.app">unspent.app</a> instead.
+    To support Unspent Phi: <a href="{base}/202212_fundraiser"> click here</a>
 	</div>
 {:else}
 	<div class="alpha">
 		This app is in development! Keep value small and create a backup of any information used to
-		create contracts that hold value.
+		create contracts that hold value. To support Unspent Phi: <a href="{base}/202212_fundraiser"> click here</a>
 	</div>
 {/if}
 
