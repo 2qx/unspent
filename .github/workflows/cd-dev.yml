@@ -1,9 +1,9 @@
-name: Deploy app
+name: Deploy .dev
 
 on:
   push:
     branches:
-      - main
+      - feature/*
   pull_request:
 
 jobs:
@@ -39,8 +39,9 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
+        #if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          cname: unspent.app
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: 2qx/unspent.dev
+          cname: unspent.dev
           publish_dir: ./docs
