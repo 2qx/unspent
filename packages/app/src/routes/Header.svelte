@@ -68,7 +68,7 @@
 
 	.alpha {
 		width: 100%;
-		background-color: rgba(117, 40, 117, 0.631);
+		background-color: #420242;
 		font-weight: 900;
 		color: white;
 		text-align: center;
