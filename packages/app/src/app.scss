@@ -10,6 +10,7 @@
 
 // Main Top App Bar styling.
 @use '@material/top-app-bar/index' as top-app-bar;
+@use '@material/image-list/index' as image-list;
 
 .mdc-top-app-bar.demo-top-app-bar {
   // Color the top bar with "surface" colors.
@@ -20,6 +21,21 @@
   @include elevation.elevation(4);
   // Position it above the drawer.
   z-index: 7;
+}
+
+
+
+ 
+.my-image-list-masonry {
+  @include image-list.masonry-columns(3);
+  @include image-list.shape-radius(10px);
+  max-width: 680px;
+}
+ 
+@media (max-width: 599px) {
+  .my-image-list-masonry {
+    @include image-list.masonry-columns(2);
+  }
 }
 
 // Now on to the regular app styling stuff.
