@@ -30,7 +30,7 @@
 			load: async () => {
 				if (cashaddr) balance = await getBalance(cashaddr);
 				balanceText = balance.toLocaleString();
-				percentDone = (balance / goal).toFixed(4);
+				percentDone = (balance / goal * 100 ).toFixed(4);
 				isSuccess = balance > 6400000000 ? true : false;
 			}
 		});
