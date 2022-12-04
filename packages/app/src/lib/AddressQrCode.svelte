@@ -3,6 +3,7 @@
 	import QRCode from 'easyqrcodejs';
 
 	export let codeValue;
+  export let size;
 	let node;
 	let qr;
 
@@ -11,11 +12,13 @@
 			qr.clear();
 		}
 
+    size = size ? size : 100
+    
 		if (codeValue) {
 			const options = {
 				text: codeValue,
-				width: 100,
-				height: 100,
+				width: size,
+				height: size,
 				quietZone: 10
 			};
 			qr = new QRCode(node, options);

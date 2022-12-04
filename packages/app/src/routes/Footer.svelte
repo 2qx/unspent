@@ -10,7 +10,7 @@
 {/if}
 
 {#if data && data.isLocal}
-<div class="uc-image">
+<div class="uc-local">
   <img src="{assets}/dev/localhost.png" alt="local" />
 </div>
 {/if}
@@ -20,9 +20,16 @@
 
 	.uc-image {
     position:fixed;
-    top: 10em;
+    top: 5em;
     z-index: 1;
     width:100%;
+    pointer-events: none;
+	}
+  .uc-local {
+    position:fixed;
+    top: 5em;
+    z-index: 1;
+    width:400px;
     pointer-events: none;
 	}
   </style>
