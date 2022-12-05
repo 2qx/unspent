@@ -4,10 +4,11 @@ import {
   ElectrumTransport,
 } from "electrum-cash";
 import { Contract, ElectrumNetworkProvider } from "cashscript";
+import { cashAddressToLockingBytecode } from "@bitauth/libauth";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact } from "./v1.js";
 
-describe(`Faucet Contract Tests`, () => {
+describe(`Buffer Contract Tests`, () => {
   test("Should pay a faucet contract 5 times in 5 blocks", async () => {
     let regTest = new ElectrumCluster(
       "unspent phi-tests - faucet",
@@ -27,11 +28,15 @@ describe(`Faucet Contract Tests`, () => {
     );
 
     let payout = 5000;
-    let index = 1;
-    let period = 1;
+    let recipient  = cashAddressToLockingBytecode(bob.getDepositAddress())
+    if (typeof recipient === "string") throw(recipient)
+    let recipientLockingBytecode = recipient.bytecode
+
+    let threshold = 10000;
+    let executorAllowance = 1200;
     let contract = new Contract(
       artifact,
-      [period, payout, index],
+      [threshold, recipientLockingBytecode, executorAllowance],
       regtestNetwork
     );
 
@@ -39,22 +44,19 @@ describe(`Faucet Contract Tests`, () => {
     await alice.send([
       {
         cashaddr: contract.address!,
-        value: 510000,
+        value: 1000,
         unit: "satoshis",
       },
     ]);
 
     for (let x = 0; x < 5; x++) {
-      await mine({
-        cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
-        blocks: 1,
-      });
+
       let balance = await contract.getBalance();
 
       let size =
         (
           await contract!.functions
-            .drip()
+            .execute()
             .to([
               {
                 to: contract.address,
@@ -62,7 +64,6 @@ describe(`Faucet Contract Tests`, () => {
               },
               { to: bob.getDepositAddress(), amount: payout - 153 },
             ])
-            .withAge(1)
             .withHardcodedFee(153)
             .build()
         ).length / 2;

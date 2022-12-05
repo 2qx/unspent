@@ -1,0 +1,38 @@
+pragma cashscript >= 0.7.1;
+
+// v20221205
+
+// Relitive or rolling timelock, per utxo
+// assures the output being spent satisfies BIP68 time requirements
+
+contract Timelock(
+
+  // interval for payouts, in blocks
+  int period,
+
+  // LockingBytecode of the beneficiary, the address receiving payments
+  bytes recipientLockingBytecode,
+
+  // extra allowance for administration of contract
+  // fees are paid from executors' allowance. 
+  int executorAllowance
+) {
+  function execute() {
+
+    // Check that the first output sends to the recipient
+    require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+    // Check that time has passed and that time locks are enabled
+    require(tx.age >= period);
+        
+    // Get the total value on the contract
+    int currentValue = tx.inputs[this.activeInputIndex].value;
+
+    // Calculate value minus allowance
+    int unlockedValue = currentValue - executorAllowance;
+
+    // Check that the outputs send the correct amounts
+    require(tx.outputs[0].value >= unlockedValue);
+        
+  }
+}
