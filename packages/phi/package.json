@@ -1,6 +1,6 @@
 {
   "name": "@unspent/phi",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
