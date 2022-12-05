@@ -2,6 +2,7 @@
 	import { beforeUpdate } from 'svelte';
 	import { assets } from '$app/paths';
 	import { load } from '$lib/machinery/loader-store.js';
+	import LinearProgress from '@smui/linear-progress';
 	import Card from '@smui/card';
 	import { Confetti } from 'svelte-confetti';
 	import { ElectrumNetworkProvider } from 'cashscript';
@@ -30,7 +31,7 @@
 			load: async () => {
 				if (cashaddr) balance = await getBalance(cashaddr);
 				balanceText = balance.toLocaleString();
-				percentDone = (balance / goal * 100 ).toFixed(4);
+				percentDone = ((balance / goal) * 100).toFixed(4);
 				isSuccess = balance > 6400000000 ? true : false;
 			}
 		});
@@ -121,6 +122,8 @@ pointer-events: none;"
 							&#37; of the initial goal.
 						</b>
 					{:else}
+						<h3>Progress:</h3>
+						<LinearProgress progress={balance / goal} />
 						<p>
 							So far, {balanceText} satoshis have been raised. About {percentDone} &#37; of the way there.
 						</p>
@@ -138,9 +141,9 @@ pointer-events: none;"
 					</p>
 					<p>
 						All donations will be treated as pseudonymous in origin from the previous respective
-						unspent outputs. A donation will confer any interest, privilege or authority over the
-						direction of this software. Everything built is free to fork, but is not otherwise
-						encumbered.
+						unspent outputs. A donation will <b>not</b> confer any stake, interest, privilege or authority
+						over the direction of this software. Everything built is free to fork, but is not otherwise
+						owned or encumbered.
 					</p>
 					<p>
 						But, as a return on your investment, each donation <b>will receive</b> its own tract in the
