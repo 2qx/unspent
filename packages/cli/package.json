@@ -1,6 +1,6 @@
 {
   "name": "unspent",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A command line utility for Unspent Phi (₿∙ϕ) contracts",
   "type": "module",
   "bin": "cli.cjs",
