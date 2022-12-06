@@ -1,5 +1,14 @@
 {
   "version": "0.1",
-  "import": ["node_modules/@generalprotocols/cspell-dictionary/cspell.json"],
-  "words": ["bchn", "chaingraph", "lcov", "macfja", "shortcode"]
+  "import": [
+    "node_modules/@generalprotocols/cspell-dictionary/cspell.json"
+  ],
+  "words": [
+    "alice",
+    "bchn",
+    "chaingraph",
+    "lcov",
+    "macfja",
+    "shortcode"
+  ]
 }

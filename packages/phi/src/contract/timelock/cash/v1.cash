@@ -2,8 +2,9 @@ pragma cashscript >= 0.7.1;
 
 // v20221205
 
-// Relitive or rolling timelock, per utxo
-// assures the output being spent satisfies BIP68 time requirements
+// Relative or rolling timelocks, per utxo.
+// This contract requires input be sufficently aged 
+// according to BIP68 time requirements.
 
 contract Timelock(
 
@@ -25,13 +26,13 @@ contract Timelock(
     // Check that time has passed and that time locks are enabled
     require(tx.age >= period);
         
-    // Get the total value on the contract
+    // Get the total value of the inputs the contract
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value minus allowance
     int unlockedValue = currentValue - executorAllowance;
 
-    // Check that the outputs send the correct amounts
+    // Check that the outputs send the correct amount
     require(tx.outputs[0].value >= unlockedValue);
         
   }

@@ -1,7 +1,7 @@
 import { Annuity } from "./annuity/index.js";
-//import { Buffer } from "./buffer/index.js";
 import { Divide } from "./divide/index.js";
 import { Faucet } from "./faucet/index.js";
+//import { Gate } from "./gate/index.js";
 import { Mine } from "./mine/index.js";
 import { Perpetuity } from "./perpetuity/index.js";
 import { Record } from "./record/index.js";
@@ -9,9 +9,9 @@ import { Record } from "./record/index.js";
 
 export const contractMap = {
   A: Annuity,
-  //B: Buffer,
   D: Divide,
   F: Faucet,
+  //G: Gate,
   M: Mine,
   P: Perpetuity,
   R: Record,
@@ -24,9 +24,9 @@ export type ContractType = typeof contractMap[keyof typeof contractMap];
 
 export const nameMap = {
   A: "annuity",
-  B: "buffer",
   D: "divide",
   F: "faucet",
+  G: "gate",
   M: "mine",
   P: "perpetuity",
   R: "record",

@@ -14,7 +14,7 @@
 	const cashaddr = 'bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4';
 	let lockingBytecode = deriveLockingBytecodeHex(cashaddr);
 
-	let goal = 6400000000;
+	let goal = 4400000000;
 	let goalText = goal.toLocaleString();
 	let balance = 0;
 	let balanceText = '';
@@ -124,6 +124,9 @@ pointer-events: none;"
 					{:else}
 						<h3>Progress:</h3>
 						<LinearProgress progress={balance / goal} />
+            <br>
+            <h3>💚💚</h3>
+						<LinearProgress progress={(balance-goal) / goal} />
 						<p>
 							So far, {balanceText} satoshis have been raised. About {percentDone} &#37; of the way there.
 						</p>
