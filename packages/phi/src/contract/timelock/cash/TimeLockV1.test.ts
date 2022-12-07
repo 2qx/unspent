@@ -10,8 +10,8 @@ import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v1 } from "./v1.js";
 import { DUST_UTXO_THRESHOLD } from "../../../common/constant.js";
 
-describe(`Timelock Tests`, () => {
-  test("Should not pay before time is met", async () => {
+describe(`TimeLock Tests`, () => {
+  test("Should not pay before time is met, but should pay at time", async () => {
     expect.assertions(4);
     let regTest = new ElectrumCluster(
       "CashScript Application",
@@ -81,7 +81,6 @@ describe(`Timelock Tests`, () => {
 
     let fn = contract.functions["execute"]!();
 
-    // now += period;
     await fn
       .to([
         { to: bob.getDepositAddress(), amount: balance - executorAllowance },

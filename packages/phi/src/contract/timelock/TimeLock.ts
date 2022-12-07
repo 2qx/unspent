@@ -16,42 +16,40 @@ import {
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
 
-export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
-  public static c: string = "P";
+export class TimeLock extends BaseUtxPhiContract implements UtxPhiIface {
+  public static c: string = "T";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
   public static minAllowance: number = DUST_UTXO_THRESHOLD + 220 + 10;
 
   constructor(
-    public period: number = 4000,
+    public period: number = 144,
     public address: string,
     public executorAllowance: number,
-    public decay: number,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
     if (options.version === 1) {
       script = v1;
     } else {
-      throw Error("Unrecognized Perpetuity Version");
+      throw Error("Unrecognized TimeLock Version");
     }
     let lock = cashAddressToLockingBytecode(address);
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
 
-    if (executorAllowance < Perpetuity.minAllowance) throw Error(`Executor Allowance below usable threshold ${Perpetuity.minAllowance}`)
+    if (executorAllowance < TimeLock.minAllowance) throw Error(`Executor Allowance below usable threshold ${TimeLock.minAllowance}`)
 
     super(options.network!, script, [
       period,
       bytecode,
-      executorAllowance,
-      decay,
+      executorAllowance
     ]);
     this.recipientLockingBytecode = lock.bytecode;
     this.options = options;
   }
 
-  static fromString(str: string, network = "mainnet"): Perpetuity {
+  static fromString(str: string, network = "mainnet"): TimeLock {
     let p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
@@ -60,7 +58,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (p.options.version != 1)
       throw Error(`${this.name} contract version not recognized`);
-    if (p.args.length != 4)
+    if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
 
     const period = parseInt(p.args.shift()!);
@@ -73,26 +71,24 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("non-standard address" + address);
 
     const executorAllowance = parseInt(p.args.shift()!);
-    const decay = parseInt(p.args.shift()!);
 
-    let perpetuity = new Perpetuity(
+    let timeLock = new TimeLock(
       period,
       address,
       executorAllowance,
-      decay,
       p.options
     );
 
     // check that the address
-    perpetuity.checkLockingBytecode(p.lockingBytecode);
-    return perpetuity;
+    timeLock.checkLockingBytecode(p.lockingBytecode);
+    return timeLock;
   }
 
-  // Create a Perpetuity contract from an OpReturn by building a serialized string.
+  // Create a TimeLock contract from an OpReturn by building a serialized string.
   static fromOpReturn(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): Perpetuity {
+  ): TimeLock {
     let p = this.parseOpReturn(opReturn, network);
 
     // check code
@@ -114,46 +110,42 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("non-standard address" + address);
 
     const executorAllowance = binToNumber(p.args.shift()!);
-    const decay = binToNumber(p.args.shift()!);
 
-    let perpetuity = new Perpetuity(
+    let timeLock = new TimeLock(
       period,
       address,
       executorAllowance,
-      decay,
       p.options
     );
 
     // check that the address
-    perpetuity.checkLockingBytecode(p.lockingBytecode);
-    return perpetuity;
+    timeLock.checkLockingBytecode(p.lockingBytecode);
+    return timeLock;
   }
 
   override toString() {
     return [
-      `${Perpetuity.c}`,
+      `${TimeLock.c}`,
       `${this.options!.version}`,
       `${this.period}`,
       `${deriveLockingBytecodeHex(this.address)}`,
       `${this.executorAllowance}`,
-      `${this.decay}`,
       `${this.getLockingBytecode()}`,
-    ].join(Perpetuity.delimiter);
+    ].join(TimeLock.delimiter);
   }
 
   override asText(): string {
-    return `Perpetuity to pay 1/${this.decay} the input, every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`;
+    return `TimeLock with a period of ${this.period} (sat), after a ${this.executorAllowance} (sat) executor allowance`;
   }
 
   toOpReturn(hex = false): string | Uint8Array {
     const chunks = [
-      Perpetuity._PROTOCOL_ID,
-      Perpetuity.c,
+      TimeLock._PROTOCOL_ID,
+      TimeLock.c,
       toHex(this.options!.version!),
       toHex(this.period),
       "0x" + deriveLockingBytecodeHex(this.address),
       toHex(this.executorAllowance),
-      toHex(this.decay),
       "0x" + this.getLockingBytecode(),
     ];
     return this.asOpReturn(chunks, hex);
@@ -180,19 +172,13 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     }
     if (currentValue == 0) return "No funds on contract";
 
-    let fn = this.getFunction(Perpetuity.fn)!;
-    let installment = Math.round(currentValue / this.decay)+1;
-    let newPrincipal = currentValue - (installment + this.executorAllowance);
+    let fn = this.getFunction(TimeLock.fn)!;
+    let newPrincipal = currentValue - (this.executorAllowance);
 
     // round up
-    installment += 2;
     newPrincipal += 3;
 
     let to = [
-      {
-        to: this.address,
-        amount: installment,
-      },
       {
         to: this.getAddress(),
         amount: newPrincipal,

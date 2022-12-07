@@ -99,7 +99,7 @@ describe(`Gate Contract Tests`, () => {
 
   });
 
-  test("Should pay Gate if threshold is met", async () => {
+  test("Should pay if threshold is met", async () => {
 
     let regTest = new ElectrumCluster(
       "unspent phi-tests - faucet",

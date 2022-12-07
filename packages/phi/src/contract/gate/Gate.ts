@@ -16,42 +16,40 @@ import {
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
 
-export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
-  public static c: string = "P";
+export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
+  public static c: string = "G";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
   public static minAllowance: number = DUST_UTXO_THRESHOLD + 220 + 10;
 
   constructor(
-    public period: number = 4000,
+    public threshold: number = 100000,
     public address: string,
     public executorAllowance: number,
-    public decay: number,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
     if (options.version === 1) {
       script = v1;
     } else {
-      throw Error("Unrecognized Perpetuity Version");
+      throw Error("Unrecognized Gate Version");
     }
     let lock = cashAddressToLockingBytecode(address);
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
 
-    if (executorAllowance < Perpetuity.minAllowance) throw Error(`Executor Allowance below usable threshold ${Perpetuity.minAllowance}`)
+    if (executorAllowance < Gate.minAllowance) throw Error(`Executor Allowance below usable threshold ${Gate.minAllowance}`)
 
     super(options.network!, script, [
-      period,
+      threshold,
       bytecode,
-      executorAllowance,
-      decay,
+      executorAllowance
     ]);
     this.recipientLockingBytecode = lock.bytecode;
     this.options = options;
   }
 
-  static fromString(str: string, network = "mainnet"): Perpetuity {
+  static fromString(str: string, network = "mainnet"): Gate {
     let p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
@@ -60,10 +58,10 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (p.options.version != 1)
       throw Error(`${this.name} contract version not recognized`);
-    if (p.args.length != 4)
+    if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
 
-    const period = parseInt(p.args.shift()!);
+    const threshold = parseInt(p.args.shift()!);
 
     const lock = p.args.shift()!;
 
@@ -73,26 +71,24 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("non-standard address" + address);
 
     const executorAllowance = parseInt(p.args.shift()!);
-    const decay = parseInt(p.args.shift()!);
 
-    let perpetuity = new Perpetuity(
-      period,
+    let gate = new Gate(
+      threshold,
       address,
       executorAllowance,
-      decay,
       p.options
     );
 
     // check that the address
-    perpetuity.checkLockingBytecode(p.lockingBytecode);
-    return perpetuity;
+    gate.checkLockingBytecode(p.lockingBytecode);
+    return gate;
   }
 
-  // Create a Perpetuity contract from an OpReturn by building a serialized string.
+  // Create a Gate contract from an OpReturn by building a serialized string.
   static fromOpReturn(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): Perpetuity {
+  ): Gate {
     let p = this.parseOpReturn(opReturn, network);
 
     // check code
@@ -105,7 +101,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    let period = binToNumber(p.args.shift()!);
+    let threshold = binToNumber(p.args.shift()!);
     let lock = p.args.shift()!;
 
     let prefix = getPrefixFromNetwork(network);
@@ -114,13 +110,11 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("non-standard address" + address);
 
     const executorAllowance = binToNumber(p.args.shift()!);
-    const decay = binToNumber(p.args.shift()!);
 
-    let perpetuity = new Perpetuity(
-      period,
+    let perpetuity = new Gate(
+      threshold,
       address,
       executorAllowance,
-      decay,
       p.options
     );
 
@@ -131,29 +125,27 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   override toString() {
     return [
-      `${Perpetuity.c}`,
+      `${Gate.c}`,
       `${this.options!.version}`,
-      `${this.period}`,
+      `${this.threshold}`,
       `${deriveLockingBytecodeHex(this.address)}`,
       `${this.executorAllowance}`,
-      `${this.decay}`,
       `${this.getLockingBytecode()}`,
-    ].join(Perpetuity.delimiter);
+    ].join(Gate.delimiter);
   }
 
   override asText(): string {
-    return `Perpetuity to pay 1/${this.decay} the input, every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`;
+    return `Gate (dust) with a threshold of ${this.threshold} (sat), after a ${this.executorAllowance} (sat) executor allowance`;
   }
 
   toOpReturn(hex = false): string | Uint8Array {
     const chunks = [
-      Perpetuity._PROTOCOL_ID,
-      Perpetuity.c,
+      Gate._PROTOCOL_ID,
+      Gate.c,
       toHex(this.options!.version!),
-      toHex(this.period),
+      toHex(this.threshold),
       "0x" + deriveLockingBytecodeHex(this.address),
       toHex(this.executorAllowance),
-      toHex(this.decay),
       "0x" + this.getLockingBytecode(),
     ];
     return this.asOpReturn(chunks, hex);
@@ -180,19 +172,13 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     }
     if (currentValue == 0) return "No funds on contract";
 
-    let fn = this.getFunction(Perpetuity.fn)!;
-    let installment = Math.round(currentValue / this.decay)+1;
-    let newPrincipal = currentValue - (installment + this.executorAllowance);
+    let fn = this.getFunction(Gate.fn)!;
+    let newPrincipal = currentValue - (this.executorAllowance);
 
     // round up
-    installment += 2;
     newPrincipal += 3;
 
     let to = [
-      {
-        to: this.address,
-        amount: installment,
-      },
       {
         to: this.getAddress(),
         amount: newPrincipal,
@@ -209,7 +195,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
 
-    let size = await tx!.to(to).withAge(this.period).withoutChange().build();
+    let size = await tx!.to(to).withoutChange().build();
 
     //console.log(size.length / 2)
     if (exAddress) {
@@ -225,7 +211,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
+    let payTx = await tx!.to(to).withoutChange().send();
     return payTx.txid;
 
   }

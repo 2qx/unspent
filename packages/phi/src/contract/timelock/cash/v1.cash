@@ -4,9 +4,9 @@ pragma cashscript >= 0.7.1;
 
 // Relative or rolling timelocks, per utxo.
 // This contract requires input be sufficently aged 
-// according to BIP68 time requirements.
+// according to BIP68 relative time locks.
 
-contract Timelock(
+contract TimeLock(
 
   // interval for payouts, in blocks
   int period,

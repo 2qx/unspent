@@ -1,4 +1,4 @@
-import { mine, RegTestWallet, delay } from "mainnet-js";
+import { mine, RegTestWallet } from "mainnet-js";
 import { Perpetuity } from "./Perpetuity.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
 
