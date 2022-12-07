@@ -2,8 +2,8 @@ import { mine, RegTestWallet, delay } from "mainnet-js";
 import { Gate } from "./Gate.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
 
-describe(`Perpetuity Class Tests`, () => {
-  test("Should a serialize a Perpetuity", async () => {
+describe(`Gate Class Tests`, () => {
+  test("Should a serialize a Gate", async () => {
     let g = new Gate(
       6000,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
@@ -14,7 +14,7 @@ describe(`Perpetuity Class Tests`, () => {
     );
     expect(g.toString()).toContain(chk);
     expect(g.toString()).toEqual(
-      "G,1,6000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1000,a91401f2644ebbda119fb742c1d34be1b38cb7cae88a87"
+      "G,1,6000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1000,a9146c93d07a3b946446767d02774646e484f88e1f2987"
     );
 
     let g2 = Gate.fromString(g.toString());

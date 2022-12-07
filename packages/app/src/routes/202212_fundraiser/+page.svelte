@@ -14,7 +14,7 @@
 	const cashaddr = 'bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4';
 	let lockingBytecode = deriveLockingBytecodeHex(cashaddr);
 
-	let goal = 4400000000;
+	let goal = 6400000000;
 	let goalText = goal.toLocaleString();
 	let balance = 0;
 	let balanceText = '';
@@ -32,7 +32,7 @@
 				if (cashaddr) balance = await getBalance(cashaddr);
 				balanceText = balance.toLocaleString();
 				percentDone = ((balance / goal) * 100).toFixed(4);
-				isSuccess = balance > 6400000000 ? true : false;
+				isSuccess = balance > goal ? true : false;
 			}
 		});
 	};
