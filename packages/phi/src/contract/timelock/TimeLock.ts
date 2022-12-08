@@ -38,6 +38,7 @@ export class TimeLock extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
 
+    console.log(binToHex(bytecode))
     if (executorAllowance < TimeLock.minAllowance) throw Error(`Executor Allowance below usable threshold ${TimeLock.minAllowance}`)
 
     super(options.network!, script, [
@@ -173,15 +174,13 @@ export class TimeLock extends BaseUtxPhiContract implements UtxPhiIface {
     if (currentValue == 0) return "No funds on contract";
 
     let fn = this.getFunction(TimeLock.fn)!;
-    let newPrincipal = currentValue - (this.executorAllowance);
+    let principal = currentValue - (this.executorAllowance);
 
-    // round up
-    newPrincipal += 3;
 
     let to = [
       {
-        to: this.getAddress(),
-        amount: newPrincipal,
+        to: this.address,
+        amount: principal,
       },
     ];
 

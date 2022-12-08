@@ -63,7 +63,6 @@ describe(`TimeLock Class Tests`, () => {
     let options = { version: 1, network: "regtest" };
     let c1 = new TimeLock(1, bob.getDepositAddress(), TimeLock.minAllowance, options);
 
-    // fund the perp contract
     await alice.send([
       {
         cashaddr: c1.getAddress(),
