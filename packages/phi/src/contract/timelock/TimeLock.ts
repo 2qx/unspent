@@ -38,7 +38,6 @@ export class TimeLock extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
 
-    console.log(binToHex(bytecode))
     if (executorAllowance < TimeLock.minAllowance) throw Error(`Executor Allowance below usable threshold ${TimeLock.minAllowance}`)
 
     super(options.network!, script, [

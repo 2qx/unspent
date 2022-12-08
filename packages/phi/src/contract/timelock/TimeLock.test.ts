@@ -77,8 +77,8 @@ describe(`TimeLock Class Tests`, () => {
     });
     await c1.execute(charlie.getDepositAddress());
 
-    expect(await charlie.getBalance("sat")).toBeGreaterThan(700);
-    expect(await bob.getBalance("sat")).toBeGreaterThan(1000000-700);
+    expect(await charlie.getBalance("sat")).toBeGreaterThan(609);
+    expect(await bob.getBalance("sat")).toBeGreaterThan(1000000-612);
     expect(c1.isTestnet()).toEqual(true);
     expect(await c1.getBalance()).toBe(0);
   });
