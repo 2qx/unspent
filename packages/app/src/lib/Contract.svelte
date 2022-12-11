@@ -13,6 +13,7 @@
 	import Address from './Address.svelte';
 	import AddressQrCode from './AddressQrCode.svelte';
 	import AddressBlockie from './AddressBlockie.svelte';
+	import ContractChart from './ContractChart.svelte';
 	import SerializedString from './SerializedString.svelte';
 
 	export let instance: any;
@@ -21,6 +22,7 @@
 	let txid = '';
 	let opReturnHex = '';
 	let utxos: any = [];
+  let series: any;
 	let isFunded = false;
 	let outputs: string[] = [];
 
@@ -88,6 +90,19 @@
 	}
 
 
+  const getSeries = async () => {
+		await load({
+			load: async () => {
+				series = await instance.asSeries();
+        console.log(series, undefined, 2)
+			}
+		});
+	};
+
+	function dropSeries() {
+		series = [];
+	}
+
 
 	function setProgress() {
 		executionProgress = 0;
@@ -151,6 +166,7 @@
 	<h2>Unspent Transaction Outputs</h2>
 
 	<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
+
 	<br />
 	Inputs
 	{#if utxos.length == 0}
@@ -161,6 +177,15 @@
 		<UtxosSelect bind:utxos />
 	{/if}
 	<br />
+  <h2>Schedule</h2>
+  {#if !series }
+		<button on:click={getSeries}>Load Schedule</button>
+	{/if}
+	{#if series && Object.keys(series).length > 0}
+		<button on:click={dropSeries}>Hide</button>
+		<ContractChart bind:series/>
+	{/if}
+  
 	<h2>Unlock</h2>
 	<Button variant="raised" touch on:click={execute}>
 		<Label>Execute</Label>

@@ -15,6 +15,7 @@ import {
   toHex,
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
+import { getBlockHeight } from "../../common/network.js";
 
 export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
@@ -165,6 +166,50 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       return [this.recipientLockingBytecode]
     }
+  }
+
+  async asSeries(){
+    const currentHeight = await getBlockHeight()
+    let currentTime = Math.floor(Date.now()/1000)
+    let utxos = await this.getUtxos()
+    let series:any = {}
+    if(utxos){
+      for(const utxo of utxos){
+        let time = []
+        let payout = []
+        let principal = []
+        let allowance = []
+        // @ts-ignore
+        if(utxo.height==0){
+          time.push(currentTime+ this.period*600)
+        }else{
+          // @ts-ignore
+          let nextCallableBlockTime = this.period-(currentHeight-utxo.height)
+          time.push(currentTime+ (nextCallableBlockTime)*600)
+        }
+        payout.push(Math.floor(utxo.satoshis/this.decay)-this.executorAllowance)
+        principal.push(utxo.satoshis-payout.at(-1)!)
+        allowance.push(this.executorAllowance)
+
+        let watchdog = 0
+        while(payout.at(-1)!>this.executorAllowance && watchdog<1000){
+            time.push(time.at(-1)! + this.period*600)
+            payout.push(Math.floor(principal.at(-1)!/this.decay)-this.executorAllowance)
+            principal.push(principal.at(-1)!-payout.at(-1)!)
+            allowance.push(this.executorAllowance)
+            watchdog += 1
+        }
+
+        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`
+        series[utxoId] = {
+          "time": time,
+          "principal" : principal,
+          "payout": payout,
+          "executorAllowance": allowance
+        }
+      } // for utxos
+    } // if utxos
+    return series
   }
 
   async execute(

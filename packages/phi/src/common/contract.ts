@@ -192,6 +192,10 @@ export class BaseUtxPhiContract {
     throw Error("Cannot get contract text description from base class");
   }
 
+  asSeries(): string {
+    throw Error("Cannot get contract series from base class");
+  }
+
   getRedeemScriptHex(): string {
     return this.contract.getRedeemScriptHex();
   }

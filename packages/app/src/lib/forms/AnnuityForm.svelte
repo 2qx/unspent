@@ -9,33 +9,31 @@
 	let showHelp = false;
 
 	let period = NaN;
-  let receiptAddress = "";
-  let installment = NaN;
+	let receiptAddress = '';
+	let installment = NaN;
 	let executorAllowance = 1200;
 	function createContract() {
 		if (receiptAddress && installment && period) {
 			try {
 				contract = new Annuity(period, receiptAddress, installment, executorAllowance);
 			} catch (e: any) {
-        contract = undefined
-				if(e.message) {
-          toast.push(e.message, { classes: ['warn'] });
-        }else{
-          toast.push(e, { classes: ['warn'] });
-        }
+				contract = undefined;
+				if (e.message) {
+					toast.push(e.message, { classes: ['warn'] });
+				} else {
+					toast.push(e, { classes: ['warn'] });
+				}
 			}
 		}
 	}
-
-	
 </script>
 
 <div class="margins">
 	<Textfield
 		bind:value={receiptAddress}
 		on:change={() => createContract()}
-    style="width: 100%;"
-    helperLine$style="width: 100%;"
+		style="width: 100%;"
+		helperLine$style="width: 100%;"
 		type="text"
 		required
 		label="Receipt Address"
@@ -43,35 +41,36 @@
 		<HelperText slot="helper">The address to recieve a regular payout.</HelperText>
 	</Textfield>
 
-  <Textfield
-  bind:value={period}
-  on:change={() => createContract()}
-  type="number"
-  input$min="1"
-  input$max="65535"
-  required
-  label="Period"
->
-  <HelperText slot="helper"> How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText>
-</Textfield>
+	<Textfield
+		bind:value={period}
+		on:change={() => createContract()}
+		type="number"
+		input$min="1"
+		input$max="65535"
+		required
+		label="Period"
+	>
+		<HelperText slot="helper">
+			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+		>
+	</Textfield>
 
 	<Textfield
 		bind:value={installment}
 		on:change={() => createContract()}
 		type="number"
-		input$min="{DUST_UTXO_THRESHOLD}"
+		input$min={DUST_UTXO_THRESHOLD}
 		required
 		label="Installment"
 	>
 		<HelperText slot="helper">Amount contract will payout per period.</HelperText>
 	</Textfield>
 
-	
 	<Textfield
 		bind:value={executorAllowance}
 		on:change={() => createContract()}
 		type="number"
-		input$min="{Annuity.minAllowance}"
+		input$min={Annuity.minAllowance}
 		input$max="12000"
 		required
 		label="Executor Allowance"
@@ -85,5 +84,3 @@
 {#if !contract}
 	<button on:click={createContract}> Calculate Locking Script</button>
 {/if}
-
-
