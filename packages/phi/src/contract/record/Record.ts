@@ -1,10 +1,10 @@
-import type { Artifact, Utxo } from "cashscript";
+import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import type { ContractOptions } from "../../common/interface.js";
 import { binToNumber, decodeNullDataScript } from "../../common/util.js";
-import { DefaultOptions } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { artifact as v1 } from "./cash/v1.js";
-import { hash160, toHex } from "../../common/util.js";
+import { hash160, sum, toHex } from "../../common/util.js";
 import { binToHex, hexToBin } from "@bitauth/libauth";
 
 export class Record extends BaseUtxPhiContract {
@@ -45,6 +45,35 @@ export class Record extends BaseUtxPhiContract {
     // check that the address
     record.checkLockingBytecode(p.lockingBytecode);
     return record;
+  }
+
+  static async getSpendableBalance(
+    opReturn: Uint8Array | string,
+    network = "mainnet",
+    networkProvider: ElectrumNetworkProvider,
+    blockHeight: number
+  ): Promise<number> {
+    let p = this.parseOpReturn(opReturn, network);
+    blockHeight
+    let utxos = await networkProvider.getUtxos(p.address)
+    let spendableUtxos = utxos.map((u) => {
+       return u.satoshis   
+    })
+    let spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    if(spendable > DUST_UTXO_THRESHOLD) {
+      return spendable
+    }else{
+      return 0
+    } 
+  }
+
+  static getExecutorAllowance(
+    opReturn: Uint8Array | string,
+    network = "mainnet"
+  ): number {
+    opReturn
+    network
+    return NaN
   }
 
   override toString() {

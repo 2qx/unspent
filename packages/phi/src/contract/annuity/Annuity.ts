@@ -4,7 +4,7 @@ import {
   cashAddressToLockingBytecode,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
-import type { Artifact, Utxo } from "cashscript";
+import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
@@ -13,13 +13,14 @@ import {
   deriveLockingBytecodeHex,
   binToNumber,
   toHex,
+  sum
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
 
 export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "A"; //A
   private static fn: string = "execute";
-  public static minAllowance: number = DUST_UTXO_THRESHOLD+222+10;
+  public static minAllowance: number = DUST_UTXO_THRESHOLD + 222 + 10;
 
   public recipientLockingBytecode: Uint8Array;
 
@@ -37,8 +38,8 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Annuity Version");
     }
 
-    if(installment<DUST_UTXO_THRESHOLD) throw Error("Installment below dust threshold")
-    if(executorAllowance<Annuity.minAllowance) throw Error("Executor Allowance below usable threshold")
+    if (installment < DUST_UTXO_THRESHOLD) throw Error("Installment below dust threshold")
+    if (executorAllowance < Annuity.minAllowance) throw Error("Executor Allowance below usable threshold")
 
     let lock = cashAddressToLockingBytecode(recipientAddress);
     if (typeof lock === "string") throw lock;
@@ -141,6 +142,40 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     return annuity;
   }
 
+  static getExecutorAllowance(
+    opReturn: Uint8Array | string,
+    network = "mainnet"
+  ): number {
+    let p = this.parseOpReturn(opReturn, network);
+    return binToNumber(p.args.pop()!);
+  }
+
+  static async getSpendableBalance(
+    opReturn: Uint8Array | string,
+    network = "mainnet",
+    networkProvider: ElectrumNetworkProvider,
+    blockHeight: number
+  ): Promise<number> {
+    let p = this.parseOpReturn(opReturn, network);
+    let period = binToNumber(p.args.shift()!);
+    let utxos = await networkProvider.getUtxos(p.address)
+    let spendableUtxos = utxos.map((u) => {
+      // @ts-ignore
+      if (u.height !== 0) {
+        // @ts-ignore
+        if (blockHeight - u.height > period) {
+          return u.satoshis
+        }
+        else {
+          return 0
+        }
+      } else {
+        return 0
+      }
+    })
+    return spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+  }
+
   override toString() {
     return [
       `${Annuity.c}`,
@@ -171,10 +206,10 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
-  getOutputLockingBytecodes(hex=true){
-    if(hex){
+  getOutputLockingBytecodes(hex = true) {
+    if (hex) {
       return [binToHex(this.recipientLockingBytecode)]
-    } else{
+    } else {
       return [this.recipientLockingBytecode]
     }
   }
@@ -218,7 +253,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
     if (utxos) estimator = estimator.from(utxos);
-    
+
     if (exAddress) to.push({
       to: exAddress,
       amount: 546,
@@ -230,7 +265,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       .withoutChange()
       .build();
 
-    let minerFee = fee ? fee : size.length / 2 +5 ;
+    let minerFee = fee ? fee : size.length / 2 + 5;
     let executorFee = balance - (this.installment + newPrincipal + minerFee) - 4;
 
     if (exAddress) {

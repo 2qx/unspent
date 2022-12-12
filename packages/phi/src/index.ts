@@ -7,9 +7,12 @@ export { Faucet } from "./contract/faucet/index.js";
 export { Perpetuity } from "./contract/perpetuity/index.js";
 export { Mine } from "./contract/mine/index.js";
 export { Record } from "./contract/record/index.js";
+export { getDefaultProvider } from "./common/network.js";
 export {
   parseOpReturn,
   stringToInstance,
+  opReturnToExecutorAllowance,
+  opReturnToSpendableBalance,
   opReturnToInstance,
   opReturnToSerializedString,
 } from "./common/map.js";

@@ -1,25 +1,33 @@
 <script>
+	import { binToHex } from '@bitauth/libauth';
 	import Card from '@smui/card';
 	import Select, { Option } from '@smui/select';
 	import IconButton from '@smui/icon-button';
-	import { Label } from '@smui/common';
 	import CircularProgress from '@smui/circular-progress';
 	import { onMount } from 'svelte';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, parseOpReturn } from '@unspent/phi';
+	import { ElectrumNetworkProvider } from 'cashscript';
+	import {
+		getDefaultProvider,
+		opReturnToExecutorAllowance,
+		opReturnToSpendableBalance
+	} from '@unspent/phi';
 	//import ContractItem from '$lib/ContractItem.svelte';
-	import ContractAccordian from '$lib/ContractAccordian.svelte';
+	import ContractAccordion from '$lib/ContractAccordion.svelte';
 	import { protocol, chaingraphHost, node, executorAddress } from '$lib/store.js';
+
 	let contractData = [];
 
 	let pageSizes = [5, 10, 25, 50];
-	let pageSize = 25;
+	let pageSize = 10;
 	let page = 0;
 
 	let executorAddressValue = '';
 	let protocolValue = '';
 	let chaingraphHostValue = '';
 	let nodeValue = '';
+  let blockHeight = 0;
 
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
@@ -35,13 +43,13 @@
 		nodeValue = value;
 	});
 
-	const zeroPage = () => {
+	const zeroPage = async () => {
 		page = 0;
-    contractData = []
-		loadContracts();
+		contractData = [];
+		await loadContracts();
 	};
 
-  const incrementPage = () => {
+	const incrementPage = () => {
 		page += 1;
 		loadContracts();
 	};
@@ -53,6 +61,8 @@
 
 	onMount(async () => {
 		if (chaingraphHostValue.length > 0) {
+      let networkProvider = getDefaultProvider('mainnet');
+      if(blockHeight<1) blockHeight = await networkProvider.getBlockHeight();
 			loadContracts();
 		}
 	});
@@ -70,7 +80,24 @@
 					pageSize,
 					page * pageSize
 				);
-				contractData = contractHex.map((x) => parseOpReturn(x));
+				let tmpData = contractHex.map((x) => parseOpReturn(x));
+				let networkProvider = getDefaultProvider('mainnet');
+				
+
+				let dataPromises = await tmpData.map(async (data) => {
+					let opReturn = binToHex(data.opReturn);
+					data.executorAllowance = opReturnToExecutorAllowance(opReturn);
+					data.spendable = await opReturnToSpendableBalance(
+						opReturn,
+						'mainnet',
+						networkProvider,
+						blockHeight
+					);
+					return data;
+				});
+				await Promise.all(dataPromises).then(function (results) {
+					contractData = results;
+				});
 			}
 		});
 	};
@@ -86,10 +113,15 @@
 		<div class="card-container">
 			<Card class="demo-spaced">
 				<div class="margins">
-					
 					<h1>Spend Unspent Contracts</h1>
-          <div id="pager">
-						<Select style="max-width: 100px"  variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
+					<div id="pager">
+						<Select
+							style="max-width: 100px"
+							variant="outlined"
+							bind:value={pageSize}
+							on:click={zeroPage}
+							noLabel
+						>
 							{#each pageSizes as pageSize}
 								<Option value={pageSize}>
 									{pageSize}
@@ -123,18 +155,24 @@
 							{/if}
 						</span>
 					</div>
-          <br>
+					<br />
 					{#if contractData.length == 0}
 						<div style="display: flex; justify-content: center">
 							<CircularProgress style="height: 48px; width: 48px;" indeterminate />
 						</div>
 					{/if}
-					<ContractAccordian bind:contractData />
-          <br>
-          <div id="pager">
-						<Select style="max-width: 100px" variant="outlined" bind:value={pageSize} on:blur={zeroPage} noLabel>
+					<ContractAccordion bind:contractData />
+					<br />
+					<div id="pager">
+						<Select
+							style="max-width: 100px"
+							variant="outlined"
+							bind:value={pageSize}
+							on:click={zeroPage}
+							noLabel
+						>
 							{#each pageSizes as pageSize}
-								<Option value={pageSize} >
+								<Option value={pageSize}>
 									{pageSize}
 								</Option>
 							{/each}
@@ -182,5 +220,4 @@
 		flex-direction: row;
 		justify-content: right;
 	}
-
 </style>

@@ -1,5 +1,6 @@
 import { binToHex, hexToBin } from "@bitauth/libauth";
 import { Artifact } from "@cashscript/utils";
+import { ElectrumNetworkProvider, Network} from "cashscript";
 import { nameMap, contractMap, CodeType } from "../contract/constant.js";
 import { decodeNullDataScript } from "./util.js";
 import { BaseUtxPhiContract } from "./contract.js";
@@ -33,7 +34,43 @@ export function opReturnToInstance(
 
   let instance = contractMap[code].fromOpReturn(serialized, network);
   return instance;
+}
 
+export function opReturnToExecutorAllowance(
+  serialized: string | Uint8Array,
+  network?: string
+): number {
+  if (typeof serialized === "string") {
+    serialized = hexToBin(serialized);
+  }
+  let serializedBinChunks = decodeNullDataScript(serialized);
+  let contractCode = binToHex(serializedBinChunks[1]!);
+
+  let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
+
+  let exAllowance = contractMap[code].getExecutorAllowance(serialized, network);
+  return exAllowance;
+}
+
+export async function opReturnToSpendableBalance(
+  serialized: string | Uint8Array,
+  network=Network.MAINNET,
+  networkProvider?: ElectrumNetworkProvider,
+  blockHeight?:number
+): Promise<number> {
+  if (typeof serialized === "string") {
+    serialized = hexToBin(serialized);
+  }
+  let serializedBinChunks = decodeNullDataScript(serialized);
+  let contractCode = binToHex(serializedBinChunks[1]!);
+
+  let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
+
+  if(!networkProvider) networkProvider = new ElectrumNetworkProvider(network)
+  if(!blockHeight) blockHeight = await networkProvider.getBlockHeight()
+
+  let spendableBalance = await contractMap[code].getSpendableBalance(serialized, network, networkProvider, blockHeight);
+  return spendableBalance;
 }
 
 export function opReturnToSerializedString(
