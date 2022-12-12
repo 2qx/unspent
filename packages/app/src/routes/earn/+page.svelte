@@ -27,6 +27,7 @@
 	let protocolValue = '';
 	let chaingraphHostValue = '';
 	let nodeValue = '';
+  let blockHeight = 0;
 
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
@@ -60,6 +61,8 @@
 
 	onMount(async () => {
 		if (chaingraphHostValue.length > 0) {
+      let networkProvider = getDefaultProvider('mainnet');
+      if(blockHeight<1) blockHeight = await networkProvider.getBlockHeight();
 			loadContracts();
 		}
 	});
@@ -79,7 +82,7 @@
 				);
 				let tmpData = contractHex.map((x) => parseOpReturn(x));
 				let networkProvider = getDefaultProvider('mainnet');
-				let blockHeight = await networkProvider.getBlockHeight();
+				
 
 				let dataPromises = await tmpData.map(async (data) => {
 					let opReturn = binToHex(data.opReturn);
@@ -116,7 +119,7 @@
 							style="max-width: 100px"
 							variant="outlined"
 							bind:value={pageSize}
-							on:blur={zeroPage}
+							on:click={zeroPage}
 							noLabel
 						>
 							{#each pageSizes as pageSize}
@@ -165,7 +168,7 @@
 							style="max-width: 100px"
 							variant="outlined"
 							bind:value={pageSize}
-							on:blur={zeroPage}
+							on:click={zeroPage}
 							noLabel
 						>
 							{#each pageSizes as pageSize}
