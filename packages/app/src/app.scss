@@ -12,6 +12,8 @@
 @use '@material/top-app-bar/index' as top-app-bar;
 @use '@material/image-list/index' as image-list;
 
+@use '@smui-extra/badge/index' as badge;
+
 .mdc-top-app-bar.demo-top-app-bar {
   // Color the top bar with "surface" colors.
   @include top-app-bar.fill-color(surface);
@@ -23,7 +25,11 @@
   z-index: 7;
 }
 
-
+@include badge.badge-color(
+  custom-green,
+  theme.$green-600,
+  theme.accessible-ink-color(theme.$green-600)
+);
 
  
 .my-image-list-masonry {

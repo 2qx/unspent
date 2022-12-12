@@ -1,8 +1,8 @@
-import type { Artifact, Utxo } from "cashscript";
+import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
-import { toHex, binToNumber } from "../../common/util.js";
+import { binToNumber, sum, toHex } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
 
 export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
@@ -79,6 +79,49 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     let faucet = new Faucet(period, payout, index, p.options);
     faucet.checkLockingBytecode(p.lockingBytecode);
     return faucet;
+  }
+
+
+  static async getSpendableBalance(
+    opReturn: Uint8Array | string,
+    network = "mainnet",
+    networkProvider: ElectrumNetworkProvider,
+    blockHeight: number
+  ): Promise<number> {
+    let p = this.parseOpReturn(opReturn, network);
+    let period = binToNumber(p.args.shift()!);
+    let payout = binToNumber(p.args.shift()!);
+    let utxos = await networkProvider.getUtxos(p.address)
+    let spendableUtxos = utxos.map((u: Utxo) => {
+      // @ts-ignore
+      if (u.height !== 0) {
+        // @ts-ignore
+        if (blockHeight - u.height > period) {
+          return u.satoshis
+        }
+        else {
+          return 0
+        }
+      } else {
+        return 0
+      }
+    })
+    const spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    if (spendable > payout) {
+      return spendable
+    } else {
+      return 0
+    }
+  }
+
+  static getExecutorAllowance(
+    opReturn: Uint8Array | string,
+    network = "mainnet"
+  ): number {
+    let p = this.parseOpReturn(opReturn, network);
+    // pop the index to get to the payout
+    p.args.pop()!
+    return binToNumber(p.args.pop()!);
   }
 
   override toString() {
