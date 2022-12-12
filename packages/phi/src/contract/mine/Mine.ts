@@ -271,7 +271,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (exAddress) {
       let minerFee = fee ? fee : size.length / 2;
-      console.log(minerFee)
+      //console.log(minerFee)
       let reward = this.payout - (minerFee + 10);
       to.pop();
       to.push({

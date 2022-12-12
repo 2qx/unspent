@@ -171,6 +171,8 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (balance == 0) return "No funds on contract";
 
     let fn = this.getFunction(Faucet.fn)!;
+    let tx = fn()
+    if (utxos) tx = tx.from(utxos);
     let newPrincipal = balance - this.payout;
     let minerFee = fee ? fee : 253;
     let sendAmount = this.payout - minerFee;
@@ -188,7 +190,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         amount: 546,
       });
 
-    let size = await fn().to(to).withAge(this.period).withoutChange().build();
+    let size = await tx.to(to).withAge(this.period).withoutChange().build();
     if (exAddress) {
       let minerFee = fee ? fee : size.length / 2;
       sendAmount = this.payout - (minerFee + 10);
@@ -200,8 +202,9 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         amount: sendAmount,
       });
     }
-
-    let payTx = await fn().to(to).withAge(this.period).withoutChange().send();
+    tx = fn()
+    if (utxos) tx = tx.from(utxos);
+    let payTx = await tx.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;
   }
 }
