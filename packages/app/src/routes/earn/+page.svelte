@@ -24,7 +24,7 @@
 	let noResults = false;
 
 	let pageSizes = [5, 10, 25, 50];
-	let pageSize = 10;
+	let pageSize = 25;
 	let page = 0;
 
 	let executorAddressValue = '';
