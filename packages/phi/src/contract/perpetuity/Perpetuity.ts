@@ -4,7 +4,7 @@ import {
   hexToBin,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
-import type { Artifact, Utxo } from "cashscript";
+import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, _PROTOCOL_ID, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
@@ -12,6 +12,7 @@ import {
   binToNumber,
   deriveLockingBytecodeHex,
   getPrefixFromNetwork,
+  sum,
   toHex,
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
@@ -128,6 +129,41 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     // check that the address
     perpetuity.checkLockingBytecode(p.lockingBytecode);
     return perpetuity;
+  }
+
+  static async getSpendableBalance(
+    opReturn: Uint8Array | string,
+    network = "mainnet",
+    networkProvider: ElectrumNetworkProvider,
+    blockHeight: number
+  ): Promise<number> {
+    let p = this.parseOpReturn(opReturn, network);
+    let period = binToNumber(p.args.shift()!);
+    let utxos = await networkProvider.getUtxos(p.address)
+    let spendableUtxos = utxos.map((u) => {
+      // @ts-ignore
+      if (u.height !== 0) {
+        // @ts-ignore
+        if (blockHeight - u.height > period) {
+          return u.satoshis
+        }
+        else {
+          return 0
+        }
+      } else {
+        return 0
+      }
+    })
+    return spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+  }
+
+  static getExecutorAllowance(
+    opReturn: Uint8Array | string,
+    network = "mainnet"
+  ): number {
+    let p = this.parseOpReturn(opReturn, network);
+    p.args.pop()!
+    return binToNumber(p.args.pop()!);
   }
 
   override toString() {

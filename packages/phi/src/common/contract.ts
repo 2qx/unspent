@@ -10,11 +10,11 @@ import {
   Utxo,
 } from "cashscript";
 import { ElectrumNetworkProvider } from "cashscript";
+
 import {
-  ElectrumCluster,
-  ClusterOrder,
-  ElectrumTransport,
-} from "electrum-cash";
+  getDefaultProvider
+} from "./network.js";
+
 import {
   binToNumber,
   createOpReturnData,
@@ -40,45 +40,9 @@ export class BaseUtxPhiContract {
     artifact: Artifact,
     constructorArguments: Argument[]
   ) {
-    if (network === "mainnet") {
-      let cluster = new ElectrumCluster(
-        "@unspent/phi",
-        "1.4.1",
-        1,
-        1,
-        ClusterOrder.RANDOM,
-        2000
-      );
-
-      cluster.addServer(
-        "bch.imaginary.cash",
-        50004,
-        ElectrumTransport.WSS.Scheme,
-        false
-      );
-      cluster.addServer(
-        "electrum.imaginary.cash",
-        50004,
-        ElectrumTransport.WSS.Scheme,
-        false
-      );
-      this.provider = new ElectrumNetworkProvider("mainnet", cluster, false);
-      this.testnet = false;
-    } else if (network === "staging") {
-      this.provider = new ElectrumNetworkProvider("staging");
-      this.testnet = true;
-    } else if (network === "regtest") {
-      let cluster = new ElectrumCluster(
-        "@unspent/phi - regtest",
-        "1.4.1",
-        1,
-        1,
-        ClusterOrder.RANDOM
-      );
-      cluster.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
-      this.provider = new ElectrumNetworkProvider("regtest", cluster);
-      this.testnet = true;
-    } else throw "unrecognized network";
+    let defaultProvider = getDefaultProvider(network);
+    this.provider = defaultProvider as ElectrumNetworkProvider
+    this.testnet = this.provider.network == "mainnet" ? false: true
 
     this.artifact = artifact;
     this.contract = new CashScriptContract(
@@ -148,7 +112,7 @@ export class BaseUtxPhiContract {
     const prefix = getPrefixFromNetwork(network);
     const address = lockingBytecodeToCashAddress(lockingBytecode!, prefix);
     if (typeof address !== "string")
-      throw Error("non-standard address" + address);
+      throw Error("non-standard address:" + address);
 
     return {
       code: code,
@@ -157,6 +121,30 @@ export class BaseUtxPhiContract {
       lockingBytecode: lockingBytecode,
       address: address,
     };
+  }
+
+  // @ts-ignore
+  // static async getSpendable(opReturn: Uint8Array | string, network = "mainnet", networkProvider: ElectrumNetworkProvider, blockHeight?: number): Promise<number> {
+  //   throw Error("Cannot get spendable amount from base class");
+  // }
+
+
+  static getExecutorAllowance(
+    opReturn: Uint8Array | string,
+    network = "mainnet"
+  ): number {
+    throw Error(`Cannot get executor allowance from base class, ${opReturn} on ${network}`);
+  }
+
+  static async getSpendableBalance(
+    opReturn: Uint8Array | string,
+    network = "mainnet",
+    networkProvider?: ElectrumNetworkProvider,
+    blockHeight?: number
+  ): Promise<number> {
+    networkProvider
+    blockHeight
+    throw Error(`Cannot get spendable amount from base class, ${opReturn} on ${network}`);
   }
 
   async getBalance(): Promise<number> {

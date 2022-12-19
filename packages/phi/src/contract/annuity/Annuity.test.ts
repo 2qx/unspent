@@ -51,6 +51,8 @@ describe(`Annuity Class Tests`, () => {
     let a1 = new Annuity(5, process.env["ADDRESS"]!, 5000, Annuity.minAllowance, options);
     let opReturn = a1.toOpReturn(false);
     let a2 = Annuity.fromOpReturn(opReturn, "regtest");
+    let ex = Annuity.getExecutorAllowance(opReturn, "regtest");
+    expect(ex).toBe(Annuity.minAllowance)
     expect(a1.toString()).toEqual(a2.toString());
     expect(a2.isTestnet()).toEqual(true);
     expect(a1.getAddress()).toEqual(a2.getAddress());

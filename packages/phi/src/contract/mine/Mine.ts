@@ -4,7 +4,7 @@ import {
   bigIntToBinUintLE,
   instantiateSha256,
 } from "@bitauth/libauth";
-import type { Artifact, Utxo } from "cashscript";
+import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
@@ -20,7 +20,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "M";
   private static fn: string = "execute";
-  public static minPayout: number = DUST_UTXO_THRESHOLD + 392+10;
+  public static minPayout: number = DUST_UTXO_THRESHOLD + 392 + 10;
 
   constructor(
     public period: number = 1,
@@ -36,7 +36,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Unrecognized Mine Contract Version`);
     }
 
-    if(payout<Mine.minPayout) throw Error(`Payout below minimum usable level ${Mine.minPayout}`)
+    if (payout < Mine.minPayout) throw Error(`Payout below minimum usable level ${Mine.minPayout}`)
 
 
     super(options.network!, script, [
@@ -100,6 +100,47 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     mine.checkLockingBytecode(p.lockingBytecode);
     return mine;
   }
+
+  static async getSpendableBalance(
+    opReturn: Uint8Array | string,
+    network = "mainnet",
+    networkProvider: ElectrumNetworkProvider,
+    blockHeight: number
+  ): Promise<number> {
+    let p = this.parseOpReturn(opReturn, network);
+    let period = binToNumber(p.args.shift()!);
+    let payout = binToNumber(p.args.shift()!);
+    let utxos = await networkProvider.getUtxos(p.address)
+    let spendableUtxos = utxos.map((u: Utxo) => {
+      // @ts-ignore
+      if (u.height !== 0) {
+        // @ts-ignore
+        if (blockHeight - u.height > period) {
+          return u.satoshis
+        }
+        else {
+          return 0
+        }
+      } else {
+        return 0
+      }
+    })
+    const spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    if (spendable > payout) {
+      return spendable
+    } else {
+      return 0
+    }
+  }
+
+  static getExecutorAllowance(
+    opReturn: Uint8Array | string,
+    network = "mainnet"
+  ): number {
+    let p = this.parseOpReturn(opReturn, network);
+    return binToNumber(p.args.at(1)!);
+  }
+
 
   override toString() {
     return [
@@ -167,7 +208,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     return nonceHex;
   }
 
-  getOutputLockingBytecodes(hex=true){
+  getOutputLockingBytecodes(hex = true) {
     hex
     return []
   }
@@ -230,7 +271,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (exAddress) {
       let minerFee = fee ? fee : size.length / 2;
-      console.log(minerFee)
+      //console.log(minerFee)
       let reward = this.payout - (minerFee + 10);
       to.pop();
       to.push({

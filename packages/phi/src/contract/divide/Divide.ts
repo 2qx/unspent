@@ -1,4 +1,4 @@
-import type { Artifact, Utxo } from "cashscript";
+import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import {
   binToHex,
   cashAddressToLockingBytecode,
@@ -13,6 +13,7 @@ import {
   getPrefixFromNetwork,
   toHex,
   binToNumber,
+  sum
 } from "../../common/util.js";
 import { artifact as v1_2 } from "./cash/divide.2.js";
 import { artifact as v1_3 } from "./cash/divide.3.js";
@@ -130,6 +131,35 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     // check that the address
     divide.checkLockingBytecode(p.lockingBytecode);
     return divide;
+  }
+
+  static getExecutorAllowance(
+    opReturn: Uint8Array | string,
+    network = "mainnet"
+  ): number {
+    let p = this.parseOpReturn(opReturn, network);
+    return binToNumber(p.args.shift()!);
+  }
+
+  static async getSpendableBalance(
+    opReturn: Uint8Array | string,
+    network = "mainnet",
+    networkProvider: ElectrumNetworkProvider,
+    blockHeight: number
+  ): Promise<number> {
+    let p = this.parseOpReturn(opReturn, network);
+    blockHeight
+    let executorAllowance = binToNumber(p.args.shift()!);
+    let utxos = await networkProvider.getUtxos(p.address)
+    let spendableUtxos = utxos.map((u) => {
+       return u.satoshis   
+    })
+    let spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    if(spendable > (p.args.length*DUST_UTXO_THRESHOLD) + executorAllowance) {
+      return spendable
+    }else{
+      return 0
+    } 
   }
 
   override toString() {
