@@ -4,10 +4,10 @@
 	import Select, { Option } from '@smui/select';
 	import IconButton from '@smui/icon-button';
 	import CircularProgress from '@smui/circular-progress';
+	import LinearProgress from '@smui/linear-progress';
 	import { onMount } from 'svelte';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getRecords, parseOpReturn } from '@unspent/phi';
-	import { ElectrumNetworkProvider } from 'cashscript';
 	import {
 		getDefaultProvider,
 		opReturnToExecutorAllowance,
@@ -18,16 +18,20 @@
 	import { protocol, chaingraphHost, node, executorAddress } from '$lib/store.js';
 
 	let contractData = [];
+	let isLoading = true;
+	let buffered = 0;
+	let progress = 0;
+	let noResults = false;
 
 	let pageSizes = [5, 10, 25, 50];
-	let pageSize = 10;
+	let pageSize = 25;
 	let page = 0;
 
 	let executorAddressValue = '';
 	let protocolValue = '';
 	let chaingraphHostValue = '';
 	let nodeValue = '';
-  let blockHeight = 0;
+	let blockHeight = 0;
 
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
@@ -61,14 +65,17 @@
 
 	onMount(async () => {
 		if (chaingraphHostValue.length > 0) {
-      let networkProvider = getDefaultProvider('mainnet');
-      if(blockHeight<1) blockHeight = await networkProvider.getBlockHeight();
+			let networkProvider = getDefaultProvider('mainnet');
+			if (blockHeight < 1) blockHeight = await networkProvider.getBlockHeight();
 			loadContracts();
 		}
 	});
 	const loadContracts = async () => {
 		await load({
 			load: async () => {
+				isLoading = true;
+				buffered = 0;
+				progress = 0;
 				let protocolHex = protocolValue
 					.split('')
 					.map((el) => el.charCodeAt(0).toString(16))
@@ -81,23 +88,34 @@
 					page * pageSize
 				);
 				let tmpData = contractHex.map((x) => parseOpReturn(x));
+				buffered = 1;
+				if (tmpData.length === 0) {
+					noResults = true;
+				} else {
+					noResults = false;
+				}
 				let networkProvider = getDefaultProvider('mainnet');
-				
 
 				let dataPromises = await tmpData.map(async (data) => {
 					let opReturn = binToHex(data.opReturn);
 					data.executorAllowance = opReturnToExecutorAllowance(opReturn);
+          
+          // adjust the progress per output, with a little bit of fuzz to make it visible.
+          setTimeout(()=>{progress += 1 / pageSize}, 300+Math.floor(Math.random() * 1000));
 					data.spendable = await opReturnToSpendableBalance(
 						opReturn,
 						'mainnet',
 						networkProvider,
 						blockHeight
 					);
+          
 					return data;
 				});
+
 				await Promise.all(dataPromises).then(function (results) {
 					contractData = results;
 				});
+				isLoading = false;
 			}
 		});
 	};
@@ -114,6 +132,8 @@
 			<Card class="demo-spaced">
 				<div class="margins">
 					<h1>Spend Unspent Contracts</h1>
+					<p>pg. {page}</p>
+
 					<div id="pager">
 						<Select
 							style="max-width: 100px"
@@ -156,12 +176,27 @@
 						</span>
 					</div>
 					<br />
-					{#if contractData.length == 0}
+					{#if isLoading}
 						<div style="display: flex; justify-content: center">
-							<CircularProgress style="height: 48px; width: 48px;" indeterminate />
+							<LinearProgress {progress} buffer={buffered} />
 						</div>
 					{/if}
-					<ContractAccordion bind:contractData />
+					<br />
+					{#if contractData.length > 0}
+						<ContractAccordion bind:contractData />
+					{/if}
+					{#if noResults}
+						<p>No Results</p>
+					{/if}
+					<br />
+					{#if contractData.length > 0}
+						{#if isLoading}
+							<div style="display: flex; justify-content: center">
+								<LinearProgress {progress} buffer={buffered} />
+							</div>
+						{/if}
+					{/if}
+
 					<br />
 					<div id="pager">
 						<Select

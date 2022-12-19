@@ -62,6 +62,7 @@
 				if (opReturnHex.length > 0) {
 					let queryHex = opReturnHex.length > 50 ? opReturnHex.slice(0, 50) : opReturnHex;
 					let records = await getRecords(chaingraphHostValue, queryHex, nodeValue);
+          records = records.filter(r =>  r == opReturnHex)
 					isPublished = records.length > 0 ? true : false;
 				}
 			}
