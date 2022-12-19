@@ -10,36 +10,50 @@ export async function getRecords(
 ) {
   prefix = prefix ? prefix : "6a04" + PROTOCOL_ID;
   node = node ? node : "bchn";
+  let exclude_pattern = "6a0401010102010717"
   let response = await axios({
     url: host,
     method: "post",
     data: {
-      query: `query SearchOutputsByLockingBytecodePrefix($prefix: String!, $node: String!, $limit:Int, $offset:Int) {
+      query: `query SearchOutputsByLockingBytecodePrefix($prefix: String!, $node: String!, $exclude_pattern: String!, $limit:Int, $offset:Int) {
               search_output_prefix(
                 args: { locking_bytecode_prefix_hex: $prefix }
                 distinct_on: locking_bytecode,
                 limit: $limit,
                 offset: $offset,
                 where: {
-                  _or: [
+                  _and: [
                     {
-                      transaction: {
-                        block_inclusions: {
-                          block: { accepted_by: { node: { name: { _eq: $node } } } }
+                     locking_bytecode_pattern: {
+                      _nlike: $exclude_pattern
+                    }  
+                    }, 
+                    {
+                      _or: [
+                        {
+                          transaction: {
+                            block_inclusions: {
+                              block: { accepted_by: { node: { name: { _eq: $node } } } }
+                            }
+                          }
                         }
-                      }
-                    }
-                    {
-                      transaction: { node_validations: { node: { name: { _eq: $node } } } }
+                        {
+                          transaction: {
+                            node_validations: { node: { name: { _eq: $node } } }
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
               ) {
+                locking_bytecode_pattern,
                 locking_bytecode
               }
             }`,
       variables: {
         prefix: prefix,
+        exclude_pattern: exclude_pattern,
         node: node,
         limit: limit,
         offset: offset,
