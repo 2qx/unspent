@@ -8,6 +8,7 @@ import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
+import { getBlockHeight } from "../../common/network.js";
 import {
   getPrefixFromNetwork,
   deriveLockingBytecodeHex,
@@ -173,7 +174,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         return 0
       }
     })
-    return spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    return spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0
   }
 
   override toString() {
@@ -212,6 +213,57 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       return [this.recipientLockingBytecode]
     }
+  }
+
+  async asSeries(): Promise<any> {
+
+    const currentHeight = await getBlockHeight()
+    let currentTime = Math.floor(Date.now() / 1000)
+    let utxos = await this.getUtxos()
+    let series: any = []
+    // @ts-ignore
+    if (!utxos || utxos?.length == 0) utxos = [{ satoshis: 1000000, txid: "<example 10,000,000 (0.1 BCH) unspent output>", vout: 0, height: 0 }]
+    if (utxos) {
+      for (const utxo of utxos) {
+        let blocksToWait = NaN
+        // @ts-ignore
+        if (utxo.height == 0) {
+          blocksToWait = this.period
+        } else {
+          // @ts-ignore
+          blocksToWait = this.period - (currentHeight - utxo.height)
+        }
+        const seriesStartTime = currentTime + (blocksToWait * 600)
+
+        const initialPrincipal = utxo.satoshis
+        let seriesLength = (initialPrincipal - DUST_UTXO_THRESHOLD) / (this.installment + this.executorAllowance)
+        
+        const principal = []
+        const time = []
+        const totalFee = []
+        const totalPayout = []
+        const installment = this.installment + this.executorAllowance
+        const intervalSeconds = this.period * 600
+        for (var i = 0; i < seriesLength; i++) {
+          time.push(seriesStartTime + (i * intervalSeconds))
+          principal.push(initialPrincipal - (installment * i))
+          totalPayout.push(this.installment * i)
+          totalFee.push(this.executorAllowance * i)
+        }
+
+        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`
+        series.push({
+          id: utxoId, data: {
+            "time": time,
+            "principal": principal,
+            "payout": totalPayout,
+            "executorAllowance": totalFee
+          }
+        })
+      } // for utxos
+    } // if utxos
+    return series
+
   }
 
 

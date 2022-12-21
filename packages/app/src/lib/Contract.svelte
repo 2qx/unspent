@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
-  import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
+	import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
 	import Button, { Label, Icon } from '@smui/button';
 	import CircularProgress from '@smui/circular-progress';
 
@@ -13,6 +13,7 @@
 	import Address from './Address.svelte';
 	import AddressQrCode from './AddressQrCode.svelte';
 	import AddressBlockie from './AddressBlockie.svelte';
+	import ContractChart from './ContractChart.svelte';
 	import SerializedString from './SerializedString.svelte';
 
 	export let instance: any;
@@ -20,7 +21,9 @@
 	let balance = NaN;
 	let txid = '';
 	let opReturnHex = '';
+	let cachedAddress = '';
 	let utxos: any = [];
+	let series: any = [];
 	let isFunded = false;
 	let outputs: string[] = [];
 
@@ -47,6 +50,10 @@
 			load: async () => {
 				if (instance) balance = await instance.getBalance();
 				isFunded = balance > 0 ? true : false;
+
+				if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
+					showSeries();
+				}
 			}
 		});
 	};
@@ -87,7 +94,17 @@
 		utxos = [];
 	}
 
-
+	const showSeries = async () => {
+		await load({
+			load: async () => {
+				// only update the series when the contract changes
+				if (cachedAddress != instance.getAddress()) {
+					series = await instance.asSeries();
+					cachedAddress = instance.getAddress();
+				}
+			}
+		});
+	};
 
 	function setProgress() {
 		executionProgress = 0;
@@ -111,13 +128,12 @@
 	<a href="{base}/contract?opReturn={instance.toOpReturn(true)}" target="_blank">Permalink</a>
 
 	<h2>Locking Bytecode</h2>
-  <p>Cashaddress:</p>
+	<p>Cashaddress:</p>
 	<p><Address address={instance.getAddress()} /></p>
 	<div>
 		<AddressQrCode codeValue={instance.getAddress()} />
-    <AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
+		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 	</div>
-
 
 	<p>Hex:</p>
 
@@ -134,23 +150,31 @@
 
 	{#if instance.getOutputLockingBytecodes().length > 0}
 		<h3>Predefined outputs:</h3>
-    <table>
-      {#each instance.getOutputLockingBytecodes() as output}
-			<tr>
-				<td class="right"><a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?lockingBytecode={output} "> {output} </a> </td>
-				<td> <AddressBlockie size={30} lockingBytecode={output} /> </td>
-			</tr>
-      <tr>
-        <td colspan="2">
-         <Address address={lockingBytecodeToCashAddress(hexToBin(output),'bitcoincash')}/>
-        </td>
-      </tr>
-		{/each}
-    </table>
+		<table>
+			{#each instance.getOutputLockingBytecodes() as output}
+				<tr>
+					<td class="right"
+						><a
+							style="max-width=30em; line-break:anywhere;"
+							href="{base}/explorer?lockingBytecode={output} "
+						>
+							{output}
+						</a>
+					</td>
+					<td> <AddressBlockie size={30} lockingBytecode={output} /> </td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<Address address={lockingBytecodeToCashAddress(hexToBin(output), 'bitcoincash')} />
+					</td>
+				</tr>
+			{/each}
+		</table>
 	{/if}
 	<h2>Unspent Transaction Outputs</h2>
 
 	<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
+
 	<br />
 	Inputs
 	{#if utxos.length == 0}
@@ -161,6 +185,16 @@
 		<UtxosSelect bind:utxos />
 	{/if}
 	<br />
+	{#if instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity'}
+		{#if series && series.length>0}
+			<h2>Schedule</h2>
+			{#each series as ts (ts.id)}
+      <pre>{ts.id}</pre>
+				<ContractChart bind:series={ts.data} />
+			{/each}
+		{/if}
+	{/if}
+
 	<h2>Unlock</h2>
 	<Button variant="raised" touch on:click={execute}>
 		<Label>Execute</Label>
