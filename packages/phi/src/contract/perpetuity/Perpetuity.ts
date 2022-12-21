@@ -309,7 +309,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress) {
       let minerFee = fee ? fee : size.length / 2;
 
-      executorFee = this.executorAllowance - minerFee - 7
+      executorFee = this.executorAllowance - minerFee - 20
       to.pop();
       to.push({
         to: exAddress,
