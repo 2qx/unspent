@@ -154,7 +154,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         return 0
       }
     })
-    return spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    return spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0
   }
 
   static getExecutorAllowance(
@@ -204,45 +204,58 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     }
   }
 
-  async asSeries(){
+  async asSeries() {
     const currentHeight = await getBlockHeight()
-    let currentTime = Math.floor(Date.now()/1000)
+    let currentTime = Math.floor(Date.now() / 1000)
     let utxos = await this.getUtxos()
-    let series:any = {}
-    if(utxos){
-      for(const utxo of utxos){
+    let series: any = []
+    // @ts-ignore
+    if (!utxos || utxos?.length == 0) utxos = [{ satoshis: 1000000, txid: "<example 10,000,000 (0.1 BCH) unspent output>", vout: 0, height: 0 }]
+    if (utxos) {
+      for (const utxo of utxos) {
         let time = []
         let payout = []
+        let installment = []
         let principal = []
         let allowance = []
+        let blocksToWait = NaN
         // @ts-ignore
-        if(utxo.height==0){
-          time.push(currentTime+ this.period*600)
-        }else{
+        if (utxo.height == 0) {
+          blocksToWait = this.period
+        } else {
           // @ts-ignore
-          let nextCallableBlockTime = this.period-(currentHeight-utxo.height)
-          time.push(currentTime+ (nextCallableBlockTime)*600)
+          blocksToWait = this.period - (currentHeight - utxo.height)
         }
-        payout.push(Math.floor(utxo.satoshis/this.decay)-this.executorAllowance)
-        principal.push(utxo.satoshis-payout.at(-1)!)
+        const seriesStartTime = currentTime + (blocksToWait * 600)
+        installment.push(Math.floor(utxo.satoshis / this.decay) - this.executorAllowance)
+        payout.push(installment.at(-1)!)
+        principal.push(utxo.satoshis - installment.at(-1)!)
         allowance.push(this.executorAllowance)
-
-        let watchdog = 0
-        while(payout.at(-1)!>this.executorAllowance && watchdog<1000){
-            time.push(time.at(-1)! + this.period*600)
-            payout.push(Math.floor(principal.at(-1)!/this.decay)-this.executorAllowance)
-            principal.push(principal.at(-1)!-payout.at(-1)!)
-            allowance.push(this.executorAllowance)
-            watchdog += 1
+        const intervalSeconds = this.period * 600
+        let nextPayout = 0
+        let lastPrincipal = principal.at(-1)!
+        for (let i = 1; i < 5000; i++) {
+          lastPrincipal = principal.at(-1)!
+          nextPayout = Math.floor(lastPrincipal / this.decay)
+          if (nextPayout < DUST_UTXO_THRESHOLD) {
+            break;
+          }
+          time.push(seriesStartTime + (i * intervalSeconds))
+          installment.push(nextPayout)
+          payout.push(payout.at(-1)! + nextPayout)
+          principal.push(lastPrincipal - nextPayout - this.executorAllowance)
+          allowance.push(this.executorAllowance * i)
         }
 
         let utxoId = `${utxo.txid}:${utxo.vout.toString()}`
-        series[utxoId] = {
-          "time": time,
-          "principal" : principal,
-          "payout": payout,
-          "executorAllowance": allowance
-        }
+        series.push({
+          id: utxoId, data: {
+            "time": time,
+            "principal": principal,
+            "payout": payout,
+            "executorAllowance": allowance
+          }
+        })
       } // for utxos
     } // if utxos
     return series
@@ -262,7 +275,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (currentValue == 0) return "No funds on contract";
 
     let fn = this.getFunction(Perpetuity.fn)!;
-    let installment = Math.round(currentValue / this.decay)+1;
+    let installment = Math.round(currentValue / this.decay) + 1;
     let newPrincipal = currentValue - (installment + this.executorAllowance);
 
     // round up
@@ -307,7 +320,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     // // Calculate value returned to the contract
     // int returnedValue = currentValue - installment - executorAllowance;
     //console.log(newPrincipal, currentValue, installment, executorFee)
-    
+
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);
