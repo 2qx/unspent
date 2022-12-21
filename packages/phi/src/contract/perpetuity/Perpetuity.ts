@@ -22,7 +22,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
-  public static minAllowance: number = DUST_UTXO_THRESHOLD + 220 + 10;
+  public static minAllowance: number = DUST_UTXO_THRESHOLD + 220 + 20;
 
   constructor(
     public period: number = 4000,
