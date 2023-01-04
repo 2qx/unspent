@@ -335,7 +335,7 @@ pointer-events: none;"
 
 					<p>
 						This fundraiser was to support the further development of an open-source ecosystem
-						around anyone-can-spend utxo contracts. A fraction of money donated was <i>also</i> be forwarded
+						around anyone-can-spend utxo contracts. A fraction of money donated was <i>also</i> forwarded
 						to support the software and tools this app depends on. At present, the app uses generic backend
 						infrastructure (fulcrum/chaingraph), but some of the budget was be set aside to run dedicated
 						deployments of those generic services.
