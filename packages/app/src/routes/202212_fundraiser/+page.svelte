@@ -320,7 +320,7 @@ pointer-events: none;"
 		<div class="card-container">
 			<Card class="demo-spaced">
 				<div class="margins">
-					<h1>The Unspent Phi Inaugural Fundraising Campaign has succeeded!</h1>
+					<h1>The Unspent Phi Inaugural Fundraising Campaign has concluded!</h1>
 
 					<table>
 						<tr>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ImageList, { Item } from '@smui/image-list';
-
+  import { Confetti } from 'svelte-confetti';
   export let response;
 	let results = response.map((r) => {
 						return {
@@ -32,7 +32,15 @@
 			{#each results as txo}
 				<Item>
 					<div class="tract" style="height:{getUnevenImageSize(txo.satoshis, 80, 120, Math.abs)}px">
-						<h2>🍊 {txo.satoshis.toLocaleString()}</h2>
+            
+						<h2>🍊 {txo.satoshis.toLocaleString()}
+              <Confetti
+              x={[-Math.random()*1, Math.random()*1]}
+              y={[-Math.random()*1, Math.random()*1]}
+              delay={[5000, (Math.random()*5000)+5000]}
+              colorArray={['#0F0', '#F0F']}
+              amount="100"
+            /></h2>
 						
 						<a target="_blank" href="https://explorer.bitcoinunlimited.info/tx/{txo.txid}"
 							>Transaction</a
