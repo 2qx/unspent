@@ -33,13 +33,13 @@ export async function getRecords(
                         {
                           transaction: {
                             block_inclusions: {
-                              block: { accepted_by: { node: { name: { _eq: $node } } } }
+                              block: { accepted_by: { node: { name: { _regex: $node } } } }
                             }
                           }
                         }
                         {
                           transaction: {
-                            node_validations: { node: { name: { _eq: $node } } }
+                            node_validations: { node: { name: { _regex: $node } } }
                           }
                         }
                       ]
