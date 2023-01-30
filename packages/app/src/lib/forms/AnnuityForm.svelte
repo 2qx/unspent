@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Annuity, DUST_UTXO_THRESHOLD } from '@unspent/phi';
+	import { Annuity, DUST_UTXO_THRESHOLD, sanitizeAddress } from '@unspent/phi';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 
@@ -12,10 +12,11 @@
 	let receiptAddress = '';
 	let installment = NaN;
 	let executorAllowance = 1200;
-	function createContract() {
+	async function createContract() {
 		if (receiptAddress && installment && period) {
 			try {
-				contract = new Annuity(period, receiptAddress, installment, executorAllowance);
+        let address = await sanitizeAddress(receiptAddress)
+				contract = new Annuity(period, address, installment, executorAllowance);
 			} catch (e: any) {
 				contract = undefined;
 				if (e.message) {

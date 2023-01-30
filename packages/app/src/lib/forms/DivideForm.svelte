@@ -5,16 +5,19 @@
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 	import AddressOptional from '$lib/AddressOptional.svelte';
-	import { Divide, DUST_UTXO_THRESHOLD } from '@unspent/phi';
+	import { Divide, sanitizeAddress } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 	let isPublished = false;
 
 	let payees: string[] = ['', ''];
 	let executorAllowance = 1200;
-	function createContract() {
+	async function createContract() {
 		try {
-			contract = new Divide(executorAllowance, payees);
+      let addresses = payees.map(async (a) => await sanitizeAddress(a))
+      await Promise.all(addresses).then((addresses) => {
+        contract = new Divide(executorAllowance, addresses);
+      })
 		} catch (e: Error) {
       contract = undefined
 			if (e.message) {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import { Perpetuity } from '@unspent/phi';
+	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	export let contract;
 	let isPublished = false;
@@ -10,9 +10,10 @@
 	let receiptAddress = '';
 	let decay = NaN;
 	let executorAllowance = 1200;
-	function createContract() {
+	async function createContract() {
 		try {
-			contract = new Perpetuity(period, receiptAddress, executorAllowance, decay);
+      let address = await sanitizeAddress(receiptAddress)
+			contract = new Perpetuity(period, address, executorAllowance, decay);
 		} catch (e: Error) {
       contract = undefined
 			if (e.message) {

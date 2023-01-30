@@ -5,7 +5,7 @@
   import Button, { Label } from '@smui/button';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import { deriveLockingBytecodeHex } from '@unspent/phi';
+	import { deriveLockingBytecodeHex, sanitizeAddress } from '@unspent/phi';
 	import AddressQrCode from '$lib/AddressQrCode.svelte';
 	import AddressBlockie from '$lib/AddressBlockie.svelte';
 	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
@@ -47,11 +47,13 @@
     executorAddress.set("");
 	}
 
-	function updateExAddress() {
-		executorAddress.set(executorAddressValue);
+	async function updateExAddress() {
+    let sanitizedAddress = await sanitizeAddress(executorAddressValue)
+		executorAddress.set(sanitizedAddress);
     if(executorAddressValue) {
       try{
-        lockingBytecode = deriveLockingBytecodeHex(executorAddressValue);
+        
+        lockingBytecode = deriveLockingBytecodeHex(sanitizedAddress);
       }
       catch{
         console.error("error decoding provided cashaddr, in settings.")

@@ -9,7 +9,7 @@ export async function getRecords(
   offset = 0
 ) {
   prefix = prefix ? prefix : "6a04" + PROTOCOL_ID;
-  node = node ? node : "bchn";
+  node = node ? node : "mainnet";
   let exclude_pattern = "6a0401010102010717"
   let response = await axios({
     url: host,

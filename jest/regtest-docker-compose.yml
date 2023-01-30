@@ -2,8 +2,8 @@ version: "3.7"
 
 services:
   bitcoind:
-    image: mainnet/bitcoin-cash-node
-    command: bitcoind -zmqpubhashtx=tcp://*:28332 -zmqpubrawtx=tcp://*:28332 -zmqpubhashblock=tcp://*:28332 -zmqpubrawblock=tcp://*:28332 -txindex=1 -regtest -rpcbind=bitcoind -rpcallowip=0.0.0.0/24 -rpcuser=alice -rpcpassword=password
+    image: mainnet/bitcoin-cash-node:v25.0.0
+    command: bitcoind -upgrade9activationtime=1668419099 -zmqpubhashtx=tcp://*:28332 -zmqpubrawtx=tcp://*:28332 -zmqpubhashblock=tcp://*:28332 -zmqpubrawblock=tcp://*:28332 -txindex=1 -regtest -rpcbind=bitcoind -rpcallowip=0/0 -rpcuser=alice -rpcpassword=password
     healthcheck:
       test: ["CMD", "/entrypoint.sh", "bitcoin-cli", "getblockchaininfo"]
       interval: 1m30s
@@ -20,7 +20,7 @@ services:
     networks:
       - bitcoin
   bitcoin-mine:
-    image: mainnet/bitcoin-cash-node
+    image: mainnet/bitcoin-cash-node:v25.0.0
     entrypoint: ["/entrypoint.sh"]
     command: /bin/sh -c "/bin/sleep 10 && bitcoin-cli -regtest -rpcconnect=bitcoind  -rpcuser=alice -rpcpassword=password -rpcport=18443 generatetoaddress 215 bchreg:qpttdv3qg2usm4nm7talhxhl05mlhms3ys43u76rn0 1> /dev/null"
     networks:
@@ -29,8 +29,8 @@ services:
     image: cculianu/fulcrum
     command: /bin/sh -c "/bin/sleep 10 && Fulcrum /tmp/fulcrum.conf"
     ports:
-      - "60001:60001"
-      - "60003:60003"
+      - "127.0.0.1:60001:60001"
+      - "127.0.0.1:60003:60003"
     expose: [60001, 60003]
     depends_on:
       - bitcoin-mine
