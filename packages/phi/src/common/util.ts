@@ -62,8 +62,6 @@ export async function sanitizeAddress(wildString: string) {
   if (typeof wildString != "string") throw Error("Cashaddress was not a string")
   // If the address has a prefix decode it as is
   let r, cashAddr
-  console.log(wildString)
-
 
   // Throw on segwit address
   if (wildString.substring(0, 3) === "bc1" || wildString.substring(0, 3) === "tb1") throw Error("Refusing to convert segwit P2SH address to cashaddress")
@@ -98,7 +96,6 @@ export async function sanitizeAddress(wildString: string) {
   }
   // otherwise, derive the network from the address without prefix
   if (typeof r === "string") throw Error(r)
-  console.log(r.prefix, r.version)
   cashAddr = encodeCashAddressFormat(r.prefix, r.version, r.hash)
   return cashAddr
 }
