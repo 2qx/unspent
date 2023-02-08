@@ -1,0 +1,49 @@
+name: Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - run: yarn
+      - run: yarn build  
+  
+  # Requires NPM_TOKEN github secret to be set
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Build project
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - run: yarn
+      - run: yarn build
+
+      # Setup environment
+      - name: Check if NPM_TOKEN is set
+        run: |
+            if [ -n $NPM_TOKEN ]; then HAS_NPM_TOKEN='true' ; fi
+            echo "HAS_NPM_TOKEN=${HAS_NPM_TOKEN}" >> $GITHUB_ENV
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+
+      # Actual job
+      - if: env.HAS_NPM_TOKEN == false
+        run: echo "NPM_TOKEN secret not set, skipping publishing"
+      - if: env.HAS_NPM_TOKEN
+        name: Publish to npm
+        run: yarn workspaces run publish:public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

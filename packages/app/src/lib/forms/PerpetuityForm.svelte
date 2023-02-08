@@ -12,10 +12,18 @@
 	let executorAllowance = 1200;
 	async function createContract() {
 		try {
-      let address = await sanitizeAddress(receiptAddress)
-			contract = new Perpetuity(period, address, executorAllowance, decay);
+			try {
+				receiptAddress = await sanitizeAddress(receiptAddress);
+			} catch (e: any) {
+				if (e.message) {
+					toast.push(e.message, { classes: ['warn'] });
+				} else {
+					toast.push(e, { classes: ['warn'] });
+				}
+			}
+			contract = new Perpetuity(period, receiptAddress, executorAllowance, decay);
 		} catch (e: Error) {
-      contract = undefined
+			contract = undefined;
 			if (e.message) {
 				toast.push(e.message, { classes: ['warn'] });
 			} else {
@@ -42,7 +50,7 @@
 		bind:value={period}
 		on:change={() => createContract()}
 		type="number"
-		input$min=1
+		input$min="1"
 		input$max="65535"
 		required
 		label="Period"

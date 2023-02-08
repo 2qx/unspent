@@ -2,6 +2,7 @@
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
 	import { Confetti } from 'svelte-confetti';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import Button, { Label, Icon } from '@smui/button';
 	import CircularProgress from '@smui/circular-progress';
 
@@ -62,7 +63,7 @@
 				if (opReturnHex.length > 0) {
 					let queryHex = opReturnHex.length > 50 ? opReturnHex.slice(0, 50) : opReturnHex;
 					let records = await getRecords(chaingraphHostValue, queryHex, nodeValue);
-          records = records.filter(r =>  r == opReturnHex)
+					records = records.filter((r) => r == opReturnHex);
 					isPublished = records.length > 0 ? true : false;
 				}
 			}
@@ -87,12 +88,21 @@
 </script>
 
 {#if isPublished == undefined}
-	checking records ...
+	<Wrapper>
+		<Button color="secondary" disabled variant="outlined">
+			<Label>Checking...</Label>
+			<Icon class="material-icons">hourglass_top</Icon>
+		</Button>
+		<Tooltip>Checking if contract is published.</Tooltip>
+	</Wrapper>
 {:else if isPublished == true}
-	<Button disabled>
-		<Label>Published</Label>
-		<Icon class="material-icons">check</Icon>
-	</Button>
+	<Wrapper>
+		<Button color="secondary"  variant="outlined" disabled>
+			<Label>Published</Label>
+			<Icon class="material-icons">check</Icon>
+		</Button>
+		<Tooltip>The contract parameters are recorded in a previous transaction.</Tooltip>
+	</Wrapper>
 	{#if txid}
 		<div style="display: flex; justify-content: center">
 			<Confetti colorRange={[75, 174]} />
@@ -102,10 +112,14 @@
 		>
 	{/if}
 {:else}
-	<Button variant="raised" touch on:click={broadcast}>
-		<Label>Broadcast</Label>
-		<Icon class="material-icons">send</Icon>
-	</Button>
+	<Wrapper>
+		<Button variant="raised" touch on:click={broadcast}>
+			<Label>Broadcast</Label>
+			<Icon class="material-icons">campaign</Icon>
+		</Button>
+		<Tooltip>Record the parameters to execute the contract on the blockchain.</Tooltip>
+	</Wrapper>
+
 	{#if !executionProgressClosed}
 		<div style="display: flex; justify-content: center">
 			<CircularProgress
@@ -121,5 +135,4 @@
 {/if}
 
 <style>
-
 </style>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Annuity, DUST_UTXO_THRESHOLD, sanitizeAddress } from '@unspent/phi';
+	//import BlockTimeField from '../BlockTimeField.svelte';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 
@@ -13,10 +14,21 @@
 	let installment = NaN;
 	let executorAllowance = 1200;
 	async function createContract() {
+    console.log(receiptAddress);
+    console.log(period)
 		if (receiptAddress && installment && period) {
 			try {
-        let address = await sanitizeAddress(receiptAddress)
-				contract = new Annuity(period, address, installment, executorAllowance);
+				try {
+					receiptAddress = await sanitizeAddress(receiptAddress);
+				} catch (e: any) {
+					if (e.message) {
+						toast.push(e.message, { classes: ['warn'] });
+					} else {
+						toast.push(e, { classes: ['warn'] });
+					}
+				}
+
+				contract = new Annuity(period, receiptAddress, installment, executorAllowance);
 			} catch (e: any) {
 				contract = undefined;
 				if (e.message) {
@@ -39,7 +51,7 @@
 		required
 		label="Receipt Address"
 	>
-		<HelperText slot="helper">The address to recieve a regular payout.</HelperText>
+		<HelperText slot="helper">The address to receive a regular payout.</HelperText>
 	</Textfield>
 
 	<Textfield
@@ -55,6 +67,8 @@
 			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
 		>
 	</Textfield>
+
+	<!-- <BlockTimeField bind:blockTime={period} on:message={() => createContract()} /> -->
 
 	<Textfield
 		bind:value={installment}

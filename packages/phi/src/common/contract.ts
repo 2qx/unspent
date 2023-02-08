@@ -1,6 +1,8 @@
 import {
   binToHex,
   hexToBin,
+  instantiateSha256,
+  lockingBytecodeToBase58Address,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import {
@@ -154,6 +156,13 @@ export class BaseUtxPhiContract {
 
   getAddress(): string {
     return this.contract.address;
+  }
+
+  async getLegacyAddress(): Promise<string>{
+    let sha256 = await instantiateSha256()
+    let addr =  lockingBytecodeToBase58Address(sha256, this.getLockingBytecode(false) as Uint8Array, this.testnet ? 'testnet' : 'mainnet' )
+    if(typeof addr !== 'string') throw Error("could not encode legacy address")
+    return addr
   }
 
   async getUtxos(): Promise<Utxo[] | undefined> {

@@ -1,34 +1,35 @@
 <script>
+  import DataTable, { Head, Body, Row, Cell, Label } from '@smui/data-table';
+  import Checkbox from '@smui/checkbox';
 	export let utxos;
+  let selected = [];
+  console.log(utxos[0])
 </script>
 
 <p>Unspent Transaction Outputs</p>
-<table>
-	<tr>
-		<td />
-		<td class="right"><b>Satoshi</b></td>
-		<td><i>Height</i></td>
-		<td>Transaction Hash</td>
-		<td><i>Output</i></td>
-	</tr>
-	{#each utxos as utxo}
-		<tr>
-			<td><input type="checkbox" bind:checked={utxo.use} /></td>
-			<td class="right"><b> {utxo.satoshis} </b> </td>
-			<td> <i>{utxo.height} </i> </td>
-			<td class="break"> {utxo.txid} </td>
-			<td> <i>{utxo.vout}</i> </td>
-		</tr>
-	{/each}
-</table>
 
-<style>
-	.right {
-		text-align: right;
-		word-wrap: normal;
-	}
-	.break {
-		word-break: break-all;
-		width: 120px;
-	}
-</style>
+<DataTable style="width: 100%;">
+  <Head>
+    <Row>
+      <Cell>Spend</Cell>
+      <Cell >Satoshi</Cell>
+      <Cell numeric>Height</Cell>
+      <Cell columnId="outpoint" style="width: 50%;">
+        <Label>Outpoint</Label>
+      </Cell>
+    </Row>
+  </Head>
+  <Body>
+    {#each utxos as utxo (utxo.key)}
+      <Row>
+        <Cell checkbox>
+          <input type="checkbox" bind:checked={utxo.use} />
+        </Cell>
+        <Cell >{utxo.satoshis.toLocaleString()}</Cell>
+        <Cell numeric>{utxo.height}</Cell>
+        <Cell ><pre>{utxo.key}</pre></Cell>
+      </Row>
+    {/each}
+  </Body>
+</DataTable>
+

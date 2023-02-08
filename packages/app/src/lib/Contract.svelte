@@ -1,9 +1,14 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
+	import Prism from 'prismjs';
 	import { base } from '$app/paths';
 	import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import Button, { Label, Icon } from '@smui/button';
+	import IconButton, { Icon as IconButtonIcon } from '@smui/icon-button';
 	import CircularProgress from '@smui/circular-progress';
+	import LinearProgress from '@smui/linear-progress';
+	import { Svg } from '@smui/common';
 
 	import { Confetti } from 'svelte-confetti';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -11,7 +16,7 @@
 	import { load } from '$lib/machinery/loader-store.js';
 	import { executorAddress } from './store.js';
 	import Address from './Address.svelte';
-	import AddressQrCode from './AddressQrCode.svelte';
+	import AddressQrDialog from './AddressQrDialog.svelte';
 	import AddressBlockie from './AddressBlockie.svelte';
 	import ContractChart from './ContractChart.svelte';
 	import SerializedString from './SerializedString.svelte';
@@ -22,8 +27,11 @@
 	let txid = '';
 	let opReturnHex = '';
 	let cachedAddress = '';
+	let legacyAddress = '';
 	let utxos: any = [];
 	let series: any = [];
+	let showSeries = false;
+	let showDetails = false;
 	let isFunded = false;
 	let outputs: string[] = [];
 
@@ -43,6 +51,7 @@
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
 		await updateBalance();
+		legacyAddress = await instance.getLegacyAddress();
 	});
 
 	const updateBalance = async () => {
@@ -52,7 +61,9 @@
 				isFunded = balance > 0 ? true : false;
 
 				if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
-					showSeries();
+					if (showSeries) {
+						updateSeries();
+					}
 				}
 			}
 		});
@@ -94,7 +105,7 @@
 		utxos = [];
 	}
 
-	const showSeries = async () => {
+	const updateSeries = async () => {
 		await load({
 			load: async () => {
 				// only update the series when the contract changes
@@ -119,90 +130,142 @@
 		executionProgressClosed = true;
 		clearTimeout(executionProgressId);
 	}
+
+	function toggleSeries() {
+		showSeries = !showSeries;
+		if (!showSeries) series = [];
+	}
+
+	function toggleDetails() {
+		console.log(instance);
+		showDetails = !showDetails;
+	}
 </script>
 
 {#if instance}
-	<h1>{instanceType}</h1>
-	<p>{instance.asText()}</p>
+	<h1>
+		{instance.artifact.contractName}
+		<BroadcastAction opReturnHex={instance.toOpReturn(true)} />
+	</h1>
 
-	<a href="{base}/contract?opReturn={instance.toOpReturn(true)}" target="_blank">Permalink</a>
+	<b>{balance.toLocaleString()} sats </b>
+	<Wrapper>
+		<IconButton on:click={updateBalance} size="button">
+			<IconButtonIcon class="material-icons">refresh</IconButtonIcon>
+		</IconButton>
+		<Tooltip>Refresh Balance</Tooltip>
+	</Wrapper>
 
-	<h2>Locking Bytecode</h2>
-	<p>Cashaddress:</p>
-	<p><Address address={instance.getAddress()} /></p>
 	<div>
-		<AddressQrCode codeValue={instance.getAddress()} />
 		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 	</div>
+	<p>{instance.asText()}</p>
 
-	<p>Hex:</p>
+	<Wrapper>
+		<IconButton
+			href="{base}/contract?opReturn={instance.toOpReturn(true)}"
+			target="_blank"
+			touch
+			color="secondary"
+			size="button"
+		>
+			<Icon class="material-icons">launch</Icon>
+		</IconButton>
+		<Tooltip>Open permanent link in new tab</Tooltip>
+	</Wrapper>
 
-	<pre>{instance.getLockingBytecode()}</pre>
+	<Wrapper>
+		<AddressQrDialog codeValue={instance.getAddress()} />
+		<Tooltip>Scan qr code</Tooltip>
+	</Wrapper>
 
-	<h2>Unlocking Bytecode</h2>
-	<h3>Phi Contract Parameters</h3>
+	<Wrapper>
+		<IconButton
+			href="https://explorer.bitcoinunlimited.info/address/{instance.getAddress()}"
+			target="_blank"
+			touch
+			color="secondary"
+			size="button"
+		>
+			<Icon class="material-icons">travel_explore</Icon>
+		</IconButton>
+		<Tooltip>View on block explorer</Tooltip>
+	</Wrapper>
+	<Wrapper>
+		<IconButton
+			href="https://blockchair.com/bitcoin-cash/address/{instance.getAddress()}"
+			target="_blank"
+			touch
+			color="secondary"
+			size="button"
+		>
+			<Icon component={Svg} viewBox="2 2 22 22">
+				<path
+					fill="currentColor"
+					d="m 12.986211,23.033985 5.306349,-3.303844 v -6.74658 c 0,-0.131639 -0.0234,-0.257971 -0.06294,-0.378921 l -5.360329,3.337034 c 0.07554,0.179108 0.116921,0.374437 0.116921,0.57597 z"
+				/>
+				<path
+					fill="currentColor"
+					d="M 11.816937,0.94789702 6.5105653,4.251752 v 6.746527 c 0,0.131714 0.023384,0.258047 0.062957,0.378996 L 11.933857,8.0402403 c -0.07555,-0.1791822 -0.11692,-0.3744512 -0.11692,-0.576014 z"
+				/>
+				<path
+					fill="currentColor"
+					d="M 12.11283,8.3501649 6.7354072,11.698787 c 0.090838,0.127229 0.2077579,0.238311 0.3462634,0.325249 l 5.2074414,3.242024 c 0.158289,0.09852 0.293195,0.223062 0.401123,0.366363 l 5.378291,-3.347725 c -0.09082,-0.127229 -0.207737,-0.238311 -0.346254,-0.325174 L 12.514858,8.7174249 C 12.355665,8.6180039 12.221655,8.4934658 12.11283,8.3501649 Z"
+				/>
+				<path fill="currentColor" d="m 11.816974,23.033985 v -5.986868 l -4.7910241,3.00461 z" />
+			</Icon>
+		</IconButton>
+		<Tooltip>View on BlockChair</Tooltip>
+	</Wrapper>
 
-	<BroadcastAction opReturnHex={instance.toOpReturn(true)} />
+	<Wrapper>
+		<IconButton
+			href="https://bitinfocharts.com/bitcoin%20cash/address/{legacyAddress}"
+			target="_blank"
+			touch
+			color="secondary"
+			size="button"
+		>
+			<Icon class="material-icons">egg</Icon>
+		</IconButton>
+		<Tooltip>View on BitInfoCharts</Tooltip>
+	</Wrapper>
 
-	<p>Serialized String: <SerializedString str={instance.toString()} /></p>
-	<p>Serialized OpReturn:</p>
-	<pre>{instance.toOpReturn(true)}</pre>
+	<Address address={instance.getAddress()} />
 
-	{#if instance.getOutputLockingBytecodes().length > 0}
-		<h3>Predefined outputs:</h3>
-		<table>
-			{#each instance.getOutputLockingBytecodes() as output}
-				<tr>
-					<td class="right"
-						><a
-							style="max-width=30em; line-break:anywhere;"
-							href="{base}/explorer?lockingBytecode={output} "
-						>
-							{output}
-						</a>
-					</td>
-					<td> <AddressBlockie size={30} lockingBytecode={output} /> </td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<Address address={lockingBytecodeToCashAddress(hexToBin(output), 'bitcoincash')} />
-					</td>
-				</tr>
-			{/each}
-		</table>
-	{/if}
-	<h2>Unspent Transaction Outputs</h2>
-
-	<p>Balance {balance} sats <button on:click={updateBalance}>Update</button></p>
-
-	<br />
-	Inputs
 	{#if utxos.length == 0}
-		<button on:click={getUtxos}>Select Inputs</button>
+		<Wrapper>
+			<Button variant="outlined" touch on:click={getUtxos}>
+				<Icon class="material-icons">filter_list</Icon>
+				<Label>Inputs</Label>
+			</Button>
+			<Tooltip>Filter input utxos</Tooltip>
+		</Wrapper>
 	{/if}
 	{#if utxos.length > 0}
-		<button on:click={dropUtxos}>Use All Unspent Outputs (default)</button>
+		<Wrapper>
+			<Button variant="outlined" touch on:click={dropUtxos}>
+				<Icon class="material-icons">list</Icon>
+				<Label>Spend All</Label>
+			</Button>
+			<Tooltip>Attempt to spend all inputs</Tooltip>
+		</Wrapper>
 		<UtxosSelect bind:utxos />
 	{/if}
-	<br />
-	{#if instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity'}
-		{#if series && series.length>0}
-			<h2>Schedule</h2>
-			{#each series as ts (ts.id)}
-      <pre>{ts.id}</pre>
-				<ContractChart bind:series={ts.data} />
-			{/each}
-		{/if}
-	{/if}
 
-	<h2>Unlock</h2>
-	<Button variant="raised" touch on:click={execute}>
-		<Label>Execute</Label>
-		<Icon class="material-icons">lock_open</Icon>
-	</Button>
+	<Wrapper>
+		<Button variant="raised" touch on:click={execute}>
+			<Label>Execute</Label>
+			<Icon class="material-icons">lock_open</Icon>
+		</Button>
+		<Tooltip>Execute this Contract</Tooltip>
+	</Wrapper>
 
 	{#if !executorAddressValue}
-		<p><b>No cashaddress specified, your executor fees will go to miners.</b></p>
+		<p>
+			<b>Note:</b>Configure an executor address in <a href="{base}/settings">settings</a> to claim execution
+			fee.
+		</p>
 	{/if}
 	{#if !executionProgressClosed}
 		<div style="display: flex; justify-content: center">
@@ -226,4 +289,114 @@
 			</div>
 		{/if}
 	{/if}
+	<br />
+
+	{#if instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity'}
+		{#if !showSeries}
+			<Wrapper>
+				<Button variant="outlined" touch on:click={toggleSeries}>
+					<Icon class="material-icons">stacked_bar_chart</Icon>
+					<Label>Schedule</Label>
+				</Button>
+				<Tooltip>Show a graph of total principal, payout, and executor fee paid</Tooltip>
+			</Wrapper>
+		{:else}
+			<Wrapper>
+				<Button variant="outlined" touch on:click={toggleSeries}>
+					<Icon class="material-icons">expand_less</Icon>
+					<Label>Close Schedule</Label>
+				</Button>
+				<Tooltip>Hide time series</Tooltip>
+			</Wrapper>
+		{/if}
+	{/if}
+
+	{#if !showDetails}
+		<Wrapper>
+			<Button variant="outlined" touch on:click={toggleDetails}>
+				<Icon class="material-icons">developer_mode</Icon>
+				<Label>Contract Details</Label>
+			</Button>
+			<Tooltip>Show contract details</Tooltip>
+		</Wrapper>
+	{:else}
+		<Wrapper>
+			<Button variant="outlined" touch on:click={toggleDetails}>
+				<Icon class="material-icons">expand_less</Icon>
+				<Label>Close Contract Details</Label>
+			</Button>
+		</Wrapper>
+	{/if}
+	{#if showSeries}
+		<p>An optimistic schedule, assuming timely contract execution.</p>
+
+		{#if series && series.length > 0}
+			{#each series as ts (ts.id)}
+				<pre>{ts.id}</pre>
+				<ContractChart bind:series={ts.data} />
+			{/each}
+		{:else}
+			<p>Building time series</p>
+			<LinearProgress indeterminate />
+		{/if}
+	{/if}
+	{#if showDetails}
+		<h3>Phi Contract Parameters</h3>
+
+		<p>
+			Unspent Phi contracts may be serialized as a comma seperated string, or, in OP_RETURN data
+			format.
+		</p>
+		<p>
+			If contract parameters have been published, or broadcasted, in an OP_RETURN, the data for
+			execution are publicly known.
+		</p>
+		<p>Serialized String: <SerializedString str={instance.toString()} /></p>
+		<p>Serialized OpReturn:</p>
+		<pre>{instance.toOpReturn(true)}</pre>
+
+		<p>Locking Bytecode:</p>
+		<pre>{instance.getLockingBytecode()}</pre>
+
+		{#if instance.getOutputLockingBytecodes().length > 0}
+			<h3>Predefined outputs:</h3>
+			<p>This contract sends funds to the following predefined output(s)</p>
+			<table>
+				{#each instance.getOutputLockingBytecodes() as output}
+					<tr>
+						<td colspan="2">
+							<Address address={lockingBytecodeToCashAddress(hexToBin(output), 'bitcoincash')} />
+						</td>
+					</tr>
+					<tr>
+						<td class="right"
+							><a
+								style="max-width=30em; line-break:anywhere;"
+								href="{base}/explorer?lockingBytecode={output} "
+							>
+								{output}
+							</a>
+						</td>
+						<td> <AddressBlockie size={30} lockingBytecode={output} /> </td>
+					</tr>
+				{/each}
+			</table>
+		{/if}
+		{#if instance.artifact}
+			<h3>Unlocking Bytecode</h3>
+			<div class="code">
+				{@html Prism.highlight(instance.artifact.bytecode, Prism.languages['javascript'])}
+			</div>
+			<h3>CashScript</h3>
+			<div class="code">
+				{@html Prism.highlight(instance.artifact.source, Prism.languages['javascript'])}
+			</div>
+		{/if}
+	{/if}
 {/if}
+
+<style>
+	.code {
+		white-space: pre-wrap;
+	}
+</style>

@@ -12,7 +12,7 @@
 			qr.clear();
 		}
 
-    size = size ? size : 100
+    size = size ? size : 300
     
 		if (codeValue) {
 			const options = {
@@ -30,7 +30,7 @@
 
 <style>
 	div {
-		float: right;
+		align-content: center;
 		padding: 10px;
 		z-index: 1;
 	}
