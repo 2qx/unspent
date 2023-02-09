@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
 	import Prism from 'prismjs';
+	import { toast } from '@zerodevx/svelte-toast';
+	import { copy } from 'svelte-copy';
 	import { base } from '$app/paths';
 	import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
+	import Badge from '@smui-extra/badge';
 	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import Button, { Label, Icon } from '@smui/button';
 	import IconButton, { Icon as IconButtonIcon } from '@smui/icon-button';
@@ -137,100 +140,110 @@
 	}
 
 	function toggleDetails() {
-		console.log(instance);
 		showDetails = !showDetails;
 	}
 </script>
 
 {#if instance}
-	<h1>
-		{instance.artifact.contractName}
+	<span style="float:right">
 		<BroadcastAction opReturnHex={instance.toOpReturn(true)} />
-	</h1>
-
-	<b>{balance.toLocaleString()} sats </b>
-	<Wrapper>
-		<IconButton on:click={updateBalance} size="button">
-			<IconButtonIcon class="material-icons">refresh</IconButtonIcon>
-		</IconButton>
-		<Tooltip>Refresh Balance</Tooltip>
-	</Wrapper>
+		<br />
+		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
+	</span>
+	<span>
+		<h1>
+			{instance.artifact.contractName}
+		</h1>
+		<Badge aria-label="contract version">v{instance.options.version}</Badge>
+	</span>
 
 	<div>
-		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
+		<p>{instance.asText()}</p>
 	</div>
-	<p>{instance.asText()}</p>
+	<div style=" width: 200px;">
+		<div style="text-align:end;">
+			<b>{balance.toLocaleString()}</b> sats
+			<Wrapper>
+				<IconButton on:click={updateBalance} size="button">
+					<IconButtonIcon class="material-icons">refresh</IconButtonIcon>
+				</IconButton>
+				<Tooltip>Refresh Balance</Tooltip>
+			</Wrapper>
+		</div>
+	</div>
+	<br />
+	<div>
+		<Wrapper>
+			<IconButton
+				href="{base}/contract?opReturn={instance.toOpReturn(true)}"
+				target="_blank"
+				touch
+				color="secondary"
+				size="button"
+			>
+				<Icon class="material-icons">launch</Icon>
+			</IconButton>
+			<Tooltip>Open permanent link in new tab</Tooltip>
+		</Wrapper>
 
-	<Wrapper>
-		<IconButton
-			href="{base}/contract?opReturn={instance.toOpReturn(true)}"
-			target="_blank"
-			touch
-			color="secondary"
-			size="button"
-		>
-			<Icon class="material-icons">launch</Icon>
-		</IconButton>
-		<Tooltip>Open permanent link in new tab</Tooltip>
-	</Wrapper>
+		<Wrapper>
+			<AddressQrDialog codeValue={instance.getAddress()} />
+			<Tooltip>Scan qr code</Tooltip>
+		</Wrapper>
 
-	<Wrapper>
-		<AddressQrDialog codeValue={instance.getAddress()} />
-		<Tooltip>Scan qr code</Tooltip>
-	</Wrapper>
+		<Wrapper>
+			<IconButton
+				href="https://explorer.bitcoinunlimited.info/address/{instance.getAddress()}"
+				target="_blank"
+				touch
+				color="secondary"
+				size="button"
+			>
+				<Icon class="material-icons">travel_explore</Icon>
+			</IconButton>
+			<Tooltip>View on block explorer</Tooltip>
+		</Wrapper>
+		<Wrapper>
+			<IconButton
+				href="https://blockchair.com/bitcoin-cash/address/{instance.getAddress()}"
+				target="_blank"
+				touch
+				color="secondary"
+				size="button"
+				ripple={false}
+			>
+				<Icon component={Svg} viewBox="2 2 22 22">
+					<path
+						fill="currentColor"
+						d="m 12.986211,23.033985 5.306349,-3.303844 v -6.74658 c 0,-0.131639 -0.0234,-0.257971 -0.06294,-0.378921 l -5.360329,3.337034 c 0.07554,0.179108 0.116921,0.374437 0.116921,0.57597 z"
+					/>
+					<path
+						fill="currentColor"
+						d="M 11.816937,0.94789702 6.5105653,4.251752 v 6.746527 c 0,0.131714 0.023384,0.258047 0.062957,0.378996 L 11.933857,8.0402403 c -0.07555,-0.1791822 -0.11692,-0.3744512 -0.11692,-0.576014 z"
+					/>
+					<path
+						fill="currentColor"
+						d="M 12.11283,8.3501649 6.7354072,11.698787 c 0.090838,0.127229 0.2077579,0.238311 0.3462634,0.325249 l 5.2074414,3.242024 c 0.158289,0.09852 0.293195,0.223062 0.401123,0.366363 l 5.378291,-3.347725 c -0.09082,-0.127229 -0.207737,-0.238311 -0.346254,-0.325174 L 12.514858,8.7174249 C 12.355665,8.6180039 12.221655,8.4934658 12.11283,8.3501649 Z"
+					/>
+					<path fill="currentColor" d="m 11.816974,23.033985 v -5.986868 l -4.7910241,3.00461 z" />
+				</Icon>
+			</IconButton>
+			<Tooltip>View on BlockChair</Tooltip>
+		</Wrapper>
 
-	<Wrapper>
-		<IconButton
-			href="https://explorer.bitcoinunlimited.info/address/{instance.getAddress()}"
-			target="_blank"
-			touch
-			color="secondary"
-			size="button"
-		>
-			<Icon class="material-icons">travel_explore</Icon>
-		</IconButton>
-		<Tooltip>View on block explorer</Tooltip>
-	</Wrapper>
-	<Wrapper>
-		<IconButton
-			href="https://blockchair.com/bitcoin-cash/address/{instance.getAddress()}"
-			target="_blank"
-			touch
-			color="secondary"
-			size="button"
-		>
-			<Icon component={Svg} viewBox="2 2 22 22">
-				<path
-					fill="currentColor"
-					d="m 12.986211,23.033985 5.306349,-3.303844 v -6.74658 c 0,-0.131639 -0.0234,-0.257971 -0.06294,-0.378921 l -5.360329,3.337034 c 0.07554,0.179108 0.116921,0.374437 0.116921,0.57597 z"
-				/>
-				<path
-					fill="currentColor"
-					d="M 11.816937,0.94789702 6.5105653,4.251752 v 6.746527 c 0,0.131714 0.023384,0.258047 0.062957,0.378996 L 11.933857,8.0402403 c -0.07555,-0.1791822 -0.11692,-0.3744512 -0.11692,-0.576014 z"
-				/>
-				<path
-					fill="currentColor"
-					d="M 12.11283,8.3501649 6.7354072,11.698787 c 0.090838,0.127229 0.2077579,0.238311 0.3462634,0.325249 l 5.2074414,3.242024 c 0.158289,0.09852 0.293195,0.223062 0.401123,0.366363 l 5.378291,-3.347725 c -0.09082,-0.127229 -0.207737,-0.238311 -0.346254,-0.325174 L 12.514858,8.7174249 C 12.355665,8.6180039 12.221655,8.4934658 12.11283,8.3501649 Z"
-				/>
-				<path fill="currentColor" d="m 11.816974,23.033985 v -5.986868 l -4.7910241,3.00461 z" />
-			</Icon>
-		</IconButton>
-		<Tooltip>View on BlockChair</Tooltip>
-	</Wrapper>
-
-	<Wrapper>
-		<IconButton
-			href="https://bitinfocharts.com/bitcoin%20cash/address/{legacyAddress}"
-			target="_blank"
-			touch
-			color="secondary"
-			size="button"
-		>
-			<Icon class="material-icons">egg</Icon>
-		</IconButton>
-		<Tooltip>View on BitInfoCharts</Tooltip>
-	</Wrapper>
-
+		<Wrapper>
+			<IconButton
+				href="https://bitinfocharts.com/bitcoin%20cash/address/{legacyAddress}"
+				target="_blank"
+				touch
+				color="secondary"
+				size="button"
+			>
+				<Icon class="material-icons">egg</Icon>
+			</IconButton>
+			<Tooltip>View on BitInfoCharts</Tooltip>
+		</Wrapper>
+	</div>
 	<Address address={instance.getAddress()} />
 
 	{#if utxos.length == 0}
@@ -246,7 +259,7 @@
 		<Wrapper>
 			<Button variant="outlined" touch on:click={dropUtxos}>
 				<Icon class="material-icons">list</Icon>
-				<Label>Spend All</Label>
+				<Label>Use Default</Label>
 			</Button>
 			<Tooltip>Attempt to spend all inputs</Tooltip>
 		</Wrapper>
@@ -255,15 +268,15 @@
 
 	<Wrapper>
 		<Button variant="raised" touch on:click={execute}>
-			<Label>Execute</Label>
-			<Icon class="material-icons">lock_open</Icon>
+			<Icon class="material-icons">key</Icon>
+			<Label>Spend</Label>
 		</Button>
 		<Tooltip>Execute this Contract</Tooltip>
 	</Wrapper>
 
 	{#if !executorAddressValue}
 		<p>
-			<b>Note:</b>Configure an executor address in <a href="{base}/settings">settings</a> to claim execution
+			<b>Note:&nbsp;</b>Set an executor address in <a href="{base}/settings">settings</a> to claim execution
 			fee.
 		</p>
 	{/if}
@@ -285,7 +298,10 @@
 				<Confetti colorRange={[75, 175]} />
 			</div>
 			<div style="max-width=30em; line-break:anywhere;">
-				<a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a>
+				<p>
+					<a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}">{txid}</a
+					>
+				</p>
 			</div>
 		{/if}
 	{/if}
@@ -298,7 +314,6 @@
 					<Icon class="material-icons">stacked_bar_chart</Icon>
 					<Label>Schedule</Label>
 				</Button>
-				<Tooltip>Show a graph of total principal, payout, and executor fee paid</Tooltip>
 			</Wrapper>
 		{:else}
 			<Wrapper>
@@ -306,7 +321,6 @@
 					<Icon class="material-icons">expand_less</Icon>
 					<Label>Close Schedule</Label>
 				</Button>
-				<Tooltip>Hide time series</Tooltip>
 			</Wrapper>
 		{/if}
 	{/if}
@@ -341,6 +355,19 @@
 		{/if}
 	{/if}
 	{#if showDetails}
+		<h4>Locking Bytecode:</h4>
+		<div
+			use:copy={instance.getLockingBytecode()}
+			on:svelte-copy={() => toast.push('LockingBytecode Copied')}
+		>
+			<Wrapper>
+				<Button variant="raised" disabled>
+					<Icon class="material-icons">lock</Icon>
+					<Label><pre>{instance.getLockingBytecode()}</pre></Label>
+				</Button>
+				<Tooltip>Locking Bytecode</Tooltip>
+			</Wrapper>
+		</div>
 		<h3>Phi Contract Parameters</h3>
 
 		<p>
@@ -351,12 +378,11 @@
 			If contract parameters have been published, or broadcasted, in an OP_RETURN, the data for
 			execution are publicly known.
 		</p>
-		<p>Serialized String: <SerializedString str={instance.toString()} /></p>
-		<p>Serialized OpReturn:</p>
-		<pre>{instance.toOpReturn(true)}</pre>
 
-		<p>Locking Bytecode:</p>
-		<pre>{instance.getLockingBytecode()}</pre>
+		<h4>Serialized String:</h4>
+		<SerializedString str={instance.toString()} />
+		<h4>Serialized OpReturn:</h4>
+		<pre>{instance.toOpReturn(true)}</pre>
 
 		{#if instance.getOutputLockingBytecodes().length > 0}
 			<h3>Predefined outputs:</h3>

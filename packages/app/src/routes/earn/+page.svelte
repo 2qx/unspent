@@ -167,6 +167,7 @@
 							class="material-icons"
 							action="next-page"
 							title="Next page"
+              ripple={false}
 							on:click={incrementPage}>chevron_right</IconButton
 						>
 						<span>
@@ -231,6 +232,7 @@
 							class="material-icons"
 							action="next-page"
 							title="Next page"
+              ripple={false}
 							on:click={incrementPage}>chevron_right</IconButton
 						>
 						<span>

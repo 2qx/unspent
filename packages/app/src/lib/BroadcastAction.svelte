@@ -101,7 +101,7 @@
 			<Label>Published</Label>
 			<Icon class="material-icons">check</Icon>
 		</Button>
-		<Tooltip>The contract parameters are recorded in a previous transaction.</Tooltip>
+		<Tooltip>The contract arguments were recorded in a previous transaction.</Tooltip>
 	</Wrapper>
 	{#if txid}
 		<div style="display: flex; justify-content: center">
@@ -117,7 +117,7 @@
 			<Label>Broadcast</Label>
 			<Icon class="material-icons">campaign</Icon>
 		</Button>
-		<Tooltip>Record the parameters to execute the contract on the blockchain.</Tooltip>
+		<Tooltip>Record the contract details on the blockchain.</Tooltip>
 	</Wrapper>
 
 	{#if !executionProgressClosed}

@@ -39,13 +39,6 @@
 {#if Object.keys(data).length > 0}
 	<div>
 
-
-    <div id="key">
-      <div id="payout">Payout (Total)</div>
-      <div id="fee">Fees (Total)</div>
-      <div id="principal">Principal (Balance)</div>
-    </div>
-
 		<Chart
 			{width}
 			{height}
@@ -56,7 +49,11 @@
 			<LineSeries data={data.payout} color="#0F0" reactive={true} />
 			<LineSeries data={data.executorAllowance} color="#F0F" reactive={true} />
 		</Chart>
-    
+    <div id="key">
+      <div id="payout">Payout (Total)</div>
+      <div id="fee">Fees (Total)</div>
+      <div id="principal">Principal (Balance)</div>
+    </div>
 	</div>
 {/if}
 
