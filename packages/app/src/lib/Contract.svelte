@@ -250,7 +250,7 @@
 	{#if utxos.length == 0}
 		<Wrapper>
 			<Button variant="outlined" touch on:click={getUtxos}>
-				<Icon class="material-icons">filter_list</Icon>
+				<Icon class="material-icons">filter_alt</Icon>
 				<Label>Inputs</Label>
 			</Button>
 			<Tooltip>Filter input utxos</Tooltip>
@@ -291,7 +291,7 @@
 		</div>
 	{/if}
 	{#if executeError}
-		<pre>{executeError}</pre>
+		<div id="errorConsole">{executeError}</div>
 	{/if}
 	{#if executedSuccess}
 		{#if txid}
@@ -433,4 +433,11 @@
     overflow-x: scroll;
 		white-space: pre;
 	}
+  #errorConsole {
+    white-space: pre-wrap; 
+    font-family:'Courier New', Courier, monospace; 
+    background-color:#f4e6e6;
+    font-size: small;
+    padding: 10px;
+  }
 </style>
