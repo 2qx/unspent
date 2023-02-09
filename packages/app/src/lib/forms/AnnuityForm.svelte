@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Annuity, DUST_UTXO_THRESHOLD, sanitizeAddress } from '@unspent/phi';
-	//import BlockTimeField from '../BlockTimeField.svelte';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 
@@ -13,21 +12,9 @@
 	let receiptAddress = '';
 	let installment = NaN;
 	let executorAllowance = 1200;
-	async function createContract() {
-    console.log(receiptAddress);
-    console.log(period)
+	function createContract() {
 		if (receiptAddress && installment && period) {
 			try {
-				try {
-					receiptAddress = await sanitizeAddress(receiptAddress);
-				} catch (e: any) {
-					if (e.message) {
-						toast.push(e.message, { classes: ['warn'] });
-					} else {
-						toast.push(e, { classes: ['warn'] });
-					}
-				}
-
 				contract = new Annuity(period, receiptAddress, installment, executorAllowance);
 			} catch (e: any) {
 				contract = undefined;
