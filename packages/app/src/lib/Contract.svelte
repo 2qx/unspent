@@ -150,12 +150,12 @@
 		<br />
 		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 	</span>
-	<span>
-		<h1>
-			{instance.artifact.contractName}
-		</h1>
-		<Badge aria-label="contract version">v{instance.options.version}</Badge>
-	</span>
+	<div>
+    <span style="position: relative; display: inline-block; padding: .5em .5em 0 0;">
+      <div style="font-size: x-large;">{instance.artifact.contractName}</div>
+      <Badge color="secondary" square align="top-end" aria-label="contract version">v{instance.options.version}</Badge>
+    </span>
+	</div>
 
 	<div>
 		<p>{instance.asText()}</p>
@@ -188,7 +188,7 @@
 
 		<Wrapper>
 			<AddressQrDialog codeValue={instance.getAddress()} />
-			<Tooltip>Scan qr code</Tooltip>
+			<Tooltip>Show qr code</Tooltip>
 		</Wrapper>
 
 		<Wrapper>
@@ -244,6 +244,7 @@
 			<Tooltip>View on BitInfoCharts</Tooltip>
 		</Wrapper>
 	</div>
+
 	<Address address={instance.getAddress()} />
 
 	{#if utxos.length == 0}
@@ -361,9 +362,9 @@
 			on:svelte-copy={() => toast.push('LockingBytecode Copied')}
 		>
 			<Wrapper>
-				<Button variant="raised" disabled>
+				<Button style="height:fit-content;" touch color="secondary"  variant="outlined">
 					<Icon class="material-icons">lock</Icon>
-					<Label><pre>{instance.getLockingBytecode()}</pre></Label>
+					<Label>{instance.getLockingBytecode()}</Label>
 				</Button>
 				<Tooltip>Locking Bytecode</Tooltip>
 			</Wrapper>
@@ -410,7 +411,7 @@
 		{/if}
 		{#if instance.artifact}
 			<h3>Unlocking Bytecode</h3>
-			<div class="code">
+			<div class="bytecode">
 				{@html Prism.highlight(instance.artifact.bytecode, Prism.languages['javascript'])}
 			</div>
 			<h3>CashScript</h3>
@@ -422,7 +423,14 @@
 {/if}
 
 <style>
-	.code {
+  	.bytecode {
+    font-size: small;
+    overflow-x: scroll;
 		white-space: pre-wrap;
+	}
+	.code {
+    font-size: small;
+    overflow-x: scroll;
+		white-space: pre;
 	}
 </style>

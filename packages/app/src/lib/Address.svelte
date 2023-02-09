@@ -12,8 +12,8 @@
 		on:svelte-copy={() => toast.push('Address copied to clipboard')}
 	>
   <Wrapper>
-		<Button touch color="secondary"  variant="outlined">
-			<Label>{address.replace("bitcoincash:","")}</Label>
+		<Button style="height:fit-content;" color="secondary"  variant="outlined">
+			<Label>{address}</Label>
 			<Icon class="material-icons">content_copy</Icon>
 		</Button>
     <Tooltip>Copy address to clipboard</Tooltip>
