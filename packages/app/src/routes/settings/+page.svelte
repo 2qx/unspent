@@ -5,8 +5,9 @@
   import Button, { Label } from '@smui/button';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
+  import Tooltip, { Wrapper } from '@smui/tooltip';
+  import AddressQrDialog from '$lib/AddressQrDialog.svelte';
 	import { deriveLockingBytecodeHex, sanitizeAddress } from '@unspent/phi';
-	import AddressQrCode from '$lib/AddressQrCode.svelte';
 	import AddressBlockie from '$lib/AddressBlockie.svelte';
 	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
 
@@ -72,11 +73,13 @@
 	<title>Settings</title>
 	<meta name="description" content="Settings" />
 </svelte:head>
-<h1>Settings</h1>
 <div class="card-display">
 	<div class="card-container">
 		<Card class="demo-spaced">
 			<div class="margins">
+
+				  <h1>Settings</h1>
+          <hr/>
 				<h2>Executor Cash Address</h2>
 				<div>
 					<Textfield
@@ -93,12 +96,16 @@
             <IconButton class="material-icons" on:click={clearExAddress}
               >delete</IconButton
             >
+            <Wrapper style="float:right">
+              <AddressQrDialog codeValue={executorAddressValue} />
+              <Tooltip>Show qr code</Tooltip>
+            </Wrapper>
           </div>
           {/if}
 				</div>
 				{#if lockingBytecode}
         <div>
-					<AddressQrCode codeValue={executorAddressValue} />
+          
 					<AddressBlockie {lockingBytecode} />
         </div>
 					<p>Locking Bytecode</p>

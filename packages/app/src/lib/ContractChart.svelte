@@ -38,7 +38,6 @@
 
 {#if Object.keys(data).length > 0}
 	<div>
-
 		<Chart
 			{width}
 			{height}
@@ -63,6 +62,7 @@
     font-size: small;
     width:100px;
     float:right;
+    display: inline-block;
   }
   #fee {
     background-color: #F0F;

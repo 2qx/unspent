@@ -347,7 +347,7 @@
 
 		{#if series && series.length > 0}
 			{#each series as ts (ts.id)}
-				<pre>{ts.id}</pre>
+				<pre style="font-size:x-small;">{ts.id}</pre>
 				<ContractChart bind:series={ts.data} />
 			{/each}
 		{:else}
@@ -435,6 +435,7 @@
 	}
   #errorConsole {
     white-space: pre-wrap; 
+    overflow: scroll;
     font-family:'Courier New', Courier, monospace; 
     background-color:#f4e6e6;
     font-size: small;
