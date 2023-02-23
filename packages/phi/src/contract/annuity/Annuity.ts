@@ -153,12 +153,17 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
+
+    // TODO: make multi-network
     network = "mainnet",
     networkProvider: ElectrumNetworkProvider,
     blockHeight: number
   ): Promise<number> {
     let p = this.parseOpReturn(opReturn, network);
     let period = binToNumber(p.args.shift()!);
+    // discard the address
+    p.args.shift()!;
+    let installment = binToNumber(p.args.shift()!);
     let utxos = await networkProvider.getUtxos(p.address)
     let spendableUtxos = utxos.map((u) => {
       // @ts-ignore
@@ -174,7 +179,15 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         return 0
       }
     })
-    return spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0
+
+    if(spendableUtxos.length > 0){
+      const spendableBalance = spendableUtxos.reduce(sum)
+      const remainder = spendableBalance % installment
+      const spendable = spendableBalance - remainder;
+      return spendable > 0 ? spendable : 0
+    } else{
+      return 0
+    } 
   }
 
   override toString() {

@@ -139,6 +139,9 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   ): Promise<number> {
     let p = this.parseOpReturn(opReturn, network);
     let period = binToNumber(p.args.shift()!);
+    // discard the address
+    p.args.shift()!;
+    let decay = binToNumber(p.args.shift()!);
     let utxos = await networkProvider.getUtxos(p.address)
     let spendableUtxos = utxos.map((u) => {
       // @ts-ignore
@@ -154,7 +157,14 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         return 0
       }
     })
-    return spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0
+    if(spendableUtxos.length > 0){
+      const spendableBalance = spendableUtxos.reduce(sum)
+      const dustLocked = decay*DUST_UTXO_THRESHOLD
+      const spendable = spendableBalance - dustLocked;
+      return spendable > 0 ? spendable : 0
+    } else{
+      return 0
+    } 
   }
 
   static getExecutorAllowance(

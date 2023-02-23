@@ -10,7 +10,7 @@ import Select, { Option } from '@smui/select';
 		{ id: 'D', name: 'Divide' },
 		{ id: 'F', name: 'Faucet' },
 		//{ id: "L", name: 'Lock' },
-		{ id: 'M', name: 'Mine' },
+		//{ id: 'M', name: 'Mine' },
 		{ id: 'P', name: 'Perpetuity' },
 		{ id: 'R', name: 'Record' }
 	];

@@ -208,6 +208,10 @@ contract Faucet(
 
 ## Mine-able Faucet
 
+| ‼️  Mining covenants are temporarily "disabled" in the earn tab |
+|----------------------------------------------------------------|
+| But they still out there and will be back in the app soon.     |
+
 The ₿∙ϕ mining covenant is very much like the faucet, with some additional requirements.
 
 First, execution of the contract must be called with a `nonce` [a random value used once]

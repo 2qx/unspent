@@ -95,22 +95,23 @@
 		</Button>
 		<Tooltip>Checking if contract is published.</Tooltip>
 	</Wrapper>
-{:else if isPublished == true}
+{:else if isPublished == true && !txid}
 	<Wrapper>
-		<Button color="secondary"  variant="outlined" disabled>
+		<Button color="secondary" variant="outlined" disabled>
 			<Label>Published</Label>
 			<Icon class="material-icons">check</Icon>
 		</Button>
 		<Tooltip>The contract arguments were recorded in a previous transaction.</Tooltip>
 	</Wrapper>
-	{#if txid}
-		<div style="display: flex; justify-content: center">
-			<Confetti colorRange={[75, 174]} />
-		</div>
-		Transaction:<a style="max-width=30em; line-break:anywhere;" href="{base}/explorer?tx={txid}"
-			>{txid}</a
-		>
-	{/if}
+{:else if txid}
+	<div style="display: flex; justify-content: center">
+		<Confetti colorRange={[75, 174]} />
+	</div>
+	<Button color="secondary" variant="outlined" href="{base}/explorer?tx={txid}" target="_blank">
+		<Label>Submitted</Label>
+		<Icon class="material-icons">check</Icon>
+	</Button>
+	<Tooltip>{txid}</Tooltip>
 {:else}
 	<Wrapper>
 		<Button variant="raised" touch on:click={broadcast}>
