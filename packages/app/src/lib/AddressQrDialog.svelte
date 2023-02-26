@@ -25,11 +25,11 @@
 	}
 	try {
 		let lockingBytecodeResult = cashAddressToLockingBytecode(codeValue);
-		if (typeof lockingBytecodeResult === 'string') throw(lockingBytecodeResult);
+		if (typeof lockingBytecodeResult === 'string') throw lockingBytecodeResult;
 		lockingBytecode = binToHex(lockingBytecodeResult.bytecode);
 
 		let addrFormat = decodeCashAddress(codeValue);
-		if (typeof addrFormat === 'string') throw(addrFormat)
+		if (typeof addrFormat === 'string') throw addrFormat;
 		type = CashAddressType[addrFormat.type];
 		prefix = addrFormat.prefix;
 

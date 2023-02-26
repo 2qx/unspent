@@ -7,7 +7,7 @@
 
 	let lightTheme = true;
 
-  export let data: any;
+	export let data: any;
 	// Optionally set default options here
 	// const options = {
 	// ...
@@ -46,20 +46,23 @@
 			media="screen and (prefers-color-scheme: dark)"
 		/>
 	{/if}
-	<Header bind:data={data}/>
+	<Header bind:data />
 	<SvelteToast />
 	{#if data && data.splash}
-  <img id="banner" src="{assets}/images/banner.svg"  alt="Unspent" />
-    <div id="description">
-      <b>Decentralized finance using unspent transaction unlocking script. Open source, on-chain, running nativiely & directly on Bitcoin Cash (BCH).</b>
-    </div>
+		<img id="banner" src="{assets}/images/banner.svg" alt="Unspent" />
+		<div id="description">
+			<b
+				>Decentralized finance using unspent transaction unlocking script. Open source, on-chain,
+				running nativiely & directly on Bitcoin Cash (BCH).</b
+			>
+		</div>
 	{/if}
 
 	<main>
 		<slot />
 	</main>
 
-	<Footer bind:data={data}/>
+	<Footer bind:data />
 </div>
 
 <style>
@@ -69,7 +72,7 @@
 		min-height: 100vh;
 	}
 
-  #banner {
+	#banner {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
@@ -78,9 +81,9 @@
 		max-width: 44rem;
 		margin: 0 auto;
 		box-sizing: border-box;
-  }
+	}
 
-  #description {
+	#description {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
@@ -89,10 +92,10 @@
 		max-width: 44rem;
 		margin: 0 auto;
 		box-sizing: border-box;
-    text-align: center;
-    background-color: #fff;
-    border: 3px solid #F0F;
-  }
+		text-align: center;
+		background-color: #fff;
+		border: 3px solid #f0f;
+	}
 	main {
 		flex: 1;
 		display: flex;

@@ -2,7 +2,6 @@
 	import Card from '@smui/card';
 
 	import ContractPicker from '$lib/ContractPicker.svelte';
-
 </script>
 
 <svelte:head>
@@ -15,8 +14,8 @@
 		<div class="card-container">
 			<Card class="demo-spaced">
 				<div class="margins">
-				  <h1>Create a new contract</h1>
-          <ContractPicker />
+					<h1>Create a new contract</h1>
+					<ContractPicker />
 				</div>
 			</Card>
 		</div>
@@ -28,7 +27,7 @@
 		margin: 18px 10px 24px;
 	}
 
-  * :global(.columns) {
+	* :global(.columns) {
 		display: flex;
 		flex-wrap: wrap;
 	}
@@ -52,5 +51,4 @@
 		word-break: break-all;
 		overflow-wrap: break-word;
 	}
-
 </style>

@@ -1,7 +1,9 @@
 ---
 layout: splash
 ---
+
 <svelte:head>
+
 <title>Unspent Phi</title>
 </svelte:head>
 
@@ -10,7 +12,6 @@ layout: splash
 Unspent Phi (₿∙ϕ) is an app for creating (and publishing) a set of simple contracts on the Bitcoin Cash (BCH) blockchain that anyone can execute. These contracts lock the value of unspent outputs from earlier transactions (UTXOs), and allow some small reward for any party to call a known contract (if valid according to the rules of BitcoinScript). Although simple, these contracts may be chained together to create complex outcomes.
 
 ₿∙ϕ contracts may be thought of as automata, machines that are unlocked and stepped forward by random participants on the blockchain. No one party has control, it's a race to spend them first. However, the code to unlock them must be known for the code to stepped forward. Money sent to ₿∙ϕ contracts appear identical to any other pay-to-script UTXOs on the network. Nothing is known about how to spend the contract until it is spent at least once, so in order for the contract to function automatically, both their existence and the parameters to unlock them must be known. While the code to unlock is broadcasted by spending the contract once, not all contracts can be spent right away, so it's easier and safer just to publish some unlock record and not worry about forgetting how to unlock them.
-
 
 # Contract Types
 
@@ -37,20 +38,17 @@ Contracts with locked value that can be spent by anyone can be characterized as 
 
 ## Informational Contracts
 
-
 A contract providing the facility to record data for free.
 
-| Name   | Description                                            |
-| ------ | ------------------------------------------------------ |
-| Record | Broadcast a contract to the blockchain                 |
+| Name   | Description                            |
+| ------ | -------------------------------------- |
+| Record | Broadcast a contract to the blockchain |
 
 ## Timelock v non-timelocked
 
 Contracts in BitcoinScript may be locked using [BIP68](https://reference.cash/protocol/forks/bip-0068)
 
 The Divide and Record contracts are not time-locked, they may be called at anytime.
-
-
 
 # Contracts
 
@@ -208,8 +206,8 @@ contract Faucet(
 
 ## Mine-able Faucet
 
-| ‼️  Mining covenants are temporarily "disabled" in the earn tab |
-|----------------------------------------------------------------|
+| ‼️ Mining covenants are temporarily "disabled" in the earn tab |
+| -------------------------------------------------------------- |
 | But they still out there and will be back in the app soon.     |
 
 The ₿∙ϕ mining covenant is very much like the faucet, with some additional requirements.
@@ -412,18 +410,17 @@ contract Record(int maxFee, int index) {
 }
 ```
 
-
 # Definitions
 
 ## Units
 
-bitcoin has it's own units of value and time. Although there are whole coins and it's possible to use epoch time (seconds since 1970) in some cases, we'll stick to two here to steer clear of the politics surrounding "leap seconds" and what is a *unit of account*.
+bitcoin has it's own units of value and time. Although there are whole coins and it's possible to use epoch time (seconds since 1970) in some cases, we'll stick to two here to steer clear of the politics surrounding "leap seconds" and what is a _unit of account_.
 
 ### satoshis
 
- A unit of account (on the Bitcoin Cash fork of the initial bitcoin blockchain). A hundred million satoshi are equal to 1 Bitcoin Cash.
+A unit of account (on the Bitcoin Cash fork of the initial bitcoin blockchain). A hundred million satoshi are equal to 1 Bitcoin Cash.
 
-### blocks (time) 
+### blocks (time)
 
 The base unit of time on bitcoin is called a block, blocktimes very, but are about 10 minutes on average.
 
@@ -464,21 +461,22 @@ At present (Nov 2022), there are two types of unlocking script (actually 4). P2P
 
 [More info](https://reference.cash/protocol/blockchain/transaction/locking-script)
 
-### OP_RETURN 
+### OP_RETURN
 
 A code (106) in BitcoinScript for transaction outputs which can store arbitrary data.
 
 ### OP_RETURN data
- Data in OP_RETURNs is commonly encoded by pushing the total number of bytes, followed by the data bytes. For example `04` followed by `7574786f` (4 bytes of in two letter hex). This format is used to "broadcast" ₿∙ϕ contracts.
+
+Data in OP_RETURNs is commonly encoded by pushing the total number of bytes, followed by the data bytes. For example `04` followed by `7574786f` (4 bytes of in two letter hex). This format is used to "broadcast" ₿∙ϕ contracts.
 
 ### Published
 
- In the context of an unspent contract, a contract is published if the parameters to construct and spend it are recorded on the blockchain, either in an OP_RETURN or by reference to the spent output.
+In the context of an unspent contract, a contract is published if the parameters to construct and spend it are recorded on the blockchain, either in an OP_RETURN or by reference to the spent output.
 
- A cashaddress locks value, the parameters of the contract allow unlocking the value.
+A cashaddress locks value, the parameters of the contract allow unlocking the value.
 
 ### Unspent Transaction Output (UTXO)
 
- some value, defined by the output of a previous transaction, which is locked by some code, either the hash of a public key (cashaddr), or a script that, when executed, satisfies a locking code.
+some value, defined by the output of a previous transaction, which is locked by some code, either the hash of a public key (cashaddr), or a script that, when executed, satisfies a locking code.
 
- The value may be zero, in the case of an OP_RETURN.
+The value may be zero, in the case of an OP_RETURN.

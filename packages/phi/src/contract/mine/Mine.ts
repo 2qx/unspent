@@ -36,8 +36,8 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Unrecognized Mine Contract Version`);
     }
 
-    if (payout < Mine.minPayout) throw Error(`Payout below minimum usable level ${Mine.minPayout}`)
-
+    if (payout < Mine.minPayout)
+      throw Error(`Payout below minimum usable level ${Mine.minPayout}`);
 
     super(options.network!, script, [
       period,
@@ -110,26 +110,26 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     let p = this.parseOpReturn(opReturn, network);
     let period = binToNumber(p.args.shift()!);
     let payout = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address)
+    let utxos = await networkProvider.getUtxos(p.address);
     let spendableUtxos = utxos.map((u: Utxo) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
         if (blockHeight - u.height > period) {
-          return u.satoshis
-        }
-        else {
-          return 0
+          return u.satoshis;
+        } else {
+          return 0;
         }
       } else {
-        return 0
+        return 0;
       }
-    })
-    const spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    });
+    const spendable =
+      spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
     if (spendable > payout) {
-      return spendable
+      return spendable;
     } else {
-      return 0
+      return 0;
     }
   }
 
@@ -140,7 +140,6 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     let p = this.parseOpReturn(opReturn, network);
     return binToNumber(p.args.at(1)!);
   }
-
 
   override toString() {
     return [
@@ -209,8 +208,8 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   getOutputLockingBytecodes(hex = true) {
-    hex
-    return []
+    hex;
+    return [];
   }
 
   async execute(

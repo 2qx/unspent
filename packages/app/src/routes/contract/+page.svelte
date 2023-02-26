@@ -18,9 +18,9 @@
 
 <svelte:head>
 	<title>Contract</title>
-  {#if instance}
-	<meta name="description" content="{instance.asText()}" />
-  {/if}
+	{#if instance}
+		<meta name="description" content={instance.asText()} />
+	{/if}
 </svelte:head>
 <section>
 	{#if error}

@@ -1,6 +1,6 @@
 import { binToHex, hexToBin } from "@bitauth/libauth";
 import { Artifact } from "@cashscript/utils";
-import { ElectrumNetworkProvider, Network} from "cashscript";
+import { ElectrumNetworkProvider, Network } from "cashscript";
 import { nameMap, contractMap, CodeType } from "../contract/constant.js";
 import { decodeNullDataScript } from "./util.js";
 import { BaseUtxPhiContract } from "./contract.js";
@@ -54,9 +54,9 @@ export function opReturnToExecutorAllowance(
 
 export async function opReturnToSpendableBalance(
   serialized: string | Uint8Array,
-  network=Network.MAINNET,
+  network = Network.MAINNET,
   networkProvider?: ElectrumNetworkProvider,
-  blockHeight?:number
+  blockHeight?: number
 ): Promise<number> {
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
@@ -66,10 +66,15 @@ export async function opReturnToSpendableBalance(
 
   let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
 
-  if(!networkProvider) networkProvider = new ElectrumNetworkProvider(network)
-  if(!blockHeight) blockHeight = await networkProvider.getBlockHeight()
+  if (!networkProvider) networkProvider = new ElectrumNetworkProvider(network);
+  if (!blockHeight) blockHeight = await networkProvider.getBlockHeight();
 
-  let spendableBalance = await contractMap[code].getSpendableBalance(serialized, network, networkProvider, blockHeight);
+  let spendableBalance = await contractMap[code].getSpendableBalance(
+    serialized,
+    network,
+    networkProvider,
+    blockHeight
+  );
   return spendableBalance;
 }
 

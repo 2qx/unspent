@@ -4,12 +4,12 @@
 
 	import QRCode from 'easyqrcodejs';
 
-	export let codeValue:string;
-  export let lockingBytecode:string;
-  export let prefix:string;
-  export let type:string;
-  export let backgroundImage:string;
-	export let size:number;
+	export let codeValue: string;
+	export let lockingBytecode: string;
+	export let prefix: string;
+	export let type: string;
+	export let backgroundImage: string;
+	export let size: number;
 
 	let node;
 	let qr;
@@ -22,7 +22,6 @@
 		size = size ? size : 300;
 
 		if (codeValue) {
-			
 			const options = {
 				backgroundImage: backgroundImage, // Background Image
 				backgroundImageAlpha: 0.2, // Background image transparency, value between 0 and 1. default is 1.

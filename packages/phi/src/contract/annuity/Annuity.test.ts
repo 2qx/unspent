@@ -1,6 +1,6 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js";
-import { DUST_UTXO_THRESHOLD } from "../../common/constant.js" 
+import { DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
 
 describe(`Annuity Class Tests`, () => {
@@ -25,10 +25,16 @@ describe(`Annuity Class Tests`, () => {
   });
 
   test("Should deserialize and reserialize a staging Annuity", async () => {
-    let a = new Annuity(5, process.env["ADDRESS"]!, 5000, Annuity.minAllowance, {
-      version: 1,
-      network: "regtest",
-    });
+    let a = new Annuity(
+      5,
+      process.env["ADDRESS"]!,
+      5000,
+      Annuity.minAllowance,
+      {
+        version: 1,
+        network: "regtest",
+      }
+    );
     let a2 = Annuity.fromString(a.toString(), "regtest");
     expect(a.toString()).toEqual(a2.toString());
     expect(a.getAddress()).toEqual(a2.getAddress());
@@ -48,11 +54,17 @@ describe(`Annuity Class Tests`, () => {
 
   test("Should deserialize and reserialize a staging Annuity to chunks and opreturn", async () => {
     let options = { version: 1, network: "regtest" };
-    let a1 = new Annuity(5, process.env["ADDRESS"]!, 5000, Annuity.minAllowance, options);
+    let a1 = new Annuity(
+      5,
+      process.env["ADDRESS"]!,
+      5000,
+      Annuity.minAllowance,
+      options
+    );
     let opReturn = a1.toOpReturn(false);
     let a2 = Annuity.fromOpReturn(opReturn, "regtest");
     let ex = Annuity.getExecutorAllowance(opReturn, "regtest");
-    expect(ex).toBe(Annuity.minAllowance)
+    expect(ex).toBe(Annuity.minAllowance);
     expect(a1.toString()).toEqual(a2.toString());
     expect(a2.isTestnet()).toEqual(true);
     expect(a1.getAddress()).toEqual(a2.getAddress());
@@ -60,7 +72,13 @@ describe(`Annuity Class Tests`, () => {
 
   test("Should a return info", async () => {
     let options = { version: 1, network: "regtest" };
-    let c1 = new Annuity(5, process.env["ADDRESS"]!, 5000, Annuity.minAllowance, options);
+    let c1 = new Annuity(
+      5,
+      process.env["ADDRESS"]!,
+      5000,
+      Annuity.minAllowance,
+      options
+    );
     let info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");
@@ -72,7 +90,13 @@ describe(`Annuity Class Tests`, () => {
     const charlie = await RegTestWallet.newRandom();
 
     let options = { version: 1, network: "regtest" };
-    let p1 = new Annuity(1, bob.getDepositAddress(), 10000, Annuity.minAllowance, options);
+    let p1 = new Annuity(
+      1,
+      bob.getDepositAddress(),
+      10000,
+      Annuity.minAllowance,
+      options
+    );
 
     // fund the perp contract
     await alice.send([

@@ -2,8 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 
 	import Textfield from '@smui/textfield';
-  import HelperText from '@smui/textfield/helper-text';
-  import Select, { Option } from '@smui/select';
+	import HelperText from '@smui/textfield/helper-text';
+	import Select, { Option } from '@smui/select';
 	import Chip, { Set, Text } from '@smui/chips';
 
 	const dispatch = createEventDispatcher();
@@ -21,48 +21,41 @@
 				break;
 			case 'blocks':
 				blockTime = interval;
-        break;
+				break;
 			case 'days':
 				blockTime = interval * 144;
-        break;
+				break;
 			case 'weeks':
 				blockTime = interval * 144 * 7;
-        break;
+				break;
 			case 'months':
 				blockTime = Math.floor(interval * 144 * 7 * 4.3333);
-        break;
-      default:
-        break;
+				break;
+			default:
+				break;
 		}
-    
 	}
 	dispatch('message', {
 		period: blockTime
 	});
 </script>
 
-<Textfield
-	bind:value={interval}
-	type="number"
-	required
-	label="Period">
-<HelperText slot="helper"> How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText>
+<Textfield bind:value={interval} type="number" required label="Period">
+	<HelperText slot="helper">
+		How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+	>
 </Textfield>
 <div>
-  <Select 
-  on:MDCSelect:change={() => onChangeFn()} 
-  bind:value={selected} 
-  label="Time Unit"
-  >
-    {#each choices as choice}
-      <Option value={choice}>{choice}</Option>
-    {/each}
-  </Select>
+	<Select on:MDCSelect:change={() => onChangeFn()} bind:value={selected} label="Time Unit">
+		{#each choices as choice}
+			<Option value={choice}>{choice}</Option>
+		{/each}
+	</Select>
 
-  <pre class="status">Selected: {selected}</pre>
+	<pre class="status">Selected: {selected}</pre>
 </div>
 
-<Set chips={choices}  let:chip choice bind:selected>
+<Set chips={choices} let:chip choice bind:selected>
 	<Chip on:click={() => onChangeFn()} {chip}>
 		<Text>{chip}</Text>
 	</Chip>

@@ -5,7 +5,6 @@ import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
 
-
 describe(`Record Class Tests`, () => {
   test("Should announce itself and Faucet", async () => {
     let options = { version: 1, network: "regtest" };
@@ -62,7 +61,6 @@ describe(`Record Class Tests`, () => {
   });
 
   test("Should announce itself and Faucet", async () => {
-
     let options = { version: 1, network: "regtest" };
     let f = new Faucet(1, 1000, 0, options);
     let r = new Record(850, 1, options);
@@ -101,11 +99,11 @@ describe(`Record Class Tests`, () => {
 
   test("Should announce itself and Faucet", async () => {
     let payees = [
-        "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
-        "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
-        "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
-        "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss"
-    ]
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+      "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+      "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
+      "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss",
+    ];
     let options = { version: 1, network: "regtest" };
     let d = new Divide(1047, payees, options);
     let r = new Record(Record.minMaxFee, 1, options);

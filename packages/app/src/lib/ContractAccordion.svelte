@@ -18,11 +18,11 @@
 	* :global(.demo-small-titles .smui-accordion__header__title--with-description) {
 		flex-basis: 20% !important;
 		max-width: 200px !important;
-    overflow: visible;
+		overflow: visible;
 	}
 
 	.accordion-container {
 		width: 100%;
-    overflow: visible;
+		overflow: visible;
 	}
 </style>

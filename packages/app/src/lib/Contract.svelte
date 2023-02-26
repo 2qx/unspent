@@ -197,7 +197,7 @@
 
 		<SickPigAddress address={instance.getAddress()} />
 		<BlockchairAddress address={instance.getAddress()} />
-		<BitInfoChartsAddress instance={instance} />
+		<BitInfoChartsAddress {instance} />
 	</div>
 
 	<Address address={instance.getAddress()} />
@@ -246,7 +246,7 @@
 		</div>
 	{/if}
 	{#if executeError}
-     <ErrorConsole errorText={executeError}/>
+		<ErrorConsole errorText={executeError} />
 	{/if}
 	{#if executedSuccess}
 		{#if txid}

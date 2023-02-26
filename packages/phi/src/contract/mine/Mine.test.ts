@@ -16,7 +16,10 @@ describe(`Mine Class Tests`, () => {
   });
 
   test("Should deserialize and reserialize a staging mine", async () => {
-    let m = new Mine(5,  Mine.minPayout, 2, undefined, { version: 1, network: "staging" });
+    let m = new Mine(5, Mine.minPayout, 2, undefined, {
+      version: 1,
+      network: "staging",
+    });
 
     let m2 = Mine.fromString(m.toString(), "staging");
 
@@ -27,7 +30,7 @@ describe(`Mine Class Tests`, () => {
 
   test("Should deserialize and reserialize a regtest Mine to chunks and from an opreturn", async () => {
     let options = { version: 1, network: "regtest" };
-    let m1 = new Mine(5,  Mine.minPayout, 2, undefined, options);
+    let m1 = new Mine(5, Mine.minPayout, 2, undefined, options);
     let opReturn = m1.toOpReturn();
     let m2 = Mine.fromOpReturn(opReturn, "regtest");
     expect(m1.toString()).toEqual(m2.toString());
@@ -58,7 +61,7 @@ describe(`Mine Class Tests`, () => {
 
   test("Should return info", async () => {
     let options = { version: 1, network: "regtest" };
-    let c1 = new Mine(5,  Mine.minPayout, 2, undefined, options);
+    let c1 = new Mine(5, Mine.minPayout, 2, undefined, options);
     let info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");

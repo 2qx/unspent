@@ -29,8 +29,6 @@ body {
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
 }
 
-
-
 a {
 	color: var(--color-theme-1);
 	text-decoration: none;
@@ -39,8 +37,6 @@ a {
 a:hover {
 	text-decoration: underline;
 }
-
-
 
 pre {
 	font-size: 16px;
@@ -115,7 +111,7 @@ button:disabled {
 }
 
 .hit-me {
-	background: #F0F;
+	background: #f0f;
 	color: #27cfc1;
 	font-weight: bolder;
 }
@@ -123,8 +119,6 @@ button:disabled {
 table {
 	width: 100%;
 }
-
-
 
 img {
 	width: 100%;

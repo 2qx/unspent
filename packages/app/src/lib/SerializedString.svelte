@@ -5,13 +5,10 @@
 	export let str;
 </script>
 
-<div
-	use:copy={str}
-	on:svelte-copy={() => toast.push('String copied to clipboard')}
->
+<div use:copy={str} on:svelte-copy={() => toast.push('String copied to clipboard')}>
 	<Button touch color="secondary">
 		<Label>copy</Label>
 		<Icon class="material-icons">content_copy</Icon>
 	</Button>
-  <pre>{str}</pre>
+	<pre>{str}</pre>
 </div>

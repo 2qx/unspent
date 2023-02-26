@@ -26,7 +26,7 @@
 		try {
 			contract = new Faucet(period, payout, index);
 		} catch (e: Error) {
-      contract = undefined
+			contract = undefined;
 			if (e.message) {
 				toast.push(e.message, { classes: ['warn'] });
 			} else {

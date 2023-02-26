@@ -13,7 +13,7 @@ import {
   getPrefixFromNetwork,
   toHex,
   binToNumber,
-  sum
+  sum,
 } from "../../common/util.js";
 import { artifact as v1_2 } from "./cash/divide.2.js";
 import { artifact as v1_3 } from "./cash/divide.3.js";
@@ -26,7 +26,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static fn: string = "execute";
   private payeeLocks: Uint8Array[];
   public divisor: number;
-  public static minAllowance = 227+DUST_UTXO_THRESHOLD+10
+  public static minAllowance = 227 + DUST_UTXO_THRESHOLD + 10;
 
   constructor(
     public executorAllowance: number = 1200,
@@ -40,8 +40,11 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Divide Contract Version");
     }
 
-    const usableThreshold = Divide.minAllowance+(66*payees.length)
-    if(executorAllowance<usableThreshold) throw Error(`Executor Allowance below usable threshold (${usableThreshold}) for ${payees.length} addresses`)
+    const usableThreshold = Divide.minAllowance + 66 * payees.length;
+    if (executorAllowance < usableThreshold)
+      throw Error(
+        `Executor Allowance below usable threshold (${usableThreshold}) for ${payees.length} addresses`
+      );
 
     let divisor = payees.length;
     if (!(divisor >= 2 && divisor <= 4))
@@ -148,18 +151,18 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     blockHeight: number
   ): Promise<number> {
     let p = this.parseOpReturn(opReturn, network);
-    blockHeight
+    blockHeight;
     let executorAllowance = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address)
+    let utxos = await networkProvider.getUtxos(p.address);
     let spendableUtxos = utxos.map((u) => {
-       return u.satoshis   
-    })
-    let spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
-    if(spendable > (p.args.length*DUST_UTXO_THRESHOLD) + executorAllowance) {
-      return spendable
-    }else{
-      return 0
-    } 
+      return u.satoshis;
+    });
+    let spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
+    if (spendable > p.args.length * DUST_UTXO_THRESHOLD + executorAllowance) {
+      return spendable;
+    } else {
+      return 0;
+    }
   }
 
   override toString() {
@@ -191,11 +194,11 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
-  getOutputLockingBytecodes(hex=true){
-    if(hex){
-      return this.payeeLocks.map(b => binToHex(b))
-    } else{
-      return this.payeeLocks
+  getOutputLockingBytecodes(hex = true) {
+    if (hex) {
+      return this.payeeLocks.map((b) => binToHex(b));
+    } else {
+      return this.payeeLocks;
     }
   }
 
@@ -235,7 +238,8 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       let feeEstimate = fee ? fee : size.length / 2;
 
       to.pop();
-      let executorPayout = this.executorAllowance - (feeEstimate + (2*divisor)+8)
+      let executorPayout =
+        this.executorAllowance - (feeEstimate + 2 * divisor + 8);
       if (executorPayout > 546)
         to.push({
           to: exAddress,
@@ -244,7 +248,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     }
 
     let txn = await fn().to(to).withoutChange().send();
-    
+
     return txn.txid;
   }
 }

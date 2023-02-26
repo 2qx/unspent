@@ -10,7 +10,7 @@ import { binToHex, hexToBin } from "@bitauth/libauth";
 export class Record extends BaseUtxPhiContract {
   static c: string = "R";
   private static fn: string = "execute";
-  public static minMaxFee: number =  310;
+  public static minMaxFee: number = 310;
 
   constructor(
     public maxFee: number = 850,
@@ -23,7 +23,10 @@ export class Record extends BaseUtxPhiContract {
     } else {
       throw Error("Unrecognized Divide Contract Version");
     }
-    if(maxFee<Record.minMaxFee) throw Error(`Allowed fee < ${Record.minMaxFee} may result in unusable outputs`)
+    if (maxFee < Record.minMaxFee)
+      throw Error(
+        `Allowed fee < ${Record.minMaxFee} may result in unusable outputs`
+      );
 
     super(options.network!, script, [maxFee, index]);
     this.options = options;
@@ -54,26 +57,26 @@ export class Record extends BaseUtxPhiContract {
     blockHeight: number
   ): Promise<number> {
     let p = this.parseOpReturn(opReturn, network);
-    blockHeight
-    let utxos = await networkProvider.getUtxos(p.address)
+    blockHeight;
+    let utxos = await networkProvider.getUtxos(p.address);
     let spendableUtxos = utxos.map((u) => {
-       return u.satoshis   
-    })
-    let spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
-    if(spendable > DUST_UTXO_THRESHOLD) {
-      return spendable
-    }else{
-      return 0
-    } 
+      return u.satoshis;
+    });
+    let spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
+    if (spendable > DUST_UTXO_THRESHOLD) {
+      return spendable;
+    } else {
+      return 0;
+    }
   }
 
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): number {
-    opReturn
-    network
-    return NaN
+    opReturn;
+    network;
+    return NaN;
   }
 
   override toString() {
@@ -134,9 +137,9 @@ export class Record extends BaseUtxPhiContract {
     return record;
   }
 
-  getOutputLockingBytecodes(hex=true){
-    hex
-    return []
+  getOutputLockingBytecodes(hex = true) {
+    hex;
+    return [];
   }
 
   async broadcast(

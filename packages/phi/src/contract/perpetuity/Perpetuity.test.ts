@@ -64,7 +64,13 @@ describe(`Perpetuity Class Tests`, () => {
     const charlie = await RegTestWallet.newRandom();
 
     let options = { version: 1, network: "regtest" };
-    let p1 = new Perpetuity(1, bob.getDepositAddress(),  Perpetuity.minAllowance, 10, options);
+    let p1 = new Perpetuity(
+      1,
+      bob.getDepositAddress(),
+      Perpetuity.minAllowance,
+      10,
+      options
+    );
 
     // fund the perp contract
     await alice.send([

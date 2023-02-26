@@ -15,157 +15,156 @@
 @use '@smui-extra/badge/index' as badge;
 
 .mdc-top-app-bar.demo-top-app-bar {
-  // Color the top bar with "surface" colors.
-  @include top-app-bar.fill-color(surface);
-  @include top-app-bar.ink-color(on-surface);
-  @include top-app-bar.icon-ink-color(on-surface);
-  // Give it a shadow.
-  @include elevation.elevation(4);
-  // Position it above the drawer.
-  z-index: 7;
+	// Color the top bar with "surface" colors.
+	@include top-app-bar.fill-color(surface);
+	@include top-app-bar.ink-color(on-surface);
+	@include top-app-bar.icon-ink-color(on-surface);
+	// Give it a shadow.
+	@include elevation.elevation(4);
+	// Position it above the drawer.
+	z-index: 7;
 }
 
 @include badge.badge-color(
-  custom-green,
-  theme.$green-600,
-  theme.accessible-ink-color(theme.$green-600)
+	custom-green,
+	theme.$green-600,
+	theme.accessible-ink-color(theme.$green-600)
 );
 
- 
 .my-image-list-masonry {
-  @include image-list.masonry-columns(3);
-  @include image-list.shape-radius(10px);
-  max-width: 680px;
+	@include image-list.masonry-columns(3);
+	@include image-list.shape-radius(10px);
+	max-width: 680px;
 }
- 
+
 @media (max-width: 599px) {
-  .my-image-list-masonry {
-    @include image-list.masonry-columns(2);
-  }
+	.my-image-list-masonry {
+		@include image-list.masonry-columns(2);
+	}
 }
 
 // Now on to the regular app styling stuff.
 
 body,
 #smui-app {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 .toc-item {
-  padding: 6px;
-  font-size: xx-large;
+	padding: 6px;
+	font-size: xx-large;
 }
 
 .drawer-container {
-  flex-grow: 1;
-  height: 0;
-  display: flex;
+	flex-grow: 1;
+	height: 0;
+	display: flex;
 }
 
 .demo-drawer,
 .demo-main-content {
-  overflow: auto;
-  height: 100%;
+	overflow: auto;
+	height: 100%;
 }
 
 .demo-drawer.demo-drawer-adjust {
-  padding-bottom: top-app-bar.$row-height;
+	padding-bottom: top-app-bar.$row-height;
 }
 
 .demo-app-content {
-  flex: auto;
-  position: relative;
-  width: 0;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+	flex: auto;
+	position: relative;
+	width: 0;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 .demo-main-content {
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	position: relative;
 }
 
-.demo-main-content>section {
-  padding: 48px;
-  width: 100%;
-  box-sizing: border-box;
+.demo-main-content > section {
+	padding: 48px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
-.demo-main-content>section:after {
-  height: 32px;
-  display: block;
-  content: ' ';
+.demo-main-content > section:after {
+	height: 32px;
+	display: block;
+	content: ' ';
 }
 
 .demo-spaced {
-  margin-bottom: 2.5em;
+	margin-bottom: 2.5em;
 }
 
 .highlight {
-  background-color: #282b2e;
-  color: #e0e2e4;
-  padding: 1em !important;
-  border-radius: 5px;
+	background-color: #282b2e;
+	color: #e0e2e4;
+	padding: 1em !important;
+	border-radius: 5px;
 }
 
 .status {
-  max-width: 100%;
-  font-size: 0.9em;
-  word-break: break-word;
-  white-space: normal;
-  margin-bottom: 0;
+	max-width: 100%;
+	font-size: 0.9em;
+	word-break: break-word;
+	white-space: normal;
+	margin-bottom: 0;
 }
 
-@include paper.paper-color(svelte-pink, #F0F, #fff);
+@include paper.paper-color(svelte-pink, #f0f, #fff);
 
 @media (max-width: 460px) {
-  .demo-main-content>section {
-    padding: 16px;
-  }
+	.demo-main-content > section {
+		padding: 16px;
+	}
 }
 
 code:not([class]) {
-  background-color: #282b2e;
-  color: #e0e2e4;
-  border-radius: 4px;
-  padding: 0 3px;
+	background-color: #282b2e;
+	color: #e0e2e4;
+	border-radius: 4px;
+	padding: 0 3px;
 }
 
 :global(body) {
-  overflow: hidden;
+	overflow: hidden;
 }
 
 section.markdown {
-  h1 {
-    @include typography.typography('headline2');
-  }
+	h1 {
+		@include typography.typography('headline2');
+	}
 
-  h2 {
-    @include typography.typography('headline3');
-  }
+	h2 {
+		@include typography.typography('headline3');
+	}
 
-  h3 {
-    @include typography.typography('headline4');
-  }
+	h3 {
+		@include typography.typography('headline4');
+	}
 
-  h4 {
-    @include typography.typography('headline5');
-  }
+	h4 {
+		@include typography.typography('headline5');
+	}
 
-  h5 {
-    @include typography.typography('headline6');
-  }
+	h5 {
+		@include typography.typography('headline6');
+	}
 
-  pre {
-    padding-left: 2em;
-  }
+	pre {
+		padding-left: 2em;
+	}
 }
 
 .mdc-button {
-  text-transform: none;
+	text-transform: none;
 }

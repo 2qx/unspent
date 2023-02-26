@@ -6,7 +6,11 @@ import {
 } from "@bitauth/libauth";
 import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions, _PROTOCOL_ID, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
+import {
+  DefaultOptions,
+  _PROTOCOL_ID,
+  DUST_UTXO_THRESHOLD,
+} from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   binToNumber,
@@ -41,7 +45,10 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
 
-    if (executorAllowance < Perpetuity.minAllowance) throw Error(`Executor Allowance below usable threshold ${Perpetuity.minAllowance}`)
+    if (executorAllowance < Perpetuity.minAllowance)
+      throw Error(
+        `Executor Allowance below usable threshold ${Perpetuity.minAllowance}`
+      );
 
     super(options.network!, script, [
       period,
@@ -142,29 +149,28 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     // discard the address
     p.args.shift()!;
     let decay = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address)
+    let utxos = await networkProvider.getUtxos(p.address);
     let spendableUtxos = utxos.map((u) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
         if (blockHeight - u.height > period) {
-          return u.satoshis
-        }
-        else {
-          return 0
+          return u.satoshis;
+        } else {
+          return 0;
         }
       } else {
-        return 0
+        return 0;
       }
-    })
-    if(spendableUtxos.length > 0){
-      const spendableBalance = spendableUtxos.reduce(sum)
-      const dustLocked = decay*DUST_UTXO_THRESHOLD
+    });
+    if (spendableUtxos.length > 0) {
+      const spendableBalance = spendableUtxos.reduce(sum);
+      const dustLocked = decay * DUST_UTXO_THRESHOLD;
       const spendable = spendableBalance - dustLocked;
-      return spendable > 0 ? spendable : 0
-    } else{
-      return 0
-    } 
+      return spendable > 0 ? spendable : 0;
+    } else {
+      return 0;
+    }
   }
 
   static getExecutorAllowance(
@@ -172,7 +178,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     network = "mainnet"
   ): number {
     let p = this.parseOpReturn(opReturn, network);
-    p.args.pop()!
+    p.args.pop()!;
     return binToNumber(p.args.pop()!);
   }
 
@@ -208,67 +214,78 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   getOutputLockingBytecodes(hex = true) {
     if (hex) {
-      return [binToHex(this.recipientLockingBytecode)]
+      return [binToHex(this.recipientLockingBytecode)];
     } else {
-      return [this.recipientLockingBytecode]
+      return [this.recipientLockingBytecode];
     }
   }
 
   async asSeries() {
-    const currentHeight = await getBlockHeight()
-    let currentTime = Math.floor(Date.now() / 1000)
-    let utxos = await this.getUtxos()
-    let series: any = []
+    const currentHeight = await getBlockHeight();
+    let currentTime = Math.floor(Date.now() / 1000);
+    let utxos = await this.getUtxos();
+    let series: any = [];
     // @ts-ignore
-    if (!utxos || utxos?.length == 0) utxos = [{ satoshis: 1000000, txid: "<example 10,000,000 (0.1 BCH) unspent output>", vout: 0, height: 0 }]
+    if (!utxos || utxos?.length == 0)
+      utxos = [
+        {
+          satoshis: 1000000,
+          txid: "<example 10,000,000 (0.1 BCH) unspent output>",
+          vout: 0,
+          height: 0,
+        },
+      ];
     if (utxos) {
       for (const utxo of utxos) {
-        let time = []
-        let payout = []
-        let installment = []
-        let principal = []
-        let allowance = []
-        let blocksToWait = NaN
+        let time = [];
+        let payout = [];
+        let installment = [];
+        let principal = [];
+        let allowance = [];
+        let blocksToWait = NaN;
         // @ts-ignore
         if (utxo.height == 0) {
-          blocksToWait = this.period
+          blocksToWait = this.period;
         } else {
           // @ts-ignore
-          blocksToWait = this.period - (currentHeight - utxo.height)
+          blocksToWait = this.period - (currentHeight - utxo.height);
         }
-        const seriesStartTime = currentTime + (blocksToWait * 600)
-        installment.push(Math.floor(utxo.satoshis / this.decay) - this.executorAllowance)
-        payout.push(installment.at(-1)!)
-        principal.push(utxo.satoshis - installment.at(-1)!)
-        allowance.push(this.executorAllowance)
-        const intervalSeconds = this.period * 600
-        let nextPayout = 0
-        let lastPrincipal = principal.at(-1)!
+        const seriesStartTime = currentTime + blocksToWait * 600;
+        installment.push(
+          Math.floor(utxo.satoshis / this.decay) - this.executorAllowance
+        );
+        payout.push(installment.at(-1)!);
+        principal.push(utxo.satoshis - installment.at(-1)!);
+        allowance.push(this.executorAllowance);
+        const intervalSeconds = this.period * 600;
+        let nextPayout = 0;
+        let lastPrincipal = principal.at(-1)!;
         for (let i = 1; i < 5000; i++) {
-          lastPrincipal = principal.at(-1)!
-          nextPayout = Math.floor(lastPrincipal / this.decay)
+          lastPrincipal = principal.at(-1)!;
+          nextPayout = Math.floor(lastPrincipal / this.decay);
           if (nextPayout < DUST_UTXO_THRESHOLD) {
             break;
           }
-          time.push(seriesStartTime + (i * intervalSeconds))
-          installment.push(nextPayout)
-          payout.push(payout.at(-1)! + nextPayout)
-          principal.push(lastPrincipal - nextPayout - this.executorAllowance)
-          allowance.push(this.executorAllowance * i)
+          time.push(seriesStartTime + i * intervalSeconds);
+          installment.push(nextPayout);
+          payout.push(payout.at(-1)! + nextPayout);
+          principal.push(lastPrincipal - nextPayout - this.executorAllowance);
+          allowance.push(this.executorAllowance * i);
         }
 
-        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`
+        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`;
         series.push({
-          id: utxoId, data: {
-            "time": time,
-            "principal": principal,
-            "payout": payout,
-            "executorAllowance": allowance
-          }
-        })
+          id: utxoId,
+          data: {
+            time: time,
+            principal: principal,
+            payout: payout,
+            executorAllowance: allowance,
+          },
+        });
       } // for utxos
     } // if utxos
-    return series
+    return series;
   }
 
   async execute(
@@ -319,7 +336,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress) {
       let minerFee = fee ? fee : size.length / 2;
 
-      executorFee = this.executorAllowance - minerFee - 20
+      executorFee = this.executorAllowance - minerFee - 20;
       to.pop();
       to.push({
         to: exAddress,
@@ -331,11 +348,9 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     // int returnedValue = currentValue - installment - executorAllowance;
     //console.log(newPrincipal, currentValue, installment, executorFee)
 
-
     tx = fn();
     if (utxos) tx = tx.from(utxos);
     let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;
-
   }
 }

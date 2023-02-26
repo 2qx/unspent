@@ -8,7 +8,7 @@ import { artifact as v1 } from "./cash/v1.js";
 export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "F";
   private static fn: string = "drip";
-  public static minPayout: number = 158+DUST_UTXO_THRESHOLD+10;
+  public static minPayout: number = 158 + DUST_UTXO_THRESHOLD + 10;
 
   constructor(
     public period: number = 1,
@@ -23,7 +23,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Faucet Version");
     }
 
-    if(payout<Faucet.minPayout) throw Error("Payout below dust threshold")
+    if (payout < Faucet.minPayout) throw Error("Payout below dust threshold");
 
     super(options.network!, script, [period, payout, index]);
     this.options = options;
@@ -81,7 +81,6 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     return faucet;
   }
 
-
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
@@ -91,26 +90,26 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     let p = this.parseOpReturn(opReturn, network);
     let period = binToNumber(p.args.shift()!);
     let payout = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address)
+    let utxos = await networkProvider.getUtxos(p.address);
     let spendableUtxos = utxos.map((u: Utxo) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
         if (blockHeight - u.height > period) {
-          return u.satoshis
-        }
-        else {
-          return 0
+          return u.satoshis;
+        } else {
+          return 0;
         }
       } else {
-        return 0
+        return 0;
       }
-    })
-    const spendable = spendableUtxos.length> 0 ? spendableUtxos.reduce(sum) : 0
+    });
+    const spendable =
+      spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
     if (spendable > payout) {
-      return spendable
+      return spendable;
     } else {
-      return 0
+      return 0;
     }
   }
 
@@ -120,7 +119,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   ): number {
     let p = this.parseOpReturn(opReturn, network);
     // pop the index to get to the payout
-    p.args.pop()!
+    p.args.pop()!;
     return binToNumber(p.args.pop()!);
   }
 
@@ -152,9 +151,9 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     return this.asOpReturn(chunks, hex);
   }
 
-  getOutputLockingBytecodes(hex=true){
-    hex
-    return []
+  getOutputLockingBytecodes(hex = true) {
+    hex;
+    return [];
   }
 
   async execute(
@@ -171,7 +170,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (balance == 0) return "No funds on contract";
 
     let fn = this.getFunction(Faucet.fn)!;
-    let tx = fn()
+    let tx = fn();
     if (utxos) tx = tx.from(utxos);
     let newPrincipal = balance - this.payout;
     let minerFee = fee ? fee : 253;
@@ -202,7 +201,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         amount: sendAmount,
       });
     }
-    tx = fn()
+    tx = fn();
     if (utxos) tx = tx.from(utxos);
     let payTx = await tx.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;

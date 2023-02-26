@@ -6,12 +6,14 @@
 </script>
 
 {#if data && data.isLocal}
-	<div class="local">This is a local development instance,  <a href="{base}/202212_fundraiser"> 🎉🍊</a></div>
+	<div class="local">
+		This is a local development instance, <a href="{base}/202212_fundraiser"> 🎉🍊</a>
+	</div>
 {:else if data && data.isDevelopment}
 	<div class="dev">
 		This is an <b>unstable</b> development version of the unspent app. Funds may be lost using new
 		features. Please go to <a href="https://unspent.app">unspent.app</a> instead.
-    <a href="{base}/202212_fundraiser">🎉🍊</a>
+		<a href="{base}/202212_fundraiser">🎉🍊</a>
 	</div>
 {:else}
 	<div class="alpha">
@@ -56,8 +58,6 @@
 			<img src="{base}/images/github.svg" alt="GitHub" />
 		</a>
 	</div>
-
-
 </header>
 
 <style>

@@ -24,7 +24,7 @@
 		try {
 			contract = new Mine(period, payout, difficulty, canaryHex);
 		} catch (e: any) {
-      contract = undefined
+			contract = undefined;
 			if (e.message) {
 				toast.push(e.message, { classes: ['warn'] });
 			} else {

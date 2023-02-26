@@ -69,8 +69,8 @@ class AnnuityCommand extends CustomFeeCommand {
     let network = this.isTestnet
       ? "staging"
       : this.isRegtest
-        ? "regtest"
-        : "mainnet";
+      ? "regtest"
+      : "mainnet";
     const defaultPeriod = this.isTestnet ? 1 : 4000;
     let periodInt = !this.period ? defaultPeriod : parseInt(this.period);
     let allowanceInt = !this.allowance ? 3400 : parseInt(this.allowance);
@@ -127,8 +127,8 @@ class DivideCommand extends CustomFeeCommand {
     let network = this.isTestnet
       ? "staging"
       : this.isRegtest
-        ? "regtest"
-        : "mainnet";
+      ? "regtest"
+      : "mainnet";
 
     let allowanceInt = !this.allowance ? 1200 : parseInt(this.allowance);
     let addresses = this.addresses.split(",");
@@ -175,8 +175,8 @@ class FaucetCommand extends CustomFeeCommand {
     let network = this.isTestnet
       ? "staging"
       : this.isRegtest
-        ? "regtest"
-        : "mainnet";
+      ? "regtest"
+      : "mainnet";
 
     let periodInt = !this.period ? 1 : parseInt(this.period);
     let payoutInt = !this.payout ? 1000 : parseInt(this.payout);
@@ -238,8 +238,8 @@ class MineCommand extends CustomFeeCommand {
     let network = this.isTestnet
       ? "staging"
       : this.isRegtest
-        ? "regtest"
-        : "mainnet";
+      ? "regtest"
+      : "mainnet";
     const defaultPeriod = this.isTestnet ? 1 : 4000;
     let periodInt = !this.period ? defaultPeriod : parseInt(this.period);
     let payoutInt = !this.payout ? 1000 : parseInt(this.payout);
@@ -296,8 +296,8 @@ class PerpetuityCommand extends CustomFeeCommand {
     let network = this.isTestnet
       ? "staging"
       : this.isRegtest
-        ? "regtest"
-        : "mainnet";
+      ? "regtest"
+      : "mainnet";
     const defaultPeriod = this.isTestnet ? 1 : 4000;
     const defaultDecay = this.isTestnet ? 8 : 120;
     let periodInt = !this.period ? defaultPeriod : parseInt(this.period);
@@ -346,9 +346,10 @@ class QueryCommand extends NetworkCommand {
     description: "The contract prefix in hex",
   });
 
-
   async execute() {
-    let chaingraph = this.chaingraph ? this.chaingraph : "https://demo.chaingraph.cash/v1/graphql"
+    let chaingraph = this.chaingraph
+      ? this.chaingraph
+      : "https://demo.chaingraph.cash/v1/graphql";
     let prefix = this.prefix ? this.prefix : undefined;
     let node = this.isTestnet ? "tbchn" : this.isRegtest ? "rbchn" : "bchn";
     let hexRecords = await getRecords(chaingraph, prefix, node);
@@ -392,8 +393,8 @@ class RecordCommand extends CustomFeeCommand {
     let network = this.isTestnet
       ? "staging"
       : this.isRegtest
-        ? "regtest"
-        : "mainnet";
+      ? "regtest"
+      : "mainnet";
     let maxFeeInt = !this.maxFee ? undefined : parseInt(this.maxFee);
     let indexInt = !this.index ? undefined : parseInt(this.index);
 

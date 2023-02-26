@@ -14,12 +14,12 @@
 	let executorAllowance = 1200;
 	async function createContract() {
 		try {
-      let addresses = payees.map(async (a) => await sanitizeAddress(a))
-      await Promise.all(addresses).then((addresses) => {
-        contract = new Divide(executorAllowance, addresses);
-      })
+			let addresses = payees.map(async (a) => await sanitizeAddress(a));
+			await Promise.all(addresses).then((addresses) => {
+				contract = new Divide(executorAllowance, addresses);
+			});
 		} catch (e: Error) {
-      contract = undefined
+			contract = undefined;
 			if (e.message) {
 				toast.push(e.message, { classes: ['warn'] });
 			} else {
@@ -42,12 +42,11 @@
 		if (event.detail.addressIdx && payees.length > 2) {
 			payees.splice(event.detail.addressIdx, 1);
 			payees = payees;
-      createContract();
-		} else if(payees.length < 2){
+			createContract();
+		} else if (payees.length < 2) {
 			toast.push('Minimum of two addresses required.');
 		}
-    createContract();
-		
+		createContract();
 	}
 </script>
 
@@ -56,7 +55,7 @@
 		bind:value={executorAllowance}
 		on:change={() => createContract()}
 		type="number"
-		input$min="{Divide.minAllowance+(66*payees.length)}"
+		input$min={Divide.minAllowance + 66 * payees.length}
 		input$max="12000"
 		required
 		label="Executor Allowance"

@@ -23,6 +23,7 @@
     "build": "npx lerna build",
     "build:phi": "yarn workspace @unspent/phi run build ",
     "phi:publish": "yarn workspace @unspent/phi run publish ",
+    "format": "prettier --write .",
     "cli": "yarn workspace unspent run cli",
     "postinstall": "lerna bootstrap && lerna run build",
     "nuke": "rm -fr jest/playwright/* && rm -fr node_modules && yarn remove:packages",

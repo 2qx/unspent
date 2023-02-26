@@ -1,20 +1,19 @@
-
 import {
   ElectrumCluster,
   ClusterOrder,
   ElectrumTransport,
 } from "electrum-cash";
-import { ElectrumNetworkProvider  } from "cashscript";
+import { ElectrumNetworkProvider } from "cashscript";
 
-export async function getBlockHeight():Promise<number>{
+export async function getBlockHeight(): Promise<number> {
   let e = new ElectrumNetworkProvider();
-  const height = await e.getBlockHeight()
-  e.disconnectCluster()
-  return height
+  const height = await e.getBlockHeight();
+  e.disconnectCluster();
+  return height;
 }
 
-export function getDefaultProvider(network="mainnet"){
-  let provider = undefined
+export function getDefaultProvider(network = "mainnet") {
+  let provider = undefined;
   if (network === "mainnet") {
     let cluster = new ElectrumCluster(
       "@unspent/phi",
@@ -51,5 +50,5 @@ export function getDefaultProvider(network="mainnet"){
     cluster.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
     provider = new ElectrumNetworkProvider("regtest", cluster);
   } else throw "unrecognized network";
-  return provider
+  return provider;
 }

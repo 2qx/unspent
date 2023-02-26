@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let errorText:string;
+	export let errorText: string;
 </script>
 
 <div class="error">

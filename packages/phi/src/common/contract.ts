@@ -13,9 +13,7 @@ import {
 } from "cashscript";
 import { ElectrumNetworkProvider } from "cashscript";
 
-import {
-  getDefaultProvider
-} from "./network.js";
+import { getDefaultProvider } from "./network.js";
 
 import {
   binToNumber,
@@ -43,8 +41,8 @@ export class BaseUtxPhiContract {
     constructorArguments: Argument[]
   ) {
     let defaultProvider = getDefaultProvider(network);
-    this.provider = defaultProvider as ElectrumNetworkProvider
-    this.testnet = this.provider.network == "mainnet" ? false: true
+    this.provider = defaultProvider as ElectrumNetworkProvider;
+    this.testnet = this.provider.network == "mainnet" ? false : true;
 
     this.artifact = artifact;
     this.contract = new CashScriptContract(
@@ -130,12 +128,13 @@ export class BaseUtxPhiContract {
   //   throw Error("Cannot get spendable amount from base class");
   // }
 
-
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): number {
-    throw Error(`Cannot get executor allowance from base class, ${opReturn} on ${network}`);
+    throw Error(
+      `Cannot get executor allowance from base class, ${opReturn} on ${network}`
+    );
   }
 
   static async getSpendableBalance(
@@ -144,9 +143,11 @@ export class BaseUtxPhiContract {
     networkProvider?: ElectrumNetworkProvider,
     blockHeight?: number
   ): Promise<number> {
-    networkProvider
-    blockHeight
-    throw Error(`Cannot get spendable amount from base class, ${opReturn} on ${network}`);
+    networkProvider;
+    blockHeight;
+    throw Error(
+      `Cannot get spendable amount from base class, ${opReturn} on ${network}`
+    );
   }
 
   async getBalance(): Promise<number> {
@@ -158,11 +159,16 @@ export class BaseUtxPhiContract {
     return this.contract.address;
   }
 
-  async getLegacyAddress(): Promise<string>{
-    let sha256 = await instantiateSha256()
-    let addr =  lockingBytecodeToBase58Address(sha256, this.getLockingBytecode(false) as Uint8Array, this.testnet ? 'testnet' : 'mainnet' )
-    if(typeof addr !== 'string') throw Error("could not encode legacy address")
-    return addr
+  async getLegacyAddress(): Promise<string> {
+    let sha256 = await instantiateSha256();
+    let addr = lockingBytecodeToBase58Address(
+      sha256,
+      this.getLockingBytecode(false) as Uint8Array,
+      this.testnet ? "testnet" : "mainnet"
+    );
+    if (typeof addr !== "string")
+      throw Error("could not encode legacy address");
+    return addr;
   }
 
   async getUtxos(): Promise<Utxo[] | undefined> {

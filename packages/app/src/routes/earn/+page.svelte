@@ -99,16 +99,18 @@
 				let dataPromises = await tmpData.map(async (data) => {
 					let opReturn = binToHex(data.opReturn);
 					data.executorAllowance = opReturnToExecutorAllowance(opReturn);
-          
-          // adjust the progress per output, with a little bit of fuzz to make it visible.
-          setTimeout(()=>{progress += 1 / pageSize}, 300+Math.floor(Math.random() * 1000));
+
+					// adjust the progress per output, with a little bit of fuzz to make it visible.
+					setTimeout(() => {
+						progress += 1 / pageSize;
+					}, 300 + Math.floor(Math.random() * 1000));
 					data.spendable = await opReturnToSpendableBalance(
 						opReturn,
 						'mainnet',
 						networkProvider,
 						blockHeight
 					);
-          
+
 					return data;
 				});
 
@@ -167,7 +169,7 @@
 							class="material-icons"
 							action="next-page"
 							title="Next page"
-              ripple={false}
+							ripple={false}
 							on:click={incrementPage}>chevron_right</IconButton
 						>
 						<span>
@@ -230,7 +232,7 @@
 							class="material-icons"
 							action="next-page"
 							title="Next page"
-              ripple={false}
+							ripple={false}
 							on:click={incrementPage}>chevron_right</IconButton
 						>
 						<span>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  
 	import Contract from '$lib/Contract.svelte';
 	import AnnuityForm from '$lib/forms/AnnuityForm.svelte';
 	import DivideForm from '$lib/forms/DivideForm.svelte';
@@ -29,7 +28,6 @@
 		<p>Couldn't find contract form for {instanceType}</p>
 	{/if}
 	<br />
-
 
 	{#if contract}
 		<Contract bind:instance={contract} {instanceType} />

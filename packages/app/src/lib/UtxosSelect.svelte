@@ -4,13 +4,11 @@
 	export let utxos;
 	let selected = [];
 
-	$: utxos =  utxos.map((utxo) => {
-			utxo.use = selected.includes(utxo.key);
-      if(utxo.use) console.log(utxo.key)
-			return utxo;
-		});
-    
-
+	$: utxos = utxos.map((utxo) => {
+		utxo.use = selected.includes(utxo.key);
+		if (utxo.use) console.log(utxo.key);
+		return utxo;
+	});
 </script>
 
 <p>Unspent Transaction Outputs</p>

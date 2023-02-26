@@ -1,7 +1,7 @@
 <script>
 	import { afterUpdate } from 'svelte';
 	import makeBlockie from 'ethereum-blockies-base64';
-  import { binToHex } from '@bitauth/libauth';
+	import { binToHex } from '@bitauth/libauth';
 	import { opReturnToInstance } from '@unspent/phi';
 	import { load } from '$lib/machinery/loader-store.js';
 	import Contract from '$lib/Contract.svelte';
@@ -28,26 +28,25 @@
 </script>
 
 <table>
-  <tr>
-    <td class="icon">
-      <img alt={data.lockingBytecode} src={makeBlockie(binToHex(data.lockingBytecode))} />
-    </td>
-    <td class="cashaddr">
-      <Address address={data.address} />
-      <br>
-      <b>{data.name}</b><br>
-      lock:{binToHex(data.lockingBytecode)}
-    </td>
-    <td class="loader">
-      {#if !instance}
-        <button on:click={init}> v </button>
-      {/if}
-      {#if instance}
-        <button on:click={collapse}> ^ </button>
-      {/if}
-    </td>
-  </tr>
-
+	<tr>
+		<td class="icon">
+			<img alt={data.lockingBytecode} src={makeBlockie(binToHex(data.lockingBytecode))} />
+		</td>
+		<td class="cashaddr">
+			<Address address={data.address} />
+			<br />
+			<b>{data.name}</b><br />
+			lock:{binToHex(data.lockingBytecode)}
+		</td>
+		<td class="loader">
+			{#if !instance}
+				<button on:click={init}> v </button>
+			{/if}
+			{#if instance}
+				<button on:click={collapse}> ^ </button>
+			{/if}
+		</td>
+	</tr>
 </table>
 
 {#if instance}
@@ -56,9 +55,7 @@
 <hr />
 
 <style>
-
-
-	 .cashaddr {
+	.cashaddr {
 		flex: auto;
 		font-size: small;
 	}

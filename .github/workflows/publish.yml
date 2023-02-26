@@ -13,8 +13,8 @@ jobs:
         with:
           node-version: 18
       - run: yarn
-      - run: yarn build  
-  
+      - run: yarn build
+
   # Requires NPM_TOKEN github secret to be set
   publish-npm:
     needs: build
@@ -31,8 +31,8 @@ jobs:
       # Setup environment
       - name: Check if NPM_TOKEN is set
         run: |
-            if [ -n $NPM_TOKEN ]; then HAS_NPM_TOKEN='true' ; fi
-            echo "HAS_NPM_TOKEN=${HAS_NPM_TOKEN}" >> $GITHUB_ENV
+          if [ -n $NPM_TOKEN ]; then HAS_NPM_TOKEN='true' ; fi
+          echo "HAS_NPM_TOKEN=${HAS_NPM_TOKEN}" >> $GITHUB_ENV
       - name: Setup node
         uses: actions/setup-node@v1
         with:

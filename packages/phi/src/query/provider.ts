@@ -10,7 +10,7 @@ export async function getRecords(
 ) {
   prefix = prefix ? prefix : "6a04" + PROTOCOL_ID;
   node = node ? node : "mainnet";
-  let exclude_pattern = "6a0401010102010717"
+  let exclude_pattern = "6a0401010102010717";
   let response = await axios({
     url: host,
     method: "post",
@@ -82,12 +82,7 @@ export async function getRecords(
   return results;
 }
 
-
-export async function getTransaction(
-  host: string,
-  txid: string
-) {
-
+export async function getTransaction(host: string, txid: string) {
   let response = await axios({
     url: host,
     method: "post",
@@ -181,11 +176,7 @@ export async function getTransaction(
   return response.data.data;
 }
 
-export async function getUnspentOutputs(
-  host: string,
-  lockingBytecode: string
-) {
-
+export async function getUnspentOutputs(host: string, lockingBytecode: string) {
   let response = await axios({
     url: host,
     method: "post",
@@ -224,7 +215,6 @@ export async function getLockingBytecode(
   host: string,
   lockingBytecode: string
 ) {
-
   let response = await axios({
     url: host,
     method: "post",

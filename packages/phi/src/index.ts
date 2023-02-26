@@ -16,10 +16,15 @@ export {
   opReturnToInstance,
   opReturnToSerializedString,
 } from "./common/map.js";
-export { getRecords, getTransaction, getLockingBytecode, getUnspentOutputs } from "./query/index.js";
-export { 
-  binToNumber, 
-  decodeNullDataScript, 
+export {
+  getRecords,
+  getTransaction,
+  getLockingBytecode,
+  getUnspentOutputs,
+} from "./query/index.js";
+export {
+  binToNumber,
+  decodeNullDataScript,
   deriveLockingBytecodeHex,
-  sanitizeAddress 
+  sanitizeAddress,
 } from "./common/util.js";

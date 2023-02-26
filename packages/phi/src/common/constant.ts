@@ -11,6 +11,10 @@ const _PROTOCOL_ID = "0x" + PROTOCOL_ID;
 
 const DUST_UTXO_THRESHOLD = 546;
 
-
-export { DELIMITER, DefaultOptions, PROTOCOL_ID, _PROTOCOL_ID, DUST_UTXO_THRESHOLD };
-
+export {
+  DELIMITER,
+  DefaultOptions,
+  PROTOCOL_ID,
+  _PROTOCOL_ID,
+  DUST_UTXO_THRESHOLD,
+};

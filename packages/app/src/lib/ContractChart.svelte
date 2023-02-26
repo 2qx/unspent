@@ -48,36 +48,36 @@
 			<LineSeries data={data.payout} color="#0F0" reactive={true} />
 			<LineSeries data={data.executorAllowance} color="#F0F" reactive={true} />
 		</Chart>
-    <div id="key">
-      <div id="payout">Payout (Total)</div>
-      <div id="fee">Fees (Total)</div>
-      <div id="principal">Principal (Balance)</div>
-    </div>
+		<div id="key">
+			<div id="payout">Payout (Total)</div>
+			<div id="fee">Fees (Total)</div>
+			<div id="principal">Principal (Balance)</div>
+		</div>
 	</div>
 {/if}
 
 <style>
-    #key {
-    padding: 2px;
-    font-size: small;
-    width:100px;
-    float:right;
-    display: inline-block;
-  }
-  #fee {
-    background-color: #F0F;
-    color: #FFF;
-    padding: 3px;
-  }
-  #payout {
-    background-color: #0F0;
-    padding: 3px;
-  }
-  
-  #principal {
-    background-color: #9ec69e94;
-    padding: 3px;
-  }
+	#key {
+		padding: 2px;
+		font-size: small;
+		width: 100px;
+		float: right;
+		display: inline-block;
+	}
+	#fee {
+		background-color: #f0f;
+		color: #fff;
+		padding: 3px;
+	}
+	#payout {
+		background-color: #0f0;
+		padding: 3px;
+	}
+
+	#principal {
+		background-color: #9ec69e94;
+		padding: 3px;
+	}
 	:global(.chart) {
 		width: 100%;
 		height: 400px;

@@ -13,7 +13,7 @@ export interface UtxPhiIface {
 
   getBalance(): Promise<number>;
 
-  getOutputLockingBytecodes(hex: boolean): string[]| Uint8Array[]
+  getOutputLockingBytecodes(hex: boolean): string[] | Uint8Array[];
 }
 
 export interface ContractOptions {

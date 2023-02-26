@@ -59,45 +59,50 @@ export function deriveLockingBytecode(address: string): Uint8Array {
 }
 
 export async function sanitizeAddress(wildString: string) {
-  if (typeof wildString != "string") throw Error("Cashaddress was not a string")
+  if (typeof wildString != "string")
+    throw Error("Cashaddress was not a string");
   // If the address has a prefix decode it as is
-  let r, cashAddr
+  let r, cashAddr;
 
   // Throw on segwit address
-  if (wildString.substring(0, 3) === "bc1" || wildString.substring(0, 3) === "tb1") throw Error("Refusing to convert segwit P2SH address to cashaddress")
+  if (
+    wildString.substring(0, 3) === "bc1" ||
+    wildString.substring(0, 3) === "tb1"
+  )
+    throw Error("Refusing to convert segwit P2SH address to cashaddress");
 
   if (wildString.includes(":")) {
     r = decodeCashAddressFormat(wildString);
   } else {
     // If not Bech32, try to decode a Base58 address
     if (!isBech32CharacterSet(wildString)) {
+      if (wildString[0] === "3" || wildString[0] === "2")
+        throw Error(
+          "Refusing to convert a legacy P2SH address (possibly segwit) to cashaddress"
+        );
 
-      if (wildString[0] === "3" || wildString[0] === "2") throw Error("Refusing to convert a legacy P2SH address (possibly segwit) to cashaddress")
+      let sha256 = await instantiateSha256();
+      r = decodeBase58Address(sha256, wildString);
+      if (typeof r === "string") throw Error(r);
 
-      let sha256 = await instantiateSha256()
-      r = decodeBase58Address(sha256, wildString)
-      if (typeof r === "string") throw Error(r)
-
-      let prefix
+      let prefix;
       if (r.version === 0 || r.version === 5) {
-        prefix = "bitcoincash"
+        prefix = "bitcoincash";
+      } else if (r.version === 111) {
+        prefix = "bchtest";
+      } else {
+        throw Error("Couldn't identify type of legacy address");
       }
-      else if (r.version === 111) {
-        prefix = "bchtest"
-      }
-      else {
-        throw Error("Couldn't identify type of legacy address")
-      }
-      cashAddr = encodeCashAddress(prefix, 0, r.payload)
-      return cashAddr
+      cashAddr = encodeCashAddress(prefix, 0, r.payload);
+      return cashAddr;
     } else {
       r = decodeCashAddressFormatWithoutPrefix(wildString);
     }
   }
   // otherwise, derive the network from the address without prefix
-  if (typeof r === "string") throw Error(r)
-  cashAddr = encodeCashAddressFormat(r.prefix, r.version, r.hash)
-  return cashAddr
+  if (typeof r === "string") throw Error(r);
+  cashAddr = encodeCashAddressFormat(r.prefix, r.version, r.hash);
+  return cashAddr;
 }
 
 export function getPrefixFromNetwork(

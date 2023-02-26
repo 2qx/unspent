@@ -14,7 +14,7 @@ import {
   deriveLockingBytecodeHex,
   binToNumber,
   toHex,
-  sum
+  sum,
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
 
@@ -39,8 +39,10 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Annuity Version");
     }
 
-    if (installment < DUST_UTXO_THRESHOLD) throw Error("Installment below dust threshold")
-    if (executorAllowance < Annuity.minAllowance) throw Error("Executor Allowance below usable threshold")
+    if (installment < DUST_UTXO_THRESHOLD)
+      throw Error("Installment below dust threshold");
+    if (executorAllowance < Annuity.minAllowance)
+      throw Error("Executor Allowance below usable threshold");
 
     let lock = cashAddressToLockingBytecode(recipientAddress);
     if (typeof lock === "string") throw lock;
@@ -164,30 +166,29 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     // discard the address
     p.args.shift()!;
     let installment = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address)
+    let utxos = await networkProvider.getUtxos(p.address);
     let spendableUtxos = utxos.map((u) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
         if (blockHeight - u.height > period) {
-          return u.satoshis
-        }
-        else {
-          return 0
+          return u.satoshis;
+        } else {
+          return 0;
         }
       } else {
-        return 0
+        return 0;
       }
-    })
+    });
 
-    if(spendableUtxos.length > 0){
-      const spendableBalance = spendableUtxos.reduce(sum)
-      const remainder = spendableBalance % installment
+    if (spendableUtxos.length > 0) {
+      const spendableBalance = spendableUtxos.reduce(sum);
+      const remainder = spendableBalance % installment;
       const spendable = spendableBalance - remainder;
-      return spendable > 0 ? spendable : 0
-    } else{
-      return 0
-    } 
+      return spendable > 0 ? spendable : 0;
+    } else {
+      return 0;
+    }
   }
 
   override toString() {
@@ -222,63 +223,71 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   getOutputLockingBytecodes(hex = true) {
     if (hex) {
-      return [binToHex(this.recipientLockingBytecode)]
+      return [binToHex(this.recipientLockingBytecode)];
     } else {
-      return [this.recipientLockingBytecode]
+      return [this.recipientLockingBytecode];
     }
   }
 
   async asSeries(): Promise<any> {
-
-    const currentHeight = await getBlockHeight()
-    let currentTime = Math.floor(Date.now() / 1000)
-    let utxos = await this.getUtxos()
-    let series: any = []
+    const currentHeight = await getBlockHeight();
+    let currentTime = Math.floor(Date.now() / 1000);
+    let utxos = await this.getUtxos();
+    let series: any = [];
     // @ts-ignore
-    if (!utxos || utxos?.length == 0) utxos = [{ satoshis: 1000000, txid: "<example 10,000,000 (0.1 BCH) unspent output>", vout: 0, height: 0 }]
+    if (!utxos || utxos?.length == 0)
+      utxos = [
+        {
+          satoshis: 1000000,
+          txid: "<example 10,000,000 (0.1 BCH) unspent output>",
+          vout: 0,
+          height: 0,
+        },
+      ];
     if (utxos) {
       for (const utxo of utxos) {
-        let blocksToWait = NaN
+        let blocksToWait = NaN;
         // @ts-ignore
         if (utxo.height == 0) {
-          blocksToWait = this.period
+          blocksToWait = this.period;
         } else {
           // @ts-ignore
-          blocksToWait = this.period - (currentHeight - utxo.height)
+          blocksToWait = this.period - (currentHeight - utxo.height);
         }
-        const seriesStartTime = currentTime + (blocksToWait * 600)
+        const seriesStartTime = currentTime + blocksToWait * 600;
 
-        const initialPrincipal = utxo.satoshis
-        let seriesLength = (initialPrincipal - DUST_UTXO_THRESHOLD) / (this.installment + this.executorAllowance)
-        
-        const principal = []
-        const time = []
-        const totalFee = []
-        const totalPayout = []
-        const installment = this.installment + this.executorAllowance
-        const intervalSeconds = this.period * 600
+        const initialPrincipal = utxo.satoshis;
+        let seriesLength =
+          (initialPrincipal - DUST_UTXO_THRESHOLD) /
+          (this.installment + this.executorAllowance);
+
+        const principal = [];
+        const time = [];
+        const totalFee = [];
+        const totalPayout = [];
+        const installment = this.installment + this.executorAllowance;
+        const intervalSeconds = this.period * 600;
         for (var i = 0; i < seriesLength; i++) {
-          time.push(seriesStartTime + (i * intervalSeconds))
-          principal.push(initialPrincipal - (installment * i))
-          totalPayout.push(this.installment * i)
-          totalFee.push(this.executorAllowance * i)
+          time.push(seriesStartTime + i * intervalSeconds);
+          principal.push(initialPrincipal - installment * i);
+          totalPayout.push(this.installment * i);
+          totalFee.push(this.executorAllowance * i);
         }
 
-        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`
+        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`;
         series.push({
-          id: utxoId, data: {
-            "time": time,
-            "principal": principal,
-            "payout": totalPayout,
-            "executorAllowance": totalFee
-          }
-        })
+          id: utxoId,
+          data: {
+            time: time,
+            principal: principal,
+            payout: totalPayout,
+            executorAllowance: totalFee,
+          },
+        });
       } // for utxos
     } // if utxos
-    return series
-
+    return series;
   }
-
 
   async execute(
     exAddress?: string,
@@ -300,8 +309,6 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     let newPrincipal = balance - (this.installment + this.executorAllowance);
 
-
-
     let to = [
       {
         to: this.recipientAddress,
@@ -313,16 +320,16 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       },
     ];
 
-
     let estimator = fn();
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
     if (utxos) estimator = estimator.from(utxos);
 
-    if (exAddress) to.push({
-      to: exAddress,
-      amount: 546,
-    });
+    if (exAddress)
+      to.push({
+        to: exAddress,
+        amount: 546,
+      });
 
     let size = await estimator!
       .to(to)
@@ -331,11 +338,15 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       .build();
 
     let minerFee = fee ? fee : size.length / 2 + 5;
-    let executorFee = balance - (this.installment + newPrincipal + minerFee) - 4;
+    let executorFee =
+      balance - (this.installment + newPrincipal + minerFee) - 4;
 
     if (exAddress) {
       to.pop();
-      if (executorFee < 546) throw Error(`inputs would result in executor fee below dust limit ${executorFee}`)
+      if (executorFee < 546)
+        throw Error(
+          `inputs would result in executor fee below dust limit ${executorFee}`
+        );
       to.push({
         to: exAddress,
         amount: executorFee,

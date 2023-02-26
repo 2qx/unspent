@@ -5,27 +5,27 @@ import rehypeSlug from 'rehype-slug';
 import sveltePreprocess from 'svelte-preprocess';
 
 const dev = process.env.NODE_ENV === 'development';
-const buildDir = process.env.NODE_ENV === 'production' ? '../../docs' : "";
+const buildDir = process.env.NODE_ENV === 'production' ? '../../docs' : '';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  ssr: {
-    noExternal: [/^@material\//],
-  },
+	ssr: {
+		noExternal: [/^@material\//]
+	},
 	kit: {
-    adapter: adapter({
-      pages: buildDir,
-      assets: buildDir
-    })
+		adapter: adapter({
+			pages: buildDir,
+			assets: buildDir
+		})
 	},
 	extensions: ['.svelte', '.md'],
-  css: {
-   postcss: {},
-  },
+	css: {
+		postcss: {}
+	},
 	preprocess: [
 		sveltePreprocess({ sourceMap: false, handleMixedImports: true, reportDiagnostics: true }),
 		mdsvex({
 			extensions: ['.md'],
-      rehypePlugins: [rehypeSlug, [toc, {headings: ["h1", "h2"]}]],
+			rehypePlugins: [rehypeSlug, [toc, { headings: ['h1', 'h2'] }]],
 			highlight: {
 				alias: { cashscript: 'solidity' }
 			}

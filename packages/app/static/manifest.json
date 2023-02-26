@@ -1,27 +1,27 @@
 {
-  "name": "Unspent Phi",
-  "short_name": "₿∙ϕ",
-  "background_color": "#ffffff",
-  "theme_color": "#F0F",
-  "display": "minimal-ui",
-  "start_url": "/",
-  "icons": [
-    {
-      "src": "/images/android-icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "density": "4.0"
-    },
-    {
-      "src": "/images/android-icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "density": "10.6"
-    },
-    {
-      "src": "/images/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    }
-  ]
+	"name": "Unspent Phi",
+	"short_name": "₿∙ϕ",
+	"background_color": "#ffffff",
+	"theme_color": "#F0F",
+	"display": "minimal-ui",
+	"start_url": "/",
+	"icons": [
+		{
+			"src": "/images/android-icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"density": "4.0"
+		},
+		{
+			"src": "/images/android-icon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"density": "10.6"
+		},
+		{
+			"src": "/images/apple-touch-icon.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		}
+	]
 }
