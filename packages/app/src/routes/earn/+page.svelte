@@ -176,13 +176,11 @@
 							{/if}
 						</span>
 					</div>
-					<br />
 					{#if isLoading}
-						<div style="display: flex; justify-content: center">
+						<div style="display: flex; padding: 5px; justify-content: center">
 							<LinearProgress {progress} buffer={buffered} />
 						</div>
 					{/if}
-					<br />
 					{#if contractData.length > 0}
 						<ContractAccordion bind:contractData />
 					{/if}

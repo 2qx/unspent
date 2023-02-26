@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import Card from '@smui/card';
-  import IconButton, { Icon } from '@smui/icon-button';
-  import Button, { Label } from '@smui/button';
+	import IconButton, { Icon } from '@smui/icon-button';
+	import Button, { Label } from '@smui/button';
+	import { toast } from '@zerodevx/svelte-toast';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-  import Tooltip, { Wrapper } from '@smui/tooltip';
-  import AddressQrDialog from '$lib/AddressQrDialog.svelte';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
+	import AddressQrDialog from '$lib/AddressQrDialog.svelte';
 	import { deriveLockingBytecodeHex, sanitizeAddress } from '@unspent/phi';
 	import AddressBlockie from '$lib/AddressBlockie.svelte';
 	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
@@ -22,14 +23,13 @@
 	});
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
-    if(executorAddressValue) {
-      try{
-        lockingBytecode = deriveLockingBytecodeHex(executorAddressValue);
-      }
-      catch{
-        console.error("error decoding provided cashaddr, in settings.")
-      }
-    }
+		if (executorAddressValue) {
+			try {
+				lockingBytecode = deriveLockingBytecodeHex(executorAddressValue);
+			} catch {
+				console.error('error decoding provided cashaddr, in settings.');
+			}
+		}
 	});
 	node.subscribe((value) => {
 		nodeValue = value;
@@ -42,25 +42,42 @@
 		chaingraphHost.set(chaingraphHostValue);
 	}
 
-  function clearExAddress() {
-		lockingBytecode = "";
-    executorAddressValue = "";
-    executorAddress.set("");
+	function clearExAddress() {
+		lockingBytecode = '';
+		executorAddressValue = '';
+		executorAddress.set('');
 	}
 
 	async function updateExAddress() {
-    let sanitizedAddress = await sanitizeAddress(executorAddressValue)
-		executorAddress.set(sanitizedAddress);
-    if(executorAddressValue) {
-      try{
-        
-        lockingBytecode = deriveLockingBytecodeHex(sanitizedAddress);
-      }
-      catch{
-        console.error("error decoding provided cashaddr, in settings.")
-      }
-    }
+		let sanitizedAddress;
+		try {
+			sanitizedAddress = await sanitizeAddress(executorAddressValue);
+		} catch (e: any) {
+			sanitizedAddress = '';
+			if (e.message) {
+				toast.push(e.message, { classes: ['warn'] });
+			} else {
+				toast.push(e, { classes: ['warn'] });
+			}
+		}
+
+		if (sanitizedAddress) {
+			try {
+				lockingBytecode = deriveLockingBytecodeHex(sanitizedAddress);
+
+				executorAddress.set(sanitizedAddress);
+			} catch (e: any) {
+				if (e.message) {
+					toast.push(e.message, { classes: ['warn'] });
+				} else {
+					toast.push(e, { classes: ['warn'] });
+				}
+			}
+		} else {
+			lockingBytecode = undefined;
+		}
 	}
+
 	function updateNode() {
 		node.set(nodeValue);
 	}
@@ -77,9 +94,8 @@
 	<div class="card-container">
 		<Card class="demo-spaced">
 			<div class="margins">
-
-				  <h1>Settings</h1>
-          <hr/>
+				<h1>Settings</h1>
+				<hr />
 				<h2>Executor Cash Address</h2>
 				<div>
 					<Textfield
@@ -91,23 +107,21 @@
 					>
 						<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
 					</Textfield>
-          {#if executorAddressValue}
-          <div style="display: flex; align-items: center;">
-            <IconButton class="material-icons" on:click={clearExAddress}
-              >delete</IconButton
-            >
-            <Wrapper style="float:right">
-              <AddressQrDialog codeValue={executorAddressValue} />
-              <Tooltip>Show qr code</Tooltip>
-            </Wrapper>
-          </div>
-          {/if}
+
+					<div style="display: flex; align-items: center;">
+						<IconButton class="material-icons" on:click={clearExAddress}>delete</IconButton>
+						{#if lockingBytecode}
+							<Wrapper style="float:right">
+								<AddressQrDialog codeValue={executorAddressValue} />
+								<Tooltip>Show qr code</Tooltip>
+							</Wrapper>
+						{/if}
+					</div>
 				</div>
 				{#if lockingBytecode}
-        <div>
-          
-					<AddressBlockie {lockingBytecode} />
-        </div>
+					<div>
+						<AddressBlockie {lockingBytecode} />
+					</div>
 					<p>Locking Bytecode</p>
 					<a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}"
 						>{lockingBytecode}</a
