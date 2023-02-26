@@ -6,8 +6,8 @@
 	import { toast } from '@zerodevx/svelte-toast';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-	import Tooltip, { Wrapper } from '@smui/tooltip';
-	import AddressQrDialog from '$lib/AddressQrDialog.svelte';
+  import Tooltip, { Wrapper } from '@smui/tooltip';
+  import AddressQrDialog from '$lib/AddressQrDialog.svelte';
 	import { deriveLockingBytecodeHex, sanitizeAddress } from '@unspent/phi';
 	import AddressBlockie from '$lib/AddressBlockie.svelte';
 	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
@@ -107,21 +107,23 @@
 					>
 						<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
 					</Textfield>
-
-					<div style="display: flex; align-items: center;">
-						<IconButton class="material-icons" on:click={clearExAddress}>delete</IconButton>
-						{#if lockingBytecode}
-							<Wrapper style="float:right">
-								<AddressQrDialog codeValue={executorAddressValue} />
-								<Tooltip>Show qr code</Tooltip>
-							</Wrapper>
-						{/if}
-					</div>
+          {#if executorAddressValue}
+          <div style="display: flex; align-items: center;">
+            <IconButton class="material-icons" on:click={clearExAddress}
+              >delete</IconButton
+            >
+            <Wrapper style="float:right">
+              <AddressQrDialog codeValue={executorAddressValue} />
+              <Tooltip>Show qr code</Tooltip>
+            </Wrapper>
+          </div>
+          {/if}
 				</div>
 				{#if lockingBytecode}
-					<div>
-						<AddressBlockie {lockingBytecode} />
-					</div>
+        <div>
+          
+					<AddressBlockie {lockingBytecode} />
+        </div>
 					<p>Locking Bytecode</p>
 					<a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}"
 						>{lockingBytecode}</a

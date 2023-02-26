@@ -388,4 +388,12 @@
 		overflow-x: scroll;
 		white-space: pre;
 	}
+	#errorConsole {
+		white-space: pre-wrap;
+		overflow: scroll;
+		font-family: 'Courier New', Courier, monospace;
+		background-color: #f4e6e6;
+		font-size: small;
+		padding: 10px;
+	}
 </style>
