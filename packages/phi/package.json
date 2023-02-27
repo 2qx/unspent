@@ -28,11 +28,11 @@
   ],
   "dependencies": {
     "@bitauth/libauth": "^1.19.1",
-    "@cashscript/utils": "^0.7.2",
+    "@cashscript/utils": "0.7.2",
     "@tsconfig/node16-strictest-esm": "latest",
     "axios": "^0.27.2",
-    "cashc": "^0.7.4",
-    "cashscript": "^0.7.4",
+    "cashc": "0.7.2",
+    "cashscript": "0.7.2",
     "electrum-cash": "^2.0.10"
   },
   "devDependencies": {
