@@ -225,7 +225,6 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     let currentTime = Math.floor(Date.now() / 1000);
     let utxos = await this.getUtxos();
     let series: any = [];
-
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
