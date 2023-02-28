@@ -44,7 +44,6 @@
 {#if lockingBytecode}
 	<Dialog
 		bind:open
-		fullscreen
 		noContentPadding
 		aria-labelledby="simple-title"
 		aria-describedby="simple-content"
