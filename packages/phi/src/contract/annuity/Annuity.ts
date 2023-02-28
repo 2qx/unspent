@@ -234,13 +234,13 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     let currentTime = Math.floor(Date.now() / 1000);
     let utxos = await this.getUtxos();
     let series: any = [];
-    // @ts-ignore
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
           satoshis: 1000000,
           txid: "<example 10,000,000 (0.1 BCH) unspent output>",
           vout: 0,
+          // @ts-ignore
           height: 0,
         },
       ];
