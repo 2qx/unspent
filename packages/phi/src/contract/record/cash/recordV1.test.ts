@@ -8,6 +8,7 @@ import {
   Contract as CashScriptContract,
   ElectrumNetworkProvider,
 } from "cashscript";
+//@ts-ignore
 import { RegTestWallet } from "mainnet-js";
 import { compileFile } from "cashc";
 import { Divide } from "../../divide/index.js";

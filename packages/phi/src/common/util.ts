@@ -3,9 +3,11 @@ import {
   binToNumberUintLE,
   decodeCashAddressFormat,
   decodeBase58Address,
+  decodeCashAddress,
   decodeCashAddressFormatWithoutPrefix,
   cashAddressToLockingBytecode,
   CashAddressNetworkPrefix,
+  CashAddressVersionByte,
   hexToBin,
   instantiateSha256,
   instantiateRipemd160,
@@ -208,3 +210,11 @@ export function getRandomIntWeak(max: number) {
 export function sum(previousValue: any, currentValue: any) {
   return previousValue + currentValue;
 }
+
+
+export function assurePkh(address: string){
+  let cashaddrInfo = decodeCashAddress(address)
+  if(typeof cashaddrInfo === "string") throw Error(cashaddrInfo)
+  if(cashaddrInfo.type!=CashAddressVersionByte.P2PKH) throw ("Provided address was not a pay to public key hash address")
+}
+

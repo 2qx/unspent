@@ -3,7 +3,22 @@ import { RegTestWallet, mine } from "mainnet-js";
 import { deriveLockingBytecodeHex } from "../../common/util.js";
 
 describe(`Faucet Class Tests`, () => {
-  test("Should serialize a faucet", async () => {
+  test("Should serialize a faucet (v0)", async () => {
+    let f = new Faucet(undefined, undefined, undefined, {version:0});
+    let chk = deriveLockingBytecodeHex(f.getAddress());
+    expect(f.toString()).toContain(chk);
+    expect(f.toString()).toEqual(`F,0,1,1000,1,${chk}`);
+
+    let f2 = Faucet.fromString(f.toString());
+
+    expect(f.toString()).toEqual(f2.toString());
+    expect(f.toOpReturn()).toEqual(f2.toOpReturn());
+    expect(f.toOpReturn()).toEqual(Faucet.fromOpReturn(f2.toOpReturn()).toOpReturn());
+    expect(f.getAddress()).toEqual(f2.getAddress());
+    expect(f.isTestnet()).toEqual(f2.isTestnet());
+  });
+
+  test("Should serialize a faucet (v1)", async () => {
     let f = new Faucet();
     let chk = deriveLockingBytecodeHex(f.getAddress());
     expect(f.toString()).toContain(chk);

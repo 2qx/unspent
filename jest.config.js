@@ -1,7 +1,12 @@
+const path = require('path');
+
 module.exports = {
   preset: "ts-jest",
   rootDir: "./",
-  roots: ["<rootDir>/packages/phi/src"],
+  roots: [
+    "<rootDir>/packages/phi/src",
+    "<rootDir>/packages/psi/src"
+  ],
   collectCoverage: true,
 
   collectCoverageFrom: [
@@ -14,28 +19,32 @@ module.exports = {
     ".*/src/.*\\.test\\.{ts,js}",
     ".*/src/.*\\.test\\.headless\\.js",
   ],
+  globalSetup: "<rootDir>/jest/node.setup.js",
+  globalTeardown: "<rootDir>/jest/node.teardown.js",
   testMatch: [
     "**/__tests__/**/*.+(ts|tsx|js)",
     "**/?(*.)+(spec|test).+(ts|tsx|js)",
   ],
-  transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
-  },
-  // TODO: This requires Jest 28, but installing Jest 28 runs into other issues
-  // Fix ts-jest / ESM issues (https://stackoverflow.com/questions/66154478/jest-ts-jest-typescript-with-es-modules-import-cannot-find-module)
-  extensionsToTreatAsEsm: [".ts"],
+        // transform: {
+        //   "^.+\\.(ts|tsx)$": "ts-jest",
+        // },
+  
+  // // TODO: This requires Jest 28, but installing Jest 28 runs into other issues
+  // // Fix ts-jest / ESM issues (https://stackoverflow.com/questions/66154478/jest-ts-jest-typescript-with-es-modules-import-cannot-find-module)
+  extensionsToTreatAsEsm: ['.ts'],
   globals: {
-    "ts-jest": {
+    'ts-jest': {
+      tsConfig: "./tsconfig.json",
       useESM: true,
     },
   },
   moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
+    '^(\\.{1,2}/.*)\\.js$': '$1'
   },
-  testEnvironment: "node",
-  globalSetup: "<rootDir>/jest/node.setup.js",
-  globalTeardown: "<rootDir>/jest/node.teardown.js",
-  verbose: true,
-  maxConcurrency: 1,
+  testEnvironment: "jest-environment-node",
+  setupFiles: ["fake-indexeddb/auto"],
   testTimeout: 65000,
+  maxWorkers:2,
+  verbose: true
+
 };

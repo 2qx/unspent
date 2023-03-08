@@ -155,8 +155,6 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
-
-    // TODO: make multi-network
     network = "mainnet",
     networkProvider: ElectrumNetworkProvider,
     blockHeight: number

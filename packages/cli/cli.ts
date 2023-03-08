@@ -1,3 +1,7 @@
+
+// @ts-ignore
+import  version  from "./package.json" assert { type: "json" };
+
 import { Cli, Command, Builtins, Option } from "clipanion";
 
 import {
@@ -15,11 +19,21 @@ import {
   stringToInstance,
 } from "@unspent/phi";
 
-abstract class NetworkCommand extends Command {
+
+abstract class VersionedCommand extends Command{
+  version = Option.String("--version", "1", {
+    description: "The unspent/phi contract version",
+  });
+}
+
+abstract class NetworkCommand extends VersionedCommand {
   isTestnet = Option.Boolean("--testnet", false, {
     description: "Use testnet",
   });
-  isRegtest = Option.Boolean("--regtest", false);
+  isRegtest = Option.Boolean("--regtest", false,
+  {
+    description: "Use a regtest network",
+  });
 }
 
 abstract class CustomFeeCommand extends NetworkCommand {
@@ -30,7 +44,7 @@ abstract class CustomFeeCommand extends NetworkCommand {
 }
 
 class AnnuityCommand extends CustomFeeCommand {
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     category: `Beneficiary`,
     description: `Regular payments over time`,
   });
@@ -76,6 +90,7 @@ class AnnuityCommand extends CustomFeeCommand {
     let allowanceInt = !this.allowance ? 3400 : parseInt(this.allowance);
     let installmentInt = parseInt(this.installment);
     let feeOverride = !this.fee ? undefined : parseInt(this.fee);
+    let version = parseInt(this.version)
 
     if (!this.getAddress) {
       let a = new Annuity(
@@ -83,7 +98,7 @@ class AnnuityCommand extends CustomFeeCommand {
         this.address,
         installmentInt,
         allowanceInt,
-        { version: 1, network: network }
+        { version: version, network: network }
       );
       await a.info();
       a.execute(this.executorAddress, feeOverride);
@@ -93,7 +108,7 @@ class AnnuityCommand extends CustomFeeCommand {
         this.address,
         installmentInt,
         allowanceInt,
-        { version: 1, network: network }
+        { version: version, network: network }
       );
       await a.info();
     }
@@ -101,7 +116,7 @@ class AnnuityCommand extends CustomFeeCommand {
 }
 
 class DivideCommand extends CustomFeeCommand {
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     category: `Beneficiary`,
     description: `Divide money into equal payments, up to four addresses`,
   });
@@ -133,8 +148,10 @@ class DivideCommand extends CustomFeeCommand {
     let allowanceInt = !this.allowance ? 1200 : parseInt(this.allowance);
     let addresses = this.addresses.split(",");
     let feeOverride = !this.fee ? undefined : parseInt(this.fee);
+    let version = parseInt(this.version)
+
     let divide = new Divide(allowanceInt, addresses, {
-      version: 1,
+      version: version,
       network: network,
     });
     if ((await divide.getBalance()) > addresses.length * 550) {
@@ -149,7 +166,7 @@ class DivideCommand extends CustomFeeCommand {
 class FaucetCommand extends CustomFeeCommand {
   static override paths = [[`faucet`], [`f`]];
 
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     category: `Distributive`,
     description: `Distributes some free bitcoin per period`,
   });
@@ -182,9 +199,11 @@ class FaucetCommand extends CustomFeeCommand {
     let payoutInt = !this.payout ? 1000 : parseInt(this.payout);
     let indexInt = !this.index ? 1 : parseInt(this.index);
     let feeOverride = !this.fee ? undefined : parseInt(this.fee);
+    let version = parseInt(this.version)
+
     if (this.address) {
       let faucet = new Faucet(periodInt, payoutInt, indexInt, {
-        version: 1,
+        version: version,
         network: network,
       });
       await faucet.info(true);
@@ -192,7 +211,7 @@ class FaucetCommand extends CustomFeeCommand {
       console.log(response);
     } else {
       let faucet = await new Faucet(periodInt, payoutInt, indexInt, {
-        version: 1,
+        version: version,
         network: network,
       });
       await faucet.info(true);
@@ -201,7 +220,7 @@ class FaucetCommand extends CustomFeeCommand {
 }
 
 class MineCommand extends CustomFeeCommand {
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     category: `Distributive`,
     description: `Distributes some bitcoin per period, for proof of work`,
   });
@@ -246,9 +265,10 @@ class MineCommand extends CustomFeeCommand {
     let difficultyInt = !this.difficulty ? 3 : parseInt(this.difficulty);
     let canaryHex = this.canary;
     let feeOverride = !this.fee ? undefined : parseInt(this.fee);
+    let version = parseInt(this.version)
 
     let m = new Mine(periodInt, payoutInt, difficultyInt, canaryHex, {
-      version: 1,
+      version: version,
       network: network,
     });
     await m.execute(this.executorAddress, feeOverride);
@@ -256,7 +276,7 @@ class MineCommand extends CustomFeeCommand {
 }
 
 class PerpetuityCommand extends CustomFeeCommand {
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     category: `Beneficiary`,
     description: `Pay a fixed fraction of total value at intervals.`,
   });
@@ -304,6 +324,7 @@ class PerpetuityCommand extends CustomFeeCommand {
     let allowanceInt = !this.allowance ? 3400 : parseInt(this.allowance);
     let decayInt = !this.decay ? defaultDecay : parseInt(this.decay);
     let feeOverride = !this.fee ? undefined : parseInt(this.fee);
+    let version = parseInt(this.version)
 
     if (!this.getAddress) {
       let perp = new Perpetuity(
@@ -311,7 +332,7 @@ class PerpetuityCommand extends CustomFeeCommand {
         this.address,
         allowanceInt,
         decayInt,
-        { version: 1, network: network }
+        { version: version, network: network }
       );
       await perp.info();
       perp.execute(this.executorAddress, feeOverride);
@@ -321,7 +342,7 @@ class PerpetuityCommand extends CustomFeeCommand {
         this.address,
         allowanceInt,
         decayInt,
-        { version: 1, network: network }
+        { version: version, network: network }
       );
       await perp.info();
     }
@@ -329,7 +350,7 @@ class PerpetuityCommand extends CustomFeeCommand {
 }
 
 class QueryCommand extends NetworkCommand {
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     category: `Informational`,
     description: `Query a list of contracts.`,
   });
@@ -351,7 +372,7 @@ class QueryCommand extends NetworkCommand {
       ? this.chaingraph
       : "https://demo.chaingraph.cash/v1/graphql";
     let prefix = this.prefix ? this.prefix : undefined;
-    let node = this.isTestnet ? "tbchn" : this.isRegtest ? "rbchn" : "bchn";
+    let node = this.isTestnet ? "testnet" : this.isRegtest ? "rbchn" : "mainnet";
     let hexRecords = await getRecords(chaingraph, prefix, node);
     console.log(`Found ${hexRecords.length} records`);
     hexRecords.map((s: string) => console.log(s));
@@ -368,7 +389,7 @@ class QueryCommand extends NetworkCommand {
 }
 
 class RecordCommand extends CustomFeeCommand {
-  static usage = Command.Usage({
+  static override usage = Command.Usage({
     category: `Informational`,
     description: `Broadcast a contract to the blockchain`,
   });
@@ -397,10 +418,11 @@ class RecordCommand extends CustomFeeCommand {
       : "mainnet";
     let maxFeeInt = !this.maxFee ? undefined : parseInt(this.maxFee);
     let indexInt = !this.index ? undefined : parseInt(this.index);
+    let version = parseInt(this.version)
 
     if (!this.contract) {
       console.log("no contract specified");
-      let r = new Record(maxFeeInt, indexInt, { version: 1, network: network });
+      let r = new Record(maxFeeInt, indexInt, { version: version, network: network });
       if (await r.isFunded()) {
         let tx = await r.broadcast();
         console.log(tx);
@@ -409,7 +431,7 @@ class RecordCommand extends CustomFeeCommand {
         await r.info();
       }
     } else {
-      let r = new Record(maxFeeInt, indexInt, { version: 1, network: network });
+      let r = new Record(maxFeeInt, indexInt, { version: version, network: network });
       let i = stringToInstance(this.contract, network);
       if (!i) throw Error(`Couldn't parse string ${this.contract}`);
       console.log("broadcasting... ");
@@ -423,7 +445,7 @@ class RecordCommand extends CustomFeeCommand {
 const cli = new Cli({
   binaryName: "unspent",
   binaryLabel: "@unspent/cli",
-  binaryVersion: "0.0.7",
+  binaryVersion: version,
 });
 
 cli.register(AnnuityCommand);

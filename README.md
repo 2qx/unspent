@@ -7,3 +7,4 @@ More information can be found [here](./BCR.md)
 | @unspent/app | A [webapp](https://unspent.app) for creating and intracting with contracts      |
 | @unspent/cli | A command line interface for calling or calculating unspent contracts           |
 | @unspent/phi | A library with a set of anyone-can-spend automata contracts, used in the above. |
+| @unspent/psi | Persistent storage IndexedDB wrapper for unspent data.                          |

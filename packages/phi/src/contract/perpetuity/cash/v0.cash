@@ -1,0 +1,51 @@
+pragma cashscript >= 0.7.0;
+
+// v20220522
+
+// This is an experimental perpetuity contract 
+// see: bitcoin-cash-forever npm package.
+contract Perpetuity(
+
+    // interval for payouts, in blocks
+    int period,
+
+    // PKH of the beneficiary, the address receiving payments
+    bytes20 recipientPkh,
+
+    // extra allowance for administration of contract
+    // fees are paid from executors' allowance. 
+    int executorAllowance,
+
+    // divisor for the payout, each payout must be greater than the total
+    // amount held on the contract divided by this number
+    int decay
+) {
+    function execute() {
+
+        // Check that the first output sends to the recipient
+        bytes25 recipientLockingBytecode = new LockingBytecodeP2PKH(recipientPkh);
+        require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+        // Check that time has passed and that time locks are enabled
+        require(tx.age >= period);
+            
+        // require the second output to match the active bytecode
+        require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
+
+
+        // Get the total value on the contract
+        int currentValue = tx.inputs[this.activeInputIndex].value;
+
+        // The payout is the current value divided by the decay
+        int installment = currentValue/decay;
+
+        // Calculate value returned to the contract
+        int returnedValue = currentValue - installment - executorAllowance;
+
+        // Check that the outputs send the correct amounts
+        require(tx.outputs[0].value >= installment);
+        require(tx.outputs[1].value >= returnedValue);
+            
+    }
+
+}

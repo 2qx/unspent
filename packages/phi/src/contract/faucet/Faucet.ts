@@ -3,6 +3,7 @@ import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { binToNumber, sum, toHex } from "../../common/util.js";
+import { artifact as v0 } from "./cash/v0.js";
 import { artifact as v1 } from "./cash/v1.js";
 
 export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
@@ -19,6 +20,8 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     let script: Artifact;
     if (options.version === 1) {
       script = v1;
+    }else if (options.version === 0) {
+      script = v0;
     } else {
       throw Error("Unrecognized Faucet Version");
     }
@@ -40,7 +43,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(Faucet.c == p.code))
       throw "non-faucet serialized string passed to faucet constructor";
 
-    if (p.options.version != 1)
+    if (![0,1].includes(p.options.version))
       throw Error("faucet contract version not recognized");
 
     if (p.args.length != 3)
@@ -64,7 +67,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (p.options.version !== 1)
+    if (![0,1].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );

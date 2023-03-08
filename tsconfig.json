@@ -5,6 +5,7 @@
     "baseUrl": "./packages",
     "paths": {
       "phi": ["phi/src"],
+      "psi": ["psi/src"],
       "cli": ["cli/src"],
       "app": ["app/src"]
     }

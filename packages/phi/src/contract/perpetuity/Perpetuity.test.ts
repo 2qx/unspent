@@ -25,6 +25,32 @@ describe(`Perpetuity Class Tests`, () => {
     expect(p.isTestnet()).toEqual(p2.isTestnet());
   });
 
+
+  test("Should a serialize a v0 Perpetuity", async () => {
+    let p = new Perpetuity(
+      3400,
+      "bitcoincash:qrtyy8w9yv6ffqtny9gp56m8kztl3nwwzcqyzsv32k",
+      1000,
+      120,
+      {version:0}
+    );
+    let chk = derivePublicKeyHashHex(
+      "bitcoincash:qrtyy8w9yv6ffqtny9gp56m8kztl3nwwzcqyzsv32k"
+    );
+    expect(p.toString()).toContain(chk);
+    expect(p.toString()).toEqual(
+      "P,0,3400,76a914d6421dc5233494817321501a6b67b097f8cdce1688ac,1000,120,a9148096ebf59ac63fdf71def10d9df7ce5b94349d7a87"
+    );
+
+    let p2 = Perpetuity.fromString(p.toString());
+
+    expect(p.toString()).toEqual(p2.toString());
+    expect(p.toOpReturn()).toEqual(p2.toOpReturn());
+    expect(p.getAddress()).toEqual(p2.getAddress());
+    expect(p.isTestnet()).toEqual(p2.isTestnet());
+  }); 
+
+
   test("Should a deserialize and reserialize a staging Perpetuity", async () => {
     let options = { version: 1, network: "staging" };
     let p = new Perpetuity(

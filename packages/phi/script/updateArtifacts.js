@@ -58,7 +58,6 @@ function updateDivideContract(d) {
 function updateDivideContracts() {
   let divisors = [2, 3, 4];
   divisors.forEach((d) => {
-    console.log(d);
     updateDivideContract(d);
   });
 }

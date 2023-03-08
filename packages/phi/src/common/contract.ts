@@ -66,7 +66,7 @@ export class BaseUtxPhiContract {
     // if the contract shortcode doesn't match, error
     const code = components.shift();
     const version = parseInt(components.shift()!);
-    const lockingBytecode = components.splice(-1)[0];
+    const lockingBytecode = components.splice(-1)[0]!;
     const args = [...components];
     const options = { version: version, network: network };
 
@@ -105,7 +105,7 @@ export class BaseUtxPhiContract {
     // if the contract shortcode doesn't match, error
     const code = String.fromCharCode(components.shift()![0]!);
     const version = binToNumber(components.shift()!);
-    const lockingBytecode = components.splice(-1)[0];
+    const lockingBytecode = components.splice(-1)[0]!;
     const args = [...components];
     const options = { version: version, network: network };
 

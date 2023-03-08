@@ -13,12 +13,16 @@ import {
 } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
+  assurePkh,
   binToNumber,
+  deriveLockingBytecode,
   deriveLockingBytecodeHex,
+  derivePublicKeyHash,
   getPrefixFromNetwork,
   sum,
   toHex,
 } from "../../common/util.js";
+import { artifact as v0 } from "./cash/v0.js";
 import { artifact as v1 } from "./cash/v1.js";
 import { getBlockHeight } from "../../common/network.js";
 
@@ -35,15 +39,24 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     public decay: number,
     public options: ContractOptions = DefaultOptions
   ) {
+    
     let script: Artifact;
+
+    let lock: Uint8Array;
+
     if (options.version === 1) {
       script = v1;
-    } else {
+      let lockingBytecode = cashAddressToLockingBytecode(address);
+      if (typeof lockingBytecode === "string") throw lockingBytecode;
+      lock = lockingBytecode.bytecode;
+    } else if (options.version === 0) {
+      script = v0;
+      assurePkh(address)
+      let publicKeyHash = derivePublicKeyHash(address)
+      lock = publicKeyHash
+    }else {
       throw Error("Unrecognized Perpetuity Version");
     }
-    let lock = cashAddressToLockingBytecode(address);
-    if (typeof lock === "string") throw lock;
-    let bytecode = lock.bytecode;
 
     if (executorAllowance < Perpetuity.minAllowance)
       throw Error(
@@ -52,11 +65,11 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     super(options.network!, script, [
       period,
-      bytecode,
+      lock!,
       executorAllowance,
       decay,
     ]);
-    this.recipientLockingBytecode = lock.bytecode;
+    this.recipientLockingBytecode = deriveLockingBytecode(address);
     this.options = options;
   }
 
@@ -67,8 +80,9 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
 
-    if (p.options.version != 1)
+    if (![0,1].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
+
     if (p.args.length != 4)
       throw `invalid number of arguments ${p.args.length}`;
 
@@ -92,7 +106,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       p.options
     );
 
-    // check that the address
+    // check that the address matches
     perpetuity.checkLockingBytecode(p.lockingBytecode);
     return perpetuity;
   }
@@ -109,7 +123,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (p.options.version !== 1)
+    if (![0,1].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
@@ -133,7 +147,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       p.options
     );
 
-    // check that the address
+    // check that the address matches
     perpetuity.checkLockingBytecode(p.lockingBytecode);
     return perpetuity;
   }
