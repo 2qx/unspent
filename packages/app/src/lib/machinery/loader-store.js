@@ -4,12 +4,12 @@ import { writable } from 'svelte/store';
 // 	load: () => Promise<void>;
 // }
 
-export const loaderStore = writable(undefined);
+//export const loaderStore = writable(undefined);
 
 export async function load(loader) {
-	loaderStore.set(loader);
+	//loaderStore.set(loader);
 	setTimeout(
-		async () => await loader.load().then(() => loaderStore.set(undefined)),
+		async () => await loader.load().then(() => {}),
 		500 // TODO: HACK to get loading screen to show
 	);
 }

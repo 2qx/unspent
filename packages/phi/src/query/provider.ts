@@ -10,58 +10,95 @@ export async function getRecords(
   excludePattern = "6a0401010102010717",
   after = 0
 ) {
+
+  let response = await getChaingraphUnspentRecords(
+    host,
+    prefix,
+    node,
+    limit,
+    offset,
+    excludePattern,
+    after
+  )
+  let results = response.data["search_output_prefix"];
+
+  // transform list of objects to a list of strings
+  results = results.map((val: any) => {
+    return val.locking_bytecode as string;
+  });
+  results = results.map((x: string) => x.replace("\\x", ""));
+  return results;
+}
+
+export async function getChaingraphUnspentRecords(
+  host: string,
+  prefix?: string,
+  node?: string,
+  limit = 25,
+  offset = 0,
+  excludePattern = "6a0401010102010717",
+  after = 0
+) {
+
   prefix = prefix ? prefix : "6a04" + PROTOCOL_ID;
   node = node ? node : "mainnet";
   after = !isNaN(after) ? after : 0;
-  
+
   let response = await axios({
     url: host,
     method: "post",
     data: {
       query: `query SearchOutputsByLockingBytecodePrefix(
-        $prefix: String!
-        $node: String!
-        $exclude_pattern: String!
-        $limit: Int
-        $offset: Int
-        $after: bigint
-      ) {
-              search_output_prefix(
-                args: { locking_bytecode_prefix_hex: $prefix }
-                distinct_on: locking_bytecode,
-                limit: $limit,
-                offset: $offset,
-                where: {
-                  _and: [
-                    { locking_bytecode_pattern: {  _nlike: $exclude_pattern } }
-                    {
-                      transaction: {
-                        block_inclusions: { block: { height: { _gt: $after } } }
+      $prefix: String!
+      $node: String!
+      $exclude_pattern: String!
+      $limit: Int
+      $offset: Int
+      $after: bigint
+    ) {
+            search_output_prefix(
+              args: { locking_bytecode_prefix_hex: $prefix }
+              distinct_on: locking_bytecode,
+              limit: $limit,
+              offset: $offset,
+              where: {
+                _and: [
+                  { locking_bytecode_pattern: {  _nlike: $exclude_pattern } }
+                  {
+                    transaction: {
+                      block_inclusions: { block: { height: { _gt: $after } } }
+                    }
+                  }
+                  {
+                    _or: [
+                      {
+                        transaction: {
+                          block_inclusions: {
+                            block: { accepted_by: { node: { name: { _regex: $node } } } }
+                          }
+                        }
                       }
-                    }
-                    {
-                      _or: [
-                        {
-                          transaction: {
-                            block_inclusions: {
-                              block: { accepted_by: { node: { name: { _regex: $node } } } }
-                            }
-                          }
+                      {
+                        transaction: {
+                          node_validations: { node: { name: { _regex: $node } } }
                         }
-                        {
-                          transaction: {
-                            node_validations: { node: { name: { _regex: $node } } }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ) {
-                locking_bytecode_pattern,
-                locking_bytecode
+                      }
+                    ]
+                  }
+                ]
               }
-            }`,
+            ) {
+              locking_bytecode_pattern,
+              locking_bytecode,
+              transaction{
+                block_inclusions{
+                  block{
+                    height
+                  }
+                }
+              }
+            }
+          }`,
       variables: {
         prefix: prefix,
         exclude_pattern: excludePattern,
@@ -83,15 +120,7 @@ export async function getRecords(
       throw Error(response.data.errors[0].message);
     }
   }
-
-  let results = response.data.data["search_output_prefix"];
-
-  // transform list of objects to a list of strings
-  results = results.map((val: any) => {
-    return val.locking_bytecode as string;
-  });
-  results = results.map((x: string) => x.replace("\\x", ""));
-  return results;
+  return response.data
 }
 
 export async function getTransaction(host: string, txid: string) {

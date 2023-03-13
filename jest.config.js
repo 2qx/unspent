@@ -10,7 +10,7 @@ module.exports = {
   collectCoverage: true,
 
   collectCoverageFrom: [
-    "**/*.{js,jsx,ts}",
+    "**/dist/*.{js,jsx,ts}",
     "!**/node_modules/**",
     "!**/generated/**",
   ],
@@ -34,7 +34,7 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts'],
   globals: {
     'ts-jest': {
-      tsConfig: "./tsconfig.json",
+      tsconfig: "./tsconfig.json",
       useESM: true,
     },
   },

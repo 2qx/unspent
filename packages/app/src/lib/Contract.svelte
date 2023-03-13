@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
 	import Prism from 'prismjs';
+	import { Confetti } from 'svelte-confetti';
+
 	import { toast } from '@zerodevx/svelte-toast';
 	import { copy } from 'svelte-copy';
 	import { base } from '$app/paths';
+
 	import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
+
 	import Badge from '@smui-extra/badge';
 	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import Button, { Label, Icon } from '@smui/button';
@@ -12,20 +16,18 @@
 	import CircularProgress from '@smui/circular-progress';
 	import LinearProgress from '@smui/linear-progress';
 
-	import { Confetti } from 'svelte-confetti';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
-	import { load } from '$lib/machinery/loader-store.js';
-	import { executorAddress } from './store.js';
-	import Address from './Address.svelte';
-	import AddressQrDialog from './AddressQrDialog.svelte';
-	import AddressBlockie from './AddressBlockie.svelte';
-	import ContractChart from './ContractChart.svelte';
-	import SerializedString from './SerializedString.svelte';
-	import BlockchairAddress from './addressLinks/BlockchairAddress.svelte';
-	import BitInfoChartsAddress from './addressLinks/BitInfoChartsAddress.svelte';
-	import SickPigAddress from './addressLinks/SickPigAddress.svelte';
-	import ErrorConsole from './ErrorConsole.svelte';
+	import { executorAddress } from '$lib/store.js';
+	import Address from '$lib/Address.svelte';
+	import AddressQrDialog from '$lib/AddressQrDialog.svelte';
+	import AddressBlockie from '$lib/AddressBlockie.svelte';
+	import ContractChart from '$lib/ContractChart.svelte';
+	import SerializedString from '$lib/SerializedString.svelte';
+	import BlockchairAddress from '$lib/addressLinks/BlockchairAddress.svelte';
+	import BitInfoChartsAddress from '$lib/addressLinks/BitInfoChartsAddress.svelte';
+	import SickPigAddress from '$lib/addressLinks/SickPigAddress.svelte';
+	import ErrorConsole from '$lib/ErrorConsole.svelte';
 
 	export let instance: any;
 	export let instanceType = '';
@@ -60,49 +62,37 @@
 	});
 
 	const updateBalance = async () => {
-		await load({
-			load: async () => {
-				if (instance) balance = await instance.getBalance();
-				isFunded = balance > 0 ? true : false;
+		if (instance) balance = await instance.getBalance();
+		isFunded = balance > 0 ? true : false;
 
-				if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
-					if (showSeries) {
-						updateSeries();
-					}
-				}
+		if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
+			if (showSeries) {
+				updateSeries();
 			}
-		});
+		}
 	};
 
 	const execute = async () => {
-		await load({
-			load: async () => {
-				setProgress();
-				executedSuccess = false;
-				try {
-					let inUtxos = utxos.filter((u: any) => u.use == true);
-					txid = await instance.execute(executorAddressValue, undefined, inUtxos);
-					executedSuccess = true;
-					executeError = '';
-					clearProgress();
-				} catch (e) {
-					executeError = e;
-					clearProgress();
-				}
-			}
-		});
+		setProgress();
+		executedSuccess = false;
+		try {
+			let inUtxos = utxos.filter((u: any) => u.use == true);
+			txid = await instance.execute(executorAddressValue, undefined, inUtxos);
+			executedSuccess = true;
+			executeError = '';
+			clearProgress();
+		} catch (e: any) {
+			executeError = e;
+			clearProgress();
+		}
 	};
 
 	const getUtxos = async () => {
-		await load({
-			load: async () => {
-				utxos = await instance.getUtxos();
-				utxos = utxos.map((u: any) => {
-					u.key = u.txid + ':' + u.vout;
-					u.use = true;
-					return u;
-				});
-			}
+		utxos = await instance.getUtxos();
+		utxos = utxos.map((u: any) => {
+			u.key = u.txid + ':' + u.vout;
+			u.use = true;
+			return u;
 		});
 	};
 
@@ -111,15 +101,11 @@
 	}
 
 	const updateSeries = async () => {
-		await load({
-			load: async () => {
-				// only update the series when the contract changes
-				if (cachedAddress != instance.getAddress()) {
-					series = await instance.asSeries();
-					cachedAddress = instance.getAddress();
-				}
-			}
-		});
+		// only update the series when the contract changes
+		if (cachedAddress != instance.getAddress()) {
+			series = await instance.asSeries();
+			cachedAddress = instance.getAddress();
+		}
 	};
 
 	function setProgress() {
@@ -388,12 +374,12 @@
 		overflow-x: scroll;
 		white-space: pre;
 	}
-	#errorConsole {
+	/* #errorConsole {
 		white-space: pre-wrap;
 		overflow: scroll;
 		font-family: 'Courier New', Courier, monospace;
 		background-color: #f4e6e6;
 		font-size: small;
 		padding: 10px;
-	}
+	} */
 </style>

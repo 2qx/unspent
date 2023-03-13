@@ -67,8 +67,8 @@
 {/if}
 
 <style>
-	#qrCenter {
+	/* #qrCenter {
 		margin: auto;
 		padding: 10px;
-	}
+	} */
 </style>

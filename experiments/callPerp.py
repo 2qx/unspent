@@ -7,8 +7,8 @@ from pprint import pprint
 # Defining the host is optional and defaults to https://rest-unstable.mainnet.cash
 # See configuration.py for a list of all supported configuration parameters.
 configuration = mainnet.Configuration(
-    #host="https://rest-unstable.mainnet.cash"
-    host="http://localhost:3000"
+    host="https://rest-unstable.mainnet.cash"
+    #host="http://localhost:3000"
 )
 
 configuration.access_token = None

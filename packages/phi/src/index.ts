@@ -18,6 +18,7 @@ export {
 } from "./common/map.js";
 export {
   getRecords,
+  getChaingraphUnspentRecords,
   getTransaction,
   getLockingBytecode,
   getUnspentOutputs,
@@ -25,6 +26,7 @@ export {
 export {
   binToNumber,
   decodeNullDataScript,
+  deriveLockingBytecode,
   deriveLockingBytecodeHex,
   sanitizeAddress,
 } from "./common/util.js";

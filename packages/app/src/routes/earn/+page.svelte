@@ -1,18 +1,21 @@
 <script>
-	import { binToHex } from '@bitauth/libauth';
-	import Card from '@smui/card';
-	import Select, { Option } from '@smui/select';
-	import IconButton from '@smui/icon-button';
-	import CircularProgress from '@smui/circular-progress';
-	import LinearProgress from '@smui/linear-progress';
 	import { onMount } from 'svelte';
-	import { load } from '$lib/machinery/loader-store.js';
-	import { getRecords, parseOpReturn } from '@unspent/phi';
+
+	import { binToHex } from '@bitauth/libauth';
+
+	import { parseOpReturn } from '@unspent/phi';
+	import { PsiNetworkProvider } from '@unspent/psi';
 	import {
 		getDefaultProvider,
 		opReturnToExecutorAllowance,
 		opReturnToSpendableBalance
 	} from '@unspent/phi';
+
+	import Card from '@smui/card';
+	import Select, { Option } from '@smui/select';
+	import IconButton from '@smui/icon-button';
+	import LinearProgress from '@smui/linear-progress';
+
 	//import ContractItem from '$lib/ContractItem.svelte';
 	import ContractAccordion from '$lib/ContractAccordion.svelte';
 	import { protocol, chaingraphHost, node, executorAddress } from '$lib/store.js';
@@ -32,6 +35,7 @@
 	let chaingraphHostValue = '';
 	let nodeValue = '';
 	let blockHeight = 0;
+	let psiNetworkProvider;
 
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
@@ -66,60 +70,58 @@
 	onMount(async () => {
 		if (chaingraphHostValue.length > 0) {
 			let networkProvider = getDefaultProvider('mainnet');
+			if (!psiNetworkProvider)
+				psiNetworkProvider = new PsiNetworkProvider('mainnet', networkProvider, 500);
 			if (blockHeight < 1) blockHeight = await networkProvider.getBlockHeight();
 			loadContracts();
 		}
 	});
 	const loadContracts = async () => {
-		await load({
-			load: async () => {
-				isLoading = true;
-				buffered = 0;
-				progress = 0;
-				let protocolHex = protocolValue
-					.split('')
-					.map((el) => el.charCodeAt(0).toString(16))
-					.join('');
-				let contractHex = await getRecords(
-					chaingraphHostValue,
-					'6a04' + protocolHex,
-					nodeValue,
-					pageSize,
-					page * pageSize
-				);
-				let tmpData = contractHex.map((x) => parseOpReturn(x));
-				buffered = 1;
-				if (tmpData.length === 0) {
-					noResults = true;
-				} else {
-					noResults = false;
-				}
-				let networkProvider = getDefaultProvider('mainnet');
+		isLoading = true;
+		buffered = 0;
+		progress = 0;
+		let protocolHex = protocolValue
+			.split('')
+			.map((el) => el.charCodeAt(0).toString(16))
+			.join('');
+		let searchFilterParams = {
+			prefix: '6a04' + protocolHex,
+			node: nodeValue,
+			limit: pageSize,
+			offset: page * pageSize
+		};
+		let contractHex = await psiNetworkProvider.search(chaingraphHostValue, searchFilterParams);
+		let tmpData = contractHex.map((x) => parseOpReturn(x));
+		buffered = 1;
+		if (tmpData.length === 0) {
+			noResults = true;
+		} else {
+			noResults = false;
+		}
+		let networkProvider = getDefaultProvider('mainnet');
 
-				let dataPromises = await tmpData.map(async (data) => {
-					let opReturn = binToHex(data.opReturn);
-					data.executorAllowance = opReturnToExecutorAllowance(opReturn);
+		let dataPromises = await tmpData.map(async (data) => {
+			let opReturn = binToHex(data.opReturn);
+			data.executorAllowance = opReturnToExecutorAllowance(opReturn);
 
-					// adjust the progress per output, with a little bit of fuzz to make it visible.
-					setTimeout(() => {
-						progress += 1 / pageSize;
-					}, 300 + Math.floor(Math.random() * 1000));
-					data.spendable = await opReturnToSpendableBalance(
-						opReturn,
-						'mainnet',
-						networkProvider,
-						blockHeight
-					);
+			// adjust the progress per output, with a little bit of fuzz to make it visible.
+			setTimeout(() => {
+				progress += 1 / pageSize;
+			}, 300 + Math.floor(Math.random() * 1000));
+			data.spendable = await opReturnToSpendableBalance(
+				opReturn,
+				'mainnet',
+				networkProvider,
+				blockHeight
+			);
 
-					return data;
-				});
-
-				await Promise.all(dataPromises).then(function (results) {
-					contractData = results;
-				});
-				isLoading = false;
-			}
+			return data;
 		});
+
+		await Promise.all(dataPromises).then(function (results) {
+			contractData = results;
+		});
+		isLoading = false;
 	};
 </script>
 
