@@ -3,16 +3,16 @@
 
 	import { binToHex } from '@bitauth/libauth';
 
-  import type { BytecodePatternExtendedQueryI } from "@unspent/phi"
 	import {
-    BytecodePatternQueryDefaults,
 		getDefaultProvider,
 		opReturnToExecutorAllowance,
 		opReturnToSpendableBalance,
-    parseOpReturn
+		opReturnToBalance,
+		parseOpReturn,
+		sum,
+		BaseUtxPhiContract
 	} from '@unspent/phi';
 	import { PsiNetworkProvider } from '@unspent/psi';
-
 
 	import Card from '@smui/card';
 	import Select, { Option } from '@smui/select';
@@ -23,28 +23,23 @@
 	import ContractAccordion from '$lib/ContractAccordion.svelte';
 	import { protocol, chaingraphHost, node, executorAddress } from '$lib/store.js';
 
-  import AddressSearch  from '$lib/contractFilter/AddressSearch.svelte';
-  import CodeSelect  from '$lib/contractFilter/CodeSelect.svelte';
-
-	let contractData:any[] = [];
+	let contractData: any[] = [];
 	let isLoading = true;
 	let buffered = 0;
 	let progress = 0;
+	let tlv = '';
 	let noResults = false;
 
-	let pageSizes = [5, 10, 25];
-	let pageSize = 10;
+	let pageSizes = [5, 10, 25, 50, 100, 500];
+	let pageSize = 500;
 	let page = 0;
 
-  let contractFilter = '';
-  let addressFilter = '';
 	let executorAddressValue = '';
 	let protocolValue = '';
 	let chaingraphHostValue = '';
 	let nodeValue = '';
 	let blockHeight = 0;
-	let psiNetworkProvider:PsiNetworkProvider;
-  let searchFilterParams: BytecodePatternExtendedQueryI = BytecodePatternQueryDefaults;
+	let psiNetworkProvider: PsiNetworkProvider;
 
 	executorAddress.subscribe((value) => {
 		executorAddressValue = value;
@@ -80,7 +75,7 @@
 		if (chaingraphHostValue.length > 0) {
 			let networkProvider = getDefaultProvider('mainnet');
 			if (!psiNetworkProvider)
-				psiNetworkProvider = new PsiNetworkProvider('mainnet', chaingraphHostValue, [networkProvider]);
+				psiNetworkProvider = new PsiNetworkProvider('mainnet', chaingraphHostValue, [networkProvider], 500);
 			if (blockHeight < 1) blockHeight = await networkProvider.getBlockHeight();
 			loadContracts();
 		}
@@ -93,16 +88,22 @@
 			.split('')
 			.map((el) => el.charCodeAt(0).toString(16))
 			.join('');
-
-		searchFilterParams.prefix = '6a04' + protocolHex;
-    searchFilterParams.code = contractFilter;
-    searchFilterParams.node = nodeValue;
-    searchFilterParams.limit = pageSize;
-    searchFilterParams.offset = page * pageSize;
-		
+		let searchFilterParams = {
+			prefix: '6a04' + protocolHex,
+			node: nodeValue,
+			limit: pageSize,
+			offset: page * pageSize
+		};
 		let contractHex = await psiNetworkProvider.search(searchFilterParams);
-    
-		let tmpData = contractHex.map((x) => parseOpReturn(x));
+		let tmpData = contractHex.map((x: string) => parseOpReturn(x));
+		let balPromises = tmpData.map(async (data) => {
+			return BaseUtxPhiContract.getBalance(data.address, psiNetworkProvider);
+		});
+
+		tlv = await Promise.all(balPromises).then((results) => {
+			return results.reduce(sum, 0).toLocaleString();
+		});
+
 		buffered = 1;
 		if (tmpData.length === 0) {
 			noResults = true;
@@ -118,6 +119,7 @@
 			setTimeout(() => {
 				progress += 1 / pageSize;
 			}, 300 + Math.floor(Math.random() * 1000));
+
 			data.spendable = await opReturnToSpendableBalance(
 				opReturn,
 				'mainnet',
@@ -131,6 +133,7 @@
 		await Promise.all(dataPromises).then(function (results) {
 			contractData = results;
 		});
+
 		isLoading = false;
 	};
 </script>
@@ -145,15 +148,11 @@
 		<div class="card-container">
 			<Card class="demo-spaced">
 				<div class="margins">
-					<h3>Unspent Contracts</h3>
-          
-					
+					<h1>Spend Unspent Contracts</h1>
+					<p>pg. {page}</p>
+
+					<p>TLV: {tlv}</p>
 					<div id="pager">
-            <CodeSelect 
-            on:codeChange={zeroPage}
-            bind:value={contractFilter}
-            />
-            <AddressSearch bind:value={addressFilter} />
 						<Select
 							style="max-width: 100px"
 							variant="outlined"
@@ -189,7 +188,6 @@
 							ripple={false}
 							on:click={incrementPage}>chevron_right</IconButton
 						>
-            pg. {page}  
 						<span>
 							{#if chaingraphHostValue.length == 0}
 								No Chaingraph endpoint specified.
@@ -270,11 +268,8 @@
 		margin: 18px 10px 24px;
 	}
 
-  #filter{
-		flex-direction: row;
-		justify-content: right;
-	}
 	#pager {
+		display: flex;
 		flex-direction: row;
 		justify-content: right;
 	}

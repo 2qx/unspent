@@ -1,4 +1,4 @@
-import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
+import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import {
   binToHex,
   cashAddressToLockingBytecode,
@@ -46,13 +46,13 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
         `Executor Allowance below usable threshold (${usableThreshold}) for ${payees.length} addresses`
       );
 
-    let divisor = payees.length;
+    const divisor = payees.length;
     if (!(divisor >= 2 && divisor <= 4))
       throw Error(`Divide contract range must be 2-4, ${divisor} out of range`);
     const script = scriptFn[divisor - 2]!;
 
-    let payeeLocks = [...payees].map((c) => {
-      let lock = cashAddressToLockingBytecode(c);
+    const payeeLocks = [...payees].map((c) => {
+      const lock = cashAddressToLockingBytecode(c);
       if (typeof lock === "string") throw lock;
       return lock.bytecode;
     });
@@ -68,7 +68,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
   refresh(): void {
     this.payeeLocks = [...this.payees].map((c) => {
-      let lock = cashAddressToLockingBytecode(c);
+      const lock = cashAddressToLockingBytecode(c);
       if (typeof lock === "string") throw lock;
       return lock.bytecode;
     });
@@ -77,7 +77,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   static fromString(str: string, network = "mainnet"): Divide {
-    let p = this.parseSerializedString(str, network);
+    const p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
     if (!(Divide.c == p.code))
@@ -86,16 +86,16 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     if (p.options.version != 1)
       throw Error(`${this.name} contract version not recognized`);
 
-    let prefix = getPrefixFromNetwork(p.options.network);
+    const prefix = getPrefixFromNetwork(p.options.network);
 
-    let executorAllowance = parseInt(p.args.shift()!);
-    let payees = p.args.map((lock) => {
-      let addr = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
+    const executorAllowance = parseInt(p.args.shift()!);
+    const payees = p.args.map((lock) => {
+      const addr = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
       if (typeof addr !== "string") throw Error("non-standard address" + addr);
       return addr;
     });
 
-    let divide = new Divide(executorAllowance, payees, p.options);
+    const divide = new Divide(executorAllowance, payees, p.options);
 
     // check that the address
     divide.checkLockingBytecode(p.lockingBytecode);
@@ -107,7 +107,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): Divide {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
 
     // check code
     if (p.code !== this.c)
@@ -119,17 +119,17 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    let prefix = getPrefixFromNetwork(p.options.network);
+    const prefix = getPrefixFromNetwork(p.options.network);
 
-    let executorAllowance = binToNumber(p.args.shift()!);
-    let payeesLocks = p.args;
-    let payees = payeesLocks.map((lock) => {
-      let addr = lockingBytecodeToCashAddress(lock, prefix);
+    const executorAllowance = binToNumber(p.args.shift()!);
+    const payeesLocks = p.args;
+    const payees = payeesLocks.map((lock) => {
+      const addr = lockingBytecodeToCashAddress(lock, prefix);
       if (typeof addr !== "string")
         throw Error("non-standard address: " + addr);
       return addr;
     });
-    let divide = new Divide(executorAllowance, payees, p.options);
+    const divide = new Divide(executorAllowance, payees, p.options);
 
     // check that the address
     divide.checkLockingBytecode(p.lockingBytecode);
@@ -140,24 +140,24 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): number {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
     return binToNumber(p.args.shift()!);
   }
 
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
-    networkProvider: ElectrumNetworkProvider,
+    networkProvider: NetworkProvider,
     blockHeight: number
   ): Promise<number> {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
     blockHeight;
-    let executorAllowance = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address);
-    let spendableUtxos = utxos.map((u) => {
+    const executorAllowance = binToNumber(p.args.shift()!);
+    const utxos = await networkProvider.getUtxos(p.address);
+    const spendableUtxos = utxos.map((u) => {
       return u.satoshis;
     });
-    let spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
+    const spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
     if (spendable > p.args.length * DUST_UTXO_THRESHOLD + executorAllowance) {
       return spendable;
     } else {
@@ -166,7 +166,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   override toString() {
-    let payees = this.payees
+    const payees = this.payees
       .map((cashaddr) => deriveLockingBytecodeHex(cashaddr))
       .join(Divide.delimiter);
     return [
@@ -183,7 +183,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   toOpReturn(hex = false): string | Uint8Array {
-    let chunks = [
+    const chunks = [
       Divide._PROTOCOL_ID,
       Divide.c,
       toHex(this.options!.version!),
@@ -215,14 +215,14 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     }
     if (balance == 0) return "No funds on contract";
 
-    let fn = this.getFunction(Divide.fn)!;
-    let distributedValue = balance - this.executorAllowance;
-    let divisor = this.payees.length;
-    let installment = Math.round(distributedValue / divisor) + 1;
+    const fn = this.getFunction(Divide.fn)!;
+    const distributedValue = balance - this.executorAllowance;
+    const divisor = this.payees.length;
+    const installment = Math.round(distributedValue / divisor) + 1;
 
     if (installment < 546) throw "Installment less than dust limit... bailing";
 
-    let to: any[] = [];
+    const to: any[] = [];
     for (let i = 0; i < divisor; i++) {
       to.push({ to: this.payees[i], amount: installment });
     }
@@ -233,12 +233,12 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
         amount: 546,
       });
 
-      let size = await fn().to(to).withoutChange().build();
+      const size = await fn().to(to).withoutChange().build();
 
-      let feeEstimate = fee ? fee : size.length / 2;
+      const feeEstimate = fee ? fee : size.length / 2;
 
       to.pop();
-      let executorPayout =
+      const executorPayout =
         this.executorAllowance - (feeEstimate + 2 * divisor + 8);
       if (executorPayout > 546)
         to.push({
@@ -247,7 +247,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
         });
     }
 
-    let txn = await fn().to(to).withoutChange().send();
+    const txn = await fn().to(to).withoutChange().send();
 
     return txn.txid;
   }

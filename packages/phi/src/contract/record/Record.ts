@@ -1,4 +1,4 @@
-import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
+import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { ContractOptions } from "../../common/interface.js";
 import { binToNumber, decodeNullDataScript } from "../../common/util.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
@@ -33,7 +33,7 @@ export class Record extends BaseUtxPhiContract {
   }
 
   static fromString(str: string, network = "mainnet"): Record {
-    let p = this.parseSerializedString(str, network);
+    const p = this.parseSerializedString(str, network);
     // if the contract shortcode doesn't match, error
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
@@ -41,9 +41,9 @@ export class Record extends BaseUtxPhiContract {
     if (p.options.version != 1)
       throw Error(`${this.name} contract version not recognized`);
 
-    let maxFee = parseInt(p.args.shift()!);
-    let index = parseInt(p.args.shift()!);
-    let record = new Record(maxFee, index, p.options);
+    const maxFee = parseInt(p.args.shift()!);
+    const index = parseInt(p.args.shift()!);
+    const record = new Record(maxFee, index, p.options);
 
     // check that the address
     record.checkLockingBytecode(p.lockingBytecode);
@@ -53,16 +53,16 @@ export class Record extends BaseUtxPhiContract {
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
-    networkProvider: ElectrumNetworkProvider,
+    networkProvider: NetworkProvider,
     blockHeight: number
   ): Promise<number> {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
     blockHeight;
-    let utxos = await networkProvider.getUtxos(p.address);
-    let spendableUtxos = utxos.map((u) => {
+    const utxos = await networkProvider.getUtxos(p.address);
+    const spendableUtxos = utxos.map((u) => {
       return u.satoshis;
     });
-    let spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
+    const spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
     if (spendable > DUST_UTXO_THRESHOLD) {
       return spendable;
     } else {
@@ -110,7 +110,7 @@ export class Record extends BaseUtxPhiContract {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): Record {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
 
     // check code
     if (p.code !== this.c)
@@ -130,7 +130,7 @@ export class Record extends BaseUtxPhiContract {
       throw Error("Record contract version not recognized");
     }
 
-    let record = new Record(maxFee, index, p.options);
+    const record = new Record(maxFee, index, p.options);
 
     // check that the address
     record.checkLockingBytecode(p.lockingBytecode);
@@ -159,16 +159,16 @@ export class Record extends BaseUtxPhiContract {
 
     // regardless of how many inputs, filter to two if more than two utxos are available
     if (!utxos || utxos.length == 0) {
-      let allUtxos = await this.getUtxos();
+      const allUtxos = await this.getUtxos();
       if (allUtxos && allUtxos.length > 1) {
         utxos = allUtxos.slice(0, 2);
       }
     }
 
     if (typeof opReturn === "string") opReturn = hexToBin(opReturn);
-    let checkHash = await hash160(opReturn);
+    const checkHash = await hash160(opReturn);
 
-    let fn = this.getFunction(Record.fn)!;
+    const fn = this.getFunction(Record.fn)!;
 
     let tx = fn(checkHash)!;
     let estimator = fn(checkHash)!;
@@ -178,11 +178,11 @@ export class Record extends BaseUtxPhiContract {
       estimator = estimator.from(utxos);
     }
 
-    let size = (
+    const size = (
       await estimator.withOpReturn(chunks).withHardcodedFee(669).build()
     ).length;
 
-    let txn = await tx
+    const txn = await tx
       .withOpReturn(chunks)
       .withHardcodedFee(size / 2)
       .send();

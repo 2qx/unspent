@@ -11,7 +11,7 @@ import {
   Contract as CashScriptContract,
   Utxo,
 } from "cashscript";
-import { ElectrumNetworkProvider } from "cashscript";
+import { NetworkProvider } from "cashscript";
 
 import { getDefaultProvider } from "./network.js";
 
@@ -22,14 +22,16 @@ import {
   deriveLockingBytecode,
   deriveLockingBytecodeHex,
   getPrefixFromNetwork,
+  sum
 } from "./util.js";
 import { DELIMITER, PROTOCOL_ID, _PROTOCOL_ID } from "./constant.js";
+import { ParsedContractI } from "./interface.js"
 
 export class BaseUtxPhiContract {
   private artifact: Artifact;
   private contract: CashScriptContract;
   protected testnet: boolean;
-  public provider?: ElectrumNetworkProvider;
+  public provider?: NetworkProvider;
 
   public static delimiter: string = DELIMITER;
   public static _PROTOCOL_ID: string = _PROTOCOL_ID;
@@ -40,8 +42,8 @@ export class BaseUtxPhiContract {
     artifact: Artifact,
     constructorArguments: Argument[]
   ) {
-    let defaultProvider = getDefaultProvider(network);
-    this.provider = defaultProvider as ElectrumNetworkProvider;
+    const defaultProvider = getDefaultProvider(network);
+    this.provider = defaultProvider as NetworkProvider;
     this.testnet = this.provider.network == "mainnet" ? false : true;
 
     this.artifact = artifact;
@@ -87,7 +89,7 @@ export class BaseUtxPhiContract {
     };
   }
 
-  static parseOpReturn(opReturn: Uint8Array | string, network = "mainnet") {
+  static parseOpReturn(opReturn: Uint8Array | string, network = "mainnet"):ParsedContractI {
     // transform to binary
     if (typeof opReturn == "string") {
       opReturn = hexToBin(opReturn);
@@ -96,7 +98,7 @@ export class BaseUtxPhiContract {
     // decode data
     const components = decodeNullDataScript(opReturn);
 
-    let protocol = binToHex(components.shift()!);
+    const protocol = binToHex(components.shift()!);
     if (protocol !== PROTOCOL_ID)
       throw Error(
         `Protocol specified in OpReturn didn't match the PROTOCOL_ID: ${protocol} v ${PROTOCOL_ID}`
@@ -123,8 +125,28 @@ export class BaseUtxPhiContract {
     };
   }
 
+  static parseOutputs(opReturn: Uint8Array | string):Uint8Array[] {
+    // transform to binary
+    if (typeof opReturn == "string") {
+      opReturn = hexToBin(opReturn);
+    }
+
+    // decode data
+    const components = decodeNullDataScript(opReturn);
+
+    binToHex(components.shift()!);
+    // if the contract shortcode doesn't match, error
+    String.fromCharCode(components.shift()![0]!);
+    binToNumber(components.shift()!);
+    const lockingBytecode = components.splice(-1)[0]!;
+    
+    const args = [...components].filter(b => b.length==23 || b.length == 25);
+
+    return [...args, lockingBytecode];
+  }
+
   // @ts-ignore
-  // static async getSpendable(opReturn: Uint8Array | string, network = "mainnet", networkProvider: ElectrumNetworkProvider, blockHeight?: number): Promise<number> {
+  // static async getSpendable(opReturn: Uint8Array | string, network = "mainnet", networkProvider: NetworkProvider, blockHeight?: number): Promise<number> {
   //   throw Error("Cannot get spendable amount from base class");
   // }
 
@@ -140,7 +162,7 @@ export class BaseUtxPhiContract {
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
-    networkProvider?: ElectrumNetworkProvider,
+    networkProvider?: NetworkProvider,
     blockHeight?: number
   ): Promise<number> {
     networkProvider;
@@ -150,8 +172,17 @@ export class BaseUtxPhiContract {
     );
   }
 
+  static async getBalance(
+    address:string,
+    networkProvider: NetworkProvider
+    ){
+    const balance =  (await networkProvider.getUtxos(address)).map(utxo=> utxo.satoshis).filter((x) => x > 0).reduce(sum,0)
+    return balance 
+  }
+
+
   async getBalance(): Promise<number> {
-    let bal = await this.contract.getBalance();
+    const bal = await this.contract.getBalance();
     return bal;
   }
 
@@ -160,8 +191,8 @@ export class BaseUtxPhiContract {
   }
 
   async getLegacyAddress(): Promise<string> {
-    let sha256 = await instantiateSha256();
-    let addr = lockingBytecodeToBase58Address(
+    const sha256 = await instantiateSha256();
+    const addr = lockingBytecodeToBase58Address(
       sha256,
       this.getLockingBytecode(false) as Uint8Array,
       this.testnet ? "testnet" : "mainnet"
@@ -212,7 +243,7 @@ export class BaseUtxPhiContract {
   }
 
   asOpReturn(chunks: string[], hex: boolean) {
-    let opReturn = createOpReturnData(chunks);
+    const opReturn = createOpReturnData(chunks);
     if (hex) {
       return binToHex(opReturn);
     } else {
@@ -225,8 +256,8 @@ export class BaseUtxPhiContract {
   }
 
   async info(cat = true): Promise<string | undefined> {
-    let bal = await this.getBalance();
-    let info =
+    const bal = await this.getBalance();
+    const info =
       `# ${this.asText()}\n` +
       `# ${this.toString()}\n` +
       `address:        ${this.getAddress()}\n` +

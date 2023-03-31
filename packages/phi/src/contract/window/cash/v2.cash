@@ -1,0 +1,73 @@
+pragma cashscript ^0.7.3;
+
+contract Window(
+  // deposit rate in sat per coin per sat
+  int rate // 
+) {
+
+    function deposit(
+        bytes recipientLockingBytecode,
+        int locktime
+        ) {
+
+        // 0 bank      -\/-> deposit + coupon >> receipt
+        // 1 deposit   -/\-> L,1,<locktime> OP_RETURN
+        //               |-> contract - coupon >> vault
+        //                   
+
+        // Get the current value on the contract
+        int bankValue = tx.inputs[this.activeInputIndex].value;
+
+        // The depositer input
+        int depositValue = tx.inputs[1].value;
+
+        int coupon = (locktime*rate*depositValue/100000000);
+
+        // assure the bank is able to accommodate the deposit
+        require(bankValue > coupon);
+
+        int maturity = depositValue+coupon;
+        int vaultRemainder = bankValue-coupon;
+
+
+        //new LockingBytecodeP2SH(hash160(this.activeBytecode)));
+        
+
+        // calculate the deposit script
+        depositScript = LockingBytecodeP2SH([locktime,"b17576a9",recipientLockingBytecode,"88ac"]);
+
+        bytes depositLock = new LockingBytecodeP2SH(hash160(depositScript));
+        require(tx.outputs[0].lockingBytecode == depositLock);
+        require(tx.outputs[0].value <= maturity);
+
+        // broadcast lock
+        bytes announcement = new LockingBytecodeNullData([
+            // The protocol
+            0x7574786f,
+            // L for lock contract
+            bytes('L'),
+            // version
+            bytes1(2),
+            // The locktime,
+            bytes(locktime),
+            // The executorFee,
+            bytes4(500),
+            // The new bytecode
+            bytes(depositLock)
+        ]);
+
+        // broadcast the lock contract
+        require(tx.outputs[1].lockingBytecode == announcement);
+        // Assure it has zero value
+        require(tx.outputs[1].value == 0);
+
+        if(vaultRemainder > 546){
+        // if remainder is greater than dust value, return it
+        // assure the vault-coupon returns to the bank
+        require(tx.outputs[2].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+        require(tx.outputs[2].value >= vaultRemainder); 
+        }
+
+        
+    }
+}

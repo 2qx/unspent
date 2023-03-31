@@ -4,7 +4,7 @@ import {
   hexToBin,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
-import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
+import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import {
   DefaultOptions,
@@ -46,13 +46,13 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (options.version === 1) {
       script = v1;
-      let lockingBytecode = cashAddressToLockingBytecode(address);
+      const lockingBytecode = cashAddressToLockingBytecode(address);
       if (typeof lockingBytecode === "string") throw lockingBytecode;
       lock = lockingBytecode.bytecode;
     } else if (options.version === 0) {
       script = v0;
       assurePkh(address)
-      let publicKeyHash = derivePublicKeyHash(address)
+      const publicKeyHash = derivePublicKeyHash(address)
       lock = publicKeyHash
     }else {
       throw Error("Unrecognized Perpetuity Version");
@@ -74,7 +74,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   static fromString(str: string, network = "mainnet"): Perpetuity {
-    let p = this.parseSerializedString(str, network);
+    const p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
     if (!(this.c == p.code))
@@ -98,7 +98,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     const executorAllowance = parseInt(p.args.shift()!);
     const decay = parseInt(p.args.shift()!);
 
-    let perpetuity = new Perpetuity(
+    const perpetuity = new Perpetuity(
       period,
       address,
       executorAllowance,
@@ -116,7 +116,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): Perpetuity {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
 
     // check code
     if (p.code !== this.c)
@@ -128,18 +128,18 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    let period = binToNumber(p.args.shift()!);
-    let lock = p.args.shift()!;
+    const period = binToNumber(p.args.shift()!);
+    const lock = p.args.shift()!;
 
-    let prefix = getPrefixFromNetwork(network);
-    let address = lockingBytecodeToCashAddress(lock, prefix);
+    const prefix = getPrefixFromNetwork(network);
+    const address = lockingBytecodeToCashAddress(lock, prefix);
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
     const executorAllowance = binToNumber(p.args.shift()!);
     const decay = binToNumber(p.args.shift()!);
 
-    let perpetuity = new Perpetuity(
+    const perpetuity = new Perpetuity(
       period,
       address,
       executorAllowance,
@@ -155,16 +155,16 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
-    networkProvider: ElectrumNetworkProvider,
+    networkProvider: NetworkProvider,
     blockHeight: number
   ): Promise<number> {
-    let p = this.parseOpReturn(opReturn, network);
-    let period = binToNumber(p.args.shift()!);
+    const p = this.parseOpReturn(opReturn, network);
+    const period = binToNumber(p.args.shift()!);
     // discard the address
     p.args.shift()!;
-    let decay = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address);
-    let spendableUtxos = utxos.map((u) => {
+    const decay = binToNumber(p.args.shift()!);
+    const utxos = await networkProvider.getUtxos(p.address);
+    const spendableUtxos = utxos.map((u) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
@@ -191,7 +191,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): number {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
     p.args.pop()!;
     return binToNumber(p.args.pop()!);
   }
@@ -236,9 +236,9 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   async asSeries() {
     const currentHeight = await getBlockHeight();
-    let currentTime = Math.floor(Date.now() / 1000);
+    const currentTime = Math.floor(Date.now() / 1000);
     let utxos = await this.getUtxos();
-    let series: any = [];
+    const series: any = [];
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
@@ -251,11 +251,11 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       ];
     if (utxos) {
       for (const utxo of utxos) {
-        let time = [];
-        let payout = [];
-        let installment = [];
-        let principal = [];
-        let allowance = [];
+        const time = [];
+        const payout = [];
+        const installment = [];
+        const principal = [];
+        const allowance = [];
         let blocksToWait = NaN;
         // @ts-ignore
         if (utxo.height == 0) {
@@ -287,7 +287,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
           allowance.push(this.executorAllowance * i);
         }
 
-        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`;
+        const utxoId = `${utxo.txid}:${utxo.vout.toString()}`;
         series.push({
           id: utxoId,
           data: {
@@ -315,7 +315,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     }
     if (currentValue == 0) return "No funds on contract";
 
-    let fn = this.getFunction(Perpetuity.fn)!;
+    const fn = this.getFunction(Perpetuity.fn)!;
     let installment = Math.round(currentValue / this.decay) + 1;
     let newPrincipal = currentValue - (installment + this.executorAllowance);
 
@@ -323,7 +323,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     installment += 2;
     newPrincipal += 3;
 
-    let to = [
+    const to = [
       {
         to: this.address,
         amount: installment,
@@ -344,11 +344,11 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
 
-    let size = await tx!.to(to).withAge(this.period).withoutChange().build();
+    const size = await tx!.to(to).withAge(this.period).withoutChange().build();
 
     //console.log(size.length / 2)
     if (exAddress) {
-      let minerFee = fee ? fee : size.length / 2;
+      const minerFee = fee ? fee : size.length / 2;
 
       executorFee = this.executorAllowance - minerFee - 20;
       to.pop();
@@ -364,7 +364,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
+    const payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;
   }
 }

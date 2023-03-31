@@ -4,7 +4,7 @@ import {
   cashAddressToLockingBytecode,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
-import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
+import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
@@ -44,7 +44,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (executorAllowance < Annuity.minAllowance)
       throw Error("Executor Allowance below usable threshold");
 
-    let lock = cashAddressToLockingBytecode(recipientAddress);
+    const lock = cashAddressToLockingBytecode(recipientAddress);
     if (typeof lock === "string") throw lock;
 
     super(options.network!, script, [
@@ -67,7 +67,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   static fromString(str: string, network = "mainnet"): Annuity {
-    let p = this.parseSerializedString(str, network);
+    const p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
     if (!(Annuity.c == p.code))
@@ -78,15 +78,15 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (p.args.length != 4)
       throw `invalid number of arguments ${p.args.length}`;
 
-    let period = parseInt(p.args.shift()!);
-    let lock = p.args.shift()!;
-    let prefix = getPrefixFromNetwork(network);
-    let address = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
+    const period = parseInt(p.args.shift()!);
+    const lock = p.args.shift()!;
+    const prefix = getPrefixFromNetwork(network);
+    const address = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
-    let installment = parseInt(p.args.shift()!);
-    let executorAllowance = parseInt(p.args.shift()!);
-    let annuity = new Annuity(
+    const installment = parseInt(p.args.shift()!);
+    const executorAllowance = parseInt(p.args.shift()!);
+    const annuity = new Annuity(
       period,
       address,
       installment,
@@ -104,7 +104,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): Annuity {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
 
     // check code
     if (p.code !== this.c)
@@ -116,11 +116,11 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    let period = binToNumber(p.args.shift()!);
-    let lock = p.args.shift()!;
+    const period = binToNumber(p.args.shift()!);
+    const lock = p.args.shift()!;
 
-    let prefix = getPrefixFromNetwork(network);
-    let address = lockingBytecodeToCashAddress(lock, prefix);
+    const prefix = getPrefixFromNetwork(network);
+    const address = lockingBytecodeToCashAddress(lock, prefix);
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
@@ -132,7 +132,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Annuity contract version not recognized");
     }
 
-    let annuity = new Annuity(
+    const annuity = new Annuity(
       period,
       address,
       installment,
@@ -149,23 +149,23 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): number {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
     return binToNumber(p.args.pop()!);
   }
 
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
-    networkProvider: ElectrumNetworkProvider,
+    networkProvider: NetworkProvider,
     blockHeight: number
   ): Promise<number> {
-    let p = this.parseOpReturn(opReturn, network);
-    let period = binToNumber(p.args.shift()!);
+    const p = this.parseOpReturn(opReturn, network);
+    const period = binToNumber(p.args.shift()!);
     // discard the address
     p.args.shift()!;
-    let installment = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address);
-    let spendableUtxos = utxos.map((u) => {
+    const installment = binToNumber(p.args.shift()!);
+    const utxos = await networkProvider.getUtxos(p.address);
+    const spendableUtxos = utxos.map((u) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
@@ -206,7 +206,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   toOpReturn(hex = false): string | Uint8Array {
-    let chunks = [
+    const chunks = [
       Annuity._PROTOCOL_ID,
       Annuity.c,
       toHex(this.options!.version!),
@@ -229,9 +229,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   async asSeries(): Promise<any> {
     const currentHeight = await getBlockHeight();
-    let currentTime = Math.floor(Date.now() / 1000);
+    const currentTime = Math.floor(Date.now() / 1000);
     let utxos = await this.getUtxos();
-    let series: any = [];
+    const series: any = [];
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
@@ -255,7 +255,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         const seriesStartTime = currentTime + blocksToWait * 600;
 
         const initialPrincipal = utxo.satoshis;
-        let seriesLength =
+        const seriesLength =
           (initialPrincipal - DUST_UTXO_THRESHOLD) /
           (this.installment + this.executorAllowance);
 
@@ -272,7 +272,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
           totalFee.push(this.executorAllowance * i);
         }
 
-        let utxoId = `${utxo.txid}:${utxo.vout.toString()}`;
+        const utxoId = `${utxo.txid}:${utxo.vout.toString()}`;
         series.push({
           id: utxoId,
           data: {
@@ -300,14 +300,14 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     }
     if (balance == 0) throw Error("No funds on contract");
 
-    let fn = this.getFunction(Annuity.fn)!;
+    const fn = this.getFunction(Annuity.fn)!;
 
     if (balance < this.installment)
       throw Error("Funds selected below installment amount");
 
-    let newPrincipal = balance - (this.installment + this.executorAllowance);
+    const newPrincipal = balance - (this.installment + this.executorAllowance);
 
-    let to = [
+    const to = [
       {
         to: this.recipientAddress,
         amount: this.installment,
@@ -329,14 +329,14 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         amount: 546,
       });
 
-    let size = await estimator!
+    const size = await estimator!
       .to(to)
       .withAge(this.period)
       .withoutChange()
       .build();
 
-    let minerFee = fee ? fee : size.length / 2 + 5;
-    let executorFee =
+    const minerFee = fee ? fee : size.length / 2 + 5;
+    const executorFee =
       balance - (this.installment + newPrincipal + minerFee) - 4;
 
     if (exAddress) {
@@ -351,7 +351,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       });
     }
 
-    let payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
+    const payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;
   }
 }

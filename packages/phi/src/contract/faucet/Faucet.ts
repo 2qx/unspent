@@ -1,4 +1,4 @@
-import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
+import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
@@ -37,7 +37,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   static fromString(str: string, network = "mainnet"): Faucet {
-    let p = this.parseSerializedString(str, network);
+    const p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
     if (!(Faucet.c == p.code))
@@ -48,9 +48,9 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
-    let [period, payout, index] = [...p.args.map((i) => parseInt(i) as number)];
+    const [period, payout, index] = [...p.args.map((i) => parseInt(i) as number)];
 
-    let faucet = new Faucet(period, payout, index, p.options);
+    const faucet = new Faucet(period, payout, index, p.options);
     faucet.checkLockingBytecode(p.lockingBytecode);
     return faucet;
   }
@@ -60,7 +60,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): Faucet {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
 
     // check code
     if (p.code !== this.c)
@@ -75,11 +75,11 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     // parse argumnets
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
-    let [period, payout, index] = [
+    const [period, payout, index] = [
       ...p.args.map((i) => binToNumber(i) as number),
     ];
 
-    let faucet = new Faucet(period, payout, index, p.options);
+    const faucet = new Faucet(period, payout, index, p.options);
     faucet.checkLockingBytecode(p.lockingBytecode);
     return faucet;
   }
@@ -87,14 +87,14 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
-    networkProvider: ElectrumNetworkProvider,
+    networkProvider: NetworkProvider,
     blockHeight: number
   ): Promise<number> {
-    let p = this.parseOpReturn(opReturn, network);
-    let period = binToNumber(p.args.shift()!);
-    let payout = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address);
-    let spendableUtxos = utxos.map((u: Utxo) => {
+    const p = this.parseOpReturn(opReturn, network);
+    const period = binToNumber(p.args.shift()!);
+    const payout = binToNumber(p.args.shift()!);
+    const utxos = await networkProvider.getUtxos(p.address);
+    const spendableUtxos = utxos.map((u: Utxo) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
@@ -120,7 +120,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): number {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
     // pop the index to get to the payout
     p.args.pop()!;
     return binToNumber(p.args.pop()!);
@@ -142,7 +142,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   toOpReturn(hex = false): string | Uint8Array {
-    let chunks = [
+    const chunks = [
       Faucet._PROTOCOL_ID,
       Faucet.c,
       toHex(this.options!.version!),
@@ -172,14 +172,14 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     }
     if (balance == 0) return "No funds on contract";
 
-    let fn = this.getFunction(Faucet.fn)!;
+    const fn = this.getFunction(Faucet.fn)!;
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
-    let newPrincipal = balance - this.payout;
-    let minerFee = fee ? fee : 253;
+    const newPrincipal = balance - this.payout;
+    const minerFee = fee ? fee : 253;
     let sendAmount = this.payout - minerFee;
 
-    let to = [
+    const to = [
       {
         to: this.getAddress(),
         amount: newPrincipal,
@@ -192,9 +192,9 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         amount: 546,
       });
 
-    let size = await tx.to(to).withAge(this.period).withoutChange().build();
+    const size = await tx.to(to).withAge(this.period).withoutChange().build();
     if (exAddress) {
-      let minerFee = fee ? fee : size.length / 2;
+      const minerFee = fee ? fee : size.length / 2;
       sendAmount = this.payout - (minerFee + 10);
       // remove the old executor amount
       // replace with new fee
@@ -206,7 +206,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     }
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    let payTx = await tx.to(to).withAge(this.period).withoutChange().send();
+    const payTx = await tx.to(to).withAge(this.period).withoutChange().send();
     return payTx.txid;
   }
 }

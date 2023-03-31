@@ -1,6 +1,6 @@
-import { binToHex, hexToBin } from "@bitauth/libauth";
+import { binToHex, hexToBin, lockingBytecodeToCashAddress } from "@bitauth/libauth";
 import { Artifact } from "@cashscript/utils";
-import { ElectrumNetworkProvider, Network } from "cashscript";
+import { ElectrumNetworkProvider, NetworkProvider, Network } from "cashscript";
 import { nameMap, contractMap, CodeType } from "../contract/constant.js";
 import { decodeNullDataScript } from "./util.js";
 import { BaseUtxPhiContract } from "./contract.js";
@@ -12,12 +12,17 @@ export function parseOpReturn(serialized: string | Uint8Array) {
     serialized = hexToBin(serialized);
   }
 
-  let data = BaseUtxPhiContract.parseOpReturn(serialized);
+  const data = BaseUtxPhiContract.parseOpReturn(serialized);
   return {
     name: nameMap[data.code as CodeType] as string,
     opReturn: serialized,
     ...data,
   };
+}
+
+export function parseOutputs(serialized: string | Uint8Array) {
+  if (typeof serialized === "string") serialized = hexToBin(serialized);
+  return BaseUtxPhiContract.parseOutputs(serialized);
 }
 
 export function opReturnToInstance(
@@ -27,12 +32,12 @@ export function opReturnToInstance(
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
   }
-  let serializedBinChunks = decodeNullDataScript(serialized);
-  let contractCode = binToHex(serializedBinChunks[1]!);
+  const serializedBinChunks = decodeNullDataScript(serialized);
+  const contractCode = binToHex(serializedBinChunks[1]!);
 
-  let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
+  const code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
 
-  let instance = contractMap[code].fromOpReturn(serialized, network);
+  const instance = contractMap[code].fromOpReturn(serialized, network);
   return instance;
 }
 
@@ -43,16 +48,49 @@ export function opReturnToExecutorAllowance(
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
   }
-  let serializedBinChunks = decodeNullDataScript(serialized);
-  let contractCode = binToHex(serializedBinChunks[1]!);
+  const serializedBinChunks = decodeNullDataScript(serialized);
+  const contractCode = binToHex(serializedBinChunks[1]!);
 
-  let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
+  const code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
 
-  let exAllowance = contractMap[code].getExecutorAllowance(serialized, network);
+  const exAllowance = contractMap[code].getExecutorAllowance(serialized, network);
   return exAllowance;
 }
 
 export async function opReturnToSpendableBalance(
+  serialized: string | Uint8Array,
+  network = Network.MAINNET,
+  networkProvider?: NetworkProvider,
+  blockHeight?: number
+): Promise<number> {
+  if (typeof serialized === "string") {
+    serialized = hexToBin(serialized);
+  }
+  const serializedBinChunks = decodeNullDataScript(serialized);
+  const contractCode = binToHex(serializedBinChunks[1]!);
+
+  const code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
+
+  if (!networkProvider) networkProvider = new ElectrumNetworkProvider(network);
+  if (!blockHeight) blockHeight = await networkProvider.getBlockHeight();
+
+  try{
+    const spendableBalance = await contractMap[code].getSpendableBalance(
+      serialized,
+      network,
+      networkProvider,
+      blockHeight
+    );
+    return spendableBalance;
+  }catch(e:any){
+    console.log(`error getting balance for ${binToHex(serialized)}`)
+    return 0
+  }
+  
+}
+
+
+export async function opReturnToBalance(
   serialized: string | Uint8Array,
   network = Network.MAINNET,
   networkProvider?: ElectrumNetworkProvider,
@@ -61,28 +99,25 @@ export async function opReturnToSpendableBalance(
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
   }
-  let serializedBinChunks = decodeNullDataScript(serialized);
-  let contractCode = binToHex(serializedBinChunks[1]!);
+  const serializedBinChunks = decodeNullDataScript(serialized);
+  const address = lockingBytecodeToCashAddress(serializedBinChunks.pop()!, "bitcoincash")
 
-  let code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
-
+  if(typeof address!=="string") throw Error("couldn't decode cashaddr")
   if (!networkProvider) networkProvider = new ElectrumNetworkProvider(network);
   if (!blockHeight) blockHeight = await networkProvider.getBlockHeight();
 
-  let spendableBalance = await contractMap[code].getSpendableBalance(
-    serialized,
-    network,
-    networkProvider,
-    blockHeight
+  const balance = await BaseUtxPhiContract.getBalance(
+    address,
+    networkProvider
   );
-  return spendableBalance;
+  return balance;
 }
 
 export function opReturnToSerializedString(
   serialized: string | Uint8Array,
   network?: string
 ): string | undefined {
-  let instance = opReturnToInstance(serialized, network);
+  const instance = opReturnToInstance(serialized, network);
   if (instance) {
     return instance.toString();
   } else {
@@ -94,9 +129,9 @@ export function stringToInstance(
   serialized: string,
   network: string
 ): InstanceType<ContractType> | undefined {
-  let code = serialized[0]! as CodeType;
+  const code = serialized[0]! as CodeType;
   try {
-    let instance = contractMap[code].fromString(serialized, network);
+    const instance = contractMap[code].fromString(serialized, network);
     return instance;
   } catch (e) {
     console.warn(`Couldn't parse serialized contract, ${e}`);
@@ -108,11 +143,11 @@ export function castConstructorParametersFromArtifact(
   parameters: string[],
   artifact: Artifact
 ) {
-  let result = [];
-  let inputs = artifact.constructorInputs;
+  const result = [];
+  const inputs = artifact.constructorInputs;
 
   parameters.forEach(function (value, i) {
-    let abiInput = inputs[i]!;
+    const abiInput = inputs[i]!;
 
     let parsedVal = undefined;
 

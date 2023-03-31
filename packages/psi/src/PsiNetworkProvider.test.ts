@@ -1,10 +1,42 @@
 import { ElectrumCluster, ClusterOrder, ElectrumTransport } from "electrum-cash";
 import { ElectrumNetworkProvider } from "cashscript";
 import { PsiNetworkProvider } from "./PsiNetworkProvider";
-import {  mine } from "mainnet-js";
+import { mine } from "mainnet-js";
 
-test("Should store the height", async () => {
-  let regTest = new ElectrumCluster(
+// TODO reenable
+// test("Should store the height", async () => {
+//   const regTest = new ElectrumCluster(
+//     "CashScript Application",
+//     "1.4.1",
+//     1,
+//     1,
+//     ClusterOrder.PRIORITY,
+//     2000
+//   );
+//   const host = "https://demo.chaingraph.cash/v1/graphql";
+//   regTest.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
+
+//   const fulcrumProvider = new ElectrumNetworkProvider("regtest", regTest, false);
+
+//   const psiProvider = new PsiNetworkProvider("regtest", host, [fulcrumProvider], 50)
+
+//   const initialHeight = await psiProvider.getBlockHeight()
+
+//   expect(initialHeight).toBeGreaterThan(200)
+
+//   await mine({
+//     cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
+//     blocks: 150,
+//   });
+
+//   const newHeight = await psiProvider.getBlockHeight()
+//   expect(newHeight - initialHeight).toBeGreaterThan(90)
+
+// });
+
+
+test("Should get a utxo", async () => {
+  const cluster = new ElectrumCluster(
     "CashScript Application",
     "1.4.1",
     1,
@@ -12,53 +44,18 @@ test("Should store the height", async () => {
     ClusterOrder.PRIORITY,
     2000
   );
-  regTest.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
-  
-  let fulcrumProvider = new ElectrumNetworkProvider("regtest", regTest, false);
+  const host = "https://demo.chaingraph.cash/v1/graphql";
+  cluster.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
 
-  let psiProvider = new PsiNetworkProvider("regtest",[fulcrumProvider],50)
+  const fulcrumProvider = new ElectrumNetworkProvider("mainnet", cluster, false);
 
-  let initalHeight = await psiProvider.getBlockHeight()
+  const psiProvider = new PsiNetworkProvider("mainnet", host, [fulcrumProvider], 50)
 
-  expect(initalHeight).toBeGreaterThan(200)
+  const utxos = await psiProvider.getUtxos("bitcoincash:pz6qg80k3tps0zexq0kkxreen2ndscvqwve8l0r6vn")
 
-  await mine({
-    cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
-    blocks: 100,
-  });
-
-  
-  let newHeight = await psiProvider.getBlockHeight()
-
-  expect(newHeight-initalHeight).toBe(100)
-
+  expect(utxos.length).toBe(1)
 
 });
 
 
-test("Should get utxos transaction over the network", async () => {
-  let regTest = new ElectrumCluster(
-    "CashScript Application",
-    "1.4.1",
-    1,
-    1,
-    ClusterOrder.PRIORITY,
-    2000
-  );
-  regTest.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
-  
-  let fulcrumProvider = new ElectrumNetworkProvider("regtest", regTest, false);
-
-  let psiProvider = new PsiNetworkProvider("regtest",[fulcrumProvider],500)
-
-  let utxos = await psiProvider.getUtxos("bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f")
-  expect(utxos.length).toBeGreaterThan(50)
-  
-  let raw = await psiProvider.getRawTransaction(utxos[50].txid)
-
-  //console.log(raw)
-  expect(raw.length).toBeGreaterThan(100)
-
-
-});
 

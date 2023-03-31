@@ -20,3 +20,14 @@ export interface ContractOptions {
   version?: number;
   network?: string;
 }
+
+export interface ParsedContractI {
+  code: string;
+  options: {
+    version: number;
+    network: string;
+  };
+  args: Uint8Array[];
+  lockingBytecode: Uint8Array;
+  address: string;
+}

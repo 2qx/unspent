@@ -6324,10 +6324,15 @@ devalue@^4.0.0:
   resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.0.0.tgz#efeadbc922894d468ad903029d4a7e65e37f4952"
   integrity sha512-w25siwXyuMUqMr7jPlEjyNCp1vn0Jzj/fNg3qVt/r/Dpe8HjESh2V92L0jmh3uq4iJt0BvjH+Azk1pQzkcnDWA==
 
-dexie@3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.3.tgz#f35c91ca797599df8e771b998e9ae9669c877f8c"
-  integrity sha512-iHayBd4UYryDCVUNa3PMsJMEnd8yjyh5p7a+RFeC8i8n476BC9wMhVvqiImq5zJZJf5Tuer+s4SSj+AA3x+ZbQ==
+dexie-export-import@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/dexie-export-import/-/dexie-export-import-4.0.6.tgz#bccccc92788ecf13445bdf85e61b2d25ae7e90f8"
+  integrity sha512-WFTSm/XB4MNHBZVQJTrWjWvqur7vfpx1mWEWMuTUB9zdW3FTXvkpm7SvsUX55r6y6wmJ3libwA5eRCbVUKmuTw==
+
+dexie@4.0.1-alpha.8:
+  version "4.0.1-alpha.8"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-4.0.1-alpha.8.tgz#3abd79f0a6bde95dbb12a7a2e6e1776bdf2cdd90"
+  integrity sha512-i47tssYy1en6SCImjKaYS/zd4q11ydVyPQYF5waF8BIQw4aaVaHmPIpVVH1BoNdY0EgJhHzZM4te7VXEEM6wFw==
 
 dexie@^3.0.2:
   version "3.2.2"
@@ -12988,7 +12993,7 @@ ts-loader@^9.2.3:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-ts-node@^10.8.0:
+ts-node@10.9.1, ts-node@^10.8.0:
   version "10.9.1"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
   integrity sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==

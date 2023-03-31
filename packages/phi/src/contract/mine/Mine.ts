@@ -4,7 +4,7 @@ import {
   bigIntToBinUintLE,
   instantiateSha256,
 } from "@bitauth/libauth";
-import type { Artifact, Utxo, ElectrumNetworkProvider } from "cashscript";
+import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
@@ -49,7 +49,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   static fromString(str: string, network = "mainnet"): Mine {
-    let p = this.parseSerializedString(str, network);
+    const p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
     if (!(this.c == p.code))
@@ -60,12 +60,12 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (p.args.length != 4)
       throw `invalid number of arguments ${p.args.length}`;
-    let period = parseInt(p.args.shift()!);
-    let payout = parseInt(p.args.shift()!);
-    let difficulty = parseInt(p.args.shift()!);
-    let canary = p.args.shift()!;
+    const period = parseInt(p.args.shift()!);
+    const payout = parseInt(p.args.shift()!);
+    const difficulty = parseInt(p.args.shift()!);
+    const canary = p.args.shift()!;
 
-    let mine = new Mine(period, payout, difficulty, canary, p.options);
+    const mine = new Mine(period, payout, difficulty, canary, p.options);
 
     // check that the address is correct
     mine.checkLockingBytecode(p.lockingBytecode);
@@ -77,7 +77,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): Mine {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
 
     // check code
     if (p.code !== this.c)
@@ -94,7 +94,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     const difficulty = binToNumber(p.args.shift()!);
     const canary = binToHex(p.args.shift()!);
 
-    let mine = new Mine(period, payout, difficulty, canary, p.options);
+    const mine = new Mine(period, payout, difficulty, canary, p.options);
 
     // check that the address
     mine.checkLockingBytecode(p.lockingBytecode);
@@ -104,14 +104,14 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
   static async getSpendableBalance(
     opReturn: Uint8Array | string,
     network = "mainnet",
-    networkProvider: ElectrumNetworkProvider,
+    networkProvider: NetworkProvider,
     blockHeight: number
   ): Promise<number> {
-    let p = this.parseOpReturn(opReturn, network);
-    let period = binToNumber(p.args.shift()!);
-    let payout = binToNumber(p.args.shift()!);
-    let utxos = await networkProvider.getUtxos(p.address);
-    let spendableUtxos = utxos.map((u: Utxo) => {
+    const p = this.parseOpReturn(opReturn, network);
+    const period = binToNumber(p.args.shift()!);
+    const payout = binToNumber(p.args.shift()!);
+    const utxos = await networkProvider.getUtxos(p.address);
+    const spendableUtxos = utxos.map((u: Utxo) => {
       // @ts-ignore
       if (u.height !== 0) {
         // @ts-ignore
@@ -137,7 +137,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     opReturn: Uint8Array | string,
     network = "mainnet"
   ): number {
-    let p = this.parseOpReturn(opReturn, network);
+    const p = this.parseOpReturn(opReturn, network);
     return binToNumber(p.args.at(1)!);
   }
 
@@ -182,14 +182,14 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     if (verbose) console.log("mining...");
     // keep mining 'til the number of zeros are reached
     while (!mined) {
-      let nonceNumber = getRandomIntWeak(9007199254740991);
+      const nonceNumber = getRandomIntWeak(9007199254740991);
       nonce = bigIntToBinUintLE(BigInt(nonceNumber));
-      let msg = new Uint8Array([
+      const msg = new Uint8Array([
         ...hexToBin(this.getRedeemScriptHex()),
         ...nonce,
       ]);
       result = sha256.hash(msg);
-      let newBest = result.slice(0, this.difficulty).reduce(sum);
+      const newBest = result.slice(0, this.difficulty).reduce(sum);
       if (newBest <= best) {
         best = newBest;
         if (verbose) console.log(newBest, result.slice(0, this.difficulty));
@@ -199,10 +199,10 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     // if the number is smaller than the space allowed, prepend it by adding zeros to the right
     if (nonce.length < this.canary.length / 2) {
-      let zeros = this.canary.length / 2 - nonce.length;
+      const zeros = this.canary.length / 2 - nonce.length;
       nonce = new Uint8Array([...nonce, ...new Uint8Array(zeros)]);
     }
-    let nonceHex = binToHex(nonce);
+    const nonceHex = binToHex(nonce);
     if (verbose) console.log("success: ", nonceHex);
     return nonceHex;
   }
@@ -219,11 +219,11 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     nonce?: string | Uint8Array,
     verbose = false
   ): Promise<string> {
-    let balance = await this.getBalance();
+    const balance = await this.getBalance();
     let fn = this.getFunction(Mine.fn)!;
-    let newPrincipal = balance - this.payout;
-    let minerFee = fee ? fee : 400;
-    let reward = this.payout - minerFee;
+    const newPrincipal = balance - this.payout;
+    const minerFee = fee ? fee : 400;
+    const reward = this.payout - minerFee;
 
     if (!nonce) {
       this.canary = await this.getNonce(verbose);
@@ -231,19 +231,19 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
       this.canary = typeof nonce === "string" ? nonce : binToHex(nonce);
     }
 
-    let nextContract = new Mine(
+    const nextContract = new Mine(
       this.period,
       this.payout,
       this.difficulty,
       this.canary,
       this.options
     );
-    let opReturn = nextContract.toOpReturn(false);
+    const opReturn = nextContract.toOpReturn(false);
     const chunks = decodeNullDataScript(opReturn).map(
       (c) => "0x" + binToHex(c)
     );
 
-    let to = [
+    const to = [
       {
         to: nextContract.getAddress(),
         amount: newPrincipal,
@@ -256,12 +256,12 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
         amount: reward,
       });
 
-    let canaryHex = "0x" + this.canary;
+    const canaryHex = "0x" + this.canary;
 
     fn = this.getFunction(Mine.fn)!;
     let tx = fn(canaryHex)!;
     if (utxos) tx = tx.from(utxos);
-    let size = await tx
+    const size = await tx
       .withOpReturn(chunks)
       .to(to)
       .withAge(this.period)
@@ -269,9 +269,9 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
       .build();
 
     if (exAddress) {
-      let minerFee = fee ? fee : size.length / 2;
+      const minerFee = fee ? fee : size.length / 2;
       //console.log(minerFee)
-      let reward = this.payout - (minerFee + 10);
+      const reward = this.payout - (minerFee + 10);
       to.pop();
       to.push({
         to: exAddress,
@@ -280,10 +280,11 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     }
 
     // assure cluster is connected
+    // @ts-ignore
     await this.provider?.connectCluster();
     tx = fn(canaryHex)!;
     if (utxos) tx = tx.from(utxos);
-    let payTx = await tx
+    const payTx = await tx
       .withOpReturn(chunks)
       .to(to)
       .withAge(this.period)

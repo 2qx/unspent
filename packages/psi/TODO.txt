@@ -1,0 +1,16 @@
+getUnspentPhi 
+
+
+searchByAddress
+
+#enqueue by address
+#dequeue item
+
+  
+  getHistory(address)
+  // get local, subtract difference
+  // don't store
+
+
+  updateSeries
+

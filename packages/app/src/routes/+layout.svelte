@@ -53,7 +53,7 @@
 		<div id="description">
 			<b
 				>Decentralized finance using unspent transaction unlocking script. Open source, on-chain,
-				running nativiely & directly on Bitcoin Cash (BCH).</b
+				running natively & directly on Bitcoin Cash (BCH).</b
 			>
 		</div>
 	{/if}

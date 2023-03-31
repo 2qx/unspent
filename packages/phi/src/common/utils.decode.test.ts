@@ -3,7 +3,7 @@ import { decodeNullDataScript } from "./util.js";
 
 describe(`Faucet Class Tests`, () => {
   test("Should a serialize a faucet", async () => {
-    let expectedReturn = [
+    const expectedReturn = [
       new Uint8Array([98, 97, 110, 107]),
       new Uint8Array([68]),
       new Uint8Array([1]),
@@ -45,7 +45,7 @@ describe(`Faucet Class Tests`, () => {
         216, 168, 219, 157, 231, 128, 128,
       ]),
     ];
-    let d = new Uint8Array([
+    const d = new Uint8Array([
       106, 4, 98, 97, 110, 107, 1, 68, 1, 1, 3, 207, 128, 0, 20, 242, 142, 142,
       173, 231, 168, 142, 105, 233, 141, 182, 237, 131, 143, 229, 137, 151, 83,
       71, 0, 25, 118, 237, 177, 143, 237, 182, 148, 228, 148, 159, 9, 237, 186,
@@ -62,7 +62,7 @@ describe(`Faucet Class Tests`, () => {
       231, 173, 150, 50, 230, 130, 138, 216, 168, 219, 157, 231, 128, 128,
     ]);
 
-    let r = decodeNullDataScript(d);
+    const r = decodeNullDataScript(d);
     expect(r).toEqual(expectedReturn);
   });
 });

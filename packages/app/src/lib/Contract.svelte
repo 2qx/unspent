@@ -313,7 +313,7 @@
 		<h3>Phi Contract Parameters</h3>
 
 		<p>
-			Unspent Phi contracts may be serialized as a comma seperated string, or, in OP_RETURN data
+			Unspent Phi contracts may be serialized as a comma separated string, or, in OP_RETURN data
 			format.
 		</p>
 		<p>

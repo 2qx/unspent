@@ -50,12 +50,12 @@ export function derivePublicKeyHashHex(address: string): string {
 }
 
 export function deriveLockingBytecodeHex(address: string): string {
-  let bytecode = deriveLockingBytecode(address);
+  const bytecode = deriveLockingBytecode(address);
   return binToHex(bytecode);
 }
 
 export function deriveLockingBytecode(address: string): Uint8Array {
-  let lock = cashAddressToLockingBytecode(address);
+  const lock = cashAddressToLockingBytecode(address);
   if (typeof lock === "string") throw lock;
   return lock.bytecode;
 }
@@ -83,7 +83,7 @@ export async function sanitizeAddress(wildString: string) {
           "Refusing to convert a legacy P2SH address (possibly segwit) to cashaddress"
         );
 
-      let sha256 = await instantiateSha256();
+      const sha256 = await instantiateSha256();
       r = decodeBase58Address(sha256, wildString);
       if (typeof r === "string") throw Error(r);
 
@@ -142,7 +142,7 @@ export function toHex(num: number): string {
 }
 
 export function binToNumber(data: Uint8Array): number {
-  let h = binToNumberUintLE(data);
+  const h = binToNumberUintLE(data);
   return h;
 }
 
@@ -159,7 +159,7 @@ export function decodeNullDataScript(data: Uint8Array | string) {
   // skip the OP_RETURN code data[0]
   let i = 1;
 
-  let r: Uint8Array[] = [];
+  const r: Uint8Array[] = [];
   while (i < data.length) {
     if (data.slice(i, i + 1)[0] === 0x4c) {
       r.push(data.slice(i, i + 1));
@@ -167,9 +167,9 @@ export function decodeNullDataScript(data: Uint8Array | string) {
     } else if (data.slice(i, i + 1)[0] === 0x4d) {
       throw Error("Not Implemented");
     } else {
-      let len = data.slice(i, i + 1)[0]!;
-      let start = i + 1;
-      let end = start + len;
+      const len = data.slice(i, i + 1)[0]!;
+      const start = i + 1;
+      const end = start + len;
       r.push(data.slice(start, end));
       i = end;
     }
@@ -213,7 +213,7 @@ export function sum(previousValue: any, currentValue: any) {
 
 
 export function assurePkh(address: string){
-  let cashaddrInfo = decodeCashAddress(address)
+  const cashaddrInfo = decodeCashAddress(address)
   if(typeof cashaddrInfo === "string") throw Error(cashaddrInfo)
   if(cashaddrInfo.type!=CashAddressVersionByte.P2PKH) throw ("Provided address was not a pay to public key hash address")
 }

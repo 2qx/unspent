@@ -18,8 +18,8 @@ import { _PROTOCOL_ID } from "../../../common/constant.js";
 
 describe(`Mining Contract Tests`, () => {
   test("Should pay a mining contract 10 times in 10 blocks", async () => {
-    let regTest = new ElectrumCluster(
-      "utxfi-tests - faucet",
+    const regTest = new ElectrumCluster(
+      "unspent phi-tests - faucet",
       "1.4.1",
       1,
       1,
@@ -27,17 +27,17 @@ describe(`Mining Contract Tests`, () => {
     );
     regTest.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
 
-    let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
+    const regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
     const bob = await RegTestWallet.fromSeed(
       "rubber amateur across squirrel deposit above dish toddler visa cherry clerk egg"
     );
 
-    let period = 1;
-    let payout = 5000;
-    let difficulty = 1;
-    let index = new Uint8Array(7);
+    const period = 1;
+    const payout = 5000;
+    const difficulty = 1;
+    const index = new Uint8Array(7);
 
     let contract = new Contract(
       v1,
@@ -59,7 +59,7 @@ describe(`Mining Contract Tests`, () => {
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
-      let balance = await contract.getBalance();
+      const balance = await contract.getBalance();
       let mined = false;
       let nonce = 0;
 
@@ -68,7 +68,7 @@ describe(`Mining Contract Tests`, () => {
       while (!mined) {
         nonce = getRandomInt(9007199254740991);
         nonceBin = bigIntToScriptNumber(BigInt(nonce));
-        let msg = new Uint8Array([
+        const msg = new Uint8Array([
           ...hexToBin(contract.getRedeemScriptHex()),
           ...nonceBin,
         ]);
@@ -77,22 +77,22 @@ describe(`Mining Contract Tests`, () => {
       }
 
       if (nonceBin.length < 7) {
-        let zeros = 7 - nonceBin.length;
+        const zeros = 7 - nonceBin.length;
         nonceBin = new Uint8Array([...nonceBin, ...new Uint8Array(zeros)]);
       }
 
-      let nonceHex = binToHex(nonceBin);
+      const nonceHex = binToHex(nonceBin);
 
-      let fn = contract!.functions["execute"]!(nonceHex);
+      const fn = contract!.functions["execute"]!(nonceHex);
 
-      let newContract = new Contract(
+      const newContract = new Contract(
         v1,
         [period, payout, difficulty, nonceHex],
         regtestNetwork
       );
 
       //console.log(payout)
-      let tx = await fn
+      const tx = await fn
         .withOpReturn([
           _PROTOCOL_ID,
           "M",

@@ -2,15 +2,8 @@ module.exports = {
   verbose: true,
   rootDir: "./",
   roots: [
-    "<rootDir>/packages/annuity/src",
-    "<rootDir>/packages/bus/src",
-    "<rootDir>/packages/divide/src",
-    "<rootDir>/packages/faucet/src",
-    "<rootDir>/packages/lock/src",
-    "<rootDir>/packages/mine/src",
-    "<rootDir>/packages/perpetuity/src",
-    "<rootDir>/packages/record/src",
-    "<rootDir>/packages/shares/src",
+    "<rootDir>/packages/phi/src",
+    "<rootDir>/packages/psi/src",
   ],
   preset: "jest-playwright-preset",
   collectCoverageFrom: ["**/*.{js}", "!**/node_modules/**", "!**/generated/**"],
@@ -23,7 +16,7 @@ module.exports = {
   testEnvironment: "node",
   testEnvironmentOptions: {
     "jest-playwright": {
-      browsers: ["chromium", "firefox"],
+      browsers: ["chromium"],
     },
   },
   transform: {

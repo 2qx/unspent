@@ -5,10 +5,10 @@ import { getArtifactsAsync } from "./getArtifact.js";
 
 describe(`Test getting artifacts`, () => {
   test("Should import a class", async () => {
-    let faucet = new Faucet();
-    let serializedFaucet = faucet.toString();
-    let params = BaseUtxPhiContract.parseSerializedString(serializedFaucet);
-    let artifact = await getArtifactsAsync(
+    const faucet = new Faucet();
+    const serializedFaucet = faucet.toString();
+    const params = BaseUtxPhiContract.parseSerializedString(serializedFaucet);
+    const artifact = await getArtifactsAsync(
       params.code as CodeType,
       params.options.version
     );

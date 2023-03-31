@@ -1,49 +1,59 @@
-import { Network, NetworkProvider } from "cashscript";
-import { getChaingraphUnspentRecords, deriveLockingBytecode } from "@unspent/phi"
+import { ElectrumNetworkProvider, Network, NetworkProvider } from "cashscript";
 import {
   BytecodePatternQueryI,
-  OutpointDetailsI,
-  PsiUtxoI,
+  BytecodePatternExtendedQueryI,
+  deriveLockingBytecode,
+  getChaingraphUnspentRecords,
+  getHistory,
+  prepareBytecodeQueryParameters
+} from "@unspent/phi"
+import {
   Utxo
 } from "./interface.js";
+import {
+  //   getMaxBlockHeight,
+  asUtxo
+} from "./util.js"
 import { Psi } from "./Psi.js"
-import { hexToBin } from "@bitauth/libauth";
+import { binToHex } from "@bitauth/libauth";
 
 
 export class PsiNetworkProvider implements NetworkProvider {
 
   public db!: Psi
-  public DEBOUNCE: number = 500   // millseconds.
+  public DEBOUNCE: number = 300 * 1000   // five minutes (half a blocktime) in milliseconds.
+  public FUZZ: number = 300 * 1000
 
   public constructor(
     public network: Network,
-    public failoverProviders?: NetworkProvider[],
-    public debounce?: number
+    public chaingraphHost: string,
+    public failoverProviders?: ElectrumNetworkProvider[],
+    public debounce?: number,
+    public fuzz?: number
   ) {
 
     this.db = new Psi(network)
 
     failoverProviders = failoverProviders ? failoverProviders : []
     if (debounce) this.DEBOUNCE = debounce
+    if (fuzz) this.FUZZ = fuzz
   }
 
   public async getBlockHeight(): Promise<number> {
 
 
-    let block = await this.db.getBlockHeight()
+    const block = await this.db.getBlockHeight()
 
     if (block.id > 0 && block.timestamp) {
-      let age = new Date().getTime() - block.timestamp.getTime()
+      const age = new Date().getTime() - block.timestamp.getTime()
       if (age < this.DEBOUNCE) {
-        console.debug("debounced")
         return block.id
       }
     }
 
     if (this.failoverProviders) {
-      let currentHeight = await this.failoverProviders[0]?.getBlockHeight()!
+      const currentHeight = await this.failoverProviders[0]?.getBlockHeight()!
       await this.db.setBlockHeight(currentHeight)
-      console.debug("network call, set")
       return currentHeight
     } else {
       throw Error("no blocks in index and no backup providers specified")
@@ -52,26 +62,27 @@ export class PsiNetworkProvider implements NetworkProvider {
 
 
   public async getUtxos(address: string): Promise<Utxo[]> {
-    let lockingBytecode = deriveLockingBytecode(address)
-    let utxos = (await this.db.getUtxosByLockingBytecode(lockingBytecode)).map(phiUtxo => asUtxo(phiUtxo))
-    if (this.failoverProviders) {
-      let newUtxos = await this.failoverProviders[0]?.getUtxos(address)
-      if (newUtxos) {
-        let phiUtxos = newUtxos.map(utxo => asPsiUtxoI(utxo, lockingBytecode))
-        if (phiUtxos) this.db.bulkPutUtxo(phiUtxos, lockingBytecode)
-      }
-      if (newUtxos) {
-        return newUtxos
-      }
+    const lockingBytecode = deriveLockingBytecode(address)
+    const lockingBytecodeHex = binToHex(lockingBytecode)
+    const psiOutpoints = await this.db.getUtxosByLockingBytecode(lockingBytecode)
+    let ageFilter = new Date().getTime() - this.DEBOUNCE
+    let goodUtxos = psiOutpoints.filter(op => op.debounce > ageFilter)
+    if (Array.isArray(goodUtxos) && goodUtxos.length > 0) {
+      // some time ago
+      return goodUtxos.map(op => asUtxo(op))
+    } else {
+      const history = await getHistory(this.chaingraphHost, lockingBytecode, { after: 0, limit: 5 })
+      return (await this.db.bulkPutRawTransaction(history, lockingBytecodeHex)).map(u => asUtxo(u))
     }
-    return utxos
 
   }
+
 
   public async getRawTransaction(txid: string): Promise<string> {
     if (!this.failoverProviders) {
       throw Error("No failover network providers specified. Cannot get tx from cache.")
     } else {
+      // TODO replace with chaingraph raw transaction getter.
       for (const p of this.failoverProviders) {
         try {
           return await p.getRawTransaction(txid)
@@ -88,6 +99,7 @@ export class PsiNetworkProvider implements NetworkProvider {
     if (!this.failoverProviders) {
       throw Error("No failover network providers specified. Cannot send from cache.")
     } else {
+      // replace with chaingraph send
       for (const p of this.failoverProviders) {
         try {
           return await p.sendRawTransaction(txHex)
@@ -100,26 +112,23 @@ export class PsiNetworkProvider implements NetworkProvider {
   }
 
 
-  public async search(host: string, param: BytecodePatternQueryI): Promise<string[]> {
+
+  public async search(param?: BytecodePatternQueryI | BytecodePatternExtendedQueryI): Promise<string[]> {
+
+
     let cached: any[] = []
-    cached = await this.db.getUnspentPhi(param)
-    if (cached.length === 0) {
+    param = prepareBytecodeQueryParameters(param)
+    cached = await this.db.getUnspentPhiContracts(param)
+
+    if (cached.length < param.limit!) {
       console.debug("hitting chaingraph")
-      let result = await getChaingraphUnspentRecords(
-        host,
-        param.prefix,
-        param.node,
-        param.limit,
-        param.offset,
-        param.exclude_pattern,
-        param.after
+      const result = await getChaingraphUnspentRecords(
+        this.chaingraphHost,
+        param
       )
-      this.db.bulkPutSearchOutputPrefix(result.data)
+      this.db.bulkPutUnspentPhiContracts(result)
       // transform list of objects to a list of strings
-      let results = result.data["search_output_prefix"].map((val: any) => {
-        return val.locking_bytecode as string;
-      });
-      return results.map((x: string) => x.replace("\\x", ""));
+      return result.map((r: any) => r.id)
 
     } else {
       return cached.map(r => r.id)
@@ -131,28 +140,3 @@ export class PsiNetworkProvider implements NetworkProvider {
 
 }
 
-// There can only be 21M!, utxo formats.
-// convert db utxo to standard electrumX/fulcrum format
-export function asUtxo(utxo: PsiUtxoI): Utxo {
-  let r = utxo.data
-  delete r.lockingBytecode
-  return {
-    txid: r.tx_hash,
-    vout: r.tx_pos,
-    height: r.height,
-    satoshis: r.value
-  }
-}
-
-// convert db utxo to standard electrumX/fulcrum format
-// NO. Strike the that, reverse it.
-export function asPsiUtxoI(utxo: Utxo, locking_bytecode: Uint8Array | string): OutpointDetailsI {
-  if (typeof locking_bytecode === "string") locking_bytecode = hexToBin(locking_bytecode)
-  return {
-    tx_hash: utxo.txid,
-    tx_pos: utxo.vout,
-    height: utxo.height!,
-    value: utxo.satoshis,
-    lockingBytecode: locking_bytecode
-  }
-}
