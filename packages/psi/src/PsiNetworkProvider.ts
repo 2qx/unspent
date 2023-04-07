@@ -1,7 +1,6 @@
 import { ElectrumNetworkProvider, Network, NetworkProvider } from "cashscript";
 import {
   BytecodePatternQueryI,
-  BytecodePatternExtendedQueryI,
   deriveLockingBytecode,
   getChaingraphUnspentRecords,
   getHistory,
