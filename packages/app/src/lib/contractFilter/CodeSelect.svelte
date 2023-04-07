@@ -27,7 +27,7 @@
 <div class="columns margins" style="justify-content: flex-start;">
 	<div>
 		<Select 
-    style="width: 130px"
+    style="width: 140px"
     key={(fruit) => `${fruit ? fruit.id : ''}`} 
     on:MDCSelect:change={handleChange}
     bind:value 
