@@ -17,10 +17,13 @@ import {
 // This class deals strictly with putting data into and getting it out of the database.
 import {
   BytecodePatternQueryI,
+  BytecodePatternExtendedQueryI, 
   HistoryI,
   parseOpReturn,
+  prepareBytecodeQueryParameters
 } from "@unspent/phi";
 import { binToHex } from "@bitauth/libauth";
+
 
 export class Psi
   extends Dexie {
@@ -193,8 +196,10 @@ export class Psi
 
   }
 
-  public async getUnspentPhiContracts(param: BytecodePatternQueryI ): Promise<ContractI[]> {
+  public async getUnspentPhiContracts(param: BytecodePatternQueryI | BytecodePatternExtendedQueryI ): Promise<ContractI[]> {
 
+    param = prepareBytecodeQueryParameters(param)
+    
     return this.contract
       .where("id").startsWith(param.prefix!)
       .offset(param.offset ? param.offset : 0) // offset MUST come before limit

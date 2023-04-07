@@ -28,7 +28,7 @@ describe(`Mine Class Tests`, () => {
     expect(m.isTestnet()).toEqual(m2.isTestnet());
   });
 
-  test("Should deserialize and reserialize a regtest Mine to chunks and from an opreturn", async () => {
+  test("Should deserialize and reserialize a regtest Mine to chunks and from an op_return", async () => {
     const options = { version: 1, network: "regtest" };
     const m1 = new Mine(5, Mine.minPayout, 2, undefined, options);
     const opReturn = m1.toOpReturn();

@@ -25,6 +25,7 @@ import { mine } from "mainnet-js";
 //   expect(initialHeight).toBeGreaterThan(200)
 
 //   await mine({
+  // /* cspell:disable-next-line */ 
 //     cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
 //     blocks: 150,
 //   });

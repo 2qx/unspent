@@ -12,8 +12,8 @@
 	import { opReturnToInstance } from '@unspent/phi';
 	import { load } from '$lib/machinery/loader-store.js';
 
-	export let data;
-	let instance;
+	export let data:any;
+	let instance:any;
 	let error = '';
 	let panelOpen = false;
 
@@ -22,7 +22,7 @@
 			load: async () => {
 				try {
 					instance = opReturnToInstance(data.opReturn);
-				} catch (e) {
+				} catch (e:any) {
 					if (e.message) {
 						error = e;
 					} else {

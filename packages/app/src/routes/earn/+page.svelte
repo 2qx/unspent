@@ -153,7 +153,7 @@
             on:codeChange={zeroPage}
             bind:value={contractFilter}
             />
-            <AddressSearch bind:value={addressFilter} />
+            <!--AddressSearch bind:value={addressFilter} /-->
 						<Select
 							style="max-width: 100px"
 							variant="outlined"

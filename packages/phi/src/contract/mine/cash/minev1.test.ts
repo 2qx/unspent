@@ -45,7 +45,7 @@ describe(`Mining Contract Tests`, () => {
       regtestNetwork
     );
 
-    // fund the inital mining contract
+    // fund the initial mining contract
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -56,6 +56,7 @@ describe(`Mining Contract Tests`, () => {
 
     for (let x = 0; x < 3; x++) {
       await mineBlocks({
+        /* cspell:disable-next-line */ 
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });

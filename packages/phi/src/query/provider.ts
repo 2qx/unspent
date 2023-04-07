@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   BytecodePatternQueryI,
+  BytecodePatternQueryDefaults,
   ChaingraphSearchOutputResult,
   HistoryI,
   HistoryQueryI,
@@ -13,22 +14,23 @@ import { binToHex } from "@bitauth/libauth";
 export async function getRecords(
   host: string,
   prefix?: string,
-  node?: string,
+  node = "mainnet",
   limit = 25,
   offset = 0,
   exclude_pattern = "6a0401010102010717",
   after = 0
 ) {
 
-  const param = {
+  let param = {
+    prefix: prefix,
+    node: node,
     limit: limit,
     offset: offset,
     exclude_pattern: exclude_pattern,
     after: after
   } as BytecodePatternQueryI
 
-  if (prefix) param.prefix = prefix
-  if (node) param.node = node
+  param = { ... BytecodePatternQueryDefaults, ...param}
 
   let response = await getChaingraphUnspentRecords(
     host,
@@ -46,8 +48,6 @@ export async function getChaingraphUnspentRecords(
   host: string,
   param: BytecodePatternQueryI
 ) {
-
-
 
   const response = await axios({
     url: host,

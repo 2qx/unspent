@@ -113,8 +113,7 @@ export class PsiNetworkProvider implements NetworkProvider {
 
 
 
-  public async search(param?: BytecodePatternQueryI | BytecodePatternExtendedQueryI): Promise<string[]> {
-
+  public async search(param?: BytecodePatternQueryI ): Promise<string[]> {
 
     let cached: any[] = []
     param = prepareBytecodeQueryParameters(param)

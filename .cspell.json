@@ -11,6 +11,8 @@
     "Blockchair",
     "blockheight",
     "Blockie",
+    "blockies",
+    "blocktime",
     "Btyecode",
     "bytea",
     "Bytecodes",
@@ -25,6 +27,7 @@
     "smui",
     "SMUI",
     "STXO",
+    "utxos",
     "zerodevx"
   ]
 }
