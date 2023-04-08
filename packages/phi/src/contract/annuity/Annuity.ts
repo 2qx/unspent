@@ -231,7 +231,8 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     const currentHeight = await getBlockHeight();
     const currentTime = Math.floor(Date.now() / 1000);
     let utxos = await this.getUtxos();
-    const series: any = [];
+
+    let series: any = [];
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
