@@ -1,0 +1,56 @@
+pragma cashscript >= 0.7.1;
+
+// v20221205
+
+// A dust Gate collects very small inputs (i.e. dust)
+// until a certain threshold usable value is reached, 
+// then allows that value to be paid to a pre-determined address.
+// 
+// It may be useful for collecting very small inputs, 
+// it SHOULD NOT be integrated into any larger payment flow 
+// requiring inputs much larger than 10-40x the current dust limit, 
+// nor for collecting payments over a long period of time.
+//
+// Further, if the contract is intended to collect a lot of small payments,
+// the executor allowance must accomidate a large contract.
+// 
+// All software permitting use of this contract should take these hazards 
+// into consideration and MUST prevent users from bricking funds 
+// in a Gate with a ridiculous threshold, or executor allowance so small that 
+// inputs cannot be easily spent.
+//
+
+
+
+contract Gate(
+
+  // threshold for output transactions
+  int threshold,
+
+  // LockingBytecode of the beneficiary, the address receiving payments
+  bytes recipientLockingBytecode,
+
+  // extra allowance for administration of contract
+  // fees are paid from executors' allowance. 
+  int executorAllowance
+) {
+  function execute() {
+
+    // Check that the first output sends to the recipient
+    require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+        
+    // Get the value input to the transaction
+    int inputValue = tx.inputs[this.activeInputIndex].value;
+
+    // get the vaule paid to the recipient
+    int recipientValue = tx.outputs[0].value;  
+
+    // assure total input minus recipient dispersement is less than executor allowance
+    require(executorAllowance >= inputValue - recipientValue);
+
+    // require the value paid (minus fees) exceeds the threshold.
+    require(recipientValue >= threshold);
+        
+    // let the executor do as they please with tx.outputs[n+]
+  }
+}

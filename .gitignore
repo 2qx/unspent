@@ -12,7 +12,7 @@ coverage
 jest/playwright/*
 jest/docker/data
 dist
-docs/
+docs
 packages/app/build
 packages/app/.svelte-kit
 app2

@@ -10,7 +10,7 @@ import { artifact } from "./v1.js";
 describe(`Faucet Contract Tests`, () => {
   test("Should pay a faucet contract 5 times in 5 blocks", async () => {
     let regTest = new ElectrumCluster(
-      "utxfi-tests - faucet",
+      "unspent phi-tests - faucet",
       "1.4.1",
       1,
       1,
