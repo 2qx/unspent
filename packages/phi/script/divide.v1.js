@@ -7,7 +7,7 @@ export function getDivideContract(numParties) {
   //
   // This is an experimental divider contract
   // Splits input across a range of predetermined outputs
-  // Alpha stage, tested on regtest and testnet
+  // Beta stage
   contract Divide(
       // allowance for party executing the contract
       int executorAllowance,

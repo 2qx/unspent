@@ -17,7 +17,7 @@ export async function getRecords(
   node = "mainnet",
   limit = 25,
   offset = 0,
-  exclude_pattern = "6a0401010102010717",
+  exclude_pattern = "",
   after = 0
 ) {
 
@@ -56,7 +56,7 @@ export async function getChaingraphUnspentRecords(
       query: `query SearchOutputsByLockingBytecodePrefix(
       $prefix: String!
       $node: String!
-      $exclude_pattern: String!
+      $exclude_pattern: String
       $limit: Int
       $offset: Int
       $after: bigint

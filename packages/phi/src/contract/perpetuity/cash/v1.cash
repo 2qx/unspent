@@ -3,7 +3,7 @@ pragma cashscript >= 0.7.1;
 // v20220522
 
 // This is an experimental perpetuity contract 
-// Prelim testing on regtest, just a concept
+// Beta stage
 contract Perpetuity(
 
  // interval for payouts, in blocks

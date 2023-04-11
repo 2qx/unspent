@@ -3,7 +3,7 @@ pragma cashscript >= 0.7.0;
 // v20220522
 
 // This is an experimental perpetuity contract 
-// see: bitcoin-cash-forever npm package.
+// from: bitcoin-cash-forever npm package.
 contract Perpetuity(
 
     // interval for payouts, in blocks

@@ -26,7 +26,7 @@ export const BytecodePatternQueryDefaults: BytecodePatternQueryI = {
   node: "mainnet",
   limit: 50,
   offset: 0,
-  exclude_pattern: "6a0401010102010717", // mining covenants
+  exclude_pattern: "",
   after: 0,
 }
 

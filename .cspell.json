@@ -13,10 +13,12 @@
     "Blockie",
     "blockies",
     "blocktime",
+    "blocktimes",
     "Btyecode",
     "bytea",
     "Bytecodes",
     "chaingraph",
+    "forex",
     "indexeddb",
     "lcov",
     "macfja",
@@ -27,6 +29,10 @@
     "smui",
     "SMUI",
     "STXO",
+    "timelock",
+    "Timelock",
+    "timelocked",
+    "transpiles",
     "utxos",
     "zerodevx"
   ]

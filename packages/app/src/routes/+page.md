@@ -216,7 +216,7 @@ First, execution of the contract must be called with a `nonce` [a random value u
 which when added to the current locking bytecode and hashed results in a value starting with some number of zeros.
 How many zeros is the `difficulty`.
 
-Finally, prior to spending the the mining `payout`, the spender must announce
+Finally, prior to spending the mining `payout`, the spender must announce
 the winning `nonce` in an OP_RETURN of the first output, and send the balance of the contract to a new mining covenant with the new nonce as a `canary`.
 
 ![Replace the canary](images/canary.jpeg "Look, see, he's alright. He's fine.")
