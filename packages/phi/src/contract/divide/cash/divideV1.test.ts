@@ -26,8 +26,8 @@ describe(`Example Divide Tests`, () => {
 
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
     let bobs: RegTestWallet[] = [];
-    let divisor = 4;
-    for (let i = 0; i < divisor; i++) {
+    let divisor = 4n;
+    for (let i = 0n; i < divisor; i++) {
       bobs.push(await RegTestWallet.newRandom());
     }
     let bobLockingCodes: string[] = [];
@@ -42,14 +42,14 @@ describe(`Example Divide Tests`, () => {
 
     let charlie = await RegTestWallet.newRandom();
 
-    let exFee = 5000;
+    let exFee = 5000n;
 
     const script = v1_4;
     //console.log(script)
     let contract = new CashScriptContract(
       script,
       [exFee, divisor, ...bobLockingCodes],
-      regtestNetwork
+      {provider : regtestNetwork}
     );
 
     //console.log(`D:1:${exFee}:` + bobPkhs.map(i=> `${i}`).join(":"))
@@ -64,14 +64,14 @@ describe(`Example Divide Tests`, () => {
 
     let contracts = [contract];
     let balance = await contracts.slice(-1)[0]!.getBalance();
-    let installment = Math.round((balance - exFee) / divisor);
+    let installment = (balance - exFee) / divisor;
     let fn = contracts.slice(-1)[0]!.functions["execute"]!();
 
     let to: any = [];
     for (let i = 0; i < divisor; i++) {
       to.push({ to: bobs[i]!.getDepositAddress(), amount: installment });
     }
-    to.push({ to: charlie.getDepositAddress(), amount: exFee - 2000 });
+    to.push({ to: charlie.getDepositAddress(), amount: exFee - 2000n });
 
     await fn.to(to).withoutChange().send();
 

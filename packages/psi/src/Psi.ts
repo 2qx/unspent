@@ -1,8 +1,7 @@
 import {
   Sha256,
   decodeTransaction,
-  hexToBin,
-  binToBigIntUint64LE
+  hexToBin
 } from '@bitauth/libauth';
 import { default as Dexie } from "dexie";
 import { Table } from "dexie";
@@ -69,6 +68,7 @@ export class Psi
         // Log or display the error
         console.error(error.stack || error);
       });
+      console.log(lastBlock)
     // -1 is no blockheight
     return lastBlock ? lastBlock : { id: -1, timestamp: new Date() }
   }
@@ -125,7 +125,7 @@ export class Psi
             return {
               id: tx.hash + ":" + idx,
               lockingBytecode: binToHex(o.lockingBytecode),
-              value: Number(binToBigIntUint64LE(o.satoshis)),
+              value: o.valueSatoshis,
               state: !Array.isArray(tx.spentBy) || !tx.spentBy.length ? "UTXO" : "STXO",
               debounce: new Date().getTime(),
               height: tx.height,

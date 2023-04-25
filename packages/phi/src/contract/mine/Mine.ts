@@ -10,22 +10,22 @@ import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   toHex,
-  binToNumber,
   getRandomIntWeak,
   sum,
   decodeNullDataScript,
+  binToBigInt,
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
 
 export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "M";
   private static fn: string = "execute";
-  public static minPayout: number = DUST_UTXO_THRESHOLD + 392 + 10;
+  public static minPayout: bigint = DUST_UTXO_THRESHOLD + 392n + 10n;
 
   constructor(
-    public period: number = 1,
-    public payout: number = 5000,
-    public difficulty: number = 3,
+    public period: bigint | number = 1n,
+    public payout: bigint | number = 5000n,
+    public difficulty: bigint | number = 3n,
     public canary: string = binToHex(new Uint8Array(7)),
     public options: ContractOptions = DefaultOptions
   ) {
@@ -40,9 +40,9 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Payout below minimum usable level ${Mine.minPayout}`);
 
     super(options.network!, script, [
-      period,
-      payout,
-      difficulty,
+      BigInt(period),
+      BigInt(payout),
+      BigInt(difficulty),
       hexToBin(canary),
     ]);
     this.options = options;
@@ -60,9 +60,9 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (p.args.length != 4)
       throw `invalid number of arguments ${p.args.length}`;
-    const period = parseInt(p.args.shift()!);
-    const payout = parseInt(p.args.shift()!);
-    const difficulty = parseInt(p.args.shift()!);
+    const period = BigInt(parseInt(p.args.shift()!));
+    const payout = BigInt(parseInt(p.args.shift()!));
+    const difficulty = BigInt(parseInt(p.args.shift()!));
     const canary = p.args.shift()!;
 
     const mine = new Mine(period, payout, difficulty, canary, p.options);
@@ -89,9 +89,9 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    const period = binToNumber(p.args.shift()!);
-    const payout = binToNumber(p.args.shift()!);
-    const difficulty = binToNumber(p.args.shift()!);
+    const period = binToBigInt(p.args.shift()!);
+    const payout = binToBigInt(p.args.shift()!);
+    const difficulty = binToBigInt(p.args.shift()!);
     const canary = binToHex(p.args.shift()!);
 
     const mine = new Mine(period, payout, difficulty, canary, p.options);
@@ -106,10 +106,10 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     network = "mainnet",
     networkProvider: NetworkProvider,
     blockHeight: number
-  ): Promise<number> {
+  ): Promise<bigint> {
     const p = this.parseOpReturn(opReturn, network);
-    const period = binToNumber(p.args.shift()!);
-    const payout = binToNumber(p.args.shift()!);
+    const period = binToBigInt(p.args.shift()!);
+    const payout = binToBigInt(p.args.shift()!);
     const utxos = await networkProvider.getUtxos(p.address);
     const spendableUtxos = utxos.map((u: Utxo) => {
       // @ts-ignore
@@ -118,27 +118,27 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
         if (blockHeight - u.height > period) {
           return u.satoshis;
         } else {
-          return 0;
+          return 0n;
         }
       } else {
-        return 0;
+        return 0n;
       }
     });
     const spendable =
-      spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
+      spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0n;
     if (spendable > payout) {
       return spendable;
     } else {
-      return 0;
+      return 0n;
     }
   }
 
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): number {
+  ): bigint {
     const p = this.parseOpReturn(opReturn, network);
-    return binToNumber(p.args.at(1)!);
+    return binToBigInt(p.args.at(1)!);
   }
 
   override toString() {
@@ -189,12 +189,12 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
         ...nonce,
       ]);
       result = sha256.hash(msg);
-      const newBest = result.slice(0, this.difficulty).reduce(sum);
+      const newBest = result.slice(0, Number(this.difficulty)).reduce(sum);
       if (newBest <= best) {
         best = newBest;
-        if (verbose) console.log(newBest, result.slice(0, this.difficulty));
+        if (verbose) console.log(newBest, result.slice(0, Number(this.difficulty)));
       }
-      if (result.slice(0, this.difficulty).reduce(sum) === 0) mined = true;
+      if (result.slice(0, Number(this.difficulty)).reduce(sum) === 0) mined = true;
     }
 
     // if the number is smaller than the space allowed, prepend it by adding zeros to the right
@@ -214,16 +214,16 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
   async execute(
     exAddress?: string,
-    fee?: number,
+    fee?: bigint,
     utxos?: Utxo[],
     nonce?: string | Uint8Array,
     verbose = false
   ): Promise<string> {
     const balance = await this.getBalance();
     let fn = this.getFunction(Mine.fn)!;
-    const newPrincipal = balance - this.payout;
-    const minerFee = fee ? fee : 400;
-    const reward = this.payout - minerFee;
+    const newPrincipal = balance - BigInt(this.payout);
+    const minerFee = fee ? fee : BigInt(400);
+    const reward = BigInt(this.payout) - minerFee;
 
     if (!nonce) {
       this.canary = await this.getNonce(verbose);
@@ -246,14 +246,14 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     const to = [
       {
         to: nextContract.getAddress(),
-        amount: newPrincipal,
+        amount: BigInt(newPrincipal),
       },
     ];
 
     if (exAddress)
       to.push({
         to: exAddress,
-        amount: reward,
+        amount: BigInt(reward),
       });
 
     const canaryHex = "0x" + this.canary;
@@ -264,14 +264,14 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     const size = await tx
       .withOpReturn(chunks)
       .to(to)
-      .withAge(this.period)
+      .withAge(Number(this.period))
       .withHardcodedFee(minerFee)
       .build();
 
     if (exAddress) {
-      const minerFee = fee ? fee : size.length / 2;
+      const minerFee = fee ? fee : BigInt(size.length) / 2n;
       //console.log(minerFee)
-      const reward = this.payout - (minerFee + 10);
+      const reward = BigInt(this.payout) - (minerFee + 10n);
       to.pop();
       to.push({
         to: exAddress,
@@ -287,7 +287,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     const payTx = await tx
       .withOpReturn(chunks)
       .to(to)
-      .withAge(this.period)
+      .withAge(Number(this.period))
       .withoutChange()
       .send();
     return payTx.txid;

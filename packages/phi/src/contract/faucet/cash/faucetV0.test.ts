@@ -26,13 +26,13 @@ describe(`Faucet Contract Tests`, () => {
       "rubber amateur across squirrel deposit above dish toddler visa cherry clerk egg"
     );
 
-    let payout = 5000;
-    let index = 1;
-    let period = 1;
+    let payout = 5000n;
+    let index = 1n;
+    let period = 1n;
     let contract = new Contract(
       artifact,
       [period, payout, index],
-      regtestNetwork
+      {provider: regtestNetwork, addressType: "p2sh20"}
     );
 
     // fund the faucet contract
@@ -52,7 +52,7 @@ describe(`Faucet Contract Tests`, () => {
       let balance = await contract.getBalance();
 
       let size =
-        (
+        BigInt((
           await contract!.functions
             .drip()
             .to([
@@ -60,21 +60,21 @@ describe(`Faucet Contract Tests`, () => {
                 to: contract.address,
                 amount: balance - payout,
               },
-              { to: bob.getDepositAddress(), amount: payout - 153 },
+              { to: bob.getDepositAddress(), amount: payout - 153n },
             ])
             .withAge(1)
-            .withHardcodedFee(153)
+            .withHardcodedFee(153n)
             .build()
-        ).length / 2;
+        ).length) / 2n;
       //console.log(size)
       await contract!.functions
         .drip()
         .to([
           {
             to: contract.address,
-            amount: balance - payout + 1,
+            amount: balance - payout + 1n,
           },
-          { to: bob.getDepositAddress(), amount: payout - (size + 4) },
+          { to: bob.getDepositAddress(), amount: payout - (size + 4n) },
         ])
         .withAge(1)
         .withoutChange()
@@ -82,7 +82,7 @@ describe(`Faucet Contract Tests`, () => {
     }
 
     expect(await bob.getBalance("sat")).toBeGreaterThanOrEqual(
-      (payout - 200) * 5
+      (payout - 200n) * 5n
     );
   });
 });

@@ -1,20 +1,20 @@
 import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { ContractOptions } from "../../common/interface.js";
-import { binToNumber, decodeNullDataScript } from "../../common/util.js";
+import { binToBigInt, decodeNullDataScript } from "../../common/util.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { artifact as v1 } from "./cash/v1.js";
-import { hash160, sum, toHex } from "../../common/util.js";
+import { hash160, sum, toHex, parseBigInt } from "../../common/util.js";
 import { binToHex, hexToBin } from "@bitauth/libauth";
 
 export class Record extends BaseUtxPhiContract {
   static c: string = "R";
   private static fn: string = "execute";
-  public static minMaxFee: number = 310;
+  public static minMaxFee: bigint = 310n;
 
   constructor(
-    public maxFee: number = 850,
-    public index: number = 0,
+    public maxFee: bigint|number = 850n,
+    public index: bigint|number = 0n,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
@@ -28,7 +28,7 @@ export class Record extends BaseUtxPhiContract {
         `Allowed fee < ${Record.minMaxFee} may result in unusable outputs`
       );
 
-    super(options.network!, script, [maxFee, index]);
+    super(options.network!, script, [BigInt(maxFee), BigInt(index)]);
     this.options = options;
   }
 
@@ -41,8 +41,8 @@ export class Record extends BaseUtxPhiContract {
     if (p.options.version != 1)
       throw Error(`${this.name} contract version not recognized`);
 
-    const maxFee = parseInt(p.args.shift()!);
-    const index = parseInt(p.args.shift()!);
+    const maxFee = parseBigInt(p.args.shift()!);
+    const index = parseBigInt(p.args.shift()!);
     const record = new Record(maxFee, index, p.options);
 
     // check that the address
@@ -55,28 +55,28 @@ export class Record extends BaseUtxPhiContract {
     network = "mainnet",
     networkProvider: NetworkProvider,
     blockHeight: number
-  ): Promise<number> {
+  ): Promise<bigint> {
     const p = this.parseOpReturn(opReturn, network);
     blockHeight;
     const utxos = await networkProvider.getUtxos(p.address);
     const spendableUtxos = utxos.map((u) => {
       return u.satoshis;
     });
-    const spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
+    const spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0n;
     if (spendable > DUST_UTXO_THRESHOLD) {
       return spendable;
     } else {
-      return 0;
+      return 0n;
     }
   }
 
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): number {
+  ): bigint {
     opReturn;
     network;
-    return NaN;
+    return 0n;
   }
 
   override toString() {
@@ -122,10 +122,10 @@ export class Record extends BaseUtxPhiContract {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    let [maxFee, index]: [number?, number?] = [undefined, undefined];
+    let [maxFee, index]: [bigint?, bigint?] = [undefined, undefined];
     if (p.options.version == 1) {
-      maxFee = binToNumber(p.args.shift()!);
-      index = binToNumber(p.args.shift()!);
+      maxFee = binToBigInt(p.args.shift()!);
+      index = binToBigInt(p.args.shift()!);
     } else {
       throw Error("Record contract version not recognized");
     }
@@ -178,13 +178,13 @@ export class Record extends BaseUtxPhiContract {
       estimator = estimator.from(utxos);
     }
 
-    const size = (
-      await estimator.withOpReturn(chunks).withHardcodedFee(669).build()
-    ).length;
+    const size = BigInt((
+      await estimator.withOpReturn(chunks).withHardcodedFee(669n).build()
+    ).length);
 
     const txn = await tx
       .withOpReturn(chunks)
-      .withHardcodedFee(size / 2)
+      .withHardcodedFee(size / 2n)
       .send();
     return txn.txid;
   }

@@ -8,7 +8,7 @@ try {
 
 const { spawn } = require("child_process");
 const http = require("http");
-const commonSetup = require("./common.setup");
+const commonSetup = require("./common.setup.cjs");
 
 function serverReady() {
   return new Promise((resolve) => {

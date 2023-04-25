@@ -22,7 +22,7 @@ export interface PsiOutpointI{
     
     id: string // tx_hash:output_index
     lockingBytecode: string // Matching by Typed array is a non-starter
-    value: number;
+    value: bigint;
     state: string;
 
     debounce:  number;
@@ -53,7 +53,7 @@ export interface Utxo {
   txid: string;
   height?: number;
   vout: number;
-  satoshis: number;
+  satoshis: bigint;
 }
 
 export interface BlockI {

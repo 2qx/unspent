@@ -2,19 +2,19 @@ import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
-import { binToNumber, sum, toHex } from "../../common/util.js";
+import { binToNumber, sum, toHex, parseBigInt, binToBigInt } from "../../common/util.js";
 import { artifact as v0 } from "./cash/v0.js";
 import { artifact as v1 } from "./cash/v1.js";
 
 export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "F";
   private static fn: string = "drip";
-  public static minPayout: number = 158 + DUST_UTXO_THRESHOLD + 10;
+  public static minPayout: bigint = 158n + DUST_UTXO_THRESHOLD + 10n;
 
   constructor(
-    public period: number = 1,
-    public payout: number = 1000,
-    public index: number = 1,
+    public period: bigint|number = 1n,
+    public payout: bigint|number = 1000n,
+    public index: bigint|number = 1n,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
@@ -28,12 +28,12 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (payout < Faucet.minPayout) throw Error("Payout below dust threshold");
 
-    super(options.network!, script, [period, payout, index]);
+    super(options.network!, script, [BigInt(period), BigInt(payout), BigInt(index)]);
     this.options = options;
   }
 
   refresh(): void {
-    this._refresh([this.period, this.payout, this.index]);
+    this._refresh([BigInt(this.period), BigInt(this.payout), BigInt(this.index)]);
   }
 
   static fromString(str: string, network = "mainnet"): Faucet {
@@ -48,7 +48,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
-    const [period, payout, index] = [...p.args.map((i) => parseInt(i) as number)];
+    const [period, payout, index] = [...p.args.map((i) => parseBigInt(i) )];
 
     const faucet = new Faucet(period, payout, index, p.options);
     faucet.checkLockingBytecode(p.lockingBytecode);
@@ -76,7 +76,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
     const [period, payout, index] = [
-      ...p.args.map((i) => binToNumber(i) as number),
+      ...p.args.map((i) => binToBigInt(i)),
     ];
 
     const faucet = new Faucet(period, payout, index, p.options);
@@ -89,7 +89,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     network = "mainnet",
     networkProvider: NetworkProvider,
     blockHeight: number
-  ): Promise<number> {
+  ): Promise<bigint> {
     const p = this.parseOpReturn(opReturn, network);
     const period = binToNumber(p.args.shift()!);
     const payout = binToNumber(p.args.shift()!);
@@ -101,29 +101,29 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         if (blockHeight - u.height > period) {
           return u.satoshis;
         } else {
-          return 0;
+          return 0n;
         }
       } else {
-        return 0;
+        return 0n;
       }
     });
     const spendable =
-      spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
+      spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0n;
     if (spendable > payout) {
       return spendable;
     } else {
-      return 0;
+      return 0n;
     }
   }
 
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): number {
+  ): bigint {
     const p = this.parseOpReturn(opReturn, network);
     // pop the index to get to the payout
     p.args.pop()!;
-    return binToNumber(p.args.pop()!);
+    return binToBigInt(p.args.pop()!);
   }
 
   override toString() {
@@ -161,23 +161,23 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
   async execute(
     exAddress?: string,
-    fee?: number,
+    fee?: bigint,
     utxos?: Utxo[]
   ): Promise<string> {
-    let balance = 0;
+    let balance = 0n;
     if (utxos && utxos?.length > 0) {
-      balance = utxos.reduce((a, b) => a + b.satoshis, 0);
+      balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       balance = await this.getBalance();
     }
-    if (balance == 0) return "No funds on contract";
+    if (balance == 0n) return "No funds on contract";
 
     const fn = this.getFunction(Faucet.fn)!;
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
-    const newPrincipal = balance - this.payout;
-    const minerFee = fee ? fee : 253;
-    let sendAmount = this.payout - minerFee;
+    const newPrincipal = balance - BigInt(this.payout);
+    const minerFee = fee ? fee : 253n;
+    let sendAmount = BigInt(this.payout) - minerFee;
 
     const to = [
       {
@@ -189,13 +189,13 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress)
       to.push({
         to: exAddress,
-        amount: 546,
+        amount: 546n,
       });
 
-    const size = await tx.to(to).withAge(this.period).withoutChange().build();
+    const size = await tx.to(to).withAge(Number(this.period)).withoutChange().build();
     if (exAddress) {
-      const minerFee = fee ? fee : size.length / 2;
-      sendAmount = this.payout - (minerFee + 10);
+      const minerFee = fee ? fee : BigInt(size.length) / 2n;
+      sendAmount = BigInt(this.payout) - (minerFee + 10n);
       // remove the old executor amount
       // replace with new fee
       to.pop();
@@ -206,7 +206,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     }
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    const payTx = await tx.to(to).withAge(this.period).withoutChange().send();
+    const payTx = await tx.to(to).withAge(Number(this.period)).withoutChange().send();
     return payTx.txid;
   }
 }

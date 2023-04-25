@@ -9,9 +9,10 @@ import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, _PROTOCOL_ID, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
-  binToNumber,
+  binToBigInt,
   deriveLockingBytecodeHex,
   getPrefixFromNetwork,
+  parseBigInt,
   toHex,
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
@@ -20,12 +21,12 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "G";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
-  public static minAllowance: number = DUST_UTXO_THRESHOLD + 220 + 10;
+  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 220n + 10n;
 
   constructor(
-    public threshold: number = 100000,
+    public threshold: bigint = 100000n,
     public address: string,
-    public executorAllowance: number,
+    public executorAllowance: bigint,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
@@ -61,7 +62,7 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
 
-    const threshold = parseInt(p.args.shift()!);
+    const threshold = parseBigInt(p.args.shift()!);
 
     const lock = p.args.shift()!;
 
@@ -70,7 +71,7 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
-    const executorAllowance = parseInt(p.args.shift()!);
+    const executorAllowance = parseBigInt(p.args.shift()!);
 
     let gate = new Gate(
       threshold,
@@ -101,7 +102,7 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    let threshold = binToNumber(p.args.shift()!);
+    let threshold = binToBigInt(p.args.shift()!);
     let lock = p.args.shift()!;
 
     let prefix = getPrefixFromNetwork(network);
@@ -109,7 +110,7 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
-    const executorAllowance = binToNumber(p.args.shift()!);
+    const executorAllowance = binToBigInt(p.args.shift()!);
 
     let perpetuity = new Gate(
       threshold,
@@ -161,22 +162,22 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
 
   async execute(
     exAddress?: string,
-    fee?: number,
+    fee?: bigint,
     utxos?: Utxo[]
   ): Promise<string> {
-    let currentValue = 0;
+    let currentValue = 0n;
     if (utxos && utxos?.length > 0) {
-      currentValue = utxos.reduce((a, b) => a + b.satoshis, 0);
+      currentValue = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       currentValue = await this.getBalance();
     }
-    if (currentValue == 0) return "No funds on contract";
+    if (currentValue == 0n) return "No funds on contract";
 
     let fn = this.getFunction(Gate.fn)!;
     let newPrincipal = currentValue - (this.executorAllowance);
 
     // round up
-    newPrincipal += 3;
+    newPrincipal += 3n;
 
     let to = [
       {
@@ -199,9 +200,9 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
 
     //console.log(size.length / 2)
     if (exAddress) {
-      let minerFee = fee ? fee : size.length / 2;
+      let minerFee = fee ? fee : BigInt(size.length) / 2n;
 
-      executorFee = this.executorAllowance - minerFee - 7
+      executorFee = this.executorAllowance - minerFee - 7n
       to.pop();
       to.push({
         to: exAddress,

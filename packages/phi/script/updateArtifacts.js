@@ -1,6 +1,6 @@
 import glob from "glob";
 import fs from "fs";
-import { compileFile, compileString } from "cashc";
+import { compileFile, compileString } from "cashc-0.7";
 import { getDivideContract } from "./divide.v1.js";
 
 function updateArtifacts() {

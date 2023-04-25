@@ -35,6 +35,7 @@ export {
   prepareBytecodeQueryParameters
 } from "./query/index.js";
 export {
+  parseBigInt,
   binToNumber,
   decodeNullDataScript,
   deriveLockingBytecode,

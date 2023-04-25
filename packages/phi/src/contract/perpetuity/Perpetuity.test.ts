@@ -5,10 +5,10 @@ import { derivePublicKeyHashHex } from "../../common/util.js";
 describe(`Perpetuity Class Tests`, () => {
   test("Should a serialize a Perpetuity", async () => {
     const p = new Perpetuity(
-      4000,
+      4000n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
-      1000,
-      12
+      1000n,
+      12n
     );
     const chk = derivePublicKeyHashHex(
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr"
@@ -28,10 +28,10 @@ describe(`Perpetuity Class Tests`, () => {
 
   test("Should a serialize a v0 Perpetuity", async () => {
     const p = new Perpetuity(
-      3400,
+      3400n,
       "bitcoincash:qrtyy8w9yv6ffqtny9gp56m8kztl3nwwzcqyzsv32k",
-      1000,
-      120,
+      1000n,
+      120n,
       {version:0}
     );
     const chk = derivePublicKeyHashHex(
@@ -51,17 +51,17 @@ describe(`Perpetuity Class Tests`, () => {
   }); 
 
 
-  test("Should a deserialize and reserialize a staging Perpetuity", async () => {
-    const options = { version: 1, network: "staging" };
+  test("Should a deserialize and reserialize a chipnet Perpetuity", async () => {
+    const options = { version: 1, network: "chipnet" };
     const p = new Perpetuity(
-      5,
+      5n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
-      2000,
-      120,
+      2000n,
+      120n,
       options
     );
 
-    const p2 = Perpetuity.fromString(p.toString(), "staging");
+    const p2 = Perpetuity.fromString(p.toString(), "chipnet");
 
     expect(p.toString()).toEqual(p2.toString());
     expect(p.getAddress()).toEqual(p2.getAddress());
@@ -71,10 +71,10 @@ describe(`Perpetuity Class Tests`, () => {
   test("Should a deserialize and reserialize a regtest Perpetuity to and from an opreturn", async () => {
     const options = { version: 1, network: "regtest" };
     const p1 = new Perpetuity(
-      5,
+      5n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
-      2000,
-      120,
+      2000n,
+      120n,
       options
     );
     const opReturn = p1.toOpReturn();
@@ -91,10 +91,10 @@ describe(`Perpetuity Class Tests`, () => {
 
     const options = { version: 1, network: "regtest" };
     const p1 = new Perpetuity(
-      1,
+      1n,
       bob.getDepositAddress(),
       Perpetuity.minAllowance,
-      10,
+      10n,
       options
     );
 

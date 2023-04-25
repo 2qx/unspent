@@ -9,8 +9,8 @@ import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v1 } from "./v1.js";
 
-describe(`Example Perpituity Tests`, () => {
-  test("Should pay a perpituity contract", async () => {
+describe(`Example Perpetuity Tests`, () => {
+  test("Should pay a perpetuity contract", async () => {
     let regTest = new ElectrumCluster(
       "CashScript Application",
       "1.4.1",
@@ -33,13 +33,13 @@ describe(`Example Perpituity Tests`, () => {
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
     //let now = await regtestNetwork.getBlockHeight();
-    let fee = 5000;
-    let decay = 120;
-    let period = 1;
+    let fee = 5000n;
+    let decay = 120n;
+    let period = 1n;
     let contract = new Contract(
       v1 as Artifact,
       [period, bytecode, fee, decay],
-      regtestNetwork
+      {provider: regtestNetwork, addressType: 'p2sh20'}
     );
 
     // fund the perp contract
@@ -54,26 +54,26 @@ describe(`Example Perpituity Tests`, () => {
     let contracts = [contract];
     await mine({
       cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
-      blocks: 5000,
+      blocks: 5,
     });
-    for (let x = 0; x < 5; x++) {
+    for (let x = 0n; x < 5n; x++) {
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
       let balance = await contracts.slice(-1)[0]!.getBalance();
-      let installment = Math.round(balance / decay);
+      let installment = balance / decay;
       let fn = contracts.slice(-1)[0]!.functions["execute"]!();
 
       //now += period;
       await fn
         .to([
-          { to: bob.getDepositAddress(), amount: installment + 3 },
+          { to: bob.getDepositAddress(), amount: installment + 3n },
           {
             to: contract.address,
-            amount: balance - (installment + fee) + 3,
+            amount: balance - (installment + fee) + 3n,
           },
-          { to: charlie.getDepositAddress(), amount: 700 + x },
+          { to: charlie.getDepositAddress(), amount: 700n + x },
         ])
         .withAge(1)
         .withoutChange()

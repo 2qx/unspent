@@ -1,7 +1,6 @@
 import {
   binToHex,
   hexToBin,
-  instantiateSha256,
   lockingBytecodeToBase58Address,
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
@@ -10,8 +9,14 @@ import {
   Artifact,
   Contract as CashScriptContract,
   Utxo,
-} from "cashscript";
-import { NetworkProvider } from "cashscript";
+  NetworkProvider
+}
+  from "cashscript";
+// import {
+//   asmToScript,
+//   generateRedeemScript,
+//   scriptToBytecode
+// } from "@cashscript/utils";
 
 import { getDefaultProvider } from "./network.js";
 
@@ -26,12 +31,14 @@ import {
 } from "./util.js";
 import { DELIMITER, PROTOCOL_ID, _PROTOCOL_ID } from "./constant.js";
 import { ParsedContractI } from "./interface.js"
+import { ContractOptions } from "cashscript/dist/interfaces.js";
 
 export class BaseUtxPhiContract {
   private artifact: Artifact;
   private contract: CashScriptContract;
   protected testnet: boolean;
   public provider?: NetworkProvider;
+  public addressType: ContractOptions["addressType"]
 
   public static delimiter: string = DELIMITER;
   public static _PROTOCOL_ID: string = _PROTOCOL_ID;
@@ -47,10 +54,16 @@ export class BaseUtxPhiContract {
     this.testnet = this.provider.network == "mainnet" ? false : true;
 
     this.artifact = artifact;
+
+    this.addressType = this.artifact.compiler.version.startsWith("0.7") ? 'p2sh20' : 'p2sh32'
     this.contract = new CashScriptContract(
       artifact,
       [...constructorArguments],
-      this.provider
+      {
+        provider: this.provider,
+        addressType: this.addressType
+      }
+
     );
   }
 
@@ -58,7 +71,10 @@ export class BaseUtxPhiContract {
     this.contract = new CashScriptContract(
       this.artifact,
       [...constructorArguments],
-      this.provider
+      {
+        provider: this.provider,
+        addressType: this.addressType
+      }
     );
   }
 
@@ -89,7 +105,7 @@ export class BaseUtxPhiContract {
     };
   }
 
-  static parseOpReturn(opReturn: Uint8Array | string, network = "mainnet"):ParsedContractI {
+  static parseOpReturn(opReturn: Uint8Array | string, network = "mainnet"): ParsedContractI {
     // transform to binary
     if (typeof opReturn == "string") {
       opReturn = hexToBin(opReturn);
@@ -125,7 +141,7 @@ export class BaseUtxPhiContract {
     };
   }
 
-  static parseOutputs(opReturn: Uint8Array | string):Uint8Array[] {
+  static parseOutputs(opReturn: Uint8Array | string): Uint8Array[] {
     // transform to binary
     if (typeof opReturn == "string") {
       opReturn = hexToBin(opReturn);
@@ -139,8 +155,8 @@ export class BaseUtxPhiContract {
     String.fromCharCode(components.shift()![0]!);
     binToNumber(components.shift()!);
     const lockingBytecode = components.splice(-1)[0]!;
-    
-    const args = [...components].filter(b => b.length==23 || b.length == 25);
+
+    const args = [...components].filter(b => b.length == 23 || b.length == 25);
 
     return [...args, lockingBytecode];
   }
@@ -153,7 +169,7 @@ export class BaseUtxPhiContract {
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): number {
+  ): bigint {
     throw Error(
       `Cannot get executor allowance from base class, ${opReturn} on ${network}`
     );
@@ -164,7 +180,7 @@ export class BaseUtxPhiContract {
     network = "mainnet",
     networkProvider?: NetworkProvider,
     blockHeight?: number
-  ): Promise<number> {
+  ): Promise<bigint> {
     networkProvider;
     blockHeight;
     throw Error(
@@ -173,15 +189,15 @@ export class BaseUtxPhiContract {
   }
 
   static async getBalance(
-    address:string,
+    address: string,
     networkProvider: NetworkProvider
-    ){
-    const balance =  (await networkProvider.getUtxos(address)).map(utxo=> utxo.satoshis).filter((x) => x > 0).reduce(sum,0)
-    return balance 
+  ) {
+    const balance = (await networkProvider.getUtxos(address)).map(utxo => utxo.satoshis).filter((x) => x > 0).reduce(sum, 0)
+    return balance
   }
 
 
-  async getBalance(): Promise<number> {
+  async getBalance(): Promise<bigint> {
     const bal = await this.contract.getBalance();
     return bal;
   }
@@ -190,10 +206,8 @@ export class BaseUtxPhiContract {
     return this.contract.address;
   }
 
-  async getLegacyAddress(): Promise<string> {
-    const sha256 = await instantiateSha256();
+  getLegacyAddress(): string {
     const addr = lockingBytecodeToBase58Address(
-      sha256,
       this.getLockingBytecode(false) as Uint8Array,
       this.testnet ? "testnet" : "mainnet"
     );
@@ -231,7 +245,7 @@ export class BaseUtxPhiContract {
   }
 
   getRedeemScriptHex(): string {
-    return this.contract.getRedeemScriptHex();
+    return this.contract.bytecode
   }
 
   getFunction(fn: string) {

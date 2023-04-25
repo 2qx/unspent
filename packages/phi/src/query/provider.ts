@@ -28,7 +28,7 @@ export async function getRecords(
     offset: offset,
     exclude_pattern: exclude_pattern,
     after: after
-  } as BytecodePatternQueryI
+  } 
 
   param = { ... BytecodePatternQueryDefaults, ...param}
 

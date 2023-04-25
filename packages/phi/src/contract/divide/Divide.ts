@@ -11,9 +11,10 @@ import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   deriveLockingBytecodeHex,
   getPrefixFromNetwork,
+  parseBigInt,
   toHex,
-  binToNumber,
   sum,
+  binToBigInt,
 } from "../../common/util.js";
 import { artifact as v1_2 } from "./cash/divide.2.js";
 import { artifact as v1_3 } from "./cash/divide.3.js";
@@ -25,11 +26,11 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static c: string = "D";
   private static fn: string = "execute";
   private payeeLocks: Uint8Array[];
-  public divisor: number;
-  public static minAllowance = 227 + DUST_UTXO_THRESHOLD + 10;
+  public divisor: bigint;
+  public static minAllowance = 227n + DUST_UTXO_THRESHOLD + 10n;
 
   constructor(
-    public executorAllowance: number = 1200,
+    public executorAllowance: bigint|number = 1200n,
     public payees: string[],
     public options: ContractOptions = DefaultOptions
   ) {
@@ -40,16 +41,16 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Divide Contract Version");
     }
 
-    const usableThreshold = Divide.minAllowance + 66 * payees.length;
+    const usableThreshold = Divide.minAllowance + 66n * BigInt(payees.length);
     if (executorAllowance < usableThreshold)
       throw Error(
         `Executor Allowance below usable threshold (${usableThreshold}) for ${payees.length} addresses`
       );
 
-    const divisor = payees.length;
-    if (!(divisor >= 2 && divisor <= 4))
+    const divisor = BigInt(payees.length);
+    if (!(divisor >= 2n && divisor <= 4n))
       throw Error(`Divide contract range must be 2-4, ${divisor} out of range`);
-    const script = scriptFn[divisor - 2]!;
+    const script = scriptFn[Number(divisor - 2n)]!;
 
     const payeeLocks = [...payees].map((c) => {
       const lock = cashAddressToLockingBytecode(c);
@@ -57,7 +58,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       return lock.bytecode;
     });
     super(options.network!, script, [
-      executorAllowance,
+      BigInt(executorAllowance),
       divisor,
       ...payeeLocks,
     ]);
@@ -73,7 +74,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       return lock.bytecode;
     });
 
-    this._refresh([this.executorAllowance, this.divisor, ...this.payeeLocks]);
+    this._refresh([BigInt(this.executorAllowance), this.divisor, ...this.payeeLocks]);
   }
 
   static fromString(str: string, network = "mainnet"): Divide {
@@ -88,7 +89,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
     const prefix = getPrefixFromNetwork(p.options.network);
 
-    const executorAllowance = parseInt(p.args.shift()!);
+    const executorAllowance = parseBigInt(p.args.shift()!);
     const payees = p.args.map((lock) => {
       const addr = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
       if (typeof addr !== "string") throw Error("non-standard address" + addr);
@@ -121,7 +122,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
     const prefix = getPrefixFromNetwork(p.options.network);
 
-    const executorAllowance = binToNumber(p.args.shift()!);
+    const executorAllowance = binToBigInt(p.args.shift()!);
     const payeesLocks = p.args;
     const payees = payeesLocks.map((lock) => {
       const addr = lockingBytecodeToCashAddress(lock, prefix);
@@ -139,9 +140,9 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): number {
+  ): bigint {
     const p = this.parseOpReturn(opReturn, network);
-    return binToNumber(p.args.shift()!);
+    return binToBigInt(p.args.shift()!);
   }
 
   static async getSpendableBalance(
@@ -149,19 +150,19 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     network = "mainnet",
     networkProvider: NetworkProvider,
     blockHeight: number
-  ): Promise<number> {
+  ): Promise<bigint> {
     const p = this.parseOpReturn(opReturn, network);
     blockHeight;
-    const executorAllowance = binToNumber(p.args.shift()!);
+    const executorAllowance = binToBigInt(p.args.shift()!);
     const utxos = await networkProvider.getUtxos(p.address);
     const spendableUtxos = utxos.map((u) => {
       return u.satoshis;
     });
-    const spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0;
-    if (spendable > p.args.length * DUST_UTXO_THRESHOLD + executorAllowance) {
+    const spendable = spendableUtxos.length > 0 ? spendableUtxos.reduce(sum) : 0n;
+    if (spendable > BigInt(p.args.length) * DUST_UTXO_THRESHOLD + executorAllowance) {
       return spendable;
     } else {
-      return 0;
+      return 0n;
     }
   }
 
@@ -204,23 +205,23 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
   async execute(
     exAddress?: string,
-    fee?: number,
+    fee?: bigint,
     utxos?: Utxo[]
   ): Promise<string> {
-    let balance = 0;
+    let balance = 0n;
     if (utxos && utxos?.length > 0) {
-      balance = utxos.reduce((a, b) => a + b.satoshis, 0);
+      balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       balance = await this.getBalance();
     }
-    if (balance == 0) return "No funds on contract";
+    if (balance == 0n) return "No funds on contract";
 
     const fn = this.getFunction(Divide.fn)!;
-    const distributedValue = balance - this.executorAllowance;
-    const divisor = this.payees.length;
-    const installment = Math.round(distributedValue / divisor) + 1;
+    const distributedValue = balance - BigInt(this.executorAllowance);
+    const divisor = BigInt(this.payees.length);
+    const installment =distributedValue / divisor + 1n;
 
-    if (installment < 546) throw "Installment less than dust limit... bailing";
+    if (installment < 546n) throw "Installment less than dust limit... bailing";
 
     const to: any[] = [];
     for (let i = 0; i < divisor; i++) {
@@ -230,17 +231,17 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress) {
       to.push({
         to: exAddress,
-        amount: 546,
+        amount: 546n,
       });
 
       const size = await fn().to(to).withoutChange().build();
 
-      const feeEstimate = fee ? fee : size.length / 2;
+      const feeEstimate = fee ? fee : BigInt(size.length) / 2n;
 
       to.pop();
       const executorPayout =
-        this.executorAllowance - (feeEstimate + 2 * divisor + 8);
-      if (executorPayout > 546)
+        BigInt(this.executorAllowance) - (feeEstimate + 2n * divisor + 8n);
+      if (executorPayout > 546n)
         to.push({
           to: exAddress,
           amount: executorPayout,

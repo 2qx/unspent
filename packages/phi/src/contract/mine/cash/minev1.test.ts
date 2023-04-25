@@ -9,10 +9,9 @@ import {
   binToHex,
   hexToBin,
   bigIntToBinUintLE,
-  bigIntToScriptNumber,
+  bigIntToVmNumber,
 } from "@bitauth/libauth";
-import { getRandomInt } from "mainnet-js/dist/main/util";
-import { sha256, sum, deriveLockingBytecodeHex } from "../../../common/util.js";
+import { sha256, sum, deriveLockingBytecodeHex, getRandomIntWeak } from "../../../common/util.js";
 import { artifact as v1 } from "./v1.js";
 import { _PROTOCOL_ID } from "../../../common/constant.js";
 
@@ -34,15 +33,15 @@ describe(`Mining Contract Tests`, () => {
       "rubber amateur across squirrel deposit above dish toddler visa cherry clerk egg"
     );
 
-    const period = 1;
-    const payout = 5000;
-    const difficulty = 1;
+    const period = 1n;
+    const payout = 5000n;
+    const difficulty = 1n;
     const index = new Uint8Array(7);
 
     let contract = new Contract(
       v1,
       [period, payout, difficulty, index],
-      regtestNetwork
+      {provider:regtestNetwork, addressType:"p2sh20"}
     );
 
     // fund the initial mining contract
@@ -67,14 +66,14 @@ describe(`Mining Contract Tests`, () => {
       let nonceBin = new Uint8Array([]);
       let result = new Uint8Array([]);
       while (!mined) {
-        nonce = getRandomInt(9007199254740991);
-        nonceBin = bigIntToScriptNumber(BigInt(nonce));
+        nonce = getRandomIntWeak(9007199254740991);
+        nonceBin = bigIntToVmNumber(BigInt(nonce));
         const msg = new Uint8Array([
-          ...hexToBin(contract.getRedeemScriptHex()),
+          ...hexToBin(contract.bytecode),
           ...nonceBin,
         ]);
         result = await sha256(msg);
-        if (result.slice(0, difficulty).reduce(sum) === 0) mined = true;
+        if (result.slice(0, Number(difficulty)).reduce(sum) === 0) mined = true;
       }
 
       if (nonceBin.length < 7) {
@@ -89,7 +88,7 @@ describe(`Mining Contract Tests`, () => {
       const newContract = new Contract(
         v1,
         [period, payout, difficulty, nonceHex],
-        regtestNetwork
+        {provider:regtestNetwork, addressType:"p2sh20"}
       );
 
       //console.log(payout)
@@ -107,9 +106,9 @@ describe(`Mining Contract Tests`, () => {
         .to([
           {
             to: newContract.address,
-            amount: balance - payout + 3,
+            amount: balance - payout + 3n,
           },
-          { to: bob.getDepositAddress(), amount: payout - 453 },
+          { to: bob.getDepositAddress(), amount: payout - 453n },
         ])
         .withAge(1)
         .withoutChange()
@@ -119,7 +118,7 @@ describe(`Mining Contract Tests`, () => {
     }
 
     expect(await bob.getBalance("sat")).toBeGreaterThanOrEqual(
-      (payout - 453) * 3
+      (payout - 453n) * 3n
     );
   });
 });

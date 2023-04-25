@@ -37,8 +37,8 @@ export function getDefaultProvider(network = "mainnet") {
       false
     );
     provider = new ElectrumNetworkProvider("mainnet", cluster, false);
-  } else if (network === "staging") {
-    provider = new ElectrumNetworkProvider("staging");
+  } else if (network === "chipnet") {
+    provider = new ElectrumNetworkProvider("chipnet");
   } else if (network === "regtest") {
     let cluster = new ElectrumCluster(
       "@unspent/phi - regtest",

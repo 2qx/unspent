@@ -15,13 +15,13 @@ describe(`Mine Class Tests`, () => {
     expect(m.isTestnet()).toEqual(m2.isTestnet());
   });
 
-  test("Should deserialize and reserialize a staging mine", async () => {
-    const m = new Mine(5, Mine.minPayout, 2, undefined, {
+  test("Should deserialize and reserialize a chipnet mine", async () => {
+    const m = new Mine(5n, Mine.minPayout, 2n, undefined, {
       version: 1,
-      network: "staging",
+      network: "chipnet",
     });
 
-    const m2 = Mine.fromString(m.toString(), "staging");
+    const m2 = Mine.fromString(m.toString(), "chipnet");
 
     expect(m.toString()).toEqual(m2.toString());
     expect(m.getAddress()).toEqual(m2.getAddress());
@@ -30,7 +30,7 @@ describe(`Mine Class Tests`, () => {
 
   test("Should deserialize and reserialize a regtest Mine to chunks and from an op_return", async () => {
     const options = { version: 1, network: "regtest" };
-    const m1 = new Mine(5, Mine.minPayout, 2, undefined, options);
+    const m1 = new Mine(5n, Mine.minPayout, 2n, undefined, options);
     const opReturn = m1.toOpReturn();
     const m2 = Mine.fromOpReturn(opReturn, "regtest");
     expect(m1.toString()).toEqual(m2.toString());
@@ -40,7 +40,7 @@ describe(`Mine Class Tests`, () => {
 
   test("Should 'mine' a payout to an address", async () => {
     const options = { version: 1, network: "regtest" };
-    const m1 = new Mine(5, Mine.minPayout, 2, undefined, options);
+    const m1 = new Mine(5n, Mine.minPayout, 2n, undefined, options);
 
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
     const bob = await RegTestWallet.newRandom();
@@ -61,7 +61,7 @@ describe(`Mine Class Tests`, () => {
 
   test("Should return info", async () => {
     const options = { version: 1, network: "regtest" };
-    const c1 = new Mine(5, Mine.minPayout, 2, undefined, options);
+    const c1 = new Mine(5n, Mine.minPayout, 2n, undefined, options);
     const info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");

@@ -10,7 +10,7 @@ import {
 } from "cashscript";
 //@ts-ignore
 import { RegTestWallet } from "mainnet-js";
-import { compileFile } from "cashc";
+import { artifact as v1 } from "./v1.js";
 import { Divide } from "../../divide/index.js";
 import {
   createOpReturnData,
@@ -31,9 +31,9 @@ describe(`Record Contract Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    let maxFee = 850;
-    let script = compileFile("./packages/phi/src/contract/record/cash/v1.cash");
-    let contract = new CashScriptContract(script, [maxFee, 2], regtestNetwork);
+    let maxFee = 850n;
+    let script = v1
+    let contract = new CashScriptContract(script, [maxFee, 2n], { provider: regtestNetwork, addressType: 'p2sh20' });
 
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
@@ -46,7 +46,7 @@ describe(`Record Contract Tests`, () => {
     ]);
 
     let c = new Divide(
-      4000,
+      4000n,
       [
         "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
         "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
@@ -64,11 +64,11 @@ describe(`Record Contract Tests`, () => {
 
     let test = await contract!.functions["execute"]!(checkHash)
       .withOpReturn(chunks)
-      .withHardcodedFee(279)
+      .withHardcodedFee(279n)
       .build();
     await contract!.functions["execute"]!(checkHash)
       .withOpReturn(chunks)
-      .withHardcodedFee(test.length / 2)
+      .withHardcodedFee(BigInt(test.length) / 2n)
       .send();
     expect(await contract.getBalance()).toBeGreaterThanOrEqual(
       50000 - test.length / 2
@@ -87,11 +87,11 @@ describe(`Record Contract Tests`, () => {
 
     let provider = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    let maxFee = 850;
-    let script = compileFile("./packages/phi/src/contract/record/cash/v1.cash");
-    let contract = new CashScriptContract(script, [maxFee, 0], provider);
+    let maxFee = 850n;
+    let script = v1;
+    let contract = new CashScriptContract(script, [maxFee, 0n], { provider: provider, addressType:"p2sh20" });
     let c = new Divide(
-      4000,
+      4000n,
       [
         "bchreg:pzt2852zlgtyqu6585wtu72y2u8646tefsa54drfw8",
         "bchreg:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwus03a55xe",
@@ -119,11 +119,11 @@ describe(`Record Contract Tests`, () => {
 
     let tmp = await contract!.functions["execute"]!(checkHash)
       .withOpReturn(chunks)
-      .withHardcodedFee(369)
+      .withHardcodedFee(369n)
       .build();
     await contract!.functions["execute"]!(checkHash)
       .withOpReturn(chunks)
-      .withHardcodedFee(tmp.length / 2)
+      .withHardcodedFee(BigInt(tmp.length) / 2n)
       .send();
     expect(await contract.getBalance()).toBeGreaterThanOrEqual(50000 - 369);
   });

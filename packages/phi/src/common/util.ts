@@ -7,7 +7,6 @@ import {
   decodeCashAddressFormatWithoutPrefix,
   cashAddressToLockingBytecode,
   CashAddressNetworkPrefix,
-  CashAddressVersionByte,
   hexToBin,
   instantiateSha256,
   instantiateRipemd160,
@@ -16,6 +15,7 @@ import {
   numberToBinUintLE,
   encodeCashAddress,
   encodeCashAddressFormat,
+  CashAddressType,
 } from "@bitauth/libauth";
 
 import { Op, encodeNullDataScript } from "@cashscript/utils";
@@ -42,7 +42,7 @@ export function derivePublicKeyHash(address: string): Uint8Array {
   if (typeof result === "string") throw new Error(result);
 
   // return the public key hash
-  return result.hash;
+  return result.payload;
 }
 
 export function derivePublicKeyHashHex(address: string): string {
@@ -83,8 +83,7 @@ export async function sanitizeAddress(wildString: string) {
           "Refusing to convert a legacy P2SH address (possibly segwit) to cashaddress"
         );
 
-      const sha256 = await instantiateSha256();
-      r = decodeBase58Address(sha256, wildString);
+      r = decodeBase58Address(wildString);
       if (typeof r === "string") throw Error(r);
 
       let prefix;
@@ -95,7 +94,7 @@ export async function sanitizeAddress(wildString: string) {
       } else {
         throw Error("Couldn't identify type of legacy address");
       }
-      cashAddr = encodeCashAddress(prefix, 0, r.payload);
+      cashAddr = encodeCashAddress(prefix as CashAddressNetworkPrefix, "p2pkh", r.payload);
       return cashAddr;
     } else {
       r = decodeCashAddressFormatWithoutPrefix(wildString);
@@ -103,7 +102,7 @@ export async function sanitizeAddress(wildString: string) {
   }
   // otherwise, derive the network from the address without prefix
   if (typeof r === "string") throw Error(r);
-  cashAddr = encodeCashAddressFormat(r.prefix, r.version, r.hash);
+  cashAddr = encodeCashAddressFormat(r.prefix, r.version, r.payload);
   return cashAddr;
 }
 
@@ -114,6 +113,7 @@ export function getPrefixFromNetwork(
   if (!prefix) {
     if (network == "mainnet") prefix = CashAddressNetworkPrefix.mainnet;
     if (network == "staging") prefix = CashAddressNetworkPrefix.testnet;
+    if (network == "chipnet") prefix = CashAddressNetworkPrefix.testnet;
     if (network == "regtest") prefix = CashAddressNetworkPrefix.regtest;
   }
   if (!prefix) throw Error("unknown network");
@@ -135,7 +135,8 @@ export function toBin(output: string): Uint8Array {
   return encode(data);
 }
 
-export function toHex(num: number): string {
+export function toHex(num: number|bigint): string {
+  num = Number(num)
   let hex = binToHex(numberToBinUintLE(num)).toUpperCase();
   if (!hex) hex = "00";
   return "0x" + hex;
@@ -144,6 +145,11 @@ export function toHex(num: number): string {
 export function binToNumber(data: Uint8Array): number {
   const h = binToNumberUintLE(data);
   return h;
+}
+
+export function binToBigInt(data: Uint8Array): bigint {
+  const h = binToNumberUintLE(data);
+  return BigInt(h);
 }
 
 // For decoding OP_RETURN data
@@ -211,10 +217,13 @@ export function sum(previousValue: any, currentValue: any) {
   return previousValue + currentValue;
 }
 
+export function parseBigInt(num:string):bigint{
+  return BigInt(parseInt(num))
+}
 
 export function assurePkh(address: string){
   const cashaddrInfo = decodeCashAddress(address)
   if(typeof cashaddrInfo === "string") throw Error(cashaddrInfo)
-  if(cashaddrInfo.type!=CashAddressVersionByte.P2PKH) throw ("Provided address was not a pay to public key hash address")
+  if(cashaddrInfo.type!=CashAddressType.p2pkh) throw ("Provided address was not a pay to public key hash address")
 }
 

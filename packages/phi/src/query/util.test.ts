@@ -15,7 +15,7 @@ describe(`Record Class Tests`, () => {
     expect(result.after).toBe(0);
     expect(result.offset).toBe(0);
     expect(result.node).toBe("mainnet");
-    expect(result.exclude_pattern).toBe("6a0401010102010717");
+    expect(result.exclude_pattern).toBe("");
 
   });
 
@@ -32,11 +32,11 @@ describe(`Record Class Tests`, () => {
     expect(result.after).toBe(0);
     expect(result.offset).toBe(0);
     expect(result.node).toBe("mainnet");
-    expect(result.exclude_pattern).toBe("6a0401010102010717");
+    expect(result.exclude_pattern).toBe("");
 
   });
 
-  test("Should set prefix for unversioned annuity", async () => {
+  test("Should set prefix for un-versioned annuity", async () => {
     const extended = {
       code: "a"
     }

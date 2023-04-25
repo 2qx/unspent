@@ -3,7 +3,8 @@ require("dotenv").config({ path: ".env.regtest" });
 require("dotenv").config({ path: ".env.testnet" });
 
 const { spawnSync } = require("child_process");
-const { pingBchn, getRegtestUtxos } = require("./util/generateBlock");
+const { pingBchn, getRegtestUtxos } = require("./util/generateBlock.cjs");
+
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -18,6 +19,8 @@ module.exports = async function (cwd) {
   if (process.env.SKIP_REGTEST_INIT) {
     return;
   }
+  console.log("Importing libauth...");
+  await import("@bitauth/libauth");
 
   console.log("Starting regtest network...");
 

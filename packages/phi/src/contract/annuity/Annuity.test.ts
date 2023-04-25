@@ -6,9 +6,9 @@ import { derivePublicKeyHashHex } from "../../common/util.js";
 describe(`Annuity Class Tests`, () => {
   test("Should serialize a Annuity", async () => {
     const a = new Annuity(
-      4000,
+      4000n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
-      5000,
+      5000n,
       Annuity.minAllowance
     );
     const chk = derivePublicKeyHashHex(
@@ -24,11 +24,11 @@ describe(`Annuity Class Tests`, () => {
     expect(a.isTestnet()).toEqual(a2.isTestnet());
   });
 
-  test("Should deserialize and reserialize a staging Annuity", async () => {
+  test("Should deserialize and reserialize a regtest Annuity", async () => {
     const a = new Annuity(
-      5,
+      5n,
       process.env["ADDRESS"]!,
-      5000,
+      5000n,
       Annuity.minAllowance,
       {
         version: 1,
@@ -43,7 +43,7 @@ describe(`Annuity Class Tests`, () => {
 
   test("Should error on next version ", async () => {
     try {
-      new Annuity(5, process.env["ADDRESS"]!, 5000, Annuity.minAllowance, {
+      new Annuity(5n, process.env["ADDRESS"]!, 5000n, Annuity.minAllowance, {
         version: 22,
         network: "regtest",
       });
@@ -52,12 +52,12 @@ describe(`Annuity Class Tests`, () => {
     }
   });
 
-  test("Should deserialize and reserialize a staging Annuity to chunks and opreturn", async () => {
+  test("Should deserialize and reserialize a regtest Annuity to chunks and opreturn", async () => {
     const options = { version: 1, network: "regtest" };
     const a1 = new Annuity(
-      5,
+      5n,
       process.env["ADDRESS"]!,
-      5000,
+      5000n,
       Annuity.minAllowance,
       options
     );
@@ -73,9 +73,9 @@ describe(`Annuity Class Tests`, () => {
   test("Should a return info", async () => {
     const options = { version: 1, network: "regtest" };
     const c1 = new Annuity(
-      5,
+      5n,
       process.env["ADDRESS"]!,
-      5000,
+      5000n,
       Annuity.minAllowance,
       options
     );
@@ -91,9 +91,9 @@ describe(`Annuity Class Tests`, () => {
 
     const options = { version: 1, network: "regtest" };
     const p1 = new Annuity(
-      1,
+      1n,
       bob.getDepositAddress(),
-      10000,
+      10000n,
       Annuity.minAllowance,
       options
     );

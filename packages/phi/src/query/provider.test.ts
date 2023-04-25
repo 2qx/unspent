@@ -63,7 +63,7 @@ describe(`Tests default parameters`, () => {
     const param = {} as HistoryQueryI
     const query = {  ...BytecodePatternQueryDefaults, ...param }
     expect(query.after).toBe(0)
-    expect(query.exclude_pattern).toBe("6a0401010102010717")
+    expect(query.exclude_pattern).toBe("")
     expect(query.offset).toBe(0)
     expect(query.limit).toBe(50)
     expect(query.prefix).toBe("6a04" + PROTOCOL_ID)

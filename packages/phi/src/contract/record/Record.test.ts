@@ -1,7 +1,6 @@
 import { Record } from "./Record.js";
 import { Divide } from "../divide/Divide.js";
 import { Faucet } from "../faucet/index.js";
-//@ts-ignore
 import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
@@ -9,7 +8,7 @@ import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
 describe(`Record Class Tests`, () => {
   test("Should announce itself and Faucet", async () => {
     const options = { version: 1, network: "regtest" };
-    const r = new Record(850, 0, options);
+    const r = new Record(850n, 0n, options);
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
     await alice.send([
@@ -53,7 +52,7 @@ describe(`Record Class Tests`, () => {
 
   test("Should deserialize and reserialize a regtest Record to chunks and from an opreturn", async () => {
     const options = { version: 1, network: "regtest" };
-    const r1 = new Record(850, 0, options);
+    const r1 = new Record(850n, 0n, options);
     const opReturn = r1.toOpReturn();
     const r2 = Record.fromOpReturn(opReturn, "regtest");
     expect(r1.toString()).toEqual(r2.toString());
@@ -63,8 +62,8 @@ describe(`Record Class Tests`, () => {
 
   test("Should announce itself and Faucet", async () => {
     const options = { version: 1, network: "regtest" };
-    const f = new Faucet(1, 1000, 0, options);
-    const r = new Record(850, 1, options);
+    const f = new Faucet(1n, 1000n, 0n, options);
+    const r = new Record(850n, 1n, options);
 
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
@@ -106,8 +105,8 @@ describe(`Record Class Tests`, () => {
       "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss",
     ];
     const options = { version: 1, network: "regtest" };
-    const d = new Divide(1047, payees, options);
-    const r = new Record(Record.minMaxFee, 1, options);
+    const d = new Divide(1047n, payees, options);
+    const r = new Record(Record.minMaxFee, 1n, options);
 
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
@@ -143,9 +142,9 @@ describe(`Record Class Tests`, () => {
 
   test("Should serialize and broadcast a Faucet contract and itself", async () => {
     const options = { version: 1, network: "regtest" };
-    const f = new Faucet(1, 3000, 0, options);
+    const f = new Faucet(1n, 3000n, 0n, options);
 
-    const r = new Record(850, 0, options);
+    const r = new Record(850n, 0n, options);
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
     await alice.send([
@@ -188,15 +187,15 @@ describe(`Record Class Tests`, () => {
 
   test("Should return info", async () => {
     const options = { version: 1, network: "regtest" };
-    const c1 = new Record(850, 0, options);
+    const c1 = new Record(850n, 0n, options);
     const info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");
   });
 
   test("Should return info", async () => {
-    const options = { version: 1, network: "staging" };
-    const c1 = new Record(850, 1, options);
+    const options = { version: 1, network: "chipnet" };
+    const c1 = new Record(850n, 1n, options);
     const info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");

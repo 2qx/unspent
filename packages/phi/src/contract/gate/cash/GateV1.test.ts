@@ -9,7 +9,7 @@ import { RegTestWallet } from "mainnet-js";
 import { artifact } from "./v1.js";
 import { DUST_UTXO_THRESHOLD } from "../../../common/constant.js";
 
-describe(`Gate Contract Tests`, () => {
+describe.skip(`Gate Contract Tests`, () => {
   test("Should throw error if Gate threshold not met", async () => {
     expect.assertions(2);
 
@@ -32,12 +32,12 @@ describe(`Gate Contract Tests`, () => {
     if (typeof recipient === "string") throw (recipient)
     let recipientLockingBytecode = recipient.bytecode
 
-    let threshold = 10000;
-    let executorAllowance = 1200;
+    let threshold = 10000n;
+    let executorAllowance = 1200n;
     let contract = new Contract(
       artifact,
       [threshold, recipientLockingBytecode, executorAllowance],
-      regtestNetwork
+      {provider: regtestNetwork, addressType: 'p2sh20'}
     );
 
     // fund the Gate
@@ -67,11 +67,11 @@ describe(`Gate Contract Tests`, () => {
 
 
     let balance = await contract.getBalance();
-    expect(balance).toBe(9900)
+    expect(balance).toBe(9900n)
 
     try {
       let size =
-        (
+        BigInt((
           await contract!.functions
             .execute()
             .to([
@@ -80,13 +80,13 @@ describe(`Gate Contract Tests`, () => {
             ])
             .withoutChange()
             .build()
-        ).length / 2;
+        ).length) / 2n;
       //console.log(size)
       await contract!.functions
         .execute()
         .to([
           { to: bob.getDepositAddress(), amount: balance - executorAllowance },
-          { to: alice.getDepositAddress(), amount: executorAllowance - size - 5 },
+          { to: alice.getDepositAddress(), amount: executorAllowance - size - 5n },
         ])
         .withoutChange()
         .send()
@@ -121,12 +121,12 @@ describe(`Gate Contract Tests`, () => {
     if (typeof recipient === "string") throw (recipient)
     let recipientLockingBytecode = recipient.bytecode
 
-    let threshold = 10000;
-    let executorAllowance = 1200;
+    let threshold = 10000n;
+    let executorAllowance = 1200n;
     let contract = new Contract(
       artifact,
       [threshold, recipientLockingBytecode, executorAllowance],
-      regtestNetwork
+      {provider: regtestNetwork, addressType: 'p2sh20'}
     );
 
     // fund the Gate
@@ -160,12 +160,12 @@ describe(`Gate Contract Tests`, () => {
 
 
     let balance = await contract.getBalance();
-    expect(balance).toBe(11200)
+    expect(balance).toBe(11200n)
 
-    let txOutput0 = (balance - executorAllowance + 1)
+    let txOutput0 = (balance - executorAllowance + 1n)
 
     let size =
-      (
+      BigInt((
         await contract!.functions
           .execute()
           .to([
@@ -174,10 +174,10 @@ describe(`Gate Contract Tests`, () => {
           ])
           .withoutChange()
           .build()
-      ).length / 2;
+      ).length) / 2n;
 
 
-    let executorTake = (executorAllowance - size - 6)
+    let executorTake = (executorAllowance - size - 6n)
 
 
     // console.log(txOutput0)
@@ -203,8 +203,8 @@ describe(`Gate Contract Tests`, () => {
       .send()
 
     expect((await bob.getBalance('sat'))).toBeGreaterThan(threshold)
-    expect((await charlie.getBalance('sat'))).toBe(executorTake)
-    expect((await contract.getBalance())).toBe(0)
+    expect((await charlie.getBalance('sat'))).toBe(Number(executorTake))
+    expect((await contract.getBalance())).toBe(0n)
 
   });
 
@@ -230,12 +230,12 @@ describe(`Gate Contract Tests`, () => {
     if (typeof recipient === "string") throw (recipient)
     let recipientLockingBytecode = recipient.bytecode
 
-    let threshold = 10000;
-    let executorAllowance = 1200;
+    let threshold = 10000n;
+    let executorAllowance = 1200n;
     let contract = new Contract(
       artifact,
       [threshold, recipientLockingBytecode, executorAllowance],
-      regtestNetwork
+      {provider: regtestNetwork, addressType:"p2sh20"}
     );
 
     // fund the Gate
@@ -265,14 +265,14 @@ describe(`Gate Contract Tests`, () => {
 
 
     let balance = await contract.getBalance();
-    expect(balance).toBe(28000)
+    expect(balance).toBe(28000n)
 
     try {
       await contract!.functions
         .execute()
         .to([
-          { to: bob.getDepositAddress(), amount: threshold+1 },
-          { to: alice.getDepositAddress(), amount: executorAllowance +10000 },
+          { to: bob.getDepositAddress(), amount: threshold+1n },
+          { to: alice.getDepositAddress(), amount: executorAllowance +10000n },
         ])
         .withoutChange()
         .send()

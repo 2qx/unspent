@@ -1,4 +1,4 @@
-pragma cashscript ^0.7.3;
+pragma cashscript ^0.7.2;
 
 contract Window(
   // deposit rate in sat per coin per sat
@@ -29,12 +29,8 @@ contract Window(
         int maturity = depositValue+coupon;
         int vaultRemainder = bankValue-coupon;
 
-
-        //new LockingBytecodeP2SH(hash160(this.activeBytecode)));
-        
-
         // calculate the deposit script
-        depositScript = LockingBytecodeP2SH([locktime,"b17576a9",recipientLockingBytecode,"88ac"]);
+        bytes depositScript = bytes(locktime) + 0xb17576a9 +bytes(recipientLockingBytecode) + 0x88ac;
 
         bytes depositLock = new LockingBytecodeP2SH(hash160(depositScript));
         require(tx.outputs[0].lockingBytecode == depositLock);

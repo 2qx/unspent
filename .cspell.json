@@ -4,6 +4,7 @@
     "node_modules/@generalprotocols/cspell-dictionary/cspell.json"
   ],
   "words": [
+    "ACTIVEBYTECODE",
     "alice",
     "autotomata",
     "bchn",
@@ -18,12 +19,24 @@
     "bytea",
     "Bytecodes",
     "chaingraph",
+    "CHECKSEQUENCEVERIFY",
+    "chipnet",
+    "clipanion",
     "forex",
+    "GENEREATED",
+    "GREATERTHAN",
+    "GREATERTHANOREQUAL",
     "indexeddb",
+    "INPUTINDEX",
     "lcov",
+    "LESSTHANOREQUAL",
     "macfja",
     "nlike",
     "nonfungible",
+    "NUMEQUAL",
+    "NUMEQUALVERIFY",
+    "OUTPUTBYTECODE",
+    "OUTPUTVALUE",
     "prismjs",
     "shortcode",
     "smui",
@@ -33,7 +46,9 @@
     "Timelock",
     "timelocked",
     "transpiles",
+    "UTXOBYTECODE",
     "utxos",
+    "UTXOVALUE",
     "zerodevx"
   ]
 }

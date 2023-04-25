@@ -31,10 +31,10 @@ describe(`Faucet Class Tests`, () => {
     expect(f.isTestnet()).toEqual(f2.isTestnet());
   });
 
-  test("Should deserialize and reserialize a staging faucet", async () => {
-    let f = new Faucet(5, 3000, 2, { version: 1, network: "staging" });
+  test("Should deserialize and reserialize a chipnet faucet", async () => {
+    let f = new Faucet(5n, 3000n, 2n, { version: 1, network: "chipnet" });
 
-    let f2 = Faucet.fromString(f.toString(), "staging");
+    let f2 = Faucet.fromString(f.toString(), "chipnet");
 
     expect(f.toString()).toEqual(f2.toString());
     expect(f.getAddress()).toEqual(f2.getAddress());
@@ -43,7 +43,7 @@ describe(`Faucet Class Tests`, () => {
 
   test("Should deserialize and reserialize a regtest Faucet to chunks and from an opreturn", async () => {
     let options = { version: 1, network: "regtest" };
-    let f1 = new Faucet(5, 3000, 2, options);
+    let f1 = new Faucet(5n, 3000n, 2n, options);
     let opReturn = f1.toOpReturn();
     let f2 = Faucet.fromOpReturn(opReturn, "regtest");
     expect(f1.toString()).toEqual(f2.toString());
@@ -53,7 +53,7 @@ describe(`Faucet Class Tests`, () => {
 
   test("Should return info", async () => {
     let options = { version: 1, network: "regtest" };
-    let f1 = new Faucet(5, 3000, 2, options);
+    let f1 = new Faucet(5n, 3000n, 2n, options);
     let info = await f1.info(false);
     expect(info).toContain(f1.toString());
     expect(info).toContain("balance");

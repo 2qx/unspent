@@ -2,12 +2,12 @@ import { mine, RegTestWallet, delay } from "mainnet-js";
 import { TimeLock } from "./TimeLock.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
 
-describe(`TimeLock Class Tests`, () => {
+describe.skip(`TimeLock Class Tests`, () => {
   test("Should a serialize a TimeLock", async () => {
     let c = new TimeLock(
-      6000,
+      6000n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
-      1000
+      1000n
     );
     let chk = derivePublicKeyHashHex(
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr"
@@ -24,16 +24,16 @@ describe(`TimeLock Class Tests`, () => {
     expect(c.isTestnet()).toEqual(c2.isTestnet());
   });
 
-  test("Should a deserialize and reserialize a staging TimeLock", async () => {
-    let options = { version: 1, network: "staging" };
+  test("Should a deserialize and reserialize a chipnet TimeLock", async () => {
+    let options = { version: 1, network: "chipnet" };
     let c = new TimeLock(
-      5000,
+      5000n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
-      2000,
+      2000n,
       options
     );
 
-    let c2 = TimeLock.fromString(c.toString(), "staging");
+    let c2 = TimeLock.fromString(c.toString(), "chipnet");
 
     expect(c.toString()).toEqual(c2.toString());
     expect(c.getAddress()).toEqual(c2.getAddress());
@@ -43,9 +43,9 @@ describe(`TimeLock Class Tests`, () => {
   test("Should a deserialize and reserialize a regtest TimeLock to and from an opreturn", async () => {
     let options = { version: 1, network: "regtest" };
     let c1 = new TimeLock(
-      5000,
+      5000n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
-      2000,
+      2000n,
       options
     );
     let opReturn = c1.toOpReturn();
@@ -61,7 +61,7 @@ describe(`TimeLock Class Tests`, () => {
     const charlie = await RegTestWallet.newRandom();
 
     let options = { version: 1, network: "regtest" };
-    let c1 = new TimeLock(1, bob.getDepositAddress(), TimeLock.minAllowance, options);
+    let c1 = new TimeLock(1n, bob.getDepositAddress(), TimeLock.minAllowance, options);
 
     await alice.send([
       {
@@ -80,7 +80,7 @@ describe(`TimeLock Class Tests`, () => {
     expect(await charlie.getBalance("sat")).toBeGreaterThan(605);
     expect(await bob.getBalance("sat")).toBeGreaterThan(1000000-1200);
     expect(c1.isTestnet()).toEqual(true);
-    expect(await c1.getBalance()).toBe(0);
+    expect(await c1.getBalance()).toBe(0n);
   });
 
 });

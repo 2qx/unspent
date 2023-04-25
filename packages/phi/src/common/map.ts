@@ -44,7 +44,7 @@ export function opReturnToInstance(
 export function opReturnToExecutorAllowance(
   serialized: string | Uint8Array,
   network?: string
-): number {
+): bigint {
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
   }
@@ -62,7 +62,7 @@ export async function opReturnToSpendableBalance(
   network = Network.MAINNET,
   networkProvider?: NetworkProvider,
   blockHeight?: number
-): Promise<number> {
+): Promise<bigint> {
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
   }
@@ -84,7 +84,7 @@ export async function opReturnToSpendableBalance(
     return spendableBalance;
   }catch(e:any){
     console.log(`error getting balance for ${binToHex(serialized)}`)
-    return 0
+    return 0n
   }
   
 }

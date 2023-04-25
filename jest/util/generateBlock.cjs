@@ -1,9 +1,11 @@
 const { spawnSync } = require("child_process");
 const electron = require("electrum-cash");
-const cashscript = require("cashscript");
+
 
 async function getRegtestUtxos(address) {
   try {
+    const cashscript = await import("cashscript");
+    
     let spv = new electron.ElectrumCluster(
       "Mainnet Regtest Client",
       "1.4.1",

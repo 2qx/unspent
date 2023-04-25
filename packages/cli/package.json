@@ -8,17 +8,21 @@
     "@bitauth/libauth": "^1.19.1",
     "@swc/core": "latest",
     "@swc/helpers": "latest",
-    "@tsconfig/node16-strictest-esm": "latest",
+    "@tsconfig/node18-strictest-esm": "latest",
     "@types/node": "^10.8.0",
     "@unspent/phi": "*",
-    "cashc": "^0.7.1",
-    "cashscript": "^0.7.1",
+    "cashc-0.7": "npm:cashc@0.7.3",
+    "cashscript-0.7": "npm:cashscript@0.7.3",
+    "cashc": "0.8.0-next.2",
+    "cashscript": "0.8.0-next.2",
     "clipanion": "^3.2.0-rc.11",
+    "get-stream": "^5.1.0",
     "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
   },
   "scripts": {
-    "cli": "node --experimental-modules cli.cjs"
+    "cli": "node --experimental-modules --es-module-specifier-resolution=node cli.cjs",
+    "test": "npx jest"
   },
   "exclude": [
     "exclude/"

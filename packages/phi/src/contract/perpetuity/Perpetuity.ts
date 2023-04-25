@@ -14,7 +14,7 @@ import {
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   assurePkh,
-  binToNumber,
+  binToBigInt,
   deriveLockingBytecode,
   deriveLockingBytecodeHex,
   derivePublicKeyHash,
@@ -30,13 +30,13 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
-  public static minAllowance: number = DUST_UTXO_THRESHOLD + 220 + 20;
+  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 220n + 20n;
 
   constructor(
-    public period: number = 4000,
+    public period: bigint|number = 4000n,
     public address: string,
-    public executorAllowance: number,
-    public decay: number,
+    public executorAllowance: bigint|number,
+    public decay: bigint|number,
     public options: ContractOptions = DefaultOptions
   ) {
     
@@ -64,13 +64,22 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       );
 
     super(options.network!, script, [
-      period,
+      BigInt(period),
       lock!,
-      executorAllowance,
-      decay,
+      BigInt(executorAllowance),
+      BigInt(decay),
     ]);
     this.recipientLockingBytecode = deriveLockingBytecode(address);
     this.options = options;
+  }
+
+  refresh(): void {
+    this._refresh([
+      BigInt(this.period),
+      this.recipientLockingBytecode,
+      BigInt(this.executorAllowance),
+      BigInt(this.decay)
+    ]);
   }
 
   static fromString(str: string, network = "mainnet"): Perpetuity {
@@ -86,7 +95,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (p.args.length != 4)
       throw `invalid number of arguments ${p.args.length}`;
 
-    const period = parseInt(p.args.shift()!);
+    const period = BigInt(parseInt(p.args.shift()!));
 
     const lock = p.args.shift()!;
 
@@ -95,8 +104,8 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
-    const executorAllowance = parseInt(p.args.shift()!);
-    const decay = parseInt(p.args.shift()!);
+    const executorAllowance = BigInt(parseInt(p.args.shift()!));
+    const decay = BigInt(parseInt(p.args.shift()!));
 
     const perpetuity = new Perpetuity(
       period,
@@ -128,7 +137,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    const period = binToNumber(p.args.shift()!);
+    const period = binToBigInt(p.args.shift()!);
     const lock = p.args.shift()!;
 
     const prefix = getPrefixFromNetwork(network);
@@ -136,8 +145,8 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
-    const executorAllowance = binToNumber(p.args.shift()!);
-    const decay = binToNumber(p.args.shift()!);
+    const executorAllowance = binToBigInt(p.args.shift()!);
+    const decay = binToBigInt(p.args.shift()!);
 
     const perpetuity = new Perpetuity(
       period,
@@ -157,12 +166,12 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     network = "mainnet",
     networkProvider: NetworkProvider,
     blockHeight: number
-  ): Promise<number> {
+  ): Promise<bigint> {
     const p = this.parseOpReturn(opReturn, network);
-    const period = binToNumber(p.args.shift()!);
+    const period = binToBigInt(p.args.shift()!);
     // discard the address
     p.args.shift()!;
-    const decay = binToNumber(p.args.shift()!);
+    const decay = binToBigInt(p.args.shift()!);
     const utxos = await networkProvider.getUtxos(p.address);
     const spendableUtxos = utxos.map((u) => {
       // @ts-ignore
@@ -171,29 +180,29 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         if (blockHeight - u.height > period) {
           return u.satoshis;
         } else {
-          return 0;
+          return 0n;
         }
       } else {
-        return 0;
+        return 0n;
       }
     });
     if (spendableUtxos.length > 0) {
       const spendableBalance = spendableUtxos.reduce(sum);
       const dustLocked = decay * DUST_UTXO_THRESHOLD;
       const spendable = spendableBalance - dustLocked;
-      return spendable > 0 ? spendable : 0;
+      return spendable > 0 ? spendable : 0n;
     } else {
-      return 0;
+      return 0n;
     }
   }
 
   static getExecutorAllowance(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): number {
+  ): bigint {
     const p = this.parseOpReturn(opReturn, network);
     p.args.pop()!;
-    return binToNumber(p.args.pop()!);
+    return binToBigInt(p.args.pop()!);
   }
 
   override toString() {
@@ -236,14 +245,14 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   async asSeries() {
     const currentHeight = await getBlockHeight();
-    const currentTime = Math.floor(Date.now() / 1000);
+    const currentTime = BigInt(Math.floor(Date.now() / 1000));
     let utxos = await this.getUtxos();
 
     let series: any = [];
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
-          satoshis: 1000000,
+          satoshis: 1000000n,
           txid: "<example 10,000,000 (0.1 BCH) unspent output>",
           vout: 0,
           // @ts-ignore
@@ -257,35 +266,35 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         const installment = [];
         const principal = [];
         const allowance = [];
-        let blocksToWait = NaN;
+        let blocksToWait = 0n;
         // @ts-ignore
         if (utxo.height == 0) {
-          blocksToWait = this.period;
+          blocksToWait = BigInt(this.period);
         } else {
           // @ts-ignore
-          blocksToWait = this.period - (currentHeight - utxo.height);
+          blocksToWait = BigInt(this.period) - BigInt(currentHeight - utxo.height);
         }
-        const seriesStartTime = currentTime + blocksToWait * 600;
+        const seriesStartTime = currentTime + blocksToWait * 600n;
         installment.push(
-          Math.floor(utxo.satoshis / this.decay) - this.executorAllowance
+          (utxo.satoshis / BigInt(this.decay)) - BigInt(this.executorAllowance)
         );
         payout.push(installment.at(-1)!);
         principal.push(utxo.satoshis - installment.at(-1)!);
         allowance.push(this.executorAllowance);
-        const intervalSeconds = this.period * 600;
-        let nextPayout = 0;
+        const intervalSeconds = BigInt(this.period) * 600n;
+        let nextPayout = 0n;
         let lastPrincipal = principal.at(-1)!;
-        for (let i = 1; i < 5000; i++) {
+        for (let i = 1n; i < 5000n; i++) {
           lastPrincipal = principal.at(-1)!;
-          nextPayout = Math.floor(lastPrincipal / this.decay);
+          nextPayout =lastPrincipal / BigInt(this.decay);
           if (nextPayout < DUST_UTXO_THRESHOLD) {
             break;
           }
           time.push(seriesStartTime + i * intervalSeconds);
           installment.push(nextPayout);
           payout.push(payout.at(-1)! + nextPayout);
-          principal.push(lastPrincipal - nextPayout - this.executorAllowance);
-          allowance.push(this.executorAllowance * i);
+          principal.push(lastPrincipal - nextPayout - BigInt(this.executorAllowance));
+          allowance.push(BigInt(this.executorAllowance) * i);
         }
 
         const utxoId = `${utxo.txid}:${utxo.vout.toString()}`;
@@ -305,24 +314,24 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   async execute(
     exAddress?: string,
-    fee?: number,
+    fee?: bigint,
     utxos?: Utxo[]
   ): Promise<string> {
-    let currentValue = 0;
+    let currentValue = 0n;
     if (utxos && utxos?.length > 0) {
-      currentValue = utxos.reduce((a, b) => a + b.satoshis, 0);
+      currentValue = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       currentValue = await this.getBalance();
     }
-    if (currentValue == 0) return "No funds on contract";
+    if (currentValue == 0n) return "No funds on contract";
 
     const fn = this.getFunction(Perpetuity.fn)!;
-    let installment = Math.round(currentValue / this.decay) + 1;
-    let newPrincipal = currentValue - (installment + this.executorAllowance);
+    let installment = (currentValue / BigInt(this.decay)) + 1n;
+    let newPrincipal = currentValue - (installment + BigInt(this.executorAllowance));
 
     // round up
-    installment += 2;
-    newPrincipal += 3;
+    installment += 2n;
+    newPrincipal += 3n;
 
     const to = [
       {
@@ -345,13 +354,13 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
 
-    const size = await tx!.to(to).withAge(this.period).withoutChange().build();
+    const size = await tx!.to(to).withAge(Number(this.period)).withoutChange().build();
 
     //console.log(size.length / 2)
     if (exAddress) {
-      const minerFee = fee ? fee : size.length / 2;
+      const minerFee = fee ? fee : BigInt(size.length / 2);
 
-      executorFee = this.executorAllowance - minerFee - 20;
+      executorFee = BigInt(this.executorAllowance) - minerFee - 20n;
       to.pop();
       to.push({
         to: exAddress,
@@ -365,7 +374,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    const payTx = await tx!.to(to).withAge(this.period).withoutChange().send();
+    const payTx = await tx!.to(to).withAge(Number(this.period)).withoutChange().send();
     return payTx.txid;
   }
 }
