@@ -1,12 +1,13 @@
 {
   "name": "@unspent/psi",
-  "version": "0.0.17",
+  "version": "0.1.0",
   "description": "A persistent storage IndexedDB wrapper for ₿∙ϕ contracts and data using Dexie.js",
   "author": "2qx",
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rm -rf ./dist",
     "compile": "tsc",
+    "publish:public": "yarn publish --access public",
     "test": "npx jest --runInBand  --logHeapUsage --forceExit"
   },
   "type": "module",
@@ -27,11 +28,11 @@
   ],
   "dependencies": {
     "@bitauth/libauth": "v2.0.0-alpha.8",
-    "@unspent/phi": "*",
+    "@unspent/phi": "0.1.0",
     "cashscript": "0.8.0-next.2",
     "dexie": "4.0.1-alpha.8",
     "electrum-cash": "^2.0.10",
-    "typeson":"8.0.1"
+    "typeson": "8.0.1"
   },
   "devDependencies": {
     "@generalprotocols/cspell-dictionary": "git+https://gitlab.com/GeneralProtocols/cspell-dictionary.git",

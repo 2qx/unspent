@@ -1,12 +1,13 @@
 {
   "name": "@unspent/phi",
-  "version": "0.0.17",
+  "version": "0.1.0",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rm -rf ./dist",
     "compile": "tsc",
+    "publish:public": "yarn publish --access public",
     "update:artifacts": "node script/updateArtifacts.js",
     "test": "npx jest --runInBand  --logHeapUsage --forceExit"
   },
