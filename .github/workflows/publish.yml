@@ -13,7 +13,6 @@ jobs:
         with:
           node-version: 18
       - run: yarn
-      - run: yarn build
 
   # Requires NPM_TOKEN github secret to be set
   publish-npm:
@@ -26,7 +25,6 @@ jobs:
         with:
           node-version: 18
       - run: yarn
-      - run: yarn build
 
       # Setup environment
       - name: Check if NPM_TOKEN is set
