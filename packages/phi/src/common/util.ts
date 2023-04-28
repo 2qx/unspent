@@ -7,6 +7,7 @@ import {
   decodeCashAddressFormatWithoutPrefix,
   cashAddressToLockingBytecode,
   CashAddressNetworkPrefix,
+  CashAddressVersionByte,
   hexToBin,
   instantiateSha256,
   instantiateRipemd160,

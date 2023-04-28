@@ -1,6 +1,7 @@
 import { Record } from "./Record.js";
 import { Divide } from "../divide/Divide.js";
 import { Faucet } from "../faucet/index.js";
+//@ts-ignore
 import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
