@@ -1,4 +1,4 @@
-import { HistoryQueryI, BytecodePatternQueryDefaults, HistoryIDefaults } from "./interface.js"
+import { HistoryQueryI, BytecodePatternQueryDefaults, HistoryIDefaults, BytecodePatternQueryI } from "./interface.js"
 import { getHistory, getRecords } from "./provider.js";
 import { opReturnToInstance } from "../common/map.js";
 import { PROTOCOL_ID } from "../common/constant.js";
@@ -72,7 +72,7 @@ describe(`Tests default parameters`, () => {
   });
 
   test("Should get override default", async () => {
-    // this is an odd length hex string, which errors
+    
     const param = {
       after: 1,
       exclude_pattern: "test",
@@ -80,7 +80,7 @@ describe(`Tests default parameters`, () => {
       limit: 3,
       prefix: "6a0400000000",
       node:"testnet"
-    } as HistoryQueryI
+    } as BytecodePatternQueryI
     const query = {  ...BytecodePatternQueryDefaults, ...param }
     expect(query.after).toBe(1)
     expect(query.exclude_pattern).toBe("test")
@@ -88,6 +88,7 @@ describe(`Tests default parameters`, () => {
     expect(query.limit).toBe(3)
     expect(query.prefix).toBe("6a04" + "00000000")
     expect(query.node).toBe("testnet")
+    expect("code" in query).toBe(false)
 
   });
 

@@ -49,6 +49,11 @@ export async function getChaingraphUnspentRecords(
   param: BytecodePatternQueryI
 ) {
 
+  //@ts-ignore
+  if ("code" in param) delete param.code
+  //@ts-ignore
+  if ("version" in param) delete param.version
+  
   const response = await axios({
     url: host,
     method: "post",

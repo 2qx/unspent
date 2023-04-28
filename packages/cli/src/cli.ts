@@ -102,7 +102,7 @@ export class AnnuityCommand extends CustomFeeCommand {
         { version: version, network: network }
       );
       await a.info();
-      a.execute(this.executorAddress, feeOverride);
+      if(await a.isFunded()) a.execute(this.executorAddress, feeOverride);
     } else {
       let a = new Annuity(
         periodInt,
@@ -207,15 +207,14 @@ export class FaucetCommand extends CustomFeeCommand {
         version: version,
         network: network,
       });
-      await faucet.info(true);
-      let response = await faucet.execute(this.address, feeOverride);
-      console.log(response);
+      await faucet.info();
+      if(await faucet.isFunded()) await faucet.execute(this.address, feeOverride);
     } else {
       let faucet = await new Faucet(periodInt, payoutInt, indexInt, {
         version: version,
         network: network,
       });
-      await faucet.info(true);
+      await faucet.info();
     }
   }
 }
@@ -336,7 +335,7 @@ export class PerpetuityCommand extends CustomFeeCommand {
         { version: version, network: network }
       );
       await perpetuity.info();
-      perpetuity.execute(this.executorAddress, feeOverride);
+      if(await perpetuity.isFunded()) perpetuity.execute(this.executorAddress, feeOverride);
     } else {
       let perpetuity = new Perpetuity(
         periodInt,
@@ -409,6 +408,10 @@ export class RecordCommand extends CustomFeeCommand {
     required: false,
     description: "a serialized contract to publish",
   });
+  selfPublish = Option.Boolean("--selfPublish", {
+    required: false,
+    description: "Whether or not to self publish the contract if funded",
+  });
   network = this.isChipnet ? "chipnet" : this.isRegtest ? "regtest" : "mainnet";
 
   async execute() {
@@ -422,13 +425,12 @@ export class RecordCommand extends CustomFeeCommand {
     let version = parseInt(this.version)
 
     if (!this.contract) {
-      console.log("no contract specified");
+      //console.log("no contract specified");
       let r = new Record(maxFeeInt, indexInt, { version: version, network: network });
       if (await r.isFunded()) {
-        let tx = await r.broadcast();
-        console.log(tx);
+        await r.info();
+        if(this.selfPublish) await r.broadcast();
       } else {
-        console.log("contract is NOT funded, unable to broadcast");
         await r.info();
       }
     } else {
@@ -436,7 +438,6 @@ export class RecordCommand extends CustomFeeCommand {
       let i = stringToInstance(this.contract, network);
       if (!i) throw Error(`Couldn't parse string ${this.contract}`);
       console.log("broadcasting... ");
-      console.log(i.toOpReturn());
       let tx = await r.broadcast(i.toOpReturn());
       console.log(tx);
     }
@@ -447,7 +448,8 @@ const cli = new Cli({
   binaryName: "unspent",
   binaryLabel: "@unspent/cli",
   binaryVersion: packageJson.version,
-  enableColors: true
+  enableColors: true,
+  enableCapture: true
 });
 
 

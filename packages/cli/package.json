@@ -21,7 +21,7 @@
     "typescript": "^4.7.2"
   },
   "scripts": {
-    "cli": "node --experimental-modules --es-module-specifier-resolution=node cli.cjs",
+    "cli": "node --experimental-modules --redirect-warnings=.warnings --es-module-specifier-resolution=node cli.cjs",
     "test": "npx jest"
   },
   "exclude": [

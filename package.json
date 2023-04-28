@@ -31,7 +31,7 @@
     "remove:packages": "rm -fr packages/*/node_modules && rm -fr packages/*/dist",
     "regtest:up": "./jest/docker/start.sh",
     "regtest:down": "./jest/docker/stop.sh",
-    "test": "NODE_OPTIONS='--experimental-vm-modules --es-module-specifier-resolution=node' ./node_modules/jest/bin/jest.js  --config jest.config.js  ",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --es-module-specifier-resolution=node' ./node_modules/jest/bin/jest.js  --config jest.config.js  --forceExit",
     "test:skip": "SKIP_REGTEST_INIT=1 yarn test",
     "test:browser": "npx jest --config jest.config.browser.js --detectOpenHandles",
     "test:browser:skip": "SKIP_REGTEST_INIT=1 yarn test:browser",
