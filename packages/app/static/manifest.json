@@ -16,12 +16,22 @@
 			"src": "/images/android-icon-512x512.png",
 			"sizes": "512x512",
 			"type": "image/png",
-			"density": "10.6"
+			"density": "10.6",
+      "purpose":"any"
 		},
 		{
 			"src": "/images/apple-touch-icon.png",
 			"sizes": "180x180",
 			"type": "image/png"
 		}
-	]
+	],
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "natural",
+  "display_override": [
+    "minimal-ui"
+  ],
+  "categories": [
+    "finance"
+  ]
 }
