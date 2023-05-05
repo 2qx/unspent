@@ -58,6 +58,6 @@ export interface Utxo {
 
 export interface BlockI {
   id: number; // height
-  timestamp: Date; // new Date()
+  timestamp: number; // epoch
 }
 

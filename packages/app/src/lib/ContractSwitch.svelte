@@ -7,23 +7,33 @@
 	import MineForm from '$lib/forms/MineForm.svelte';
 	import RecordForm from '$lib/forms/RecordForm.svelte';
 
-	export let instanceType: string;
-	let contract;
+  import {node } from "$lib/store.js";
+	import { Network } from 'cashscript';
+	
+  export let instanceType: string;
+
+	let contract :any;
+  let nodeValue: Network;
+  let version = 1;
+
+  node.subscribe((value) => {
+		nodeValue = value? value: Network.MAINNET;
+	});
 </script>
 
 <div>
 	{#if instanceType == 'Annuity'}
-		<AnnuityForm bind:contract />
+		<AnnuityForm bind:contract bind:network={nodeValue} bind:version={version}/>
 	{:else if instanceType == 'Divide'}
-		<DivideForm bind:contract />
+		<DivideForm bind:contract bind:network={nodeValue} bind:version={version}/>
 	{:else if instanceType == 'Faucet'}
-		<FaucetForm bind:contract />
+		<FaucetForm bind:contract bind:network={nodeValue} bind:version={version}/>
 	{:else if instanceType == 'Perpetuity'}
-		<PerpetuityForm bind:contract />
+		<PerpetuityForm bind:contract bind:network={nodeValue} bind:version={version}/>
 	{:else if instanceType == 'Mine'}
-		<MineForm bind:contract />
+		<MineForm bind:contract bind:network={nodeValue} bind:version={version}/>
 	{:else if instanceType == 'Record'}
-		<RecordForm bind:contract />
+		<RecordForm bind:contract bind:network={nodeValue} bind:version={version}/>
 	{:else}
 		<p>Couldn't find contract form for {instanceType}</p>
 	{/if}

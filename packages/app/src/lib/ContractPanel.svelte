@@ -8,6 +8,8 @@
 	import Contract from '$lib/Contract.svelte';
 	import ErrorConsole from './ErrorConsole.svelte';
 
+  import { node } from '$lib/store.js';
+
 	import { binToHex } from '@bitauth/libauth';
 	import { opReturnToInstance } from '@unspent/phi';
 	import { load } from '$lib/machinery/loader-store.js';
@@ -16,12 +18,17 @@
 	let instance:any;
 	let error = '';
 	let panelOpen = false;
+  let nodeValue = '';
+
+  node.subscribe((value) => {
+		nodeValue = value;
+	});
 
 	const init = async () => {
 		await load({
 			load: async () => {
 				try {
-					instance = opReturnToInstance(data.opReturn);
+					instance = opReturnToInstance(data.opReturn, nodeValue);
 				} catch (e:any) {
 					if (e.message) {
 						error = e;

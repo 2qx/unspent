@@ -5,7 +5,7 @@
 	import { bytecodeToAsm } from '@cashscript/utils';
 	import List, { Item, Graphic, Meta, Text, PrimaryText, SecondaryText } from '@smui/list';
 	import { hexToBin, decodeTransaction } from '@bitauth/libauth';
-	import { getTransaction } from '@unspent/phi';
+	import { getTransaction } from '@unspent/psi';
 
 	import AddressBlockie from './AddressBlockie.svelte';
 	import { load } from '$lib/machinery/loader-store.js';

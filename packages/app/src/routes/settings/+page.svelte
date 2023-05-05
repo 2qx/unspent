@@ -2,7 +2,8 @@
 	import { base } from '$app/paths';
 	import Card from '@smui/card';
 	import IconButton, { Icon } from '@smui/icon-button';
-	import Button, { Label } from '@smui/button';
+	import Radio from '@smui/radio';
+	import FormField from '@smui/form-field';
 	import { toast } from '@zerodevx/svelte-toast';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
@@ -10,13 +11,39 @@
 	import AddressQrDialog from '$lib/AddressQrDialog.svelte';
 	import { deriveLockingBytecodeHex, sanitizeAddress } from '@unspent/phi';
 	import AddressBlockie from '$lib/AddressBlockie.svelte';
-	import { executorAddress, chaingraphHost, protocol, node } from '$lib/store.js';
+	import {
+		executorAddress,
+		executorChipnetAddress,
+		chaingraphHost,
+		protocol,
+		node,
+		explorer,
+		chipnetExplorer
+	} from '$lib/store.js';
 
 	let executorAddressValue: string;
+	let executorChipnetAddressValue: string;
+
+	let lockingBytecode: string;
+	let chipnetLockingBytecode: string;
+
 	let chaingraphHostValue: string;
 	let nodeValue: string;
 	let protocolValue: string;
-	let lockingBytecode: string;
+
+	let explorerValue: string;
+	let chipnetExplorerValue: string;
+
+	let nodeOptions = [
+		{
+			name: 'mainnet',
+			disabled: false
+		},
+		{
+			name: 'chipnet',
+			disabled: false
+		}
+	];
 
 	chaingraphHost.subscribe((value) => {
 		chaingraphHostValue = value;
@@ -31,11 +58,32 @@
 			}
 		}
 	});
+
+  executorChipnetAddress.subscribe((value) => {
+		executorChipnetAddressValue = value;
+		if (executorChipnetAddressValue) {
+			try {
+				chipnetLockingBytecode = deriveLockingBytecodeHex(executorChipnetAddressValue);
+			} catch {
+				console.error('error decoding provided chipnet cashaddr, in settings.');
+			}
+		}
+	});
+
 	node.subscribe((value) => {
 		nodeValue = value;
 	});
+
 	protocol.subscribe((value) => {
 		protocolValue = value;
+	});
+
+	chipnetExplorer.subscribe((v) => {
+		chipnetExplorerValue = v;
+	});
+
+	explorer.subscribe((v) => {
+		explorerValue = v;
 	});
 
 	function updateChaingraphHost() {
@@ -46,6 +94,12 @@
 		lockingBytecode = '';
 		executorAddressValue = '';
 		executorAddress.set('');
+	}
+
+	function clearExChipnetAddress() {
+		chipnetLockingBytecode = '';
+		executorChipnetAddressValue = '';
+		executorChipnetAddress.set('');
 	}
 
 	async function updateExAddress() {
@@ -74,13 +128,52 @@
 				}
 			}
 		} else {
-			lockingBytecode = undefined;
+			lockingBytecode = '';
+		}
+	}
+
+	async function updateExChipnetAddress() {
+		let sanitizedAddress;
+		try {
+			sanitizedAddress = await sanitizeAddress(executorChipnetAddressValue);
+		} catch (e: any) {
+			sanitizedAddress = '';
+			if (e.message) {
+				toast.push(e.message, { classes: ['warn'] });
+			} else {
+				toast.push(e, { classes: ['warn'] });
+			}
+		}
+
+		if (sanitizedAddress) {
+			try {
+				chipnetLockingBytecode = deriveLockingBytecodeHex(sanitizedAddress);
+
+				executorChipnetAddress.set(sanitizedAddress);
+			} catch (e: any) {
+				if (e.message) {
+					toast.push(e.message, { classes: ['warn'] });
+				} else {
+					toast.push(e, { classes: ['warn'] });
+				}
+			}
+		} else {
+			chipnetLockingBytecode = '';
 		}
 	}
 
 	function updateNode() {
 		node.set(nodeValue);
 	}
+
+	function updateExplorer() {
+		explorer.set(explorerValue);
+	}
+
+	function updateChipnetExplorer() {
+		chipnetExplorer.set(chipnetExplorerValue);
+	}
+
 	function updateProtocol() {
 		protocol.set(protocolValue);
 	}
@@ -96,36 +189,60 @@
 			<div class="margins">
 				<h1>Settings</h1>
 				<hr />
-				<h2>Executor Cash Address</h2>
-				<div>
-					<Textfield
-						bind:value={executorAddressValue}
-						on:change={updateExAddress}
-						style="width: 100%;"
-						helperLine$style="width: 100%;"
-						label="Cash address to recieve executor fees"
-					>
-						<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
-					</Textfield>
-
-					<div style="display: flex; align-items: center;">
-						<IconButton class="material-icons" on:click={clearExAddress}>delete</IconButton>
-						{#if lockingBytecode}
-							<Wrapper style="float:right">
-								<AddressQrDialog codeValue={executorAddressValue} />
-								<Tooltip>Show qr code</Tooltip>
-							</Wrapper>
-						{/if}
-					</div>
-				</div>
-				{#if lockingBytecode}
+				{#if nodeValue == 'mainnet'}
+					<h2>Executor Cash Address</h2>
 					<div>
-						<AddressBlockie {lockingBytecode} />
+						<Textfield
+							bind:value={executorAddressValue}
+							on:change={updateExAddress}
+							style="width: 100%;"
+							helperLine$style="width: 100%;"
+							label="Cash address to recieve executor fees"
+						>
+							<HelperText slot="helper">bitcoincash:q4j3j6j...</HelperText>
+						</Textfield>
+						<div style="display: flex; align-items: center;">
+							<IconButton class="material-icons" on:click={clearExAddress}>delete</IconButton>
+							{#if lockingBytecode}
+								<Wrapper style="float:right">
+									<AddressQrDialog codeValue={executorAddressValue} />
+									<Tooltip>Show qr code</Tooltip>
+								</Wrapper>
+							{/if}
+						</div>
 					</div>
-					<p>Locking Bytecode</p>
-					<a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}"
-						>{lockingBytecode}</a
-					>
+					{#if lockingBytecode}
+						<div>
+							<AddressBlockie {lockingBytecode} />
+						</div>
+						<p>Locking Bytecode</p>
+						<a style="line-break:anywhere;" href="{base}/explorer?lockingBytecode={lockingBytecode}"
+							>{lockingBytecode}</a
+						>
+					{/if}
+				{:else}
+					<h2>Executor Chipnet Cash Address</h2>
+					<div>
+						<Textfield
+							bind:value={executorChipnetAddressValue}
+							on:change={updateExChipnetAddress}
+							style="width: 100%;"
+							helperLine$style="width: 100%;"
+							label="Chipnet address to receive executor fees"
+						>
+							<HelperText slot="helper">bchtest:q4j3j6j...</HelperText>
+						</Textfield>
+						<div style="display: flex; align-items: center;">
+							<IconButton class="material-icons" on:click={clearExChipnetAddress}>delete</IconButton
+							>
+							{#if chipnetLockingBytecode}
+								<Wrapper style="float:right">
+									<AddressQrDialog codeValue={executorChipnetAddressValue} />
+									<Tooltip>Show qr code</Tooltip>
+								</Wrapper>
+							{/if}
+						</div>
+					</div>
 				{/if}
 			</div>
 		</Card>
@@ -149,14 +266,63 @@
 					</Textfield>
 				</div>
 				<div>
-					<Textfield on:change={updateNode} bind:value={nodeValue} label="Node Filter">
-						<HelperText slot="helper" />
-					</Textfield>
-				</div>
-				<div>
 					<Textfield on:change={updateProtocol} bind:value={protocolValue} label="Protocol">
 						<HelperText slot="helper">Protocol filter</HelperText>
 					</Textfield>
+				</div>
+			</div>
+		</Card>
+	</div>
+</div>
+
+<div class="card-display">
+	<div class="card-container">
+		<Card class="demo-spaced">
+			<div class="margins">
+				<h2>Default Explorer</h2>
+				{#if nodeValue == 'mainnet'}
+					<div>
+						<Textfield
+							bind:value={explorerValue}
+							on:change={updateExplorer}
+							style="width: 100%;"
+							helperLine$style="width: 100%;"
+							label="Explorer"
+						>
+							<HelperText slot="helper">Explorer</HelperText>
+						</Textfield>
+					</div>
+				{:else}
+					<div>
+						<Textfield
+							on:change={updateChipnetExplorer}
+							bind:value={chipnetExplorerValue}
+							style="width: 100%;"
+							helperLine$style="width: 100%;"
+							label="Chipnet Explorer"
+						>
+							<HelperText slot="helper">Chipnet Explorer</HelperText>
+						</Textfield>
+					</div>
+				{/if}
+			</div>
+		</Card>
+	</div>
+</div>
+
+<div class="card-display">
+	<div class="card-container">
+		<Card class="demo-spaced">
+			<div class="margins">
+				<h2>Network</h2>
+				<p>This app may be used in against mainnet or testnet</p>
+				<div class="radio-demo">
+					{#each nodeOptions as nodeOption}
+						<FormField>
+							<Radio on:change={updateNode} bind:group={nodeValue} value={nodeOption.name} touch />
+							<span slot="label">{nodeOption.name}</span>
+						</FormField>
+					{/each}
 				</div>
 			</div>
 		</Card>

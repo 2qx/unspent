@@ -15,11 +15,13 @@ import {
 
 import {
   parseBigInt,
-  getRecords,
   opReturnToSerializedString,
   stringToInstance,
 } from "@unspent/phi";
 
+import { 
+  getRecords 
+} from "@unspent/psi"
 
 abstract class VersionedCommand extends Command{
   version = Option.String("--version", "1", {

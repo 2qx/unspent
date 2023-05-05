@@ -1,5 +1,5 @@
 import type { Input, Output, Transaction } from '@bitauth/libauth';
-import { PROTOCOL_ID } from '../common/constant.js';
+import { PROTOCOL_ID } from '../constant.js';
 
 export interface BytecodePatternQueryI {
   prefix?: string;

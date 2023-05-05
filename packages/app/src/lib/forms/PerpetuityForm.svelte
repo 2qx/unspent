@@ -3,7 +3,12 @@
 	import HelperText from '@smui/textfield/helper-text';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
+  import type { Network } from 'cashscript';
+
+	export let network: Network;
+	export let version: number;
 	export let contract;
+	let options = { network: network, version: version };
 	let isPublished = false;
 
 	let period = NaN;
@@ -21,7 +26,7 @@
 					toast.push(e, { classes: ['warn'] });
 				}
 			}
-			contract = new Perpetuity(period, receiptAddress, executorAllowance, decay);
+			contract = new Perpetuity(period, receiptAddress, executorAllowance, decay, options);
 		} catch (e: Error) {
 			contract = undefined;
 			if (e.message) {

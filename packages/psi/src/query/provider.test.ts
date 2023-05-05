@@ -1,7 +1,7 @@
 import { HistoryQueryI, BytecodePatternQueryDefaults, HistoryIDefaults, BytecodePatternQueryI } from "./interface.js"
 import { getHistory, getRecords } from "./provider.js";
-import { opReturnToInstance } from "../common/map.js";
-import { PROTOCOL_ID } from "../common/constant.js";
+import { opReturnToInstance } from "@unspent/phi";
+import { PROTOCOL_ID } from "../constant.js";
 
 describe(`Record Class Tests`, () => {
   const host = "https://demo.chaingraph.cash/v1/graphql";

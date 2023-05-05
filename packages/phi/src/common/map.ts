@@ -1,18 +1,19 @@
 import { binToHex, hexToBin, lockingBytecodeToCashAddress } from "@bitauth/libauth";
 import { Artifact } from "@cashscript/utils";
-import { ElectrumNetworkProvider, NetworkProvider, Network } from "cashscript";
+import { NetworkProvider, Network } from "cashscript";
 import { nameMap, contractMap, CodeType } from "../contract/constant.js";
 import { decodeNullDataScript } from "./util.js";
 import { BaseUtxPhiContract } from "./contract.js";
+import { PsiNetworkProvider } from "@unspent/psi";
 
 type ContractType = typeof contractMap[keyof typeof contractMap];
 
-export function parseOpReturn(serialized: string | Uint8Array) {
+export function parseOpReturn(serialized: string | Uint8Array, network: Network = 'mainnet') {
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
   }
 
-  const data = BaseUtxPhiContract.parseOpReturn(serialized);
+  const data = BaseUtxPhiContract.parseOpReturn(serialized, network);
   return {
     name: nameMap[data.code as CodeType] as string,
     opReturn: serialized,
@@ -59,7 +60,7 @@ export function opReturnToExecutorAllowance(
 
 export async function opReturnToSpendableBalance(
   serialized: string | Uint8Array,
-  network = Network.MAINNET,
+  network:Network = Network.MAINNET,
   networkProvider?: NetworkProvider,
   blockHeight?: number
 ): Promise<bigint> {
@@ -71,8 +72,8 @@ export async function opReturnToSpendableBalance(
 
   const code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
 
-  if (!networkProvider) networkProvider = new ElectrumNetworkProvider(network);
-  if (!blockHeight) blockHeight = await networkProvider.getBlockHeight();
+  if (!networkProvider) networkProvider = new PsiNetworkProvider(network);
+  if (!blockHeight) blockHeight = await networkProvider!.getBlockHeight();
 
   try{
     const spendableBalance = await contractMap[code].getSpendableBalance(
@@ -93,7 +94,7 @@ export async function opReturnToSpendableBalance(
 export async function opReturnToBalance(
   serialized: string | Uint8Array,
   network = Network.MAINNET,
-  networkProvider?: ElectrumNetworkProvider,
+  networkProvider?: PsiNetworkProvider,
   blockHeight?: number
 ): Promise<number> {
   if (typeof serialized === "string") {
@@ -103,7 +104,7 @@ export async function opReturnToBalance(
   const address = lockingBytecodeToCashAddress(serializedBinChunks.pop()!, "bitcoincash")
 
   if(typeof address!=="string") throw Error("couldn't decode cashaddr")
-  if (!networkProvider) networkProvider = new ElectrumNetworkProvider(network);
+  if (!networkProvider) networkProvider = new PsiNetworkProvider(network);
   if (!blockHeight) blockHeight = await networkProvider.getBlockHeight();
 
   const balance = await BaseUtxPhiContract.getBalance(

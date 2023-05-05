@@ -31,7 +31,7 @@
     "@bitauth/libauth": "v2.0.0-alpha.8",
     "@cashscript/utils": "0.8.0-next.2",
     "@tsconfig/node16-strictest-esm": "latest",
-    "axios": "^0.27.2",
+    "@unspent/psi":"*",
     "cashc": "0.8.0-next.2",
     "cashscript": "0.8.0-next.2",
     "electrum-cash": "^2.0.10"

@@ -7,9 +7,9 @@
 	let error;
 	try {
 		if (data.opReturn) {
-			instance = opReturnToInstance(data.opReturn);
+			instance = opReturnToInstance(data.opReturn, data.network);
 		} else if (data.serialized) {
-			instance = stringToInstance(data.serialized, 'mainnet');
+			instance = stringToInstance(data.serialized, data.network);
 		}
 	} catch (e: any) {
 		error = e;

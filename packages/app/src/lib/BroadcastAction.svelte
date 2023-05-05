@@ -7,7 +7,8 @@
 	import CircularProgress from '@smui/circular-progress';
 
 	import { load } from '$lib/machinery/loader-store.js';
-	import { getRecords, Record } from '@unspent/phi';
+	import { Record } from '@unspent/phi';
+  import { getRecords } from '@unspent/psi'
 	import { chaingraphHost, node } from '$lib/store.js';
 
 	export let opReturnHex: string;
@@ -74,7 +75,8 @@
 		try {
 			setProgress();
 			executedSuccess = false;
-			let r = new Record();
+      let options =  {network: nodeValue, version:1}
+			let r = new Record(undefined, undefined, options);
 			txid = await r.broadcast(opReturnHex);
 			isPublished = true;
 			executedSuccess = true;
@@ -111,7 +113,6 @@
 		<Label>Submitted</Label>
 		<Icon class="material-icons">check</Icon>
 	</Button>
-	<Tooltip>{txid}</Tooltip>
 {:else}
 	<Wrapper>
 		<Button variant="raised" touch on:click={broadcast}>

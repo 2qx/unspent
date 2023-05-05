@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   BytecodePatternQueryI,
   BytecodePatternQueryDefaults,
@@ -7,7 +7,7 @@ import {
   HistoryQueryI,
   HistoryIDefaults
 } from "./interface.js";
-import { parseOpReturn } from "../common/map.js"
+import { parseOpReturn } from "./util.js"
 import { binToHex } from "@bitauth/libauth";
 
 
@@ -245,9 +245,9 @@ export async function getTransaction(host: string, txid: string) {
   return response.data.data;
 }
 
-export async function getUnspentOutputs(host: string, lockingBytecode: string) {
+export async function getUnspentOutputs(host: string, lockingBytecode: string, node?:string) {
   const query = `
-  query SearchUnspentOutputsByLockingBytecode($lockingBytecode_literal: _text!) {
+  query SearchUnspentOutputsByLockingBytecode($lockingBytecode_literal: _text!, $node: String!) {
     search_output(
       args: { locking_bytecode_hex: $lockingBytecode_literal},
       where: {_not:{spent_by:{value_satoshis:{_gt:0}}}}
@@ -257,12 +257,16 @@ export async function getUnspentOutputs(host: string, lockingBytecode: string) {
       value_satoshis
     }
   }`
+
+  node  = node ? node: "mainnet"
+
   const response = await axios({
     url: host,
     method: "post",
     data: {
       query: query,
       variables: {
+        node: node,
         lockingBytecode_literal: `{${lockingBytecode}}`,
       },
     },

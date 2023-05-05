@@ -32,7 +32,7 @@
 			{/if}
 			{#if data.lockingBytecode}
 				<pre>{data.lockingBytecode}</pre>
-				<LockingBytecodeDetail bind:lockingBytecode={data.lockingBytecode} />
+				<LockingBytecodeDetail bind:lockingBytecode={data.lockingBytecode} bind:network={data.network} />
 			{/if}
 		</Content>
 	</Paper>

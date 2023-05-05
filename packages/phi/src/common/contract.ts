@@ -49,6 +49,7 @@ export class BaseUtxPhiContract {
     artifact: Artifact,
     constructorArguments: Argument[]
   ) {
+    
     const defaultProvider = getDefaultProvider(network);
     this.provider = defaultProvider as NetworkProvider;
     this.testnet = this.provider.network == "mainnet" ? false : true;

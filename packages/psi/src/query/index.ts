@@ -9,5 +9,6 @@ export {
   HistoryQueryI
 } from "./interface.js"
 export {
-  prepareBytecodeQueryParameters
+  prepareBytecodeQueryParameters,
+  parseOpReturn
 } from "./util.js"

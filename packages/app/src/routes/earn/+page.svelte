@@ -3,14 +3,20 @@
 
 	import { binToHex } from '@bitauth/libauth';
 
-  import type { BytecodePatternExtendedQueryI } from "@unspent/phi"
+  import type { Network } from 'cashscript';
+  import type { 
+    BytecodePatternExtendedQueryI 
+  } from "@unspent/psi";
+
 	import {
-    BytecodePatternQueryDefaults,
 		getDefaultProvider,
 		opReturnToExecutorAllowance,
 		opReturnToSpendableBalance,
     parseOpReturn
 	} from '@unspent/phi';
+  import {
+    BytecodePatternQueryDefaults 
+  } from "@unspent/psi";
 	import { PsiNetworkProvider } from '@unspent/psi';
 
 
@@ -56,6 +62,7 @@
 	chaingraphHost.subscribe((value) => {
 		chaingraphHostValue = value;
 	});
+
 	node.subscribe((value) => {
 		nodeValue = value;
 	});
@@ -78,9 +85,9 @@
 
 	onMount(async () => {
 		if (chaingraphHostValue.length > 0) {
-			let networkProvider = getDefaultProvider('mainnet');
+			let networkProvider = getDefaultProvider(nodeValue);
 			if (!psiNetworkProvider)
-				psiNetworkProvider = new PsiNetworkProvider('mainnet', chaingraphHostValue, [networkProvider]);
+				psiNetworkProvider = new PsiNetworkProvider(nodeValue as Network, chaingraphHostValue, [networkProvider]);
 			if (blockHeight < 1) blockHeight = await networkProvider.getBlockHeight();
 			loadContracts();
 		}
@@ -102,7 +109,7 @@
 		
 		let contractHex = await psiNetworkProvider.search(searchFilterParams);
     
-		let tmpData = contractHex.map((x) => parseOpReturn(x));
+		let tmpData = contractHex.map((x) => parseOpReturn(x, nodeValue));
 		buffered = 1;
 		if (tmpData.length === 0) {
 			noResults = true;
@@ -112,7 +119,7 @@
 
 		let dataPromises = await tmpData.map(async (data) => {
 			let opReturn = binToHex(data.opReturn);
-			data.executorAllowance = opReturnToExecutorAllowance(opReturn);
+			data.executorAllowance = opReturnToExecutorAllowance(opReturn, nodeValue);
 
 			// adjust the progress per output, with a little bit of fuzz to make it visible.
 			setTimeout(() => {
@@ -120,7 +127,7 @@
 			}, 300 + Math.floor(Math.random() * 1000));
 			data.spendable = await opReturnToSpendableBalance(
 				opReturn,
-				'mainnet',
+				nodeValue,
 				psiNetworkProvider,
 				blockHeight
 			);

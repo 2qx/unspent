@@ -24,7 +24,6 @@ import {
 } from "../../common/util.js";
 import { artifact as v0 } from "./cash/v0.js";
 import { artifact as v1 } from "./cash/v1.js";
-import { getBlockHeight } from "../../common/network.js";
 
 export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
@@ -244,8 +243,8 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   async asSeries() {
-    const currentHeight = await getBlockHeight();
-    const currentTime = BigInt(Math.floor(Date.now() / 1000));
+    const currentHeight = await this.provider!.getBlockHeight();
+    const currentTime = Number(Math.floor(Date.now() / 1000));
     let utxos = await this.getUtxos();
 
     let series: any = [];
@@ -266,35 +265,35 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         const installment = [];
         const principal = [];
         const allowance = [];
-        let blocksToWait = 0n;
+        let blocksToWait = 0;
         // @ts-ignore
         if (utxo.height == 0) {
-          blocksToWait = BigInt(this.period);
+          blocksToWait = Number(this.period);
         } else {
           // @ts-ignore
-          blocksToWait = BigInt(this.period) - BigInt(currentHeight - utxo.height);
+          blocksToWait = Number(this.period) - Number(currentHeight - utxo.height);
         }
-        const seriesStartTime = currentTime + blocksToWait * 600n;
+        const seriesStartTime = currentTime + blocksToWait * 600;
         installment.push(
           (utxo.satoshis / BigInt(this.decay)) - BigInt(this.executorAllowance)
         );
-        payout.push(installment.at(-1)!);
-        principal.push(utxo.satoshis - installment.at(-1)!);
-        allowance.push(this.executorAllowance);
-        const intervalSeconds = BigInt(this.period) * 600n;
-        let nextPayout = 0n;
+        payout.push(Number(installment.at(-1)!));
+        principal.push(Number(utxo.satoshis - installment.at(-1)!));
+        allowance.push(Number(this.executorAllowance));
+        const intervalSeconds = Number(this.period) * 600;
+        let nextPayout = 0;
         let lastPrincipal = principal.at(-1)!;
-        for (let i = 1n; i < 5000n; i++) {
-          lastPrincipal = principal.at(-1)!;
-          nextPayout =lastPrincipal / BigInt(this.decay);
-          if (nextPayout < DUST_UTXO_THRESHOLD) {
+        for (let i = 1; i < 5000; i++) {
+          lastPrincipal = Number(principal.at(-1)!);
+          nextPayout = lastPrincipal / Number(this.decay);
+          if (nextPayout < Number(DUST_UTXO_THRESHOLD)) {
             break;
           }
-          time.push(seriesStartTime + i * intervalSeconds);
-          installment.push(nextPayout);
+          time.push(Number(seriesStartTime + i * intervalSeconds));
+          installment.push(Number(nextPayout));
           payout.push(payout.at(-1)! + nextPayout);
-          principal.push(lastPrincipal - nextPayout - BigInt(this.executorAllowance));
-          allowance.push(BigInt(this.executorAllowance) * i);
+          principal.push(Number(lastPrincipal - nextPayout - Number(this.executorAllowance)));
+          allowance.push(Number(this.executorAllowance) * i);
         }
 
         const utxoId = `${utxo.txid}:${utxo.vout.toString()}`;

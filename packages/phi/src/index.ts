@@ -7,7 +7,7 @@ export { Faucet } from "./contract/faucet/index.js";
 export { Perpetuity } from "./contract/perpetuity/index.js";
 export { Mine } from "./contract/mine/index.js";
 export { Record } from "./contract/record/index.js";
-export { getDefaultProvider } from "./common/network.js";
+export { getDefaultProvider, getDefaultElectrumProvider } from "./common/network.js";
 export {
   parseOpReturn,
   parseOutputs,
@@ -18,22 +18,6 @@ export {
   opReturnToInstance,
   opReturnToSerializedString,
 } from "./common/map.js";
-export {
-  BytecodePatternQueryI,
-  BytecodePatternExtendedQueryI,
-  BytecodePatternQueryDefaults,
-  ChaingraphSearchOutputPrefixResponse,
-  ChaingraphSearchOutputResult,
-  getChaingraphUnspentRecords,
-  getHistory,
-  getLockingBytecode,
-  getRecords,
-  getTransaction,
-  getUnspentOutputs,
-  HistoryI,
-  HistoryQueryI,
-  prepareBytecodeQueryParameters
-} from "./query/index.js";
 export {
   parseBigInt,
   binToNumber,

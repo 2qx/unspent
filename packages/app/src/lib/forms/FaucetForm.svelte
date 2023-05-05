@@ -9,7 +9,12 @@
 	import { Faucet } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
+  import type { Network } from 'cashscript';
+
+	export let network: Network;
+	export let version: number;
 	export let contract;
+	let options = { network: network, version: version };
 
 	let showHelp = false;
 
@@ -24,7 +29,7 @@
 
 	function createContract() {
 		try {
-			contract = new Faucet(period, payout, index);
+			contract = new Faucet(period, payout, index, options);
 		} catch (e: Error) {
 			contract = undefined;
 			if (e.message) {

@@ -18,7 +18,7 @@
 
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import UtxosSelect from '$lib/UtxosSelect.svelte';
-	import { executorAddress } from '$lib/store.js';
+	import { executorAddress, executorChipnetAddress, node } from '$lib/store.js';
 	import Address from '$lib/Address.svelte';
 	import AddressQrDialog from '$lib/AddressQrDialog.svelte';
 	import AddressBlockie from '$lib/AddressBlockie.svelte';
@@ -49,11 +49,24 @@
 	let executedSuccess = false;
 	let executeError = '';
 
-	let executorAddressValue = '';
+	let address = '';
+	let nodeValue = '';
 
-	executorAddress.subscribe((value) => {
-		executorAddressValue = value;
+
+
+	node.subscribe((value) => {
+		nodeValue = value;
 	});
+	if (nodeValue == 'mainnet') {
+		executorAddress.subscribe((value) => {
+			address = value;
+		});
+	}
+	if (nodeValue == 'chipnet') {
+		executorChipnetAddress.subscribe((value) => {
+			address = value;
+		});
+	}
 
 	beforeUpdate(async () => {
 		// This fixes a bug related to the contract switch where old contracts appear
@@ -77,7 +90,7 @@
 		executedSuccess = false;
 		try {
 			let inUtxos = utxos.filter((u: any) => u.use == true);
-			txid = await instance.execute(executorAddressValue, undefined, inUtxos);
+			txid = await instance.execute(address, undefined, inUtxos);
 			executedSuccess = true;
 			executeError = '';
 			clearProgress();
@@ -165,7 +178,8 @@
 	<div>
 		<Wrapper>
 			<IconButton
-				href="{base}/contract?opReturn={instance.toOpReturn(true)}"
+				href="{base}/contract?opReturn={instance.toOpReturn(true)}&network={instance.options
+					.network}"
 				target="_blank"
 				touch
 				color="secondary"
@@ -181,9 +195,11 @@
 			<Tooltip>Show qr code</Tooltip>
 		</Wrapper>
 
-		<SickPigAddress address={instance.getAddress()} />
-		<BlockchairAddress address={instance.getAddress()} />
-		<BitInfoChartsAddress {instance} />
+		<SickPigAddress address={instance.getAddress()} network={nodeValue} />
+		{#if nodeValue === 'mainnet'}
+			<BlockchairAddress address={instance.getAddress()} />
+			<BitInfoChartsAddress {instance} />
+		{/if}
 	</div>
 
 	<Address address={instance.getAddress()} />
@@ -216,7 +232,7 @@
 		<Tooltip>Execute this Contract</Tooltip>
 	</Wrapper>
 
-	{#if !executorAddressValue}
+	{#if !address}
 		<p>
 			<b>Note:&nbsp;</b>Set an executor address in <a href="{base}/settings">settings</a> to claim execution
 			fee.
@@ -340,7 +356,7 @@
 						<td class="right"
 							><a
 								style="max-width=30em; line-break:anywhere;"
-								href="{base}/explorer?lockingBytecode={output} "
+								href="{base}/explorer?lockingBytecode={output}&network={nodeValue}"
 							>
 								{output}
 							</a>

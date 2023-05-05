@@ -9,8 +9,8 @@ import { default as a9145fa33e863cfdbca34f8a5f4c4bb50c46feb7f17487 } from "../ve
 
 import { sleep } from "./util.js";
 
-//import { getChaingraphUnspentRecords } from "@unspent/phi";
-import { getHistory, HistoryQueryI } from "@unspent/phi";
+//import { getChaingraphUnspentRecords } from "./query/index.js";
+import { getHistory, HistoryQueryI } from "./query/index.js";
 
 beforeAll(async () => {
   const host = "https://demo.chaingraph.cash/v1/graphql";

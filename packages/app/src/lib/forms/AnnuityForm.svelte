@@ -4,7 +4,14 @@
 	import HelperText from '@smui/textfield/helper-text';
 
 	import { toast } from '@zerodevx/svelte-toast';
+	import type { Network } from 'cashscript';
+
+	export let network: Network;
+	export let version: number;
 	export let contract;
+	let options = { network: network, version: version };
+  
+
 	let isPublished = false;
 	let showHelp = false;
 
@@ -15,7 +22,7 @@
 	function createContract() {
 		if (receiptAddress && installment && period) {
 			try {
-				contract = new Annuity(period, receiptAddress, installment, executorAllowance);
+				contract = new Annuity(period, receiptAddress, installment, executorAllowance, options);
 			} catch (e: any) {
 				contract = undefined;
 				if (e.message) {

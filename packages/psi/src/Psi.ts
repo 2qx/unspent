@@ -20,7 +20,7 @@ import {
   HistoryI,
   parseOpReturn,
   prepareBytecodeQueryParameters
-} from "@unspent/phi";
+} from "./query/index.js";
 import { binToHex } from "@bitauth/libauth";
 
 
@@ -38,18 +38,17 @@ export class Psi
   ) {
     super(name);
     this.version(1).stores({
+      provider: 'id,endpoint',
       block: 'id,timestamp',
       contract: 'id,height,data.address,data.code,data.options',
       utxo: 'id,lockingBytecode,[lockingBytecode+state]',
     });
   }
 
-
-
   public async setBlockHeight(height: number): Promise<void> {
     await this.block.put({
       id: height,
-      timestamp: new Date()
+      timestamp: (new Date()).getTime()/1000
     }).catch(function (error) {
       // Log or display the error
       console.error(error.stack || error);
@@ -70,7 +69,7 @@ export class Psi
       });
       console.log(lastBlock)
     // -1 is no blockheight
-    return lastBlock ? lastBlock : { id: -1, timestamp: new Date() }
+    return lastBlock ? lastBlock : { id: -1, timestamp: (new Date()).getTime()/1000 }
   }
 
 

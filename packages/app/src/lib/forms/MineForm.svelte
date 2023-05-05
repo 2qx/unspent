@@ -10,8 +10,12 @@
 	import { toast } from '@zerodevx/svelte-toast';
 	import { binToHex } from '@bitauth/libauth';
 	import { onMount } from 'svelte';
-	export let contract;
+	import type { Network } from 'cashscript';
 
+	export let network: Network;
+	export let version: number;
+	export let contract;
+	let options = { network: network, version: version };
 	let period = 1;
 	let payout = 5000;
 	let difficulty = 3;
@@ -22,7 +26,7 @@
 
 	function createContract() {
 		try {
-			contract = new Mine(period, payout, difficulty, canaryHex);
+			contract = new Mine(period, payout, difficulty, canaryHex, options);
 		} catch (e: any) {
 			contract = undefined;
 			if (e.message) {

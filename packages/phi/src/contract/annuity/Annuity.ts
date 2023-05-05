@@ -8,7 +8,6 @@ import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
-import { getBlockHeight } from "../../common/network.js";
 import {
   getPrefixFromNetwork,
   deriveLockingBytecodeHex,
@@ -230,8 +229,8 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   }
 
   async asSeries(): Promise<any> {
-    const currentHeight = await getBlockHeight();
-    const currentTime = BigInt(Math.floor(Date.now() / 1000));
+    const currentHeight = await this.provider!.getBlockHeight();
+    const currentTime = Math.floor(Date.now() / 1000);
     let utxos = await this.getUtxos();
 
     let series: any = [];
@@ -247,15 +246,15 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       ];
     if (utxos) {
       for (const utxo of utxos) {
-        let blocksToWait = 0n;
+        let blocksToWait = 0;
         // @ts-ignore
         if (utxo.height == 0) {
-          blocksToWait = BigInt(this.period);
+          blocksToWait = Number(this.period);
         } else {
           // @ts-ignore
-          blocksToWait = this.period - (currentHeight - utxo.height);
+          blocksToWait = Number(this.period) - (currentHeight - utxo.height);
         }
-        const seriesStartTime = currentTime + blocksToWait * 600n;
+        const seriesStartTime = currentTime + blocksToWait * 600;
 
         const initialPrincipal = utxo.satoshis;
         const seriesLength =
@@ -267,12 +266,12 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         const totalFee = [];
         const totalPayout = [];
         const installment = BigInt(this.installment) + BigInt(this.executorAllowance);
-        const intervalSeconds = BigInt(this.period) * 600n;
-        for (var i = 0n; i < seriesLength; i++) {
-          time.push(seriesStartTime + i * intervalSeconds);
-          principal.push(initialPrincipal - installment * i);
-          totalPayout.push(BigInt(this.installment) * i);
-          totalFee.push(BigInt(this.executorAllowance) * i);
+        const intervalSeconds = Number(this.period) * 600;
+        for (var i = 0; i < seriesLength; i++) {
+          time.push(Number(seriesStartTime + i * intervalSeconds));
+          principal.push(Number(initialPrincipal) - Number(installment) * i);
+          totalPayout.push(Number(this.installment) * i);
+          totalFee.push(Number(this.executorAllowance) * i);
         }
 
         const utxoId = `${utxo.txid}:${utxo.vout.toString()}`;

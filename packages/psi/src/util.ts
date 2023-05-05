@@ -4,6 +4,7 @@ import {
   Utxo
 } from "./interface.js";
 
+import { cashAddressToLockingBytecode } from "@bitauth/libauth";
 const FLAG_TYPED_ARRAY = "FLAG_TYPED_ARRAY";
 
 // @ts-ignore
@@ -68,4 +69,13 @@ export function asUtxo(utxo: PsiOutpointI): Utxo {
 
 export function sleep (ms:number) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+// TODO move to @unspent/util
+
+export function deriveLockingBytecode(address: string): Uint8Array {
+  const lock = cashAddressToLockingBytecode(address);
+  if (typeof lock === "string") throw lock;
+  return lock.bytecode;
 }

@@ -28,7 +28,7 @@
   ],
   "dependencies": {
     "@bitauth/libauth": "v2.0.0-alpha.8",
-    "@unspent/phi": "0.1.0",
+    "axios": "1.4.0",
     "cashscript": "0.8.0-next.2",
     "dexie": "4.0.1-alpha.8",
     "electrum-cash": "^2.0.10",

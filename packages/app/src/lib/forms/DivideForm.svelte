@@ -7,7 +7,13 @@
 	import AddressOptional from '$lib/AddressOptional.svelte';
 	import { Divide, sanitizeAddress } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
+  import type { Network } from 'cashscript';
+
+	export let network: Network;
+	export let version: number;
 	export let contract;
+	let options = { network: network, version: version };
+  
 	let isPublished = false;
 
 	let payees: string[] = ['', ''];
@@ -16,7 +22,7 @@
 		try {
 			let addresses = payees.map(async (a) => await sanitizeAddress(a));
 			await Promise.all(addresses).then((addresses) => {
-				contract = new Divide(executorAllowance, addresses);
+				contract = new Divide(executorAllowance, addresses, options);
 			});
 		} catch (e: Error) {
 			contract = undefined;

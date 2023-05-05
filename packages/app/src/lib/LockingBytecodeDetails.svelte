@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { base } from '$app/paths';
-	import { load } from '$lib/machinery/loader-store.js';
-	import { getUnspentOutputs } from '@unspent/phi';
-	import Address from './Address.svelte';
-	import AddressBlockie from './AddressBlockie.svelte';
-	import { chaingraphHost } from '$lib/store.js';
 	import {
 		instantiateSha256,
 		hexToBin,
 		lockingBytecodeToCashAddress,
 		lockingBytecodeToBase58Address
 	} from '@bitauth/libauth';
+	import { getUnspentOutputs } from '@unspent/psi';
+	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
+	import { load } from '$lib/machinery/loader-store.js';
+
+	import Address from './Address.svelte';
+	import AddressBlockie from './AddressBlockie.svelte';
+	import { chaingraphHost } from '$lib/store.js';
 
 	export let lockingBytecode;
 	let results;
@@ -34,7 +35,8 @@
 		await load({
 			load: async () => {
 				const sha256Promise = instantiateSha256();
-				results = (await getUnspentOutputs(chaingraphHostValue, lockingBytecode)).search_output;
+				results = (await getUnspentOutputs(chaingraphHostValue, lockingBytecode, network))
+					.search_output;
 				results = results.map((r) => {
 					return {
 						txid: r.transaction_hash.slice(2),
