@@ -66,20 +66,12 @@
 		});
 	}
 
-	function debounce(fn:any, timeout = 500) {
-		let timer:number;
-		return (...args) => {
-			clearTimeout(timer);
-			timer = setTimeout(() => {
-				fn.apply(this, args);
-			}, timeout);
-		};
-	}
+
 
 	beforeUpdate(async () => {
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
-		debounce(() => updateBalance());
+		updateBalance();
 	});
 
 	const updateBalance = async () => {
@@ -160,16 +152,21 @@
 		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 	</span>
 	<div>
-		<span style="position: relative; display: inline-block; padding: .5em .5em 0 0;">
+		<span style="position: relative; display: inline-block; padding: 1em 1em 0 0;">
 			<div style="font-size: x-large;">{instance.artifact.contractName}</div>
 			<Badge color="secondary" square align="top-end" aria-label="contract version"
 				>v{instance.options.version}</Badge
+			>
+      <Badge color="primary"  position="outset" align="bottom-end" aria-label="contract network"
+				>{nodeValue}</Badge
 			>
 		</span>
 	</div>
 
 	<div>
+    <span style="padding: 1em;">
 		<p>{instance.asText()}</p>
+  </span>
 	</div>
 	<div style=" width: 200px;">
 		<div style="text-align:end;">
