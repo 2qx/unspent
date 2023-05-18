@@ -345,7 +345,6 @@ export async function getHistory(host: string,
   query GetTransactionHistory(
     $node: String!
     $lockingBytecode: _text!
-    $after: bigint
     $limit: Int
     $offset: Int
   ) {
@@ -355,11 +354,6 @@ export async function getHistory(host: string,
       }
       where: {
         _and: [
-          {
-            transaction: {
-              block_inclusions: { block: { height: { _gt: $after } } }
-            }
-          }
           {
             _or: [
               {
@@ -423,13 +417,17 @@ export async function getHistory(host: string,
     }
   }
 
+  
+
   return response.data.data.search_output.map((o: any) => {
     //console.log(JSON.stringify(o,undefined, 2))
+    let height = o.transaction.block_inclusions.length > 0 ? o.transaction.block_inclusions[0].block.height : -1
+    let timestamp = o.transaction.block_inclusions.length > 0 ? o.transaction.block_inclusions[0].block.timestamp : -1
     return {
       hash: o.transaction.hash.slice(2),
       raw: o.transaction.encoded_hex,
-      height: parseInt(o.transaction.block_inclusions[0].block.height),
-      timestamp: parseInt(o.transaction.block_inclusions[0].block.timestamp),
+      height: parseInt(height),
+      timestamp: parseInt(timestamp),
       spentBy: o.spent_by.map((o: any) => { return o.outpoint.transaction_hash.slice(2) + ":" + o.outpoint.output_index })
     }
   });

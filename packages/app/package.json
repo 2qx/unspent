@@ -20,7 +20,8 @@
     "@unspent/phi": "*",
     "@unspent/psi": "*",
     "lightweight-charts": "^3.8.0",
-    "svelte-lightweight-charts": "^1.6.3"
+    "svelte-lightweight-charts": "^1.6.3",
+    "throttle-debounce":"^5.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "7.19.4",

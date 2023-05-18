@@ -72,7 +72,7 @@ export class PsiNetworkProvider implements NetworkProvider {
       // some time ago
       return goodUtxos.map(op => asUtxo(op))
     } else {
-      const history = await getHistory(this.chaingraphHost!, lockingBytecode, { node: this.network, after: 0, limit: 5 })
+      const history = await getHistory(this.chaingraphHost!, lockingBytecode, { node: this.network, limit: 5 })
       return (await this.db.bulkPutRawTransaction(history, lockingBytecodeHex)).map(u => asUtxo(u))
     }
 

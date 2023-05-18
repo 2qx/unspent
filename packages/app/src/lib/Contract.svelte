@@ -2,6 +2,7 @@
 	import { beforeUpdate } from 'svelte';
 	import Prism from 'prismjs';
 	import { Confetti } from 'svelte-confetti';
+  import { throttle } from 'throttle-debounce';
 
 	import { toast } from '@zerodevx/svelte-toast';
 	import { copy } from 'svelte-copy';
@@ -67,14 +68,18 @@
 	}
 
 
+  const throttleUpdate = throttle(3000, async () => {
+         await updateBalance();
+    });
 
 	beforeUpdate(async () => {
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
-		updateBalance();
+    await throttleUpdate();
 	});
 
 	const updateBalance = async () => {
+    
 		if (instance) balance = await instance.getBalance();
 		isFunded = balance > 0 ? true : false;
 

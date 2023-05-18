@@ -34,14 +34,12 @@ export interface HistoryQueryI{
   node?: string;
   limit?: number;
   offset?: number;
-  after: number;
 }
 
 export const HistoryIDefaults: HistoryQueryI = {
   node: "mainnet",
   limit: 500,
-  offset: 0,
-  after: 0,
+  offset: 0
 }
 
 
