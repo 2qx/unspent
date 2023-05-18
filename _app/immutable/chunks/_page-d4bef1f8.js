@@ -1,0 +1,2 @@
+async function r({url:e}){let t=e.searchParams.get("tx")||void 0,a=e.searchParams.get("cashaddr")||void 0,n=e.searchParams.get("lockingBytecode")||void 0,d=e.searchParams.get("network")||void 0;return{tx:t,cashaddr:a,lockingBytecode:n,network:d}}const o=Object.freeze(Object.defineProperty({__proto__:null,load:r},Symbol.toStringTag,{value:"Module"}));export{o as _,r as l};
+//# sourceMappingURL=_page-d4bef1f8.js.map
