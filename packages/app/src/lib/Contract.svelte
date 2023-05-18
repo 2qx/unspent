@@ -52,8 +52,6 @@
 	let address = '';
 	let nodeValue = '';
 
-
-
 	node.subscribe((value) => {
 		nodeValue = value;
 	});
@@ -68,10 +66,20 @@
 		});
 	}
 
+	function debounce(fn:any, timeout = 500) {
+		let timer:number;
+		return (...args) => {
+			clearTimeout(timer);
+			timer = setTimeout(() => {
+				fn.apply(this, args);
+			}, timeout);
+		};
+	}
+
 	beforeUpdate(async () => {
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
-		await updateBalance();
+		debounce(() => updateBalance());
 	});
 
 	const updateBalance = async () => {

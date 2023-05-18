@@ -18,10 +18,10 @@ export function getDefaultProvider(network="mainnet", chaingraphHost?:string){
 
   if (network === "mainnet") {
     let failover = getDefaultElectrumProvider("mainnet");
-    provider = new PsiNetworkProvider("mainnet", chaingraphHost, [failover]);
+    provider = new PsiNetworkProvider("mainnet", chaingraphHost, failover);
   } else if (network === "chipnet") {
     let failover = getDefaultElectrumProvider("chipnet");
-    provider = new PsiNetworkProvider("chipnet", chaingraphHost, [failover]);
+    provider = new PsiNetworkProvider("chipnet", chaingraphHost, failover);
   } 
   // fallback to fulcrum for regtest
   else if (network === "regtest") {
@@ -56,12 +56,12 @@ export function getDefaultElectrumProvider(network = "mainnet") {
       ElectrumTransport.WSS.Scheme,
       false
     );
-    cluster.addServer(
-      "electrum.imaginary.cash",
-      50004,
-      ElectrumTransport.WSS.Scheme,
-      false
-    );
+    // cluster.addServer(
+    //   "electrum.imaginary.cash",
+    //   50004,
+    //   ElectrumTransport.WSS.Scheme,
+    //   false
+    // );
     provider = new ElectrumNetworkProvider("mainnet", cluster, false);
   } else if (network === "chipnet") {
     provider = new ElectrumNetworkProvider("chipnet");

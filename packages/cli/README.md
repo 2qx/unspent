@@ -2,10 +2,10 @@ A utility for calling unspent contracts via the command line.
 
 # Usage
 
-In a node ^16 environment:
+In a node ^18 environment:
 
     npm i unspent
-    npx unspent
+    unspent -h
 
 ---
 

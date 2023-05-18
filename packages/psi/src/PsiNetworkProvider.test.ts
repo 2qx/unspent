@@ -50,7 +50,7 @@ test("Should get a utxo", async () => {
 
   const fulcrumProvider = new ElectrumNetworkProvider("mainnet", cluster, false);
 
-  const psiProvider = new PsiNetworkProvider("mainnet", host, [fulcrumProvider], 50)
+  const psiProvider = new PsiNetworkProvider("mainnet", host, fulcrumProvider, 50)
 
   const utxos = await psiProvider.getUtxos("bitcoincash:pz6qg80k3tps0zexq0kkxreen2ndscvqwve8l0r6vn")
 

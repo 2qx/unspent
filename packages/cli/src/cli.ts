@@ -368,20 +368,35 @@ export class QueryCommand extends NetworkCommand {
     required: false,
     description: "The contract prefix in hex",
   });
+  offset = Option.String("--offset", {
+    required: false,
+    description: "starting index of records returned",
+  });
+  limit = Option.String("--limit", {
+    required: false,
+    description: "The maximum number of records returned, (25 default)",
+  });
 
   async execute() {
     let chaingraph = this.chaingraph
       ? this.chaingraph
       : "https://demo.chaingraph.cash/v1/graphql";
-    let prefix = this.prefix ? this.prefix : undefined;
+    let prefix = this.prefix ? this.prefix : "6a047574786f";
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
-    let hexRecords = await getRecords(chaingraph, prefix, node);
-    console.log(`Found ${hexRecords.length} records`);
-    hexRecords.map((s: string) => console.log(s));
+    let limit = !this.limit ? undefined : parseInt(this.limit);
+    let offset = !this.offset ? undefined : parseInt(this.offset);
+    let hexRecords = await getRecords(chaingraph, prefix, node, limit, offset);
+    //console.log(`Found ${hexRecords.length} records`);
+    //hexRecords.map((s: string) => console.log(s));
     let contracts = [];
     for (let record of hexRecords) {
-      let instance = opReturnToSerializedString(record, this.network);
-      if (instance) contracts.push(instance.toString());
+      try{
+        let instance = opReturnToSerializedString(record, this.network);
+        if (instance) contracts.push(instance.toString());
+      }catch{
+        // anyone can post an OP_RETURN that doesn't parse
+      }
+      
     }
     console.log(`Build ${contracts.length} contracts`);
     contracts.map((contract: string) => {
