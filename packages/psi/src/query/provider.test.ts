@@ -43,8 +43,7 @@ describe(`Provider Tests`, () => {
     // this is an odd length hex string, which errors
     const param = {
       limit: 1,
-      offset: 0,
-      after: 0
+      offset: 0
     } as HistoryQueryI
     
     const result = (await getHistory(host, "a9143dbc74da4ca839c7bc5ae5e05e1b73c41aa1273187", param))[0];

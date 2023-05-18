@@ -141,7 +141,7 @@ address:        bchtest:pztwrxwhag3lkaul2ajtjuvksfqq9muprgcmvkz5sw`
 
   test("Should query contract info", async () => {
     let r = await mockCall(["query", "--prefix", "6a047574786f01460101010002e502"])
-    expect(r[0][0]).toContain("Found 1 records");
+    expect(r[0][0]).toContain("Build 1 contracts");
   });
 
 });
