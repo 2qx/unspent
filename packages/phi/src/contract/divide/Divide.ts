@@ -16,9 +16,9 @@ import {
   sum,
   binToBigInt,
 } from "../../common/util.js";
-import { artifact as v1_2 } from "./cash/divide.2.js";
-import { artifact as v1_3 } from "./cash/divide.3.js";
-import { artifact as v1_4 } from "./cash/divide.4.js";
+import { artifact as v1_2 } from "./cash/2.v1.js";
+import { artifact as v1_3 } from "./cash/3.v1.js";
+import { artifact as v1_4 } from "./cash/4.v1.js";
 
 const scriptMapV1: Artifact[] = [v1_2, v1_3, v1_4];
 

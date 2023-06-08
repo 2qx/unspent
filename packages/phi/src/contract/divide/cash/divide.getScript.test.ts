@@ -1,5 +1,5 @@
-import { artifact as v1_2 } from "./divide.2.js";
-import { artifact as v1_4 } from "./divide.4.js";
+import { artifact as v1_2 } from "./2.v1.js";
+import { artifact as v1_4 } from "./4.v1.js";
 
 describe(`Example Divide Tests`, () => {
   test("Should generate a contract with two outputs", async () => {

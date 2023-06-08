@@ -1,23 +1,37 @@
 import glob from "glob";
 import fs from "fs";
-import { compileFile, compileString } from "cashc-0.7";
+import { compileFile as compileFile07, compileString as compileString07 } from "cashc-0.7";
+import { compileFile } from "cashc";
 import { getDivideContract } from "./divide.v1.js";
 
 function updateArtifacts() {
-  glob("src/contract/**/cash/*.cash", function (err, files) {
+  glob("src/contract/**/cash/v1.cash", function (err, files) {
     if (err) {
       console.log(err);
     }
 
     files.forEach((file) => {
       console.log(file);
-      updateArtifact(file);
+      updateArtifact(file, compileFile07);
     });
   });
+
+
+  glob("src/contract/**/cash/v2.cash", function (err, files) {
+    if (err) {
+      console.log(err);
+    }
+
+    files.forEach((file) => {
+      console.log(file);
+      updateArtifact(file, compileFile);
+    });
+  });
+
 }
 
-function updateArtifact(cashFile) {
-  let artifact = compileFile(cashFile);
+function updateArtifact(cashFile, compiler) {
+  let artifact = compiler(cashFile);
   let tsFile = cashFile.replace(".cash", ".ts");
   console.log(tsFile);
   try {
@@ -33,9 +47,9 @@ function updateArtifact(cashFile) {
 }
 
 function updateDivideContract(d) {
-  let cashFile = `src/contract/divide/cash/divide.${d}.cash`;
+  let cashFile = `src/contract/divide/cash/${d}.v1.cash`;
   let cashString = getDivideContract(d);
-  let artifact = compileString(cashString);
+  let artifact = compileString07(cashString);
   let tsFile = cashFile.replace(".cash", ".ts");
   console.log(tsFile);
   try {

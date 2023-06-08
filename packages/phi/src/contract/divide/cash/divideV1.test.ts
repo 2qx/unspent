@@ -9,7 +9,7 @@ import {
   ElectrumNetworkProvider,
 } from "cashscript";
 import { RegTestWallet } from "mainnet-js";
-import { artifact as v1_4 } from "./divide.4.js";
+import { artifact as v1_4 } from "./4.v1.js";
 
 describe(`Example Divide Tests`, () => {
   test("Should pay a divisor contract", async () => {

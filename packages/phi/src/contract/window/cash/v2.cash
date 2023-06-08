@@ -1,4 +1,4 @@
-pragma cashscript ^0.7.2;
+pragma cashscript ^0.8.0;
 
 contract Window(
   // deposit rate in sat per coin per sat
@@ -32,7 +32,7 @@ contract Window(
         // calculate the deposit script
         bytes depositScript = bytes(locktime) + 0xb17576a9 +bytes(recipientLockingBytecode) + 0x88ac;
 
-        bytes depositLock = new LockingBytecodeP2SH(hash160(depositScript));
+        bytes depositLock = new LockingBytecodeP2SH32(hash256(depositScript));
         require(tx.outputs[0].lockingBytecode == depositLock);
         require(tx.outputs[0].value <= maturity);
 
