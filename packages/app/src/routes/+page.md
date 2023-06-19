@@ -25,7 +25,7 @@ Some contracts control value on behalf of the contract creator. They all have an
 | ---------- | ------------------------------------------------------ |
 | Annuity    | Equal payments over time.                              |
 | Divide     | Divide money into equal payments, up to four addresses |
-| Perpetuity | Pay a fixed fraction of total value at intervals       |
+| Perpetuity | Pay a fixed fraction of value at intervals             |
 
 ## Distributive Contracts
 
@@ -58,7 +58,7 @@ The annuity contract pays a fixed amount (in satoshis) to a predefined locking b
 
 To prevent the contract from being called successively (thus paying out all at once), a timelock is added restricting input be of a certain age (in blocks), this parameter is called the `period`. The beneficiary address (or contract) is denoted by the `recipientLockingBytecode`. The amount paid in each period is the `installment`. To aid in execution, a small fee is left as `executorAllowance` for each execution of the contract, it may be paid to anyone.
 
-This contract: checks that the first output pays to the beneficiary; checks that the timelock is satisfied; checks that the second output pays back to the contract; gets the total value being spent; calculates the amount to be returned, and finally, checks that both the installment amount of the first output & the total returned to the contract exceed the required amounts.
+This contract: checks that the first output pays to the beneficiary; checks that the timelock is satisfied; checks that the second output pays back to the contract; gets the input value being spent; calculates the amount to be returned, and finally, checks that both the installment amount of the first output & the value returned to the contract exceed the required amounts.
 
 ```solidity
 pragma cashscript >= 0.7.1;
@@ -93,7 +93,7 @@ contract Annuity(
     // require the second output to match the active bytecode
     require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-    // Get the total value on the contract
+    // Get the value on the input
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value returned to the contract
@@ -110,9 +110,9 @@ contract Annuity(
 
 The divide contract splits inputs across a predefined set of output destinations.
 
-Each output is denoted by `r#LockingBytecode`, where `#` is the index of the output. Since early BitcoinScript did not have loops, this contract was written with a static list of outputs and a `divisor`, which is simply the number of outputs. An `executorAllowance` amount is subtracted from the total distribution amount, which may be spent by anyone as long as the amount payed to the hardcoded receipts equals or exceeds the alloted share.
+Each output is denoted by `r#LockingBytecode`, where `#` is the index of the output. Since early BitcoinScript did not have loops, this contract was written with a static list of outputs and a `divisor`, which is simply the number of outputs. An `executorAllowance` amount is subtracted from the distribution amount, which may be spent by anyone as long as the amount payed to the hardcoded receipts equals or exceeds the alloted share.
 
-This contract: checks that each of the output destinations match the predefined output; calculates the total value on the contract; calculates the amount to be paid to each receipt (`distribution`), and finally calculates that each receipt receives an output greater than, or equal to, the distribution amount.
+This contract: checks that each of the output destinations match the predefined output; calculates the input value on the contract; calculates the amount to be paid to each receipt (`distribution`), and finally calculates that each receipt receives an output greater than, or equal to, the distribution amount.
 
 ```solidity
 pragma cashscript >= 0.7.0;
@@ -134,10 +134,10 @@ pragma cashscript >= 0.7.0;
     require(tx.outputs[0].lockingBytecode == r0LockingBytecode);
     require(tx.outputs[1].lockingBytecode == r1LockingBytecode);
 
-    // Get the total value of inputs
+    // Get the value of inputs
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
-    // Total value paid to beneficiaries,
+    // Value paid to beneficiaries,
     // minus executor allowance
     int distributedValue = currentValue - executorAllowance;
 
@@ -187,7 +187,7 @@ contract Faucet(
     // require the first output to match the active bytecode
     require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-    // Get the total value on the contract
+    // Get the input value
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value returned to the contract
@@ -207,8 +207,8 @@ contract Faucet(
 ## Mine-able Faucet
 
 | ‼️ Mining covenants are temporarily "disabled" in the earn tab |
-| -------------------------------------------------------------- |
-| But they still out there and will be back in the app soon.     |
+| ------------------------------------------------------------- |
+| But they still out there and will be back in the app soon.    |
 
 The ₿∙ϕ mining covenant is very much like the faucet, with some additional requirements.
 
@@ -292,7 +292,7 @@ contract Mine(
     // check that the change output sends to that contract
     require(tx.outputs[1].lockingBytecode == lockingCode);
 
-    // Get the total value on the contract
+    // Get the value of the input
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value returned to the contract
@@ -313,7 +313,7 @@ contract Mine(
 
 ## Perpetuity
 
-The Perpetuity contract works like an Annuity, however rather than pay a fixed amount, a fixed fraction of the total is paid each period.
+The Perpetuity contract works like an Annuity, however rather than pay a fixed amount, a fixed fraction of the input is paid each period.
 
 The fraction paid is determined by the `decay` parameter. If a `decay` of 10 is specified, then one tenth the value is paid each period.
 
@@ -337,7 +337,7 @@ contract Perpetuity(
 
  // divisor for the payout,
  // each payout must be greater than
- // the total amount held on the contract
+ // the input value
  // divided by this number
  int decay
 
@@ -353,7 +353,7 @@ contract Perpetuity(
   // require the second output to match the active bytecode
   require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-  // Get the total value on the contract
+  // Get the value of the input
   int currentValue = tx.inputs[this.activeInputIndex].value;
 
   // The payout is the current value divided by the decay

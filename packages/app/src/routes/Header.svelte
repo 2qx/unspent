@@ -17,8 +17,11 @@
 	</div>
 {:else}
 	<div class="alpha">
-		This app is in development! Keep value small and create a backup of any information used to
-		create contracts that hold value. <a href="{base}/202212_fundraiser">🎉🍊</a>
+		This app is in active development! <br />
+		Creation of new contracts is disabled pending a security upgrade. <br />
+		Additional funds should NOT be sent to v0 or v1 contracts.<br/>
+    Existing contracts may continue to be executed on schedule. Almost all funds on almost all contracts are safe. <br/>
+    No new contracts. Outgoing payments only. This app does not store private keys anywhere.<br/>
 	</div>
 {/if}
 
@@ -38,9 +41,9 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li class:active={$page.url.pathname.startsWith('/create')}>
+			<!--li class:active={$page.url.pathname.startsWith('/create')}>
 				<a href="{base}/create">Create</a>
-			</li>
+			</li-->
 			<li class:active={$page.url.pathname === '/earn'}>
 				<a href="{base}/earn">Earn</a>
 			</li>
@@ -68,10 +71,17 @@
 
 	.alpha {
 		width: 100%;
-		background-color: #420242;
+		background-color: rgb(255, 0, 64);
 		font-weight: 900;
+		font-size: x-large;
+		min-height: 150px;
+
 		color: white;
 		text-align: center;
+	}
+
+	.alpha a {
+		color: darkgreen;
 	}
 
 	.dev {
