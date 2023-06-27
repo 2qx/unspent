@@ -3,7 +3,13 @@ import { RegTestWallet, mine as mineBlocks } from "mainnet-js";
 
 describe(`Mine Class Tests`, () => {
   test("Should serialize a 'mine' contract", async () => {
-    const m = new Mine();
+    const m = new Mine(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      {version:1}
+      );
     expect(m.toString()).toEqual(
       `M,1,1,5000,3,00000000000000,a914df288c9062bc5b1a7180d83ca19a7231b0fb50ad87`
     );

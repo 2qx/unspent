@@ -1,4 +1,4 @@
-pragma cashscript ^0.8.0;
+pragma cashscript ^0.8.1;
 
 // Rolling auction for an nft receipt, 
 //

@@ -1,8 +1,9 @@
 import glob from "glob";
 import fs from "fs";
 import { compileFile as compileFile07, compileString as compileString07 } from "cashc-0.7";
-import { compileFile } from "cashc";
-import { getDivideContract } from "./divide.v1.js";
+import { compileFile, compileString } from "cashc";
+import { getDivideContract as getV1 } from "./divide.v1.js";
+import { getDivideContract as getV2 } from "./divide.v2.js";
 
 function updateArtifacts() {
   glob("src/contract/**/cash/v1.cash", function (err, files) {
@@ -46,10 +47,20 @@ function updateArtifact(cashFile, compiler) {
   }
 }
 
-function updateDivideContract(d) {
-  let cashFile = `src/contract/divide/cash/${d}.v1.cash`;
-  let cashString = getDivideContract(d);
-  let artifact = compileString07(cashString);
+function updateDivideContract(d, v) {
+  let cashFile = `src/contract/divide/cash/${d}.v${v}.cash`;
+  let cashString;
+  let artifact;
+  if(v==1){
+    cashString = getV1(d);
+    artifact = compileString07(cashString);
+  }else if (v==2){
+    cashString = getV2(d);
+    artifact = compileString(cashString);
+  }else{
+    throw("Unrecognized version of Divide contract")
+  }
+
   let tsFile = cashFile.replace(".cash", ".ts");
   console.log(tsFile);
   try {
@@ -72,7 +83,8 @@ function updateDivideContract(d) {
 function updateDivideContracts() {
   let divisors = [2, 3, 4];
   divisors.forEach((d) => {
-    updateDivideContract(d);
+    updateDivideContract(d, 1);
+    updateDivideContract(d, 2);
   });
 }
 

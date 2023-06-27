@@ -19,8 +19,14 @@ import {
 import { artifact as v1_2 } from "./cash/2.v1.js";
 import { artifact as v1_3 } from "./cash/3.v1.js";
 import { artifact as v1_4 } from "./cash/4.v1.js";
+import { artifact as v2_2 } from "./cash/2.v2.js";
+import { artifact as v2_3 } from "./cash/3.v2.js";
+import { artifact as v2_4 } from "./cash/4.v2.js";
 
-const scriptMapV1: Artifact[] = [v1_2, v1_3, v1_4];
+const scriptMap: Artifact[][] = [
+  [v1_2, v1_3, v1_4],
+  [v2_2, v2_3, v2_4]
+];
 
 export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static c: string = "D";
@@ -35,9 +41,10 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     public options: ContractOptions = DefaultOptions
   ) {
     let scriptFn;
-    if (options.version === 1) {
-      scriptFn = scriptMapV1;
-    } else {
+
+    if ([1,2].includes(options.version!)){
+      scriptFn = scriptMap;
+    }else{
       throw Error("Unrecognized Divide Contract Version");
     }
 
@@ -50,7 +57,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     const divisor = BigInt(payees.length);
     if (!(divisor >= 2n && divisor <= 4n))
       throw Error(`Divide contract range must be 2-4, ${divisor} out of range`);
-    const script = scriptFn[Number(divisor - 2n)]!;
+    const script = scriptFn[options.version!-1]![Number(divisor - 2n)]!;
 
     const payeeLocks = [...payees].map((c) => {
       const lock = cashAddressToLockingBytecode(c);
@@ -84,7 +91,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(Divide.c == p.code))
       throw "non-faucet serialized string passed to faucet constructor";
 
-    if (p.options.version != 1)
+      if (![1,2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
 
     const prefix = getPrefixFromNetwork(p.options.network);
@@ -115,7 +122,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (p.options.version !== 1)
+    if (![1,2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );

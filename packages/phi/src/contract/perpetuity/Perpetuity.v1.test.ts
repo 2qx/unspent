@@ -8,7 +8,8 @@ describe(`Perpetuity Class Tests`, () => {
       4000n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
       1000n,
-      12n
+      12n,
+      {version:1}
     );
     const chk = derivePublicKeyHashHex(
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr"

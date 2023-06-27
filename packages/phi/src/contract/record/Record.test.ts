@@ -186,11 +186,63 @@ describe(`Record Class Tests`, () => {
     // ))
   });
 
+  test("Should announce v2 itself and Divide set", async () => {
+    const payees = [
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+      "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+      "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
+      "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss",
+    ];
+    const options = { version: 2, network: "regtest" };
+    const d = new Divide(1047n, payees, options);
+    const r = new Record(Record.minMaxFee, 1n, options);
+
+    // fund the contract
+    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    await alice.send([
+      {
+        cashaddr: r.getAddress(),
+        value: 50000,
+        unit: "satoshis",
+      },
+    ]);
+
+    const tx = await r.broadcast(d.toOpReturn());
+    const tx2 = await r.broadcast();
+    // expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array(
+    //     [
+    //         106,
+    //         4, 117, 116, 120, 111,
+    //         1, 82,
+    //         1, 1,
+    //         2, 82, 3,
+    //         1, 1,
+    //         23,
+    //         169, 20,
+    //         228, 166, 133, 142, 156,
+    //         50, 186, 76, 216, 44,
+    //         200, 94, 39, 43, 228,
+    //         113, 71, 191, 226, 12,
+    //         135
+
+    //     ]
+    // ))
+  });
+
+
   test("Should return info", async () => {
     const options = { version: 1, network: "regtest" };
     const c1 = new Record(850n, 0n, options);
     const info = await c1.info(false);
     expect(info).toContain(c1.toString());
+    expect(info).toContain("balance");
+  });
+
+  test("Should return v2 info", async () => {
+    const options = { version: 2, network: "regtest" };
+    const c2 = new Record(850n, 0n, options);
+    const info = await c2.info(false);
+    expect(info).toContain(c2.toString());
     expect(info).toContain("balance");
   });
 

@@ -19,7 +19,7 @@ describe(`Faucet Class Tests`, () => {
   });
 
   test("Should serialize a faucet (v1)", async () => {
-    let f = new Faucet();
+    let f = new Faucet(undefined,undefined,undefined,{version:1});
     let chk = deriveLockingBytecodeHex(f.getAddress());
     expect(f.toString()).toContain(chk);
     expect(f.toString()).toEqual(`F,1,1,1000,1,${chk}`);

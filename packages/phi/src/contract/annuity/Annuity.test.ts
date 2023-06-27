@@ -9,7 +9,8 @@ describe(`Annuity Class Tests`, () => {
       4000n,
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
       5000n,
-      Annuity.minAllowance
+      Annuity.minAllowance,
+      {version:1}
     );
     const chk = derivePublicKeyHashHex(
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr"

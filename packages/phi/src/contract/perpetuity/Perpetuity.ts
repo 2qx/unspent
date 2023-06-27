@@ -24,6 +24,7 @@ import {
 } from "../../common/util.js";
 import { artifact as v0 } from "./cash/v0.js";
 import { artifact as v1 } from "./cash/v1.js";
+import { artifact as v2 } from "./cash/v2.js";
 
 export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
@@ -43,7 +44,13 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     let lock: Uint8Array;
 
-    if (options.version === 1) {
+    if (options.version === 2) {
+      script = v2;
+      const lockingBytecode = cashAddressToLockingBytecode(address);
+      if (typeof lockingBytecode === "string") throw lockingBytecode;
+      executorAllowance = 1500n;
+      lock = lockingBytecode.bytecode;
+    } else if (options.version === 1) {
       script = v1;
       const lockingBytecode = cashAddressToLockingBytecode(address);
       if (typeof lockingBytecode === "string") throw lockingBytecode;
@@ -53,7 +60,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       assurePkh(address)
       const publicKeyHash = derivePublicKeyHash(address)
       lock = publicKeyHash
-    }else {
+    } else {
       throw Error("Unrecognized Perpetuity Version");
     }
 
@@ -88,7 +95,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
 
-    if (![0,1].includes(p.options.version))
+    if (![0,1,2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
 
     if (p.args.length != 4)
@@ -131,7 +138,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (![0,1].includes(p.options.version))
+    if (![0,1,2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
@@ -332,16 +339,28 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     installment += 2n;
     newPrincipal += 3n;
 
-    const to = [
-      {
-        to: this.address,
-        amount: installment,
-      },
-      {
-        to: this.getAddress(),
-        amount: newPrincipal,
-      },
-    ];
+    let to = []
+    if(this.options.version == 2 && installment < 1000){
+      to = [
+        {
+          to: this.address,
+          amount: installment+newPrincipal,
+        }
+      ];
+    }else{
+      to = [
+        {
+          to: this.address,
+          amount: installment,
+        },
+        {
+          to: this.getAddress(),
+          amount: newPrincipal,
+        },
+      ];
+
+    }
+
 
     let executorFee = DUST_UTXO_THRESHOLD;
     if (typeof exAddress === "string" && exAddress)
@@ -349,27 +368,25 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         to: exAddress,
         amount: executorFee,
       });
-
     let tx = fn();
+    
     if (utxos) tx = tx.from(utxos);
 
     const size = await tx!.to(to).withAge(Number(this.period)).withoutChange().build();
 
-    //console.log(size.length / 2)
     if (exAddress) {
       const minerFee = fee ? fee : BigInt(size.length / 2);
 
       executorFee = BigInt(this.executorAllowance) - minerFee - 20n;
-      to.pop();
-      to.push({
-        to: exAddress,
-        amount: executorFee,
-      });
+      if(executorFee > DUST_UTXO_THRESHOLD){
+        to.pop();
+        to.push({
+          to: exAddress,
+          amount: executorFee,
+        });
+      }
     }
 
-    // // Calculate value returned to the contract
-    // int returnedValue = currentValue - installment - executorAllowance;
-    //console.log(newPrincipal, currentValue, installment, executorFee)
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);

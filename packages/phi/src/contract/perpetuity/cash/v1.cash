@@ -19,7 +19,7 @@ contract Perpetuity(
 
  // divisor for the payout, 
  // each payout must be greater than 
- // the total amount held on the contract
+ // the input amount held on the contract
  //  divided by this number
  int decay
 ) {
@@ -35,7 +35,7 @@ contract Perpetuity(
   require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
 
-  // Get the total value on the contract
+  // Get the input value on the contract
   int currentValue = tx.inputs[this.activeInputIndex].value;
 
   // The payout is the current value divided by the decay

@@ -26,7 +26,7 @@ import {
 } from "@unspent/psi"
 
 abstract class VersionedCommand extends Command{
-  version = Option.String("--version", "1", {
+  version = Option.String("--version", "2", {
     description: "The unspent/phi contract version",
   });
 }

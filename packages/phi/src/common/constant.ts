@@ -1,7 +1,7 @@
 const DELIMITER = ",";
 
 const DefaultOptions = {
-  version: 1,
+  version: 2,
   network: "mainnet",
 };
 

@@ -29,7 +29,7 @@
   "dependencies": {
     "@bitauth/libauth": "v2.0.0-alpha.8",
     "axios": "1.4.0",
-    "cashscript": "0.8.0-next.2",
+    "cashscript": "0.8.1",
     "dexie": "4.0.1-alpha.8",
     "electrum-cash": "^2.0.10",
     "typeson": "8.0.1"

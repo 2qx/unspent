@@ -15,34 +15,34 @@ import {
   parseBigInt,
   toHex,
 } from "../../common/util.js";
-import { artifact as v1 } from "./cash/v1.js";
+import { artifact as v2 } from "./cash/v2.js";
 
-export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
-  public static c: string = "G";
+export class Locktime extends BaseUtxPhiContract implements UtxPhiIface {
+  public static c: string = "T";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
   public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 220n + 10n;
 
   constructor(
-    public threshold: bigint = 100000n,
+    public period: bigint = 144n,
     public address: string,
     public executorAllowance: bigint,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
-    if (options.version === 1) {
-      script = v1;
+    if (options.version === 2) {
+      script = v2;
     } else {
-      throw Error("Unrecognized Gate Version");
+      throw Error("Unrecognized Locktime Version");
     }
     let lock = cashAddressToLockingBytecode(address);
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
 
-    if (executorAllowance < Gate.minAllowance) throw Error(`Executor Allowance below usable threshold ${Gate.minAllowance}`)
+    if (executorAllowance < Locktime.minAllowance) throw Error(`Executor Allowance below usable threshold ${Locktime.minAllowance}`)
 
     super(options.network!, script, [
-      threshold,
+      period,
       bytecode,
       executorAllowance
     ]);
@@ -50,19 +50,19 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
     this.options = options;
   }
 
-  static fromString(str: string, network = "mainnet"): Gate {
+  static fromString(str: string, network = "mainnet"): Locktime {
     let p = this.parseSerializedString(str, network);
 
     // if the contract shortcode doesn't match, error
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
 
-    if (p.options.version != 1)
+    if (p.options.version != 2)
       throw Error(`${this.name} contract version not recognized`);
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
 
-    const threshold = parseBigInt(p.args.shift()!);
+    const period = parseBigInt(p.args.shift()!);
 
     const lock = p.args.shift()!;
 
@@ -73,23 +73,23 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
 
     const executorAllowance = parseBigInt(p.args.shift()!);
 
-    let gate = new Gate(
-      threshold,
+    let locktime = new Locktime(
+      period,
       address,
       executorAllowance,
       p.options
     );
 
     // check that the address
-    gate.checkLockingBytecode(p.lockingBytecode);
-    return gate;
+    locktime.checkLockingBytecode(p.lockingBytecode);
+    return locktime;
   }
 
-  // Create a Gate contract from an OpReturn by building a serialized string.
+  // Create a Locktime contract from an OpReturn by building a serialized string.
   static fromOpReturn(
     opReturn: Uint8Array | string,
     network = "mainnet"
-  ): Gate {
+  ): Locktime {
     let p = this.parseOpReturn(opReturn, network);
 
     // check code
@@ -102,7 +102,7 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    let threshold = binToBigInt(p.args.shift()!);
+    let period = binToBigInt(p.args.shift()!);
     let lock = p.args.shift()!;
 
     let prefix = getPrefixFromNetwork(network);
@@ -112,39 +112,39 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
 
     const executorAllowance = binToBigInt(p.args.shift()!);
 
-    let perpetuity = new Gate(
-      threshold,
+    let locktime = new Locktime(
+      period,
       address,
       executorAllowance,
       p.options
     );
 
     // check that the address
-    perpetuity.checkLockingBytecode(p.lockingBytecode);
-    return perpetuity;
+    locktime.checkLockingBytecode(p.lockingBytecode);
+    return locktime;
   }
 
   override toString() {
     return [
-      `${Gate.c}`,
+      `${Locktime.c}`,
       `${this.options!.version}`,
-      `${this.threshold}`,
+      `${this.period}`,
       `${deriveLockingBytecodeHex(this.address)}`,
       `${this.executorAllowance}`,
       `${this.getLockingBytecode()}`,
-    ].join(Gate.delimiter);
+    ].join(Locktime.delimiter);
   }
 
   override asText(): string {
-    return `Gate (dust) with a threshold of ${this.threshold} (sat), after a ${this.executorAllowance} (sat) executor allowance`;
+    return `Locktime with a period of ${this.period} (sat), after a ${this.executorAllowance} (sat) executor allowance`;
   }
 
   toOpReturn(hex = false): string | Uint8Array {
     const chunks = [
-      Gate._PROTOCOL_ID,
-      Gate.c,
+      Locktime._PROTOCOL_ID,
+      Locktime.c,
       toHex(this.options!.version!),
-      toHex(this.threshold),
+      toHex(this.period),
       "0x" + deriveLockingBytecodeHex(this.address),
       toHex(this.executorAllowance),
       "0x" + this.getLockingBytecode(),
@@ -173,16 +173,14 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
     }
     if (currentValue == 0n) return "No funds on contract";
 
-    let fn = this.getFunction(Gate.fn)!;
-    let newPrincipal = currentValue - (this.executorAllowance);
+    let fn = this.getFunction(Locktime.fn)!;
+    let principal = currentValue - (this.executorAllowance);
 
-    // round up
-    newPrincipal += 3n;
 
     let to = [
       {
-        to: this.getAddress(),
-        amount: newPrincipal,
+        to: this.address,
+        amount: principal,
       },
     ];
 
@@ -196,7 +194,7 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
 
-    let size = await tx!.to(to).withoutChange().build();
+    let size = await tx!.to(to).withAge(Number(this.period)).withoutChange().build();
 
     //console.log(size.length / 2)
     if (exAddress) {
@@ -212,7 +210,7 @@ export class Gate extends BaseUtxPhiContract implements UtxPhiIface {
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    let payTx = await tx!.to(to).withoutChange().send();
+    let payTx = await tx!.to(to).withAge(Number(this.period)).withoutChange().send();
     return payTx.txid;
 
   }

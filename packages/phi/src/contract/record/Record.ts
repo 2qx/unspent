@@ -4,6 +4,7 @@ import { binToBigInt, decodeNullDataScript } from "../../common/util.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { artifact as v1 } from "./cash/v1.js";
+import { artifact as v2 } from "./cash/v2.js";
 import { hash160, sum, toHex, parseBigInt } from "../../common/util.js";
 import { binToHex, hexToBin } from "@bitauth/libauth";
 
@@ -18,7 +19,9 @@ export class Record extends BaseUtxPhiContract {
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
-    if (options.version === 1) {
+    if (options.version === 2) {
+      script = v2;
+    } else if (options.version === 1) {
       script = v1;
     } else {
       throw Error("Unrecognized Divide Contract Version");
@@ -38,7 +41,7 @@ export class Record extends BaseUtxPhiContract {
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
 
-    if (p.options.version != 1)
+    if (![1,2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
 
     const maxFee = parseBigInt(p.args.shift()!);
@@ -117,13 +120,13 @@ export class Record extends BaseUtxPhiContract {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (p.options.version !== 1)
+    if (![1,2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
     let [maxFee, index]: [bigint?, bigint?] = [undefined, undefined];
-    if (p.options.version == 1) {
+    if ([1,2].includes(p.options.version)) {
       maxFee = binToBigInt(p.args.shift()!);
       index = binToBigInt(p.args.shift()!);
     } else {

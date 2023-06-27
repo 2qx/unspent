@@ -38,6 +38,7 @@
     "OUTPUTBYTECODE",
     "OUTPUTVALUE",
     "prismjs",
+    "reserialize",
     "shortcode",
     "smui",
     "SMUI",

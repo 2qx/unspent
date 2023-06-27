@@ -7,7 +7,7 @@ import {
 } from "electrum-cash";
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
-import { artifact as v1 } from "./v1.js";
+import { artifact as v2 } from "./v2.js";
 import { DUST_UTXO_THRESHOLD } from "../../../common/constant.js";
 
 describe.skip(`TimeLock Tests`, () => {
@@ -35,7 +35,7 @@ describe.skip(`TimeLock Tests`, () => {
     let executorAllowance = 1200n;
     let period = 51n;
     let contract = new Contract(
-      v1 as Artifact,
+      v2 as Artifact,
       [period, bytecode, executorAllowance],
       {provider: regtestNetwork, addressType: 'p2sh20'}
     );

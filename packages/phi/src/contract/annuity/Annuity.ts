@@ -18,6 +18,7 @@ import {
   binToBigInt,
 } from "../../common/util.js";
 import { artifact as v1 } from "./cash/v1.js";
+import { artifact as v2 } from "./cash/v2.js";
 
 export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "A"; //A
@@ -34,7 +35,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
-    if (options.version === 1) {
+    if (options.version === 2) {
+      script = v2;
+    } else if (options.version === 1) {
       script = v1;
     } else {
       throw Error("Unrecognized Annuity Version");
