@@ -1,4 +1,5 @@
 import { Mine } from "./Mine.js";
+import { sleep } from "../../common/util.js";
 import { RegTestWallet, mine as mineBlocks } from "mainnet-js";
 
 describe(`Mine Class Tests`, () => {
@@ -58,6 +59,7 @@ describe(`Mine Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
+    await sleep(500)
     await mineBlocks({ cashaddr: alice.getDepositAddress(), blocks: 6 });
     expect(await m1.getBalance()).toBeGreaterThan(100);
     m1.getAddress();

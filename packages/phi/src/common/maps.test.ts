@@ -39,12 +39,12 @@ describe(`Test mapping serialized contracts`, () => {
       new Faucet().toOpReturn(true),
     ];
     const opcodes = [
-      "6a047574786f01520102025203010023aa207935eb1290cae8860de0befe5b9bdaf1a44e34f1e55ed079cbcaf0f0bdfe749287",
+      "6a047574786f01520102025203010023aa208dc928bb0d76dc327f2505cfd9d5b2dfd59d36df743a092ee332e06ed6e8122c87",
       "6a047574786f01460102010102e803010123aa204cc47326322f08cf87cbbfa23c02f5e0c8efa97b63c04709cb3a3b5fe434988987",
     ];
 
     const strings = [
-      "R,2,850,0,aa207935eb1290cae8860de0befe5b9bdaf1a44e34f1e55ed079cbcaf0f0bdfe749287",
+      "R,2,850,0,aa208dc928bb0d76dc327f2505cfd9d5b2dfd59d36df743a092ee332e06ed6e8122c87",
       "F,2,1,1000,1,aa204cc47326322f08cf87cbbfa23c02f5e0c8efa97b63c04709cb3a3b5fe434988987",
     ];
 

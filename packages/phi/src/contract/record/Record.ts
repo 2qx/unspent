@@ -1,11 +1,11 @@
-import type { Artifact, Utxo, NetworkProvider } from "cashscript";
+import type { Artifact, Utxo,  NetworkProvider } from "cashscript";
 import type { ContractOptions } from "../../common/interface.js";
 import { binToBigInt, decodeNullDataScript } from "../../common/util.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { artifact as v1 } from "./cash/v1.js";
 import { artifact as v2 } from "./cash/v2.js";
-import { hash160, sum, toHex, parseBigInt } from "../../common/util.js";
+import { hash160, sum, toHex, parseBigInt, sleep } from "../../common/util.js";
 import { binToHex, hexToBin } from "@bitauth/libauth";
 
 export class Record extends BaseUtxPhiContract {
@@ -163,8 +163,8 @@ export class Record extends BaseUtxPhiContract {
     // regardless of how many inputs, filter to two if more than two utxos are available
     if (!utxos || utxos.length == 0) {
       const allUtxos = await this.getUtxos();
-      if (allUtxos && allUtxos.length > 1) {
-        utxos = allUtxos.slice(0, 2);
+      if (allUtxos && allUtxos.length > 0) {
+        utxos = allUtxos.slice(-1);
       }
     }
 
@@ -176,19 +176,27 @@ export class Record extends BaseUtxPhiContract {
     let tx = fn(checkHash)!;
     let estimator = fn(checkHash)!;
 
-    if (utxos && utxos.length > 1) {
+
+    if (utxos && utxos.length == 1) {
       tx = tx.from(utxos);
       estimator = estimator.from(utxos);
+    }else{
+      console.log(utxos)
+       throw("Cannot merge inputs");
     }
 
-    const size = BigInt((
-      await estimator.withOpReturn(chunks).withHardcodedFee(669n).build()
-    ).length);
+     const size = BigInt((
+       await estimator.withOpReturn(chunks).withHardcodedFee(669n).build()
+     ).length);
 
-    const txn = await tx
+    await sleep(500);
+    tx =  tx
       .withOpReturn(chunks)
-      .withHardcodedFee(size / 2n)
-      .send();
+      .withHardcodedFee(size/2n)
+      .withMinChange(1000n);
+
+    let txn  = await tx.send();
+
     return txn.txid;
   }
 }

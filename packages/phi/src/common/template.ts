@@ -48,15 +48,7 @@ const merge = (array: any) =>
     {}
   );
 
-// const encodeArgument = (
-//   argument: Argument,
-//   typeStr: string
-// ): Uint8Array | SignatureTemplate => {
-//   if (typeStr === PrimitiveType.INT && argument === 0n) {
-//     return Uint8Array.from([0]);
-//   }
-//   return csEncodeArgument(argument, typeStr);
-// };
+
 
 export const stringify = (any: any, spaces?: number) =>
   JSON.stringify(

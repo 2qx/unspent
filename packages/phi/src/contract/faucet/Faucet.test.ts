@@ -1,7 +1,7 @@
 import { Faucet } from "./Faucet.js";
 import { RegTestWallet, mine } from "mainnet-js";
 import { deriveLockingBytecodeHex } from "../../common/util.js";
-
+  
 describe(`Faucet Class Tests`, () => {
   test("Should serialize a faucet (v0)", async () => {
     let f = new Faucet(undefined, undefined, undefined, {version:0});

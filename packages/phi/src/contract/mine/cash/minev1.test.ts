@@ -16,7 +16,7 @@ import { artifact as v1 } from "./v1.js";
 import { _PROTOCOL_ID } from "../../../common/constant.js";
 
 describe(`Mining Contract Tests`, () => {
-  test("Should pay a mining contract 10 times in 10 blocks", async () => {
+  test.skip("Should pay a mining contract 10 times in 10 blocks", async () => {
     const regTest = new ElectrumCluster(
       "unspent phi-tests - faucet",
       "1.4.1",

@@ -5,6 +5,7 @@ import { Faucet } from "../faucet/index.js";
 import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
+import { sleep } from "../../common/util.js";
 
 describe(`Record Class Tests`, () => {
   test("Should announce itself and Faucet", async () => {
@@ -12,6 +13,7 @@ describe(`Record Class Tests`, () => {
     const r = new Record(850n, 0n, options);
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    await sleep(500);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -19,6 +21,7 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
+    await sleep(500);
 
     const tx2 = await r.broadcast();
     expect(r.toOpReturn(true)).toEqual(
@@ -68,6 +71,7 @@ describe(`Record Class Tests`, () => {
 
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    await sleep(500);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -75,6 +79,8 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
+
+    await sleep(500);
 
     const tx = await r.broadcast(f.toOpReturn());
     const tx2 = await r.broadcast();
@@ -118,6 +124,8 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
+    await sleep(500);
+
 
     const tx = await r.broadcast(d.toOpReturn());
     const tx2 = await r.broadcast();
@@ -156,7 +164,11 @@ describe(`Record Class Tests`, () => {
       },
     ]);
 
+    await sleep(500);
+
     const tx = await r.broadcast(f.toOpReturn());
+    await sleep(500);
+
     const aBin = new Uint8Array([106, 4, 117, 116, 120, 111]);
 
     const payload = new Uint8Array([
@@ -197,8 +209,10 @@ describe(`Record Class Tests`, () => {
     const d = new Divide(1047n, payees, options);
     const r = new Record(Record.minMaxFee, 1n, options);
 
+
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    await sleep(500);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -207,7 +221,11 @@ describe(`Record Class Tests`, () => {
       },
     ]);
 
+    await sleep(500);
+
     const tx = await r.broadcast(d.toOpReturn());
+
+    //await sleep(500);
     const tx2 = await r.broadcast();
     // expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array(
     //     [
@@ -241,6 +259,7 @@ describe(`Record Class Tests`, () => {
   test("Should return v2 info", async () => {
     const options = { version: 2, network: "regtest" };
     const c2 = new Record(850n, 0n, options);
+    //expect(c2.getLegacyAddress()).toBe("AipS9tRYVbDNobNs3MXe9UXzwaUMnDqTcr5")
     const info = await c2.info(false);
     expect(info).toContain(c2.toString());
     expect(info).toContain("balance");

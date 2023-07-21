@@ -8,6 +8,7 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v1 } from "./v1.js";
+import { sleep } from "../../../common/util.js";
 
 describe(`Example Perpetuity Tests`, () => {
   test("Should pay a perpetuity contract", async () => {
@@ -57,6 +58,7 @@ describe(`Example Perpetuity Tests`, () => {
       blocks: 5,
     });
     for (let x = 0n; x < 5n; x++) {
+      await sleep(500);
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,

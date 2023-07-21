@@ -214,7 +214,7 @@ export class BaseUtxPhiContract {
       this.testnet ? "testnet" : "mainnet"
     );
     if (typeof addr !== "string")
-      throw Error("could not encode legacy address");
+      throw addr;
     return addr;
   }
 

@@ -14,7 +14,7 @@
 
 	let contract :any;
   let nodeValue: Network;
-  let version = 1;
+  let version = 2;
 
   node.subscribe((value) => {
 		nodeValue = value? value: Network.MAINNET;

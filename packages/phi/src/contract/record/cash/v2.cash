@@ -50,19 +50,16 @@ contract Record(int maxFee, int index) {
   
   // Calculate the fee required to
   //   propagate the transaction 1 sat/ byte
-  int baseFee = 162;
+  int baseFee = 185;
   
   int fee = baseFee + tx.outputs[0].lockingBytecode.length;
   require(fee<=maxFee);
 
   // Get the value of the input
-  int inputValue = tx.inputs[this.activeInputIndex].value;
-
-  // Check that the second tx output sends the change back
-  int newValue = inputValue - fee;
+  int newValue = tx.inputs[this.activeInputIndex].value - fee;
 
   // If some value remains, return it to the contract,
-  if(inputValue > 1000){
+  if(newValue >= 1000){
     require(tx.outputs[1].lockingBytecode == tx.inputs[0].lockingBytecode);
     require(tx.outputs[1].value >= newValue);    
   }  // otherwise, allow balance to be spent in an unrestricted manner.

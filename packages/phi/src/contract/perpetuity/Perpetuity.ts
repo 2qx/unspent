@@ -358,7 +358,6 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
           amount: newPrincipal,
         },
       ];
-
     }
 
 

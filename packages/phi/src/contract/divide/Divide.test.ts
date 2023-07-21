@@ -5,6 +5,7 @@ import {
   derivePublicKeyHashHex,
   createOpReturnData,
   decodeNullDataScript,
+  sleep
 } from "../../common/util.js";
 
 describe(`Divide Class Tests`, () => {

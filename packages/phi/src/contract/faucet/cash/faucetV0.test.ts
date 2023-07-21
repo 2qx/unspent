@@ -6,6 +6,8 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact } from "./v0.js";
+import { sleep } from "../../../common/util.js";
+
 
 describe(`Faucet Contract Tests`, () => {
   test("Should pay a faucet contract 5 times in 5 blocks", async () => {
@@ -45,10 +47,12 @@ describe(`Faucet Contract Tests`, () => {
     ]);
 
     for (let x = 0; x < 5; x++) {
+      
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
+      sleep(500);
       let balance = await contract.getBalance();
 
       let size =

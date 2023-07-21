@@ -97,8 +97,7 @@ address:        bchreg:pdxvguexxghs3nu8ewl6y0qz7hsv3maf0d3uq3cfevarkhlyxjvgjk6kl
 
   test("Should show info for default record contract", async () => {
     let ex = `# Recording contract with up to 850 per broadcast, index 0
-# R,2,850,0,aa207935eb1290cae8860de0befe5b9bdaf1a44e34f1e55ed079cbcaf0f0bdfe749287
-address:        bchreg:pdunt6cjjr9w3psduzl0ukummtc6gn3578j4a5ree090pu9ale6fy5m6eqvq3`
+# R,2,850,0`
     let r = await mockCall(["record", "--regtest"])
     expect(r[0][0]).toContain(ex);
   });

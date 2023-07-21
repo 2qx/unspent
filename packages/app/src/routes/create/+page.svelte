@@ -14,8 +14,8 @@
 		<div class="card-container">
 			<Card class="demo-spaced">
 				<div class="margins">
-					<h1>New V1 contracts are not recommended at this time.</h1>
-					<!--ContractPicker /-->
+					<h1>Create</h1>
+					<ContractPicker />
 				</div>
 			</Card>
 		</div>

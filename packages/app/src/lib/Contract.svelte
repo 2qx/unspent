@@ -200,11 +200,10 @@
 			<Tooltip>Open permanent link in new tab</Tooltip>
 		</Wrapper>
 
-		<!--Wrapper>
-      TODO reveal again.
+		<Wrapper>
 			<AddressQrDialog codeValue={instance.getAddress()} />
 			<Tooltip>Show qr code</Tooltip>
-		</Wrapper-->
+		</Wrapper>
 
 		<SickPigAddress address={instance.getAddress()} network={nodeValue} />
 		{#if nodeValue === 'mainnet'}

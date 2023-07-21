@@ -227,3 +227,6 @@ export function assurePkh(address: string){
   if(cashaddrInfo.type!=CashAddressType.p2pkh) throw ("Provided address was not a pay to public key hash address")
 }
 
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

@@ -43,7 +43,6 @@ contract Perpetuity(
 ) {
  function execute() {
 
-
   // Check that time has passed and that time locks are enabled
   require(tx.age >= period);
 
@@ -82,16 +81,5 @@ contract Perpetuity(
     // Require the balance to be liquidated
     require(tx.outputs[0].value >= balloonPaymentValue);
   }
-
-
-   
-
-
-
-
-
-
-
-   
  }
 }
