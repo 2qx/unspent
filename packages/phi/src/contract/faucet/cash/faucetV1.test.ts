@@ -35,7 +35,7 @@ describe(`Faucet Contract Tests`, () => {
       [period, payout, index],
       {provider: regtestNetwork, addressType:"p2sh20"}
     );
-
+    await sleep(500)
     // fund the faucet contract
     await alice.send([
       {
@@ -44,7 +44,7 @@ describe(`Faucet Contract Tests`, () => {
         unit: "satoshis",
       },
     ]);
-
+    await sleep(500)
     for (let x = 0; x < 5; x++) {
       sleep(500)
       await mine({

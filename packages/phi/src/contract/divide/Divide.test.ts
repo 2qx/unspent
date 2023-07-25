@@ -1,4 +1,4 @@
-import { opReturn } from "@bitauth/libauth";
+import { opReturn , hexToBin, binToHex, lockingBytecodeToCashAddress} from "@bitauth/libauth";
 import { RegTestWallet } from "mainnet-js";
 import { Divide } from "./Divide.js";
 import {
@@ -89,6 +89,7 @@ describe(`Divide Class Tests`, () => {
 
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
 
+    await sleep(500);
     await alice.send([
       {
         cashaddr: d1.getAddress(),
@@ -97,9 +98,11 @@ describe(`Divide Class Tests`, () => {
       },
     ]);
 
+    await sleep(500);
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     const response = await d1.execute();
+    await sleep(500);
 
     const receipt = await RegTestWallet.watchOnly(
       "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n"
@@ -143,6 +146,7 @@ describe(`Divide Class Tests`, () => {
       },
     ]);
 
+    await sleep(500);
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     const response = await d1.execute(alice.getDepositAddress());
@@ -195,5 +199,36 @@ describe(`Divide Class Tests`, () => {
     const info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");
+  });
+
+  test("Should generate OP_RETURN less than 223 bytes for 4 x 32 Bytes addresses", async () => {
+    const options = { version: 2, network: "regtest" };
+    const p2sh32 = hexToBin(
+      'aa20000000000000000012345678900000000000000000000000000000000000000087'
+    );
+    
+    let cashaddr = lockingBytecodeToCashAddress(p2sh32, "bchreg")
+    if(typeof cashaddr != `string`)  throw (cashaddr)
+    const payees = Array(4).fill(cashaddr);
+    const d4 = new Divide(1200n, payees, options);
+    const info = await d4.info(false);
+    expect(info).toContain(d4.toString());
+    expect(info).toContain("balance");
+
+    // console.log(d4.toOpReturn(true))
+    //
+    // 6a 
+    // 04 7574786f 
+    // 01 44
+    // 01 02
+    // 02 b004
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20bc286656f1b943079e04471387f4f7a050cd38d42f5d93ad97dd95a473fdffef87
+
+    expect(d4.toOpReturn().length).toBeLessThan(223);
+
   });
 });

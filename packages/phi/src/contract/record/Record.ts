@@ -21,8 +21,10 @@ export class Record extends BaseUtxPhiContract {
     let script: Artifact;
     if (options.version === 2) {
       script = v2;
+      maxFee = 900n;
     } else if (options.version === 1) {
       script = v1;
+      maxFee = 850n;
     } else {
       throw Error("Unrecognized Divide Contract Version");
     }

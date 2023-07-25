@@ -16,6 +16,7 @@ import {
   createOpReturnData,
   decodeNullDataScript,
   hash160,
+  sleep
 } from "../../../common/util.js";
 
 describe(`Record Contract Tests`, () => {
@@ -44,6 +45,8 @@ describe(`Record Contract Tests`, () => {
         unit: "satoshis",
       },
     ]);
+
+    sleep(500);
 
     let c = new Divide(
       4000n,
@@ -113,6 +116,8 @@ describe(`Record Contract Tests`, () => {
       },
     ]);
 
+    sleep(500);
+    
     let chunks = decodeNullDataScript(opReturn).map((c) => "0x" + binToHex(c));
     if (typeof opReturn === "string") throw opReturn;
     let checkHash = await hash160(opReturn);

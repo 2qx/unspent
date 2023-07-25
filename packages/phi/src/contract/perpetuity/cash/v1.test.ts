@@ -44,6 +44,7 @@ describe(`Example Perpetuity Tests`, () => {
     );
 
     // fund the perp contract
+    await sleep(500);
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -57,6 +58,7 @@ describe(`Example Perpetuity Tests`, () => {
       cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
       blocks: 5,
     });
+    await sleep(500);
     for (let x = 0n; x < 5n; x++) {
       await sleep(500);
       await mine({

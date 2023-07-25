@@ -8,8 +8,9 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v2 } from "./v2.js";
-import { Network } from "../../../common/interface.js" 
-import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js" 
+import { Network } from "../../../common/interface.js"
+import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js"
+import { sleep } from "../../../common/util.js";
 
 describe(`Bare Annuity Tests`, () => {
   test("Should pay a annuity contract", async () => {
@@ -39,8 +40,9 @@ describe(`Bare Annuity Tests`, () => {
     let contract = new Contract(
       v2 as Artifact,
       [period, bytecode, installment, fee],
-      {provider: regtestNetwork, addressType: 'p2sh32'}
+      { provider: regtestNetwork, addressType: 'p2sh32' }
     );
+    await sleep(500);
 
     // fund the annuity contract
     await alice.send([
@@ -50,7 +52,7 @@ describe(`Bare Annuity Tests`, () => {
         unit: "satoshis",
       },
     ]);
-
+    await sleep(500);
     await mine({
       cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
       blocks: 2,
@@ -58,7 +60,7 @@ describe(`Bare Annuity Tests`, () => {
 
     let utxos = (await contract.getUtxos());
     let balance = utxos[0]!.satoshis
-   
+
     let fn = contract.functions["execute"]!();
 
     let transaction = await fn
@@ -68,23 +70,24 @@ describe(`Bare Annuity Tests`, () => {
           to: contract.tokenAddress,
           amount: balance - (installment + 1500n) + 3n,
         },
-        { to: charlie.getDepositAddress(), amount: 700n  },
+        { to: charlie.getDepositAddress(), amount: 700n },
       ])
       .withAge(1)
       .from([utxos[0]])
       .withoutChange();
 
-    
-        // const template =  await buildAuthenticationTemplate({
-        //   contract: contract, 
-        //   artifact: v2, 
-        //   transaction: transaction, 
-        //   network: Network.REGTEST,
-        //   manglePrivateKeys: 
-        //   false, includeSource:true})
 
-     //console.log(getBitauthUri(template))
+    // const template =  await buildAuthenticationTemplate({
+    //   contract: contract, 
+    //   artifact: v2, 
+    //   transaction: transaction, 
+    //   network: Network.REGTEST,
+    //   manglePrivateKeys: 
+    //   false, includeSource:true})
+
+    //console.log(getBitauthUri(template))
     await transaction.send();
+    await sleep(500);
     expect(await bob.getBalance("sat")).toBeGreaterThan(20000n);
   });
 

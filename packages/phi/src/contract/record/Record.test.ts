@@ -1,3 +1,4 @@
+import { hexToBin, lockingBytecodeToCashAddress } from "@bitauth/libauth";
 import { Record } from "./Record.js";
 import { Divide } from "../divide/Divide.js";
 import { Faucet } from "../faucet/index.js";
@@ -225,26 +226,45 @@ describe(`Record Class Tests`, () => {
 
     const tx = await r.broadcast(d.toOpReturn());
 
-    //await sleep(500);
+    await sleep(500);
     const tx2 = await r.broadcast();
-    // expect(tx2.outputs[0]!.lockingBytecode).toStrictEqual(new Uint8Array(
-    //     [
-    //         106,
-    //         4, 117, 116, 120, 111,
-    //         1, 82,
-    //         1, 1,
-    //         2, 82, 3,
-    //         1, 1,
-    //         23,
-    //         169, 20,
-    //         228, 166, 133, 142, 156,
-    //         50, 186, 76, 216, 44,
-    //         200, 94, 39, 43, 228,
-    //         113, 71, 191, 226, 12,
-    //         135
+    
+  });
 
-    //     ]
-    // ))
+
+  test("Should announce v2 itself and Divide set (4 x p2sh32)", async () => {
+
+    const p2sh32 = hexToBin(
+      'aa20000000000000000012345678900000000000000000000000000000000000000087'
+    );
+    
+    let cashaddr = lockingBytecodeToCashAddress(p2sh32, "bchreg")
+    if(typeof cashaddr != `string`)  throw (cashaddr)
+
+    const payees = Array(4).fill(cashaddr);
+    const options = { version: 2, network: "regtest" };
+    const d = new Divide(1047n, payees, options);
+    const r = new Record(Record.minMaxFee, 1n, options);
+
+
+    // fund the contract
+    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    await sleep(500);
+    await alice.send([
+      {
+        cashaddr: r.getAddress(),
+        value: 50000,
+        unit: "satoshis",
+      },
+    ]);
+
+    await sleep(500);
+
+    const tx = await r.broadcast(d.toOpReturn());
+
+    await sleep(500);
+    const tx2 = await r.broadcast();
+    
   });
 
 

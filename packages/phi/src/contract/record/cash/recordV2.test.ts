@@ -22,60 +22,7 @@ import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/temp
 import { sleep } from "../../../common/util.js";
 
 describe(`Record Contract Tests`, () => {
-  // test("Should record a division contract.", async () => {
-  //   let regTest = new ElectrumCluster(
-  //     "utxfi-tests - record",
-  //     "1.4.1",
-  //     1,
-  //     1,
-  //     ClusterOrder.PRIORITY
-  //   );
-  //   regTest.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
-
-  //   let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
-
-  //   let maxFee = 850n;
-  //   let script = v2
-  //   let contract = new CashScriptContract(script, [maxFee, 2n], { provider: regtestNetwork, addressType: 'p2sh32' });
-
-  //   console.log(contract.address)
-  //   // fund the contract
-  //   const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
-  //   await alice.send([
-  //     {
-  //       cashaddr: contract.address!,
-  //       value: 50000,
-  //       unit: "satoshis",
-  //     },
-  //   ]);
-
-  //   let c = new Divide(
-  //     4000n,
-  //     [
-  //       "bchreg:pvclqejht9ggdc5s5g3d97m6yl0sau69wqjjr6qs22ys99vq64uhsa408s2j4",
-  //       "bchreg:pvclqejht9ggdc5s5g3d97m6yl0sau69wqjjr6qs22ys99vq64uhsa408s2j4",
-  //     ],
-  //     { version: 2, network: "regtest" }
-  //   );
-
-  //   let opReturn = c.toOpReturn();
-  //   let chunks = decodeNullDataScript(opReturn).map((b) => "0x" + binToHex(b));
-  //   if (typeof opReturn === "string") throw opReturn;
-
-  //   let checkHash = await hash160(opReturn);
-
-  //   let test = await contract!.functions["execute"]!(checkHash)
-  //     .withOpReturn(chunks)
-  //     .withHardcodedFee(279n)
-  //     .build();
-  //   await contract!.functions["execute"]!(checkHash)
-  //     .withOpReturn(chunks)
-  //     .withHardcodedFee(BigInt(test.length) / 2n)
-  //     .send();
-  //   expect(await contract.getBalance()).toBeGreaterThanOrEqual(
-  //     50000 - test.length / 2
-  //   );
-  // });
+  
 
   test("Should record a division contract on regtest.", async () => {
     let regTest = new ElectrumCluster(
@@ -167,6 +114,7 @@ describe(`Record Contract Tests`, () => {
 
     // fund the contract
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    await sleep(500);
     await alice.send([
       {
         cashaddr: contract.address!,
