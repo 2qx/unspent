@@ -106,17 +106,12 @@ address:        bchreg:pdxvguexxghs3nu8ewl6y0qz7hsv3maf0d3uq3cfevarkhlyxjvgjk6kl
     const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
     await alice.send([
       {
-        cashaddr: "bchreg:ppmxmh7afst9af6pwdwkhtna848ufwc69ql3en0v3f",
-        value: 1000000,
-        unit: "satoshis",
-      },
-      {
-        cashaddr: "bchreg:pwm6jxx0x0s6jry4ekces0ah9rw6w3kpc9zj7gflamksx70clr3aqqtvmtvsn",
-        value: 1000000,
-        unit: "satoshis",
-      },
-      {
         cashaddr: "bchreg:p0dxc3dc95d4xgre0l8nwqz7ct2ay0ycywhvkdhuy89hrjck7jw8s8ykx9qge",
+        value: 1000000,
+        unit: "satoshis",
+      },
+      {
+        cashaddr: "bchreg:pv3z4utv0s3jv5xxhzxmd4ulhllepp2zg7wrmzwj0ykptj8crhysw4myy83a3",
         value: 1000000,
         unit: "satoshis",
       },

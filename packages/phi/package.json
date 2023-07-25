@@ -9,7 +9,7 @@
     "compile": "tsc",
     "publish:public": "yarn publish --access public",
     "update:artifacts": "node script/updateArtifacts.js",
-    "test": "npx jest --runInBand  --logHeapUsage --forceExit"
+    "test": "npx jest --logHeapUsage --forceExit"
   },
   "type": "module",
   "exclude": [

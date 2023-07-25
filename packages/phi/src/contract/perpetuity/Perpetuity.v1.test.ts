@@ -1,6 +1,6 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Perpetuity } from "./Perpetuity.js";
-import { derivePublicKeyHashHex } from "../../common/util.js";
+import { derivePublicKeyHashHex, sleep } from "../../common/util.js";
 
 describe(`Perpetuity Class Tests`, () => {
   test("Should a serialize a Perpetuity", async () => {
@@ -100,6 +100,7 @@ describe(`Perpetuity Class Tests`, () => {
     );
 
     // fund the perp contract
+    await sleep(500);
     await alice.send([
       {
         cashaddr: p1.getAddress(),
@@ -107,12 +108,14 @@ describe(`Perpetuity Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
-
+    await sleep(500);
     for (let x = 0; x < 5; x++) {
+      
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
+      await sleep(500);
       await p1.execute(charlie.getDepositAddress());
     }
     expect(await charlie.getBalance("sat")).toBeGreaterThan(2700);
