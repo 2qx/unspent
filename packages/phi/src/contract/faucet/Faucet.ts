@@ -192,7 +192,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress)
       to.push({
         to: exAddress,
-        amount: 546n,
+        amount: 577n,
       });
 
     const size = await tx.to(to).withAge(Number(this.period)).withoutChange().build();

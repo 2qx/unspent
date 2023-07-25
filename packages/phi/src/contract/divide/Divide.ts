@@ -248,7 +248,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       to.pop();
       const executorPayout =
         BigInt(this.executorAllowance) - (feeEstimate + 2n * divisor + 8n);
-      if (executorPayout > 546n)
+      if (executorPayout > 577n)
         to.push({
           to: exAddress,
           amount: executorPayout,

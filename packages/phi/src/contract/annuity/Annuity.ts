@@ -331,7 +331,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress)
       to.push({
         to: exAddress,
-        amount: 546n,
+        amount: 577n,
       });
 
     const size = await estimator!
@@ -346,7 +346,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (exAddress) {
       to.pop();
-      if (executorFee < 546n)
+      if (executorFee < 577n)
         throw Error(
           `inputs would result in executor fee below dust limit ${executorFee}`
         );
