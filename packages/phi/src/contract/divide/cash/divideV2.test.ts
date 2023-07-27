@@ -10,6 +10,7 @@ import {
 } from "cashscript";
 import { RegTestWallet } from "mainnet-js";
 import { artifact as v2_4 } from "./4.v2.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
 describe(`Example Divide Tests`, () => {
   test("Should pay a divisor contract", async () => {
@@ -24,7 +25,7 @@ describe(`Example Divide Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(69000000);
     let bobs: RegTestWallet[] = [];
     let divisor = 4n;
     for (let i = 0n; i < divisor; i++) {
@@ -94,7 +95,7 @@ describe(`Example Divide Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(69000000);
   
     let divisor = 4n;
     const p2sh32 = hexToBin(

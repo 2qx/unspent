@@ -1,6 +1,7 @@
 import { Mine } from "./Mine.js";
 import { sleep } from "../../common/util.js";
 import { RegTestWallet, mine as mineBlocks } from "mainnet-js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Mine Class Tests`, () => {
   test("Should serialize a 'mine' contract", async () => {
@@ -49,7 +50,7 @@ describe(`Mine Class Tests`, () => {
     const options = { version: 1, network: "regtest" };
     const m1 = new Mine(5n, Mine.minPayout, 2n, undefined, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     const bob = await RegTestWallet.newRandom();
 
     await alice.send([

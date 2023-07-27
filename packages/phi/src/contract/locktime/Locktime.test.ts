@@ -1,6 +1,7 @@
 import { mine, RegTestWallet, delay } from "mainnet-js";
 import { Locktime } from "./Locktime.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js"
 
 describe.skip(`Locktime Class Tests`, () => {
   test("Should a serialize a Locktime", async () => {
@@ -56,7 +57,7 @@ describe.skip(`Locktime Class Tests`, () => {
   });
 
   test("Should pay a Locktime", async () => {
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(1004000);
     const bob = await RegTestWallet.newRandom();
     const charlie = await RegTestWallet.newRandom();
 

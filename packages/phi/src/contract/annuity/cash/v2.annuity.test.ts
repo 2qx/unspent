@@ -11,6 +11,7 @@ import { artifact as v2 } from "./v2.js";
 import { Network } from "../../../common/interface.js"
 import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js"
 import { sleep } from "../../../common/util.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Bare Annuity Tests`, () => {
   test("Should pay a annuity contract", async () => {
@@ -26,7 +27,7 @@ describe(`Bare Annuity Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(6005000);
     const bob = await RegTestWallet.newRandom();
     const charlie = await RegTestWallet.newRandom();
 
@@ -87,7 +88,6 @@ describe(`Bare Annuity Tests`, () => {
 
     //console.log(getBitauthUri(template))
     await transaction.send();
-    await sleep(500);
     expect(await bob.getBalance("sat")).toBeGreaterThan(20000n);
   });
 

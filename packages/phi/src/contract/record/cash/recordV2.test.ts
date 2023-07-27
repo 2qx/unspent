@@ -20,6 +20,7 @@ import {
 import { Network } from "../../../common/interface.js" 
 import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js" 
 import { sleep } from "../../../common/util.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Record Contract Tests`, () => {
   
@@ -53,7 +54,7 @@ describe(`Record Contract Tests`, () => {
     let opReturn = c.toOpReturn();
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(10000);
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -62,7 +63,6 @@ describe(`Record Contract Tests`, () => {
       },
     ]);
 
-    await sleep(500);
 
     let chunks = decodeNullDataScript(opReturn).map((c) => "0x" + binToHex(c));
     if (typeof opReturn === "string") throw opReturn;
@@ -113,8 +113,7 @@ describe(`Record Contract Tests`, () => {
     let opReturn = c.toOpReturn();
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
-    await sleep(500);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: contract.address!,

@@ -9,6 +9,7 @@ import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v2 } from "./v2.js";
 import { DUST_UTXO_THRESHOLD } from "../../../common/constant.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe.skip(`TimeLock Tests`, () => {
   test("Should not pay before time is met, but should pay at time", async () => {
@@ -25,7 +26,7 @@ describe.skip(`TimeLock Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(1400006000)
     const bob = await RegTestWallet.newRandom();
     const charlie = await RegTestWallet.newRandom();
 

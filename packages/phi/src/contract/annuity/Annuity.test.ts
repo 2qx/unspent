@@ -2,6 +2,7 @@ import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js";
 import { DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { derivePublicKeyHashHex, sleep } from "../../common/util.js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js"; 
 
 describe(`Annuity Class Tests`, () => {
   test("Should serialize a Annuity", async () => {
@@ -86,7 +87,7 @@ describe(`Annuity Class Tests`, () => {
   });
 
   test("Should pay an annuity", async () => {
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(1200000);
     const bob = await RegTestWallet.newRandom();
     const charlie = await RegTestWallet.newRandom();
 

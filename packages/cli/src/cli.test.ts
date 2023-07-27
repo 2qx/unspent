@@ -1,5 +1,6 @@
 import { expect, jest, test } from '@jest/globals';
 import { RegTestWallet } from "mainnet-js";
+
 import { cli } from "../index.js"
 import {
   AnnuityCommand,
@@ -14,6 +15,18 @@ import { Builtins } from "clipanion";
 // @ts-ignore
 import packageJson from "../package.json" assert { type: "json" };
 
+export async function getAnAliceWallet(amount: number) : Promise<RegTestWallet> {
+  const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+  let newAlice = await RegTestWallet.newRandom();
+  await alice.send([
+    {
+      cashaddr: newAlice.getDepositAddress(),
+      value: amount,
+      unit: "satoshis",
+    },
+  ]);
+  return newAlice
+}
 
 
 async function mockCall(args: string[]): Promise<any> {
@@ -102,7 +115,8 @@ address:        bchreg:pddn9g0pjufsynag5jcren8hgxehc52h3k54vfaqrpnpwaz6scsxvtst9
   });
 
   test("Should execute divide contract", async () => {
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    
+    const alice = await getAnAliceWallet(2200000);
     await alice.send([
       {
         cashaddr: "bchreg:p0dxc3dc95d4xgre0l8nwqz7ct2ay0ycywhvkdhuy89hrjck7jw8s8ykx9qge",
@@ -125,7 +139,7 @@ address:        bchreg:pddn9g0pjufsynag5jcren8hgxehc52h3k54vfaqrpnpwaz6scsxvtst9
 
   test("Should broadcast contract info", async () => {
     
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(2200000);
     await alice.send([
       {
         cashaddr: "bchreg:pztwrxwhag3lkaul2ajtjuvksfqq9muprgz86hp8ng",

@@ -7,6 +7,7 @@ import {
   decodeNullDataScript,
   sleep
 } from "../../common/util.js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Divide Class Tests`, () => {
   test("Should serialize a Divider", async () => {
@@ -87,7 +88,7 @@ describe(`Divide Class Tests`, () => {
     const options = { version: 1, network: "regtest" };
     const d1 = new Divide(1200n, payees, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(42000);
 
     await sleep(500);
     await alice.send([
@@ -136,7 +137,7 @@ describe(`Divide Class Tests`, () => {
     ];
     const d1 = new Divide(1200n, payees, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(42000);
 
     await alice.send([
       {
@@ -167,7 +168,7 @@ describe(`Divide Class Tests`, () => {
     ];
     const d1 = new Divide(1200n, payees, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(42000);
 
     await alice.send([
       {

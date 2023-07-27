@@ -11,6 +11,7 @@ import { artifact as v2 } from "./v2.js";
 import { Network } from "../../../common/interface.js" 
 import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js" 
 import { sleep } from "../../../common/util.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
 describe(`Example Perpetuity Tests`, () => {
   test("Should pay a perpetuity contract", async () => {
@@ -26,7 +27,7 @@ describe(`Example Perpetuity Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(680050000);
     const bob = await RegTestWallet.fromSeed(
       "rubber amateur across squirrel deposit above dish toddler visa cherry clerk egg"
     );

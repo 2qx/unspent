@@ -10,6 +10,7 @@ import {
 } from "cashscript";
 import { RegTestWallet } from "mainnet-js";
 import { artifact as v1_4 } from "./4.v1.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Example Divide Tests`, () => {
   test("Should pay a divisor contract", async () => {
@@ -24,7 +25,7 @@ describe(`Example Divide Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(69000000);
     let bobs: RegTestWallet[] = [];
     let divisor = 4n;
     for (let i = 0n; i < divisor; i++) {
@@ -53,7 +54,7 @@ describe(`Example Divide Tests`, () => {
     );
 
     //console.log(`D:1:${exFee}:` + bobPkhs.map(i=> `${i}`).join(":"))
-    // fund the perp contract
+    // fund the contract
     await alice.send([
       {
         cashaddr: contract.address!,

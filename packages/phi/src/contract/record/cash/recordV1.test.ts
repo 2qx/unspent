@@ -18,6 +18,7 @@ import {
   hash160,
   sleep
 } from "../../../common/util.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Record Contract Tests`, () => {
   test("Should record a division contract.", async () => {
@@ -37,7 +38,7 @@ describe(`Record Contract Tests`, () => {
     let contract = new CashScriptContract(script, [maxFee, 2n], { provider: regtestNetwork, addressType: 'p2sh20' });
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -107,7 +108,7 @@ describe(`Record Contract Tests`, () => {
     let opReturn = c.toOpReturn();
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: contract.address!,

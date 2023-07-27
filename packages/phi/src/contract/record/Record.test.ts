@@ -7,13 +7,15 @@ import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
 import { sleep } from "../../common/util.js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Record Class Tests`, () => {
   test("Should announce itself and Faucet", async () => {
     const options = { version: 1, network: "regtest" };
     const r = new Record(850n, 0n, options);
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    
+    const alice = await getAnAliceWallet(55000);
     await sleep(500);
     await alice.send([
       {
@@ -71,7 +73,7 @@ describe(`Record Class Tests`, () => {
     const r = new Record(850n, 1n, options);
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await sleep(500);
     await alice.send([
       {
@@ -117,7 +119,7 @@ describe(`Record Class Tests`, () => {
     const r = new Record(Record.minMaxFee, 1n, options);
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -156,7 +158,7 @@ describe(`Record Class Tests`, () => {
 
     const r = new Record(850n, 0n, options);
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -212,12 +214,12 @@ describe(`Record Class Tests`, () => {
 
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(10000);
     await sleep(500);
     await alice.send([
       {
         cashaddr: r.getAddress(),
-        value: 50000,
+        value: 9000,
         unit: "satoshis",
       },
     ]);
@@ -248,12 +250,12 @@ describe(`Record Class Tests`, () => {
 
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(15000);
     await sleep(500);
     await alice.send([
       {
         cashaddr: r.getAddress(),
-        value: 50000,
+        value: 10000,
         unit: "satoshis",
       },
     ]);
