@@ -10,6 +10,7 @@ import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v2 } from "./v2.js";
 import { Network } from "../../../common/interface.js" 
 import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js" 
+import { sleep } from "../../../common/util.js";
 
 describe(`Example Perpetuity Tests`, () => {
   test("Should pay a perpetuity contract", async () => {
@@ -44,7 +45,8 @@ describe(`Example Perpetuity Tests`, () => {
       {provider: regtestNetwork, addressType: 'p2sh32'}
     );
 
-    // fund the annuity contract
+    // fund the contract
+    await sleep(500);
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -86,7 +88,7 @@ describe(`Example Perpetuity Tests`, () => {
         false, includeSource:true})
 
      //console.log(getBitauthUri(template))
-
+     await sleep(500);
      await transaction.send()
      utxos = await  contract.getUtxos()
      expect(utxos.length).toBe(1)

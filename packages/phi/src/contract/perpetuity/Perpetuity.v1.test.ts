@@ -99,7 +99,7 @@ describe(`Perpetuity Class Tests`, () => {
       options
     );
 
-    // fund the perp contract
+    // fund the contract
     await sleep(500);
     await alice.send([
       {

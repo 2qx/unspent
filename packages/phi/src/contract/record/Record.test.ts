@@ -279,7 +279,7 @@ describe(`Record Class Tests`, () => {
   test("Should return v2 info", async () => {
     const options = { version: 2, network: "regtest" };
     const c2 = new Record(850n, 0n, options);
-    //expect(c2.getLegacyAddress()).toBe("AipS9tRYVbDNobNs3MXe9UXzwaUMnDqTcr5")
+
     const info = await c2.info(false);
     expect(info).toContain(c2.toString());
     expect(info).toContain("balance");

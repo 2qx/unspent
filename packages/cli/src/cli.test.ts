@@ -1,5 +1,5 @@
 import { expect, jest, test } from '@jest/globals';
-import { mine, RegTestWallet } from "mainnet-js";
+import { RegTestWallet } from "mainnet-js";
 import { cli } from "../index.js"
 import {
   AnnuityCommand,
@@ -11,12 +11,10 @@ import {
   RecordCommand,
 } from "../index.js"
 import { Builtins } from "clipanion";
-import { runCli } from "./tools.js"
 // @ts-ignore
 import packageJson from "../package.json" assert { type: "json" };
 
 
-const sleep = (ms:number) => new Promise( res => setTimeout(res, ms));
 
 async function mockCall(args: string[]): Promise<any> {
   jest.spyOn(console, 'log');
@@ -57,9 +55,10 @@ describe(`Text annuity`, () => {
 
   test("Should cat default annuity", async () => {
 
+    // 
     let ex = `# Annuity paying 1200 (sat), every 4000 blocks, after a 3400 (sat) executor allowance
-# A,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1200,3400,aa20dad0b02de06cac90cb261463c696352959d75775d991b4b3de737dea96bc125487
-address:        bchreg:p0ddpvpdupk2eyxtyc2x835kx554n46hwhverd9nmeehm65khsf9gdhe0gqgh`
+# A,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1200,3400,aa2035f2176a7724e10559b7af260b6d6604454a8405b08c12682186cc7a028fcdbf87
+address:        bchreg:pv6ly9m2wujwzp2ek7hjvzmdvczy2j5yqkcgcyngyxrvc7sz3lxm7dz88kksc`
     let r = await mockCall(["annuity", "--regtest",  "--address", "bchreg:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwus03a55xe", "--installment", "1200"])
     expect(r[0][0]).toContain(ex);
   });
@@ -68,8 +67,8 @@ address:        bchreg:p0ddpvpdupk2eyxtyc2x835kx554n46hwhverd9nmeehm65khsf9gdhe0
   test("Should print info for default faucet", async () => {
 
     let ex = `# A faucet paying 1000 (sat), every 1 blocks
-# F,2,1,1000,1,aa204cc47326322f08cf87cbbfa23c02f5e0c8efa97b63c04709cb3a3b5fe434988987
-address:        bchreg:pdxvguexxghs3nu8ewl6y0qz7hsv3maf0d3uq3cfevarkhlyxjvgjk6kltems`
+# F,2,1,1000,1,aa205b32a1e19713024fa8a4b03cccf741b37c51578da95627a0186617745a86206687
+address:        bchreg:pddn9g0pjufsynag5jcren8hgxehc52h3k54vfaqrpnpwaz6scsxvtst9f8hn`
     let r = await mockCall(["faucet", "--regtest"])
     expect(r[0][0]).toContain(ex);
   });
@@ -87,8 +86,8 @@ address:        bchreg:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwus03a55xe`
   test("Should show info for v1 regtest faucet", async () => {
 
     let ex = `# A faucet paying 1000 (sat), every 1 blocks
-# F,2,1,1000,1,aa204cc47326322f08cf87cbbfa23c02f5e0c8efa97b63c04709cb3a3b5fe434988987
-address:        bchreg:pdxvguexxghs3nu8ewl6y0qz7hsv3maf0d3uq3cfevarkhlyxjvgjk6kltems`
+# F,2,1,1000,1,aa205b32a1e19713024fa8a4b03cccf741b37c51578da95627a0186617745a86206687
+address:        bchreg:pddn9g0pjufsynag5jcren8hgxehc52h3k54vfaqrpnpwaz6scsxvtst9f8hn`
     let r = await mockCall(["faucet", "--regtest"])
     expect(r[0][0]).toContain(ex);
 

@@ -1,6 +1,6 @@
 pragma cashscript >= 0.7.1;
 
-// Depricated.
+// Deprecated.
 // Do not use. 
 
 // Pay equal payments at regular intervals using input locks

@@ -1,6 +1,7 @@
 pragma cashscript >= 0.7.0;
 
 // v20220609
+// Deprecated. Not for new contracts.
 
 contract Faucet(
 

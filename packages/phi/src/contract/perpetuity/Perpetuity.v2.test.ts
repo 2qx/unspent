@@ -17,7 +17,7 @@ describe(`Perpetuity Class Tests`, () => {
     );
     expect(p.toString()).toContain(chk);
     expect(p.toString()).toEqual(
-      "P,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1500,12,aa2089feea009d50405c5a1d944ae0c8299e716a9d6adacf31d1c37e5d30b50b947d87"
+      "P,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1500,12,aa2041937540056af58d5b195860c75a225f68a5c117c8d2058cc93f2392b5e1819187"
     );
 
     const p2 = Perpetuity.fromString(p.toString());
@@ -78,7 +78,7 @@ describe(`Perpetuity Class Tests`, () => {
       options
     );
 
-    // fund the perp contract
+    // fund the perpetuity contract
     await alice.send([
       {
         cashaddr: p1.getAddress(),

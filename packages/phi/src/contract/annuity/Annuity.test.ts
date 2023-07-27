@@ -1,7 +1,7 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js";
 import { DUST_UTXO_THRESHOLD } from "../../common/constant.js";
-import { derivePublicKeyHashHex } from "../../common/util.js";
+import { derivePublicKeyHashHex, sleep } from "../../common/util.js";
 
 describe(`Annuity Class Tests`, () => {
   test("Should serialize a Annuity", async () => {
@@ -17,7 +17,7 @@ describe(`Annuity Class Tests`, () => {
     );
     expect(a.toString()).toContain(chk);
     expect(a.toString()).toEqual(
-      "A,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,5000,778,a914647adc808bcbfe2a60f17e5682f57c6e0355b63687"
+      "A,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,5000,793,a9149252e9df80dfb484dfccf7af76d5878902104e3987"
     );
     const a2 = Annuity.fromString(a.toString());
     expect(a.toString()).toEqual(a2.toString());
@@ -95,11 +95,12 @@ describe(`Annuity Class Tests`, () => {
       1n,
       bob.getDepositAddress(),
       10000n,
-      Annuity.minAllowance,
+      Annuity.minAllowance+20n,
       options
     );
 
-    // fund the perp contract
+    // fund the contract
+    await sleep(500);
     await alice.send([
       {
         cashaddr: p1.getAddress(),
@@ -109,6 +110,7 @@ describe(`Annuity Class Tests`, () => {
     ]);
 
     for (let x = 0; x < 5; x++) {
+      await sleep(500);
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 2,

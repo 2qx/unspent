@@ -43,6 +43,9 @@ contract Perpetuity(
 ) {
  function execute() {
 
+  // Force tx version greater than 2 to force BIP68 support
+  require(tx.version >= 2);
+  
   // Check that time has passed and that time locks are enabled
   require(tx.age >= period);
 

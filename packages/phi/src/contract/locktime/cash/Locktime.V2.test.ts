@@ -40,7 +40,7 @@ describe.skip(`TimeLock Tests`, () => {
       {provider: regtestNetwork, addressType: 'p2sh20'}
     );
 
-    // fund the perp contract
+    // fund the contract
     await alice.send([
       {
         cashaddr: contract.address!,

@@ -23,7 +23,7 @@ import {
 
 import { 
   getRecords 
-} from "@unspent/psi"
+} from "@unspent/psi";
 
 abstract class VersionedCommand extends Command{
   version = Option.String("--version", "2", {

@@ -53,7 +53,7 @@ describe(`Example Divide Tests`, () => {
     );
 
     //console.log(`D:1:${exFee}:` + bobPkhs.map(i=> `${i}`).join(":"))
-    // fund the perp contract
+    // fund the divide contract
     await alice.send([
       {
         cashaddr: contract.address!,

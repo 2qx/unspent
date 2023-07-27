@@ -36,10 +36,14 @@ contract Faucet(
 ) {
   function drip() {
 
+    // Force tx version 2 to force BIP68 support
+    require(tx.version >= 2);
+
     // Check that time has passed and that time locks are enabled
     require(tx.age >= period);
       
-    // use the index
+    // Use the index to do nothing but
+    // avoid warnings from the compiler about unused varibales.
     require(index >= 0);
 
     // Limit to a single utxo input

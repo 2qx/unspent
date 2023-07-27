@@ -75,7 +75,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
-    // parse argumnets
+    // parse arguments
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
     const [period, payout, index] = [

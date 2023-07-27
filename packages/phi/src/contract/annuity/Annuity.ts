@@ -23,7 +23,7 @@ import { artifact as v2 } from "./cash/v2.js";
 export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "A"; //A
   private static fn: string = "execute";
-  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 222n + 10n;
+  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 222n + 25n;
 
   public recipientLockingBytecode: Uint8Array;
 

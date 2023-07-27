@@ -54,7 +54,7 @@ module.exports = {
   testEnvironment: "jest-environment-node",
   setupFiles: ["fake-indexeddb/auto"],
   testTimeout: 65000,
-  maxWorkers: 2,
+  maxWorkers: 1,
   verbose: true
 
 };

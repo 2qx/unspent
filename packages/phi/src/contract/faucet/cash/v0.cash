@@ -4,6 +4,9 @@ pragma cashscript >= 0.7.0;
 
 // This is an experimental faucet contract 
 // see bitcoin-cash-faucet
+
+// Deprecated. Not for new contracts.
+
 contract Faucet(
 
     // interval for payouts, in blocks
