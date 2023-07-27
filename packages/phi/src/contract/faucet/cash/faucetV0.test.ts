@@ -6,7 +6,6 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact } from "./v0.js";
-import { sleep } from "../../../common/util.js";
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
 describe(`Faucet Contract Tests`, () => {
@@ -52,7 +51,6 @@ describe(`Faucet Contract Tests`, () => {
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
-      sleep(500);
       let balance = await contract.getBalance();
 
       let size =

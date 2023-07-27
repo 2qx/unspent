@@ -6,7 +6,6 @@ import { Faucet } from "../faucet/index.js";
 import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
-import { sleep } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Record Class Tests`, () => {
@@ -16,7 +15,6 @@ describe(`Record Class Tests`, () => {
     // fund the contract
     
     const alice = await getAnAliceWallet(55000);
-    await sleep(500);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -24,8 +22,7 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
-    await sleep(500);
-
+    
     const tx2 = await r.broadcast();
     expect(r.toOpReturn(true)).toEqual(
       "6a047574786f01520101025203010017a91496e199d7ea23fb779f5764b97196824002ef811a87"
@@ -74,7 +71,6 @@ describe(`Record Class Tests`, () => {
 
     // fund the contract
     const alice = await getAnAliceWallet(55000);
-    await sleep(500);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -83,7 +79,6 @@ describe(`Record Class Tests`, () => {
       },
     ]);
 
-    await sleep(500);
 
     const tx = await r.broadcast(f.toOpReturn());
     const tx2 = await r.broadcast();
@@ -127,7 +122,7 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
-    await sleep(500);
+    
 
 
     const tx = await r.broadcast(d.toOpReturn());
@@ -167,10 +162,10 @@ describe(`Record Class Tests`, () => {
       },
     ]);
 
-    await sleep(500);
+    
 
     const tx = await r.broadcast(f.toOpReturn());
-    await sleep(500);
+    
 
     const aBin = new Uint8Array([106, 4, 117, 116, 120, 111]);
 
@@ -215,7 +210,7 @@ describe(`Record Class Tests`, () => {
 
     // fund the contract
     const alice = await getAnAliceWallet(10000);
-    await sleep(500);
+    
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -224,11 +219,11 @@ describe(`Record Class Tests`, () => {
       },
     ]);
 
-    await sleep(500);
+    
 
     const tx = await r.broadcast(d.toOpReturn());
 
-    await sleep(500);
+    
     const tx2 = await r.broadcast();
     
   });
@@ -251,7 +246,7 @@ describe(`Record Class Tests`, () => {
 
     // fund the contract
     const alice = await getAnAliceWallet(15000);
-    await sleep(500);
+    
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -260,11 +255,11 @@ describe(`Record Class Tests`, () => {
       },
     ]);
 
-    await sleep(500);
+    
 
     const tx = await r.broadcast(d.toOpReturn());
 
-    await sleep(500);
+    
     const tx2 = await r.broadcast();
     
   });

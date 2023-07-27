@@ -6,7 +6,6 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact } from "./v1.js";
-import { sleep } from "../../../common/util.js";
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
 describe(`Faucet Contract Tests`, () => {
@@ -36,7 +35,6 @@ describe(`Faucet Contract Tests`, () => {
       [period, payout, index],
       {provider: regtestNetwork, addressType:"p2sh20"}
     );
-    await sleep(50);
     // fund the faucet contract
     await alice.send([
       {
@@ -45,9 +43,7 @@ describe(`Faucet Contract Tests`, () => {
         unit: "satoshis",
       },
     ]);
-    await sleep(50)
     for (let x = 0; x < 5; x++) {
-      sleep(50)
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,

@@ -10,7 +10,6 @@ import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v2 } from "./v2.js";
 import { Network } from "../../../common/interface.js"
 import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js"
-import { sleep } from "../../../common/util.js";
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Bare Annuity Tests`, () => {
@@ -43,7 +42,6 @@ describe(`Bare Annuity Tests`, () => {
       [period, bytecode, installment, fee],
       { provider: regtestNetwork, addressType: 'p2sh32' }
     );
-    await sleep(500);
 
     // fund the annuity contract
     await alice.send([
@@ -53,7 +51,7 @@ describe(`Bare Annuity Tests`, () => {
         unit: "satoshis",
       },
     ]);
-    await sleep(500);
+    
     await mine({
       cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
       blocks: 2,

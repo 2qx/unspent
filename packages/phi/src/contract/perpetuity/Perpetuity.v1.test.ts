@@ -1,6 +1,6 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Perpetuity } from "./Perpetuity.js";
-import { derivePublicKeyHashHex, sleep } from "../../common/util.js";
+import { derivePublicKeyHashHex } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Perpetuity Class Tests`, () => {
@@ -101,7 +101,7 @@ describe(`Perpetuity Class Tests`, () => {
     );
 
     // fund the contract
-    await sleep(50);
+    
     await alice.send([
       {
         cashaddr: p1.getAddress(),
@@ -109,7 +109,7 @@ describe(`Perpetuity Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
-    await sleep(50);
+    
     for (let x = 0; x < 5; x++) {
       
       await mine({

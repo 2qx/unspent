@@ -1,7 +1,6 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Perpetuity } from "./Perpetuity.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
-import { sleep } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Perpetuity Class Tests`, () => {
@@ -94,7 +93,6 @@ describe(`Perpetuity Class Tests`, () => {
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
-      await sleep(200);
       await p1.execute(charlie.getDepositAddress());
     }
     expect(await charlie.getBalance("sat")).toBeGreaterThan(2000);

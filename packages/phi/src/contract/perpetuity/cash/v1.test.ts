@@ -8,7 +8,6 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v1 } from "./v1.js";
-import { sleep } from "../../../common/util.js";
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
 describe(`Example Perpetuity Tests`, () => {
@@ -45,7 +44,7 @@ describe(`Example Perpetuity Tests`, () => {
     );
 
     // fund the perp contract
-    await sleep(500);
+    
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -59,9 +58,7 @@ describe(`Example Perpetuity Tests`, () => {
       cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
       blocks: 5,
     });
-    await sleep(50);
     for (let x = 0n; x < 5n; x++) {
-      await sleep(50);
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,

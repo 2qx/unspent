@@ -4,8 +4,7 @@ import { Divide } from "./Divide.js";
 import {
   derivePublicKeyHashHex,
   createOpReturnData,
-  decodeNullDataScript,
-  sleep
+  decodeNullDataScript
 } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
@@ -90,7 +89,6 @@ describe(`Divide Class Tests`, () => {
 
     const alice = await getAnAliceWallet(42000);
 
-    await sleep(500);
     await alice.send([
       {
         cashaddr: d1.getAddress(),
@@ -99,11 +97,9 @@ describe(`Divide Class Tests`, () => {
       },
     ]);
 
-    await sleep(500);
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     const response = await d1.execute();
-    await sleep(500);
 
     const receipt = await RegTestWallet.watchOnly(
       "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n"
@@ -147,7 +143,6 @@ describe(`Divide Class Tests`, () => {
       },
     ]);
 
-    await sleep(500);
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     const response = await d1.execute(alice.getDepositAddress());

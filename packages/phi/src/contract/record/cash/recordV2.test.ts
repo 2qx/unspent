@@ -19,7 +19,6 @@ import {
 } from "../../../common/util.js";
 import { Network } from "../../../common/interface.js" 
 import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js" 
-import { sleep } from "../../../common/util.js";
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Record Contract Tests`, () => {
@@ -81,7 +80,6 @@ describe(`Record Contract Tests`, () => {
       .withMinChange(1000n);
 
     let result = await tmp.send();
-    sleep(500)
     expect(await contract.getBalance()).toBeGreaterThan(8000n);
   });
 
@@ -122,7 +120,6 @@ describe(`Record Contract Tests`, () => {
       },
     ]);
 
-    await sleep(500);
     
 
     let chunks = decodeNullDataScript(opReturn).map((c) => "0x" + binToHex(c));

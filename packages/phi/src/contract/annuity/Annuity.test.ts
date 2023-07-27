@@ -1,7 +1,7 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js";
 import { DUST_UTXO_THRESHOLD } from "../../common/constant.js";
-import { derivePublicKeyHashHex, sleep } from "../../common/util.js";
+import { derivePublicKeyHashHex } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js"; 
 
 describe(`Annuity Class Tests`, () => {
@@ -101,7 +101,7 @@ describe(`Annuity Class Tests`, () => {
     );
 
     // fund the contract
-    await sleep(500);
+    
     await alice.send([
       {
         cashaddr: p1.getAddress(),
@@ -111,7 +111,7 @@ describe(`Annuity Class Tests`, () => {
     ]);
 
     for (let x = 0; x < 5; x++) {
-      await sleep(500);
+      
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 2,

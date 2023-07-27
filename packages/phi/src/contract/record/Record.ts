@@ -5,7 +5,7 @@ import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { artifact as v1 } from "./cash/v1.js";
 import { artifact as v2 } from "./cash/v2.js";
-import { hash160, sum, toHex, parseBigInt, sleep } from "../../common/util.js";
+import { hash160, sum, toHex, parseBigInt } from "../../common/util.js";
 import { binToHex, hexToBin } from "@bitauth/libauth";
 
 export class Record extends BaseUtxPhiContract {
@@ -191,7 +191,6 @@ export class Record extends BaseUtxPhiContract {
        await estimator.withOpReturn(chunks).withHardcodedFee(669n).build()
      ).length);
 
-    await sleep(500);
     tx =  tx
       .withOpReturn(chunks)
       .withHardcodedFee(size/2n)
