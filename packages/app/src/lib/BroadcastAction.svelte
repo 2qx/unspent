@@ -75,7 +75,7 @@
 		try {
 			setProgress();
 			executedSuccess = false;
-      let options =  {network: nodeValue, version:1}
+      let options =  {network: nodeValue, version:2}
 			let r = new Record(undefined, undefined, options);
 			txid = await r.broadcast(opReturnHex);
 			isPublished = true;
