@@ -23,15 +23,15 @@ import { artifact as v2 } from "./cash/v2.js";
 export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "A"; //A
   private static fn: string = "execute";
-  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 222n + 25n;
+  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 222n + 40n;
 
   public recipientLockingBytecode: Uint8Array;
 
   constructor(
-    public period: bigint|number = 4000n,
+    public period: bigint | number = 4000n,
     public recipientAddress: any,
-    public installment: bigint|number,
-    public executorAllowance: bigint|number = 800n,
+    public installment: bigint | number,
+    public executorAllowance: bigint | number = 800n,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
@@ -77,7 +77,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(Annuity.c == p.code))
       throw "non-faucet serialized string passed to faucet constructor";
 
-    if (p.options.version != 1)
+    if (![1, 2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
     if (p.args.length != 4)
       throw `invalid number of arguments ${p.args.length}`;
@@ -115,7 +115,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (p.options.version !== 1)
+    if (![1, 2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
@@ -129,12 +129,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("non-standard address" + address);
 
     let [installment, executorAllowance] = [30000n, 3000n];
-    if (p.options.version == 1) {
-      installment = binToBigInt(p.args.shift()!);
-      executorAllowance = binToBigInt(p.args.shift()!);
-    } else {
-      throw Error("Annuity contract version not recognized");
-    }
+    installment = binToBigInt(p.args.shift()!);
+    executorAllowance = binToBigInt(p.args.shift()!);
+
 
     const annuity = new Annuity(
       period,
@@ -183,7 +180,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       }
     });
 
-    if (spendableUtxos.length > 0)  {
+    if (spendableUtxos.length > 0) {
       const spendableBalance = BigInt(spendableUtxos.reduce(sum));
       const remainder = spendableBalance % BigInt(installment);
       const spendable = spendableBalance - BigInt(remainder);
@@ -316,12 +313,18 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       {
         to: this.recipientAddress,
         amount: BigInt(this.installment),
-      },
-      {
-        to: this.getAddress(),
-        amount: newPrincipal,
-      },
+      }
     ];
+
+    if (this.options.version == 1 || balance > BigInt(this.installment) * 2n) {
+      to.push(
+        {
+          to: this.getAddress(),
+          amount: newPrincipal,
+        }
+      )
+    }
+
 
     let estimator = fn();
     let tx = fn();
@@ -340,7 +343,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       .withoutChange()
       .build();
 
-    const minerFee = fee ? BigInt(fee) : BigInt(size.length) / 2n + 5n;
+    const minerFee = fee ? BigInt(fee) : BigInt(size.length) / 2n + 2n;
     const executorFee =
       balance - (BigInt(this.installment) + BigInt(newPrincipal) + minerFee) - 4n;
 

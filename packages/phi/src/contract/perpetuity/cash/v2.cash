@@ -6,10 +6,13 @@ pragma cashscript ^0.8.0;
 //
 // Perpetuity: fractional payments at regular intervals using rolling timelocks.
 //
-// - The input must have aged for a predefined number of blocks (the period)
-// - All utxos must be processed atomically. One coin per tx, no merging.
-// - If installment is greater than 1000 sats, send the remainder back to the contract,
-// - Otherwise, liquidate the contract via a balloon payment to the recipient.
+// [ ] BIP-68 timelocks were introducted in version 2 transactions, enforce versions.
+// [ ] The input must have aged for a predefined number of blocks (the period)
+// [ ] All utxos must be processed atomically. One coin per tx, no merging.
+// [ ] Require the first output is to the receipt.
+// [ ] If installment is greater than 1000 sats, send the remainder back to the contract,
+// [ ] Otherwise, liquidate the contract via a balloon payment to the recipient.
+//
 // 
 // String & op_return serializations:
 //

@@ -64,7 +64,7 @@ describe(`Perpetuity Class Tests`, () => {
     expect(p1.getAddress()).toEqual(p2.getAddress());
   });
 
-  test("Should pay a Perpetuity", async () => {
+  test("Should pay a Perpetuity, to completion", async () => {
     const alice = await getAnAliceWallet(13000);
     const bob = await RegTestWallet.newRandom();
     const charlie = await RegTestWallet.newRandom();

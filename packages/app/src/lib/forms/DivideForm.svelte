@@ -57,19 +57,6 @@
 </script>
 
 <div class="margins">
-	<Textfield
-		bind:value={executorAllowance}
-		on:change={() => createContract()}
-		type="number"
-		input$min={Number(Divide.minAllowance) + 66 * payees.length}
-		input$max="12000"
-		required
-		label="Executor Allowance"
-	>
-		<HelperText slot="helper"
-			>Remainder for the execution of the contract and miner fees.</HelperText
-		>
-	</Textfield>
 
 	{#each payees as payee, i}
 		<AddressOptional

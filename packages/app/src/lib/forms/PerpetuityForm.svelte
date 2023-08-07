@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
+	import Radio from '@smui/radio';
+	import FormField from '@smui/form-field';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
-  import type { Network } from 'cashscript';
+	import type { Network } from 'cashscript';
 
 	export let network: Network;
 	export let version: number;
@@ -11,28 +13,53 @@
 	let options = { network: network, version: version };
 	let isPublished = false;
 
-	let period = NaN;
+	let periodOptions = [
+		{
+			name: 'Annually',
+			value: 52596,
+			disabled: false
+		},
+		{
+			name: 'Quarterly',
+			value: 13149,
+			disabled: false
+		},
+		{
+			name: 'Monthly',
+			value: 4383,
+			disabled: false
+		},
+		{
+			name: 'Weekly',
+			value: 1011,
+			disabled: false
+		}
+	];
+
+	let period = 4383;
 	let receiptAddress = '';
-	let decay = NaN;
-	let executorAllowance = 1200;
+	let decay = 100;
+	let executorAllowance = 1500;
 	async function createContract() {
-		try {
+		if (receiptAddress) {
 			try {
-				receiptAddress = await sanitizeAddress(receiptAddress);
-			} catch (e: any) {
+				try {
+					receiptAddress = await sanitizeAddress(receiptAddress);
+				} catch (e: any) {
+					if (e.message) {
+						toast.push(e.message, { classes: ['warn'] });
+					} else {
+						toast.push(e, { classes: ['warn'] });
+					}
+				}
+				contract = new Perpetuity(period, receiptAddress, executorAllowance, decay, options);
+			} catch (e: Error) {
+				contract = undefined;
 				if (e.message) {
 					toast.push(e.message, { classes: ['warn'] });
 				} else {
 					toast.push(e, { classes: ['warn'] });
 				}
-			}
-			contract = new Perpetuity(period, receiptAddress, executorAllowance, decay, options);
-		} catch (e: Error) {
-			contract = undefined;
-			if (e.message) {
-				toast.push(e.message, { classes: ['warn'] });
-			} else {
-				toast.push(e, { classes: ['warn'] });
 			}
 		}
 	}
@@ -48,48 +75,49 @@
 		required
 		label="Receipt Address"
 	>
-		<HelperText slot="helper">The address to recieve a regular payout.</HelperText>
+		<HelperText slot="helper">The address to receive a regular payout.</HelperText>
 	</Textfield>
+	{#if receiptAddress}
+		<div class="radio-demo">
+			{#each periodOptions as periodOption}
+				<FormField>
+					<Radio
+						on:change={() => createContract()}
+						bind:group={period}
+						value={periodOption.value}
+						touch
+					/>
+					<span slot="label">{periodOption.name}</span>
+				</FormField>
+			{/each}
+		</div>
 
-	<Textfield
-		bind:value={period}
-		on:change={() => createContract()}
-		type="number"
-		input$min="1"
-		input$max="65535"
-		required
-		label="Period"
-	>
-		<HelperText slot="helper">
-			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
-		>
-	</Textfield>
+		<!--Textfield
+  bind:value={period}
+  on:change={() => createContract()}
+  type="number"
+  input$min="1"
+  input$max="65535"
+  required
+  label="Period"
+>
+  <HelperText slot="helper">
+    How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+  >
+</Textfield-->
 
-	<Textfield
-		bind:value={decay}
-		on:change={() => createContract()}
-		type="number"
-		input$min="2"
-		required
-		label="Decay"
-	>
-		<HelperText slot="helper"
-			>The fraction of inputs that should be sent each period. E.g. A decay of two (2) dispenses
-			half (1/2) the total each time. A decay of 20 would release 1/20th the value each period.</HelperText
+		<Textfield
+			bind:value={decay}
+			on:change={() => createContract()}
+			type="number"
+			input$min="2"
+			required
+			label="Decay"
 		>
-	</Textfield>
-
-	<Textfield
-		bind:value={executorAllowance}
-		on:change={() => createContract()}
-		type="number"
-		input$min={Perpetuity.minAllowance}
-		input$max="12000"
-		required
-		label="Executor Allowance"
-	>
-		<HelperText slot="helper"
-			>Remainder for the execution of the contract and miner fees.</HelperText
-		>
-	</Textfield>
+			<HelperText slot="helper"
+				>The fraction of inputs that should be sent each period. E.g. A decay of two (2) dispenses
+				half (1/2) the total each time. A decay of 20 would release 1/20th the value each period.</HelperText
+			>
+		</Textfield>
+	{/if}
 </div>

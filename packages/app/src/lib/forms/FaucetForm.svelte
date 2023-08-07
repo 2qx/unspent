@@ -63,7 +63,7 @@
 		input$min="1"
 		input$max="65535"
 		required
-		label="Period"
+		label="Period (blocks)"
 	>
 		<HelperText slot="helper">
 			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText

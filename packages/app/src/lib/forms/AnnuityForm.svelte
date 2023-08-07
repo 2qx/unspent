@@ -2,6 +2,8 @@
 	import { Annuity, DUST_UTXO_THRESHOLD, sanitizeAddress } from '@unspent/phi';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
+	import Radio from '@smui/radio';
+	import FormField from '@smui/form-field';
 
 	import { toast } from '@zerodevx/svelte-toast';
 	import type { Network } from 'cashscript';
@@ -10,12 +12,34 @@
 	export let version: number;
 	export let contract;
 	let options = { network: network, version: version };
-  
 
 	let isPublished = false;
-	let showHelp = false;
+	let showHelp = true;
 
-	let period = NaN;
+  let periodOptions = [
+		{
+			name: 'Annually',
+			value: 52596,
+			disabled: false
+		},
+		{
+			name: 'Quarterly',
+			value: 13149,
+			disabled: false
+		},
+		{
+			name: 'Monthly',
+			value: 4383,
+			disabled: false
+		},
+		{
+			name: 'Weekly',
+			value: 1011,
+			disabled: false
+		}
+	];
+
+	let period = 4383;
 	let receiptAddress = '';
 	let installment = NaN;
 	let executorAllowance = 1200;
@@ -48,48 +72,49 @@
 		<HelperText slot="helper">The address to receive a regular payout.</HelperText>
 	</Textfield>
 
-	<Textfield
-		bind:value={period}
-		on:change={() => createContract()}
-		type="number"
-		input$min="1"
-		input$max="65535"
-		required
-		label="Period"
-	>
-		<HelperText slot="helper">
-			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+	{#if receiptAddress}
+
+  <div class="radio-demo">
+    {#each periodOptions as periodOption}
+      <FormField>
+        <Radio
+          on:change={() => createContract()}
+          bind:group={period}
+          value={periodOption.value}
+          touch
+        />
+        <span slot="label">{periodOption.name}</span>
+      </FormField>
+    {/each}
+  </div>
+
+		<!--Textfield
+			bind:value={period}
+			on:change={() => createContract()}
+			type="number"
+			input$min="1"
+			input$max="65535"
+			required
+			label="Period"
 		>
-	</Textfield>
+			<HelperText slot="helper">
+				How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+			>
+		</Textfield-->
 
-	<!-- <BlockTimeField bind:blockTime={period} on:message={() => createContract()} /> -->
+		<!-- <BlockTimeField bind:blockTime={period} on:message={() => createContract()} /> -->
 
-	<Textfield
-		bind:value={installment}
-		on:change={() => createContract()}
-		type="number"
-		input$min={DUST_UTXO_THRESHOLD}
-		required
-		label="Installment"
-	>
-		<HelperText slot="helper">Amount contract will payout per period.</HelperText>
-	</Textfield>
-
-	<Textfield
-		bind:value={executorAllowance}
-		on:change={() => createContract()}
-		type="number"
-		input$min={Annuity.minAllowance}
-		input$max="12000"
-		required
-		label="Executor Allowance"
-	>
-		<HelperText slot="helper"
-			>Remainder for the execution of the contract and miner fees.</HelperText
+		<Textfield
+			bind:value={installment}
+			on:change={() => createContract()}
+			type="number"
+			input$min={DUST_UTXO_THRESHOLD}
+			required
+			label="Installment"
 		>
-	</Textfield>
+			<HelperText slot="helper">Amount (sats) contract will payout per period.</HelperText>
+		</Textfield>
+	{/if}
 </div>
 
-{#if !contract}
-	<button on:click={createContract}> Calculate Locking Script</button>
-{/if}
+

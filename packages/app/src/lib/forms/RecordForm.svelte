@@ -45,7 +45,7 @@
 </script>
 
 <div class="columns margins">
-	<Textfield
+	<!--Textfield
 		bind:value={maxFee}
 		on:change={() => createContract()}
 		type="number"
@@ -54,7 +54,7 @@
 		label="Max Fee (satoshis)"
 	>
 		<HelperText slot="helper">Amount available to broadcast transaction.</HelperText>
-	</Textfield>
+	</Textfield-->
 
 	<Textfield
 		bind:value={index}
