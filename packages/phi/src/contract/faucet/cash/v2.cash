@@ -43,7 +43,7 @@ contract Faucet(
     require(tx.age >= period);
       
     // Use the index to do nothing but
-    // avoid warnings from the compiler about unused varibales.
+    // avoid warnings from the compiler about unused variables.
     require(index >= 0);
 
     // Limit to a single utxo input

@@ -2,6 +2,7 @@
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 	import Radio from '@smui/radio';
+	import Button from '@smui/button';
 	import FormField from '@smui/form-field';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
 	import { toast } from '@zerodevx/svelte-toast';
@@ -12,6 +13,8 @@
 	export let contract;
 	let options = { network: network, version: version };
 	let isPublished = false;
+
+	let showWarning = true;
 
 	let periodOptions = [
 		{
@@ -38,7 +41,7 @@
 
 	let period = 4383;
 	let receiptAddress = '';
-	let decay = 100;
+	let decay = 96;
 	let executorAllowance = 1500;
 	async function createContract() {
 		if (receiptAddress) {
@@ -52,6 +55,7 @@
 						toast.push(e, { classes: ['warn'] });
 					}
 				}
+        decay = Math.floor(420786/period);
 				contract = new Perpetuity(period, receiptAddress, executorAllowance, decay, options);
 			} catch (e: Error) {
 				contract = undefined;
@@ -66,33 +70,53 @@
 </script>
 
 <div class="margins">
-	<Textfield
-		bind:value={receiptAddress}
-		on:change={() => createContract()}
-		style="width: 100%;"
-		helperLine$style="width: 100%;"
-		type="text"
-		required
-		label="Receipt Address"
-	>
-		<HelperText slot="helper">The address to receive a regular payout.</HelperText>
-	</Textfield>
-	{#if receiptAddress}
-		<div class="radio-demo">
-			{#each periodOptions as periodOption}
-				<FormField>
-					<Radio
-						on:change={() => createContract()}
-						bind:group={period}
-						value={periodOption.value}
-						touch
-					/>
-					<span slot="label">{periodOption.name}</span>
-				</FormField>
-			{/each}
-		</div>
+  <p>
+    A perpetuity contract will send a fixed fraction of total value to a predefined address on a
+    regular schedule.
+  </p>
+	{#if showWarning}
 
-		<!--Textfield
+		<ul>
+			<li>Do <b>NOT</b> use an exchange address as the receipt address.</li>
+			<li>Once a contract is funded, the receipt addresses can <b>never be changed</b>.</li>
+			<li>Funds sent to the contract <b>cannot be withdrawn prematurely</b>, only as scheduled.</li>
+		</ul>
+
+		<Button
+			on:click={() => {
+				showWarning = false;
+			}}
+		>
+			I understand the risks.
+		</Button>
+	{:else}
+		<Textfield
+			bind:value={receiptAddress}
+			on:change={() => createContract()}
+			style="width: 100%;"
+			helperLine$style="width: 100%;"
+			type="text"
+			required
+			label="Receipt Address"
+		>
+			<HelperText slot="helper">The address to receive a regular payout.</HelperText>
+		</Textfield>
+		{#if receiptAddress}
+			<div class="radio-demo">
+				{#each periodOptions as periodOption}
+					<FormField>
+						<Radio
+							on:change={() => createContract()}
+							bind:group={period}
+							value={periodOption.value}
+							touch
+						/>
+						<span slot="label">{periodOption.name}</span>
+					</FormField>
+				{/each}
+			</div>
+
+			<!--Textfield
   bind:value={period}
   on:change={() => createContract()}
   type="number"
@@ -106,18 +130,19 @@
   >
 </Textfield-->
 
-		<Textfield
-			bind:value={decay}
-			on:change={() => createContract()}
-			type="number"
-			input$min="2"
-			required
-			label="Decay"
-		>
-			<HelperText slot="helper"
-				>The fraction of inputs that should be sent each period. E.g. A decay of two (2) dispenses
-				half (1/2) the total each time. A decay of 20 would release 1/20th the value each period.</HelperText
+			<!--Textfield
+				bind:value={manualDecay}
+				on:change={() => createContract()}
+				type="number"
+				input$min="2"
+				required
+				label="Decay"
 			>
-		</Textfield>
+				<HelperText slot="helper"
+					>The fraction of inputs that should be sent each period. E.g. A decay of two (2) dispenses
+					half (1/2) the total each time. A decay of 20 would release 1/20th the value each period.</HelperText
+				>
+			</Textfield-->
+		{/if}
 	{/if}
 </div>

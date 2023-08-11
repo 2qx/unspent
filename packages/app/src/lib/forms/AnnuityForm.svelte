@@ -2,6 +2,7 @@
 	import { Annuity, DUST_UTXO_THRESHOLD, sanitizeAddress } from '@unspent/phi';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
+  import Button from '@smui/button';
 	import Radio from '@smui/radio';
 	import FormField from '@smui/form-field';
 
@@ -14,9 +15,11 @@
 	let options = { network: network, version: version };
 
 	let isPublished = false;
+  let showWarning = true;
+
 	let showHelp = true;
 
-  let periodOptions = [
+	let periodOptions = [
 		{
 			name: 'Annually',
 			value: 52596,
@@ -43,9 +46,18 @@
 	let receiptAddress = '';
 	let installment = NaN;
 	let executorAllowance = 1200;
-	function createContract() {
+	async function createContract() {
 		if (receiptAddress && installment && period) {
 			try {
+        try {
+					receiptAddress = await sanitizeAddress(receiptAddress);
+				} catch (e: any) {
+					if (e.message) {
+						toast.push(e.message, { classes: ['warn'] });
+					} else {
+						toast.push(e, { classes: ['warn'] });
+					}
+				}
 				contract = new Annuity(period, receiptAddress, installment, executorAllowance, options);
 			} catch (e: any) {
 				contract = undefined;
@@ -60,35 +72,53 @@
 </script>
 
 <div class="margins">
-	<Textfield
-		bind:value={receiptAddress}
-		on:change={() => createContract()}
-		style="width: 100%;"
-		helperLine$style="width: 100%;"
-		type="text"
-		required
-		label="Receipt Address"
-	>
-		<HelperText slot="helper">The address to receive a regular payout.</HelperText>
-	</Textfield>
+	<p>
+		An annuity contract may send a fixed amount to a predefined address on a
+		regular schedule.
+	</p>
+	{#if showWarning}
+		<ul>
+			<li>Do <b>NOT</b> use an exchange address as the receipt address.</li>
+			<li>Once a contract is funded, the receipt addresses can <b>never be changed</b>.</li>
+			<li>Funds sent to the contract <b>cannot be withdrawn prematurely</b>, only as scheduled.</li>
+		</ul>
 
-	{#if receiptAddress}
+		<Button
+			on:click={() => {
+				showWarning = false;
+			}}
+		>
+			I understand the risks.
+		</Button>
+	{:else}
+		<Textfield
+			bind:value={receiptAddress}
+			on:change={() => createContract()}
+			style="width: 100%;"
+			helperLine$style="width: 100%;"
+			type="text"
+			required
+			label="Receipt Address"
+		>
+			<HelperText slot="helper">The address to receive a regular payout.</HelperText>
+		</Textfield>
 
-  <div class="radio-demo">
-    {#each periodOptions as periodOption}
-      <FormField>
-        <Radio
-          on:change={() => createContract()}
-          bind:group={period}
-          value={periodOption.value}
-          touch
-        />
-        <span slot="label">{periodOption.name}</span>
-      </FormField>
-    {/each}
-  </div>
+		{#if receiptAddress}
+			<div class="radio-demo">
+				{#each periodOptions as periodOption}
+					<FormField>
+						<Radio
+							on:change={() => createContract()}
+							bind:group={period}
+							value={periodOption.value}
+							touch
+						/>
+						<span slot="label">{periodOption.name}</span>
+					</FormField>
+				{/each}
+			</div>
 
-		<!--Textfield
+			<!--Textfield
 			bind:value={period}
 			on:change={() => createContract()}
 			type="number"
@@ -102,19 +132,18 @@
 			>
 		</Textfield-->
 
-		<!-- <BlockTimeField bind:blockTime={period} on:message={() => createContract()} /> -->
+			<!-- <BlockTimeField bind:blockTime={period} on:message={() => createContract()} /> -->
 
-		<Textfield
-			bind:value={installment}
-			on:change={() => createContract()}
-			type="number"
-			input$min={DUST_UTXO_THRESHOLD}
-			required
-			label="Installment"
-		>
-			<HelperText slot="helper">Amount (sats) contract will payout per period.</HelperText>
-		</Textfield>
+			<Textfield
+				bind:value={installment}
+				on:change={() => createContract()}
+				type="number"
+				input$min="600n"
+				required
+				label="Installment"
+			>
+				<HelperText slot="helper">Amount (sats) contract will payout per period.</HelperText>
+			</Textfield>
+		{/if}
 	{/if}
 </div>
-
-

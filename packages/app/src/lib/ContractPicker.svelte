@@ -5,16 +5,17 @@
 	export let instanceType;
 
 	let contractTypes = [
-		{ id: 'A', name: 'Annuity' },
+		{ id: 'P', name: 'Perpetuity' },
+    { id: 'A', name: 'Annuity' },
 		{ id: 'D', name: 'Divide' },
 		{ id: 'F', name: 'Faucet' },
-		{ id: 'P', name: 'Perpetuity' },
 		{ id: 'R', name: 'Record' }
 	];
+  
 </script>
 
 <Select
-	key={(c) => `${c ? c.name : ''}`}
+	key={(c) => `${c ? c.name : 'Perpetuity'}`}
 	on:MDCSelect:change={(e) => (instanceType = e.detail.value.name)}
 	bind:value={selected}
 	label="Contract Type"

@@ -237,7 +237,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
-          satoshis: 1000000n,
+          satoshis: 10000000n,
           txid: "<example 10,000,000 (0.1 BCH) unspent output>",
           vout: 0,
           // @ts-ignore

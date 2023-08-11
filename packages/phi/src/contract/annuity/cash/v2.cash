@@ -6,10 +6,11 @@ pragma cashscript ^0.8.1;
 //
 // Annuity: equal payments at regular intervals using rolling timelocks.
 //
-// - The input must have aged for a predefined number of blocks (the period)
-// - All utxos must be processed atomically. One coin per tx, no merging.
-// - If enough funds exist for future payments, send the remainder back to the contract,
-// - Otherwise, liquidate the contract via a balloon payment to the recipient.
+// [ ] Spending transaction must use version 2.
+// [ ] The input must have aged for a predefined number of blocks (the period)
+// [ ] All utxos must be processed atomically. One coin per tx, no merging.
+// [ ] If enough funds exist for future payments, send the remainder back to the contract,
+// [ ] Otherwise, liquidate the contract via a balloon payment to the recipient.
 // 
 // Implementation notes: contract requires 32-byte locking bytecode style address.
 // 
@@ -20,7 +21,8 @@ pragma cashscript ^0.8.1;
 // 6a 047574786f
 // 01 41
 // 01 02
-// ...
+// ... period, receipt, installment
+// ... lockingBytecode
 
 contract Annuity(
 
