@@ -384,10 +384,10 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (utxos) tx = tx.from(utxos);
 
-    const size = (await tx!.to(to).withAge(Number(this.period)).withoutChange().build()).length/2;
+    const size = await tx!.to(to).withAge(Number(this.period)).withoutChange().build();
 
     if (exAddress) {
-      const minerFee = fee ? fee : BigInt(size);
+      const minerFee = fee ? fee : BigInt(size.length / 2);
 
       executorFee = BigInt(this.executorAllowance) - minerFee - 20n;
       if (executorFee > DUST_UTXO_THRESHOLD) {

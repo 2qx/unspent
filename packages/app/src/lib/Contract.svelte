@@ -71,21 +71,21 @@
 
 	const throttleUpdate = throttle(3000, async () => {
 		await updateBalance();
-	});
+	},{ noLeading: true, noTrailing: false });
 
 	beforeUpdate(async () => {
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
 		await throttleUpdate();
-		if (!bitauth) {
-			bitauth = await instance.execute(undefined, undefined, undefined, true);
-		}
+
 	});
 
 	const updateBalance = async () => {
 		if (instance) balance = await instance.getBalance();
 		isFunded = balance > 0 ? true : false;
-
+		if (bitauth.length==0) {
+			bitauth = await instance.execute(undefined, undefined, undefined, true);
+		}
 		if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
 			if (showSeries) {
 				updateSeries();
