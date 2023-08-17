@@ -292,15 +292,28 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
   async execute(
     exAddress?: string,
     fee?: bigint,
-    utxos?: Utxo[]
+    utxos?: Utxo[],
+    debug?: boolean
   ): Promise<string> {
     let balance = 0n;
+
+    // Filter to inputs of sufficient age
+    if (!utxos) utxos = await this.getUtxos(Number(this.period));
+
+    // If the contract is version 2 or higher, restrict to one input.
+    if (utxos) {
+      if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
+    }
+
     if (utxos && utxos?.length > 0) {
       balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       balance = await this.getBalance();
     }
-    if (balance == 0n) throw Error("No funds on contract");
+    if (balance == 0n) {
+      if (debug) { balance = 10000n }
+      else { throw Error("No funds on contract"); }
+    }
 
     const fn = this.getFunction(Annuity.fn)!;
 
@@ -328,6 +341,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     let estimator = fn();
     let tx = fn();
+
     if (utxos) tx = tx.from(utxos);
     if (utxos) estimator = estimator.from(utxos);
 
@@ -359,7 +373,16 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       });
     }
 
-    const payTx = await tx!.to(to).withAge(Number(this.period)).withoutChange().send();
-    return payTx.txid;
+    tx!.to(to).withAge(Number(this.period)).withoutChange();
+
+
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
+    }
+    return txn;
+
   }
 }

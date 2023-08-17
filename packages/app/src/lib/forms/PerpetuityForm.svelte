@@ -15,6 +15,7 @@
 	let isPublished = false;
 
 	let showWarning = true;
+	let showAdvanced = false;
 
 	let periodOptions = [
 		{
@@ -55,7 +56,7 @@
 						toast.push(e, { classes: ['warn'] });
 					}
 				}
-        decay = Math.floor(420786/period);
+				if (!showAdvanced) decay = Math.floor(420786 / period);
 				contract = new Perpetuity(period, receiptAddress, executorAllowance, decay, options);
 			} catch (e: Error) {
 				contract = undefined;
@@ -70,12 +71,11 @@
 </script>
 
 <div class="margins">
-  <p>
-    A perpetuity contract will send a fixed fraction of total value to a predefined address on a
-    regular schedule.
-  </p>
+	<p>
+		A perpetuity contract will send a fixed fraction of total value to a predefined address on a
+		regular schedule.
+	</p>
 	{#if showWarning}
-
 		<ul>
 			<li>Do <b>NOT</b> use an exchange address as the receipt address.</li>
 			<li>Once a contract is funded, the receipt addresses can <b>never be changed</b>.</li>
@@ -102,47 +102,57 @@
 			<HelperText slot="helper">The address to receive a regular payout.</HelperText>
 		</Textfield>
 		{#if receiptAddress}
-			<div class="radio-demo">
-				{#each periodOptions as periodOption}
-					<FormField>
-						<Radio
-							on:change={() => createContract()}
-							bind:group={period}
-							value={periodOption.value}
-							touch
-						/>
-						<span slot="label">{periodOption.name}</span>
-					</FormField>
-				{/each}
-			</div>
-
-			<!--Textfield
-  bind:value={period}
-  on:change={() => createContract()}
-  type="number"
-  input$min="1"
-  input$max="65535"
-  required
-  label="Period"
->
-  <HelperText slot="helper">
-    How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
-  >
-</Textfield-->
-
-			<!--Textfield
-				bind:value={manualDecay}
-				on:change={() => createContract()}
-				type="number"
-				input$min="2"
-				required
-				label="Decay"
-			>
-				<HelperText slot="helper"
-					>The fraction of inputs that should be sent each period. E.g. A decay of two (2) dispenses
-					half (1/2) the total each time. A decay of 20 would release 1/20th the value each period.</HelperText
+			{#if !showAdvanced}
+				<div class="radio-demo">
+					{#each periodOptions as periodOption}
+						<FormField>
+							<Radio
+								on:change={() => createContract()}
+								bind:group={period}
+								value={periodOption.value}
+								touch
+							/>
+							<span slot="label">{periodOption.name}</span>
+						</FormField>
+					{/each}
+				</div>
+			{:else}
+				<Textfield
+					bind:value={period}
+					on:change={() => createContract()}
+					type="number"
+					input$min="1"
+					input$max="65535"
+					required
+					label="Period"
 				>
-			</Textfield-->
+					<HelperText slot="helper">
+						How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText
+					>
+				</Textfield>
+
+				<Textfield
+					bind:value={decay}
+					on:change={() => createContract()}
+					type="number"
+					input$min="2"
+					required
+					label="Decay"
+				>
+					<HelperText slot="helper"
+						>The fraction of inputs that should be sent each period. E.g. A decay of two (2)
+						dispenses half (1/2) the total each time. A decay of 20 would release 1/20th the value
+						each period.</HelperText
+					>
+				</Textfield>
+			{/if}
+      <Button
+			on:click={() => {
+				showAdvanced = !showAdvanced;
+			}}
+		>
+    advanced
+		</Button>
 		{/if}
 	{/if}
 </div>

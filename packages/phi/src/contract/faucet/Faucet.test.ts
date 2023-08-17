@@ -1,7 +1,8 @@
 import { Faucet } from "./Faucet.js";
 import { RegTestWallet, mine } from "mainnet-js";
 import { deriveLockingBytecodeHex } from "../../common/util.js";
-  
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
+
 describe(`Faucet Class Tests`, () => {
   test("Should serialize a faucet (v0)", async () => {
     let f = new Faucet(undefined, undefined, undefined, {version:0});
@@ -58,4 +59,38 @@ describe(`Faucet Class Tests`, () => {
     expect(info).toContain(f1.toString());
     expect(info).toContain("balance");
   });
+
+  test("Should drip the faucet (v2) to completion", async () => {
+    let options = { version: 2, network: "regtest" };
+    let f1 = new Faucet(0n, 5000n, 2n, options);
+
+    const alice = await getAnAliceWallet(100000);
+    const bob = await RegTestWallet.newRandom();
+    const charlie = await RegTestWallet.newRandom();
+
+    await alice.send([
+      {
+        cashaddr: f1.getAddress(),
+        value: 15000,
+        unit: "satoshis",
+      },
+      {
+        cashaddr: f1.getAddress(),
+        value: 14000,
+        unit: "satoshis",
+      },
+    ]);
+
+    for (let x = 0; x < 6; x++) {
+      await f1.execute(charlie.getDepositAddress());
+    }
+
+    expect(await charlie.getBalance("sat")).toBeGreaterThan(25000);
+    expect(f1.isTestnet()).toEqual(true);
+    expect(await f1.getBalance()).toBe(0n);
+
+
+  });
+
 });
+

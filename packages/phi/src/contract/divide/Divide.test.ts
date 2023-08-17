@@ -227,4 +227,74 @@ describe(`Divide Class Tests`, () => {
     expect(d4.toOpReturn().length).toBeLessThan(223);
 
   });
+
+
+  test("Should pay a division v2 contract to completion", async () => {
+    const payees = [
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+      "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+      "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
+      "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss",
+    ];
+    const options = { version: 2, network: "regtest" };
+    const d1 = new Divide(1200n, payees, options);
+
+    const alice = await getAnAliceWallet(102000);
+
+    await alice.send([
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+    ]);
+
+    expect(await d1.getBalance()).toBeGreaterThan(100);
+
+    await d1.execute();
+    await d1.execute();
+
+    const receipt = await RegTestWallet.watchOnly(
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n"
+    );
+    expect(await receipt.getBalance("sat")).toBeGreaterThan(20000);
+    expect(await d1.getBalance()).toBe(0n);
+
+  });
+
+  test("Should cat a division v2 debug link", async () => {
+    const payees = [
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+      "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+    ];
+    const options = { version: 2, network: "regtest" };
+    const d1 = new Divide(1200n, payees, options);
+
+    const alice = await getAnAliceWallet(102000);
+
+    await alice.send([
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+    ]);
+
+    expect(await d1.getBalance()).toBeGreaterThan(100);
+
+    let link = await d1.execute(undefined, undefined, undefined, true);
+    console.log(link)
+    expect(link.length).toBeGreaterThan(100);
+
+  });
 });

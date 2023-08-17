@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="600"
+   height="300"
+   viewBox="0 0 158.75 79.375"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="perp.svg">
+  <defs
+     id="defs2">
+    <rect
+       x="65.402534"
+       y="3.3823751"
+       width="122.92776"
+       height="17.112708"
+       id="rect1538" />
+    <rect
+       x="75.028658"
+       y="9.4783334"
+       width="66.725816"
+       height="12.050675"
+       id="rect1016" />
+    <rect
+       x="41.802685"
+       y="124.40385"
+       width="58.945969"
+       height="52.421055"
+       id="rect951" />
+    <rect
+       x="150.28877"
+       y="99.213898"
+       width="25.115604"
+       height="11.748526"
+       id="rect104" />
+    <rect
+       x="107.48639"
+       y="65.09272"
+       width="162.53678"
+       height="39.806269"
+       id="rect98" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="-83.345019 : 85.066904 : 1"
+       inkscape:vp_y="-1.8369702e-13 : 926.40099 : 0"
+       inkscape:vp_z="120.17287 : 91.938595 : 1"
+       inkscape:persp3d-origin="34.154849 : 8.49259 : 1"
+       id="perspective10" />
+    <rect
+       x="107.48639"
+       y="65.09272"
+       width="147.90135"
+       height="50.844589"
+       id="rect98-3" />
+    <rect
+       x="107.48639"
+       y="65.09272"
+       width="147.90135"
+       height="50.844589"
+       id="rect1029" />
+    <rect
+       x="75.028656"
+       y="9.4783335"
+       width="77.894195"
+       height="10.743603"
+       id="rect1016-5" />
+    <rect
+       x="75.028656"
+       y="9.4783335"
+       width="48.909237"
+       height="14.683797"
+       id="rect1462" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4863414"
+     inkscape:cx="340.22886"
+     inkscape:cy="78.057136"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1176"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="opacity:1">
+    <g
+       sodipodi:type="inkscape:box3d"
+       id="g12"
+       style="fill:#0000ff;stroke-width:2.97827"
+       inkscape:perspectiveID="#perspective10"
+       inkscape:corner0="0.30338671 : 0.049849055 : 0 : 1"
+       inkscape:corner7="-0.038211277 : 0.0019998009 : 0.43016522 : 1">
+      <path
+         sodipodi:type="inkscape:box3dside"
+         id="path24"
+         style="fill:#e9e9ff;fill-rule:evenodd;stroke:none;stroke-width:2.86658;stroke-linejoin:round"
+         inkscape:box3dsidetype="11"
+         d="m 34.93594,10.135795 29.027209,3.884259 0,31.845591 L 34.93594,35.706183 Z"
+         points="63.963149,14.020054 63.963149,45.865645 34.93594,35.706183 34.93594,10.135795 " />
+      <path
+         sodipodi:type="inkscape:box3dside"
+         id="path14"
+         style="fill:#353564;fill-rule:evenodd;stroke:none;stroke-width:2.86658;stroke-linejoin:round"
+         inkscape:box3dsidetype="6"
+         d="m 6.8046404,17.627422 0,34.009551 L 34.93594,35.706183 V 10.135795 Z"
+         points="6.8046404,51.636973 34.93594,35.706183 34.93594,10.135795 6.8046404,17.627422 " />
+      <path
+         sodipodi:type="inkscape:box3dside"
+         id="path22"
+         style="fill:#afafde;fill-rule:evenodd;stroke:none;stroke-width:2.86658;stroke-linejoin:round"
+         inkscape:box3dsidetype="13"
+         d="M 6.8046404,51.636973 38.823047,71.99844 63.963149,45.865645 34.93594,35.706183 Z"
+         points="38.823047,71.99844 63.963149,45.865645 34.93594,35.706183 6.8046404,51.636973 " />
+      <path
+         sodipodi:type="inkscape:box3dside"
+         id="path16"
+         style="fill:#549f4c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.86658;stroke-linejoin:round"
+         inkscape:box3dsidetype="5"
+         d="M 6.8046404,17.627422 38.823047,25.909735 63.963149,14.020054 34.93594,10.135795 Z"
+         points="38.823047,25.909735 63.963149,14.020054 34.93594,10.135795 6.8046404,17.627422 " />
+      <path
+         sodipodi:type="inkscape:box3dside"
+         id="path20"
+         style="fill:#dbffd7;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.86658;stroke-linejoin:round"
+         inkscape:box3dsidetype="14"
+         d="m 38.823047,25.909735 0,46.088705 25.140102,-26.132795 0,-31.845591 z"
+         points="38.823047,71.99844 63.963149,45.865645 63.963149,14.020054 38.823047,25.909735 " />
+      <path
+         sodipodi:type="inkscape:box3dside"
+         id="path18"
+         style="fill:#8cbf86;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.86658;stroke-linejoin:round"
+         inkscape:box3dsidetype="3"
+         d="m 6.8046404,17.627422 32.0184066,8.282313 0,46.088705 L 6.8046404,51.636973 Z"
+         points="38.823047,25.909735 38.823047,71.99844 6.8046404,51.636973 6.8046404,17.627422 " />
+    </g>
+    <text
+       xml:space="preserve"
+       id="text96"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect98);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="matrix(0.58480264,0,0,0.58480264,1.0533909,12.672688)"><tspan
+         x="107.48633"
+         y="71.496536"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.23891px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">The coin must have not moved for a </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.23891px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000080">month</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text102"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect104);fill:#000000;fill-opacity:1;stroke:none;" />
+    <text
+       xml:space="preserve"
+       id="text949"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect951);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="matrix(0.59724427,0.2956246,0,0.59724427,-14.111802,-60.15258)"><tspan
+         x="41.802734"
+         y="133.76804"><tspan>Alice's </tspan></tspan><tspan
+         x="41.802734"
+         y="146.99716"><tspan>forever </tspan></tspan><tspan
+         x="41.802734"
+         y="160.22629"><tspan>bitcoin</tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.617361;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 55.731758,35.743967 16.39882,4.379209"
+       id="path965"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.617361;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 51.759849,38.947807 63.247971,50.125852"
+       id="path965-3"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.617361;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 46.3516,42.915719 58.086113,64.997515"
+       id="path965-6"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       id="text1014"
+       style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1016);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="matrix(1.368226,0,0,1.368226,-26.862662,14.051663)"><tspan
+         x="75.029297"
+         y="12.599774"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.09403px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Always pay </tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.09403px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000080">Alice</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.09403px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"> 1/</tspan><tspan
+           style="font-weight:bold;fill:#000080">96</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.09403px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">th of the coin.</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text96-7"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect98-3);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="matrix(0.58480264,0,0,0.58480264,11.60132,-5.2098671)"><tspan
+         x="107.48633"
+         y="71.334314"><tspan
+           style="shape-inside:url(#rect98-3);opacity:1">
+</tspan></tspan><tspan
+         x="107.48633"
+         y="80.153764"><tspan
+           style="shape-inside:url(#rect98-3);opacity:1">Minus </tspan><tspan
+           style="font-weight:bold;fill:#000080">1,500</tspan><tspan
+           style="shape-inside:url(#rect98-3);opacity:1"> sats, for fees </tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text1014-0"
+       style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1016-5);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="matrix(1.368226,0,0,1.368226,-41.572123,48.775215)"><tspan
+         x="75.029297"
+         y="12.599774"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.09403px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Return the rest of the coin to the contract.</tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.617361;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 61.300534,32.40803 73.906115,29.94209"
+       id="path965-1"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       id="text1536"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1538);fill:#000000;fill-opacity:1;stroke:none;"
+       transform="translate(-22.147336,-4.1245909)"><tspan
+         x="65.402344"
+         y="12.746552"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05556px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Rules to spend Alice's coins</tspan></tspan></text>
+  </g>
+</svg>

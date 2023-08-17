@@ -7,7 +7,7 @@ export interface UtxPhiIface {
 
   toOpReturn(hex: boolean): Uint8Array | string;
 
-  execute(exAddress: string, fee: bigint, utxos?: Utxo[]): Promise<string>;
+  execute(exAddress: string, fee: bigint, utxos?: Utxo[], debug?: boolean): Promise<string>;
 
   getAddress(): string;
 

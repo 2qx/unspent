@@ -82,7 +82,7 @@ export const buildAuthenticationTemplate = async ({
   transaction,
   network,
   manglePrivateKeys,
-  includeSource = false,
+  includeSource = true,
 }: {
   contract: Contract;
   artifact: Artifact;
@@ -109,7 +109,7 @@ export const buildAuthenticationTemplate = async ({
   }
 
   const constructorInputs = artifact.constructorInputs
-    .slice();
+    .slice().reverse();
   // @ts-ignore
   const contractParameters = contract.redeemScript.slice();
 

@@ -1,4 +1,4 @@
-import type { Artifact, Utxo,  NetworkProvider } from "cashscript";
+import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { ContractOptions } from "../../common/interface.js";
 import { binToBigInt, decodeNullDataScript } from "../../common/util.js";
 import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
@@ -14,8 +14,8 @@ export class Record extends BaseUtxPhiContract {
   public static minMaxFee: bigint = 310n;
 
   constructor(
-    public maxFee: bigint|number = 850n,
-    public index: bigint|number = 0n,
+    public maxFee: bigint | number = 850n,
+    public index: bigint | number = 0n,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
@@ -43,7 +43,7 @@ export class Record extends BaseUtxPhiContract {
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
 
-    if (![1,2].includes(p.options.version))
+    if (![1, 2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
 
     const maxFee = parseBigInt(p.args.shift()!);
@@ -122,13 +122,13 @@ export class Record extends BaseUtxPhiContract {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (![1,2].includes(p.options.version))
+    if (![1, 2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
 
     let [maxFee, index]: [bigint?, bigint?] = [undefined, undefined];
-    if ([1,2].includes(p.options.version)) {
+    if ([1, 2].includes(p.options.version)) {
       maxFee = binToBigInt(p.args.shift()!);
       index = binToBigInt(p.args.shift()!);
     } else {
@@ -149,7 +149,8 @@ export class Record extends BaseUtxPhiContract {
 
   async broadcast(
     opReturn?: Uint8Array | string,
-    utxos?: Utxo[]
+    utxos?: Utxo[],
+    debug?: boolean
   ): Promise<string> {
     // Don't attempt to broadcast from an unfunded contract
     if (!(await this.isFunded()))
@@ -162,7 +163,7 @@ export class Record extends BaseUtxPhiContract {
       (c) => "0x" + binToHex(c)
     );
 
-    // regardless of how many inputs, filter to two if more than two utxos are available
+    // regardless of how many inputs, filter to one if more than two utxos are available
     if (!utxos || utxos.length == 0) {
       const allUtxos = await this.getUtxos();
       if (allUtxos && allUtxos.length > 0) {
@@ -182,22 +183,27 @@ export class Record extends BaseUtxPhiContract {
     if (utxos && utxos.length == 1) {
       tx = tx.from(utxos);
       estimator = estimator.from(utxos);
-    }else{
+    } else {
       console.log(utxos)
-       throw("Cannot merge inputs");
+      throw ("Cannot merge inputs");
     }
 
-     const size = BigInt((
-       await estimator.withOpReturn(chunks).withHardcodedFee(669n).build()
-     ).length);
+    const size = BigInt((
+      await estimator.withOpReturn(chunks).withHardcodedFee(669n).build()
+    ).length);
 
-    tx =  tx
+    tx = tx
       .withOpReturn(chunks)
-      .withHardcodedFee(size/2n)
+      .withHardcodedFee(size / 2n)
       .withMinChange(1000n);
 
-    let txn  = await tx.send();
 
-    return txn.txid;
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
+    }
+    return txn;
   }
 }

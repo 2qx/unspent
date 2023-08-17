@@ -44,7 +44,12 @@
 	});
 </script>
 
-<div class="columns margins">
+<div class="margins">
+
+  <p>
+		An record contract allows recording an OP_RETURN message.
+	</p>
+
 	<!--Textfield
 		bind:value={maxFee}
 		on:change={() => createContract()}

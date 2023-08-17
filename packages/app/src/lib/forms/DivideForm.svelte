@@ -57,7 +57,9 @@
 </script>
 
 <div class="margins">
-
+	<p>
+		An divide contract splits any coins sent to it across multiple addresses.
+	</p>
 	{#each payees as payee, i}
 		<AddressOptional
 			bind:address={payee}

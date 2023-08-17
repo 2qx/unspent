@@ -33,13 +33,13 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 220n + 20n;
 
   constructor(
-    public period: bigint|number = 4000n,
+    public period: bigint | number = 4000n,
     public address: string,
-    public executorAllowance: bigint|number,
-    public decay: bigint|number,
+    public executorAllowance: bigint | number,
+    public decay: bigint | number,
     public options: ContractOptions = DefaultOptions
   ) {
-    
+
     let script: Artifact;
 
     let lock: Uint8Array;
@@ -95,7 +95,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
 
-    if (![0,1,2].includes(p.options.version))
+    if (![0, 1, 2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
 
     if (p.args.length != 4)
@@ -138,7 +138,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (![0,1,2].includes(p.options.version))
+    if (![0, 1, 2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
@@ -321,15 +321,28 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   async execute(
     exAddress?: string,
     fee?: bigint,
-    utxos?: Utxo[]
+    utxos?: Utxo[],
+    debug?: boolean
   ): Promise<string> {
     let currentValue = 0n;
+
+    // Filter to inputs of sufficient age
+    if (!utxos) utxos = await this.getUtxos(Number(this.period));
+
+    // If the contract is version 2 or higher, restrict to one input.
+    if (utxos) {
+      if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
+    }
+
     if (utxos && utxos?.length > 0) {
       currentValue = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       currentValue = await this.getBalance();
     }
-    if (currentValue == 0n) return "No funds on contract";
+    if (currentValue == 0n) {
+      if (debug) { currentValue = 10000n }
+      else { throw Error("No funds on contract"); }
+    }
 
     const fn = this.getFunction(Perpetuity.fn)!;
     let installment = (currentValue / BigInt(this.decay)) + 1n;
@@ -340,14 +353,14 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     newPrincipal += 3n;
 
     let to = []
-    if(this.options.version == 2 && installment < 1000){
+    if (this.options.version == 2 && installment < 1000) {
       to = [
         {
           to: this.address,
-          amount: installment+newPrincipal,
+          amount: installment + newPrincipal,
         }
       ];
-    }else{
+    } else {
       to = [
         {
           to: this.address,
@@ -368,16 +381,16 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         amount: executorFee,
       });
     let tx = fn();
-    
+
     if (utxos) tx = tx.from(utxos);
 
     const size = await tx!.to(to).withAge(Number(this.period)).withoutChange().build();
 
     if (exAddress) {
-      const minerFee = fee ? fee : BigInt(size.length / 2);
+      const minerFee = fee ? fee : BigInt(size);
 
       executorFee = BigInt(this.executorAllowance) - minerFee - 20n;
-      if(executorFee > DUST_UTXO_THRESHOLD){
+      if (executorFee > DUST_UTXO_THRESHOLD) {
         to.pop();
         to.push({
           to: exAddress,
@@ -389,7 +402,15 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    const payTx = await tx!.to(to).withAge(Number(this.period)).withoutChange().send();
-    return payTx.txid;
+    tx!.to(to).withAge(Number(this.period)).withoutChange();
+
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
+    }
+    return txn;
+
   }
 }

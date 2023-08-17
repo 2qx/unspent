@@ -8,6 +8,7 @@ import {
   Argument,
   Artifact,
   Contract as CashScriptContract,
+  Transaction,
   Utxo,
   NetworkProvider
 }
@@ -31,7 +32,8 @@ import {
   sum
 } from "./util.js";
 import { DELIMITER, PROTOCOL_ID, _PROTOCOL_ID } from "./constant.js";
-import { ParsedContractI } from "./interface.js"
+import { ParsedContractI, Network } from "./interface.js"
+import { buildAuthenticationTemplate, getBitauthUri } from "./template.js" 
 import { ContractOptions } from "cashscript/dist/interfaces.js";
 
 export class BaseUtxPhiContract {
@@ -218,8 +220,16 @@ export class BaseUtxPhiContract {
     return addr;
   }
 
-  async getUtxos(): Promise<Utxo[] | undefined> {
-    return await this.provider?.getUtxos(this.getAddress());
+  async getUtxos(ageFilter?:number): Promise<Utxo[] | undefined> {
+    if(ageFilter){
+      let utxos = await this.provider?.getUtxos(this.getAddress())
+      let blockHeight = await this.provider?.getBlockHeight()!
+      // @ts-ignore
+      return utxos?.filter(u => (blockHeight - u.height) > ageFilter)
+    } else{
+      return await this.provider?.getUtxos(this.getAddress());
+    }
+
   }
 
   getLockingBytecode(hex = true): string | Uint8Array {
@@ -265,6 +275,19 @@ export class BaseUtxPhiContract {
     } else {
       return opReturn;
     }
+  }
+
+  async asBitAuthUrl(transaction: Transaction | string, network?: Network){
+    const template =  await buildAuthenticationTemplate({
+      contract: this.contract, 
+      artifact: this.artifact, 
+      transaction: transaction, 
+      network: network,
+      manglePrivateKeys: false, 
+      includeSource:true
+    })
+
+    return getBitauthUri(template);
   }
 
   async isFunded(): Promise<boolean> {

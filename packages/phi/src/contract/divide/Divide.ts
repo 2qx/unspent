@@ -213,15 +213,28 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   async execute(
     exAddress?: string,
     fee?: bigint,
-    utxos?: Utxo[]
+    utxos?: Utxo[],
+    debug?: boolean
   ): Promise<string> {
     let balance = 0n;
+
+    // Populate a list of utxos
+    if (!utxos) utxos = await this.getUtxos();
+
+    // If the contract is version 2 or higher, restrict to one input.
+    if(utxos){
+      if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
+    }
+
     if (utxos && utxos?.length > 0) {
       balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       balance = await this.getBalance();
     }
-    if (balance == 0n) return "No funds on contract";
+    if (balance == 0n) {
+      if (debug) { balance = 10000n }
+      else { throw Error("No funds on contract"); }
+    }
 
     const fn = this.getFunction(Divide.fn)!;
     const distributedValue = balance - BigInt(this.executorAllowance);
@@ -255,8 +268,15 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
         });
     }
 
-    const txn = await fn().to(to).withoutChange().send();
+    let tx = fn()
+    tx.to(to).withoutChange();
 
-    return txn.txid;
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
+    }
+    return txn;
   }
 }

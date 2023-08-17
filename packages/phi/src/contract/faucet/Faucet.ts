@@ -13,17 +13,17 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   public static minPayout: bigint = 158n + DUST_UTXO_THRESHOLD + 10n;
 
   constructor(
-    public period: bigint|number = 1n,
-    public payout: bigint|number = 1000n,
-    public index: bigint|number = 1n,
+    public period: bigint | number = 1n,
+    public payout: bigint | number = 1000n,
+    public index: bigint | number = 1n,
     public options: ContractOptions = DefaultOptions
   ) {
     let script: Artifact;
     if (options.version === 2) {
       script = v2;
-    }else if (options.version === 1) {
+    } else if (options.version === 1) {
       script = v1;
-    }else if (options.version === 0) {
+    } else if (options.version === 0) {
       script = v0;
     } else {
       throw Error("Unrecognized Faucet Version");
@@ -46,12 +46,12 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(Faucet.c == p.code))
       throw "non-faucet serialized string passed to faucet constructor";
 
-    if (![0,1,2].includes(p.options.version))
+    if (![0, 1, 2].includes(p.options.version))
       throw Error("faucet contract version not recognized");
 
     if (p.args.length != 3)
       throw `invalid number of arguments ${p.args.length}`;
-    const [period, payout, index] = [...p.args.map((i) => parseBigInt(i) )];
+    const [period, payout, index] = [...p.args.map((i) => parseBigInt(i))];
 
     const faucet = new Faucet(period, payout, index, p.options);
     faucet.checkLockingBytecode(p.lockingBytecode);
@@ -70,7 +70,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (![0,1,2].includes(p.options.version))
+    if (![0, 1, 2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
@@ -165,15 +165,29 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   async execute(
     exAddress?: string,
     fee?: bigint,
-    utxos?: Utxo[]
+    utxos?: Utxo[],
+    debug?: boolean
   ): Promise<string> {
     let balance = 0n;
+
+    // Filter to inputs of sufficient age
+    if (!utxos) utxos = await this.getUtxos(Number(this.period));
+
+    // If the contract is version 2 or higher, restrict to one input.
+    if(utxos){
+      if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
+    }
+
+
     if (utxos && utxos?.length > 0) {
       balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       balance = await this.getBalance();
     }
-    if (balance == 0n) return "No funds on contract";
+    if (balance == 0n) {
+      if (debug) { balance = 10000n }
+      else { throw Error("No funds on contract"); }
+    }
 
     const fn = this.getFunction(Faucet.fn)!;
     let tx = fn();
@@ -182,12 +196,13 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     const minerFee = fee ? fee : 253n;
     let sendAmount = BigInt(this.payout) - minerFee;
 
-    const to = [
-      {
-        to: this.getAddress(),
-        amount: newPrincipal,
-      },
-    ];
+    const to = []
+
+    // if enough remains for an additional payout
+    if (balance > this.payout) to.push({
+      to: this.getAddress(),
+      amount: newPrincipal,
+    });
 
     if (exAddress)
       to.push({
@@ -197,8 +212,16 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
 
     const size = await tx.to(to).withAge(Number(this.period)).withoutChange().build();
     if (exAddress) {
+      
+      if(balance < this.payout){
+        sendAmount = balance;
+      }else{
+        sendAmount = BigInt(this.payout);
+      }
+
       const minerFee = fee ? fee : BigInt(size.length) / 2n;
-      sendAmount = BigInt(this.payout) - (minerFee + 10n);
+      sendAmount -= (minerFee + 10n)
+
       // remove the old executor amount
       // replace with new fee
       to.pop();
@@ -207,9 +230,19 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
         amount: sendAmount,
       });
     }
+    
     tx = fn();
     if (utxos) tx = tx.from(utxos);
-    const payTx = await tx.to(to).withAge(Number(this.period)).withoutChange().send();
-    return payTx.txid;
+    tx.to(to)
+    .withAge(Number(this.period))
+    .withoutChange();
+
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
+    }
+    return txn;
   }
 }

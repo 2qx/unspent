@@ -387,7 +387,8 @@ export class QueryCommand extends NetworkCommand {
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
     let limit = !this.limit ? undefined : parseInt(this.limit);
     let offset = !this.offset ? undefined : parseInt(this.offset);
-    let hexRecords = await getRecords(chaingraph, prefix, node, limit, offset);
+    let exclude = "6a047574786f014d0101"
+    let hexRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
     //console.log(`Found ${hexRecords.length} records`);
     //hexRecords.map((s: string) => console.log(s));
     let contracts = [];

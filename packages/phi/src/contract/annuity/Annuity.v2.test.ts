@@ -93,10 +93,10 @@ describe(`Annuity Class Tests`, () => {
 
     const options = { version: 2, network: "regtest" };
     const p1 = new Annuity(
-      1n,
+      0n,
       bob.getDepositAddress(),
-      10000n,
-      Annuity.minAllowance+40n,
+      5000n,
+      1500n,
       options
     );
 
@@ -105,22 +105,23 @@ describe(`Annuity Class Tests`, () => {
     await alice.send([
       {
         cashaddr: p1.getAddress(),
-        value: 1000000,
+        value: 19500,
+        unit: "satoshis",
+      },
+      {
+        cashaddr: p1.getAddress(),
+        value: 13000,
         unit: "satoshis",
       },
     ]);
 
     for (let x = 0; x < 5; x++) {
-      
-      await mine({
-        cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
-        blocks: 2,
-      });
       await p1.execute(charlie.getDepositAddress());
     }
-    expect(await charlie.getBalance("sat")).toBeGreaterThan(2759);
-    expect(await bob.getBalance("sat")).toBe(50000);
+
+    expect(await charlie.getBalance("sat")).toBeGreaterThan(4000);
+    expect(await bob.getBalance("sat")).toBe(25000);
     expect(p1.isTestnet()).toEqual(true);
-    expect(await p1.getBalance()).toBeGreaterThan(900000);
+    expect(await p1.getBalance()).toBe(0n);
   });
 });

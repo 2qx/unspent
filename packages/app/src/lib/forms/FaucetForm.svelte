@@ -45,6 +45,10 @@
 </script>
 
 <div class="margins">
+  <p>
+		An faucet contract pays some amount to anyone after the period has elapsed.
+	</p>
+
 	<Textfield
 		bind:value={payout}
 		on:change={() => createContract()}

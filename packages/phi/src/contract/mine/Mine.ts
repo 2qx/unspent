@@ -216,6 +216,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     exAddress?: string,
     fee?: bigint,
     utxos?: Utxo[],
+    debug?: boolean,
     nonce?: string | Uint8Array,
     verbose = false
   ): Promise<string> {
@@ -284,12 +285,18 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
     await this.provider?.connectCluster();
     tx = fn(canaryHex)!;
     if (utxos) tx = tx.from(utxos);
-    const payTx = await tx
-      .withOpReturn(chunks)
+    tx.withOpReturn(chunks)
       .to(to)
       .withAge(Number(this.period))
-      .withoutChange()
-      .send();
-    return payTx.txid;
+      .withoutChange();
+
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
+    }
+    return txn;
+
   }
 }

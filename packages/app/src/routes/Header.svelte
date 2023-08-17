@@ -37,8 +37,8 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li class:active={$page.url.pathname.startsWith('/create')}>
-				<a href="{base}/create">Create</a>
+			<li class:active={$page.url.pathname.startsWith('/docs')}>
+				<a href="{base}/docs">Docs</a>
 			</li>
 			<li class:active={$page.url.pathname === '/earn'}>
 				<a href="{base}/earn">Earn</a>

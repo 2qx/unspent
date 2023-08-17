@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>Create</title>
+	<title>Unspent Phi</title>
 	<meta name="description" content="Create unspent contracts" />
 </svelte:head>
 
