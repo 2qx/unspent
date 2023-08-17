@@ -133,7 +133,8 @@ export const buildAuthenticationTemplate = async ({
 
   return {
     $schema: "https://ide.bitauth.com/authentication-template-v0.schema.json",
-    description: `Imported from cashscript${
+    description: `// Imported from cashscript 
+    ${
       includeSource ? artifact.source : ""
     }`,
     name: artifact.contractName,

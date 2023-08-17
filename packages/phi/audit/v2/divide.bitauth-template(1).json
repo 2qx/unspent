@@ -1,0 +1,113 @@
+{
+  "$schema": "https://ide.bitauth.com/authentication-template-v0.schema.json",
+  "description": "// Imported from cashscript \n    pragma cashscript ^0.8.1;\n  //\n  //  ** AUTOMATICALLY GENEREATED ** see: phi/script/divide.v2.js\n  //\n  // This is an experimental divider contract\n  // Splits input across a range of predetermined outputs\n  // Beta stage\n  contract Divide(\n      // allowance for party executing the contract\n      int executorAllowance,\n      // number of outputs receiving payout\n      int divisor,\n\n      // for each beneficiary, take the LockingBytecode as input\n      bytes r0LockingBytecode,\n      bytes r1LockingBytecode\n  ) {\n      function execute() {\n\n        // distributes to each output in order\n        require(tx.outputs[0].lockingBytecode == r0LockingBytecode);\n        require(tx.outputs[1].lockingBytecode == r1LockingBytecode);\n        \n        // Limit to a single utxo input\n        require(tx.inputs.length == 1);\n\n        // Get the value of the input\n        int currentValue = tx.inputs[this.activeInputIndex].value;\n\n        // Value paid to beneficiaries, minus executor allowance\n        int distributedValue = currentValue - executorAllowance;\n\n        // Value paid to each beneficiary\n        int distribution = distributedValue / divisor;\n\n        // each output must be greater or equal to the distribution amount\n        require(tx.outputs[0].value >= distribution);\n        require(tx.outputs[1].value >= distribution);\n      }\n  }",
+  "name": "Divide",
+  "entities": {
+    "parameters": {
+      "description": "Contract creation and function parameters",
+      "name": "parameters",
+      "scripts": [
+        "lock",
+        "unlock_lock"
+      ],
+      "variables": {
+        "function_index": {
+          "description": "Script function index to execute",
+          "name": "function_index",
+          "type": "WalletData"
+        },
+        "r1_locking_bytecode": {
+          "description": "\"r1LockingBytecode\" parameter of this contract",
+          "name": "r1LockingBytecode",
+          "type": "WalletData"
+        },
+        "r0_locking_bytecode": {
+          "description": "\"r0LockingBytecode\" parameter of this contract",
+          "name": "r0LockingBytecode",
+          "type": "WalletData"
+        },
+        "divisor": {
+          "description": "\"divisor\" parameter of this contract",
+          "name": "divisor",
+          "type": "WalletData"
+        },
+        "executor_allowance": {
+          "description": "\"executorAllowance\" parameter of this contract",
+          "name": "executorAllowance",
+          "type": "WalletData"
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "evaluate_function": {
+      "data": {
+        "bytecode": {
+          "function_index": "0",
+          "r1_locking_bytecode": "0x76a914b4a3d03ef9c850b7a698f420e4001ceec190c85388ac",
+          "r0_locking_bytecode": "0x76a9145ad61b729b4170216bf57cd02c606ca52d13b89a88ac",
+          "divisor": "0x02",
+          "executor_allowance": "0xb004"
+        },
+        "currentBlockHeight": 2,
+        "currentBlockTime": 1692281739,
+        "keys": {
+          "privateKeys": {}
+        }
+      },
+      "description": "An example evaluation where this script execution passes.",
+      "name": "Evaluate",
+      "transaction": {
+        "inputs": [
+          {
+            "outpointIndex": 1,
+            "outpointTransactionHash": "f7147f1aa978f6ddb6a0599e9cc6a7bdcd9fd9e5cdf4d2e600648e49fdf4ed4f",
+            "sequenceNumber": 4294967294,
+            "unlockingBytecode": [
+              "slot"
+            ]
+          }
+        ],
+        "locktime": 215,
+        "outputs": [
+          {
+            "lockingBytecode": "76a9145ad61b729b4170216bf57cd02c606ca52d13b89a88ac",
+            "valueSatoshis": 20001
+          },
+          {
+            "lockingBytecode": "76a914b4a3d03ef9c850b7a698f420e4001ceec190c85388ac",
+            "valueSatoshis": 20001
+          }
+        ],
+        "version": 2
+      },
+      "sourceOutputs": [
+        {
+          "lockingBytecode": [
+            "slot"
+          ],
+          "valueSatoshis": 41200
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "unlock_lock": {
+      "passes": [
+        "evaluate_function"
+      ],
+      "name": "unlock",
+      "script": "// \"execute\" function parameters\n// none\n\n// \"Divide\" contract constructor parameters\n<r1_locking_bytecode> // bytes25 = <0x76a914b4a3d03ef9c850b7a698f420e4001ceec190c85388ac>\n<r0_locking_bytecode> // bytes25 = <0x76a9145ad61b729b4170216bf57cd02c606ca52d13b89a88ac>\n<divisor> // int = <0x02>\n<executor_allowance> // int = <0xb004>",
+      "unlocks": "lock"
+    },
+    "lock": {
+      "lockingType": "p2sh32",
+      "name": "lock",
+      "script": "OP_0\nOP_OUTPUTBYTECODE\nOP_3\nOP_ROLL\nOP_EQUALVERIFY\nOP_1\nOP_OUTPUTBYTECODE\nOP_3\nOP_ROLL\nOP_EQUALVERIFY\nOP_TXINPUTCOUNT\nOP_1\nOP_NUMEQUALVERIFY\nOP_INPUTINDEX\nOP_UTXOVALUE\nOP_SWAP\nOP_SUB\nOP_SWAP\nOP_DIV\nOP_0\nOP_OUTPUTVALUE\nOP_OVER\nOP_GREATERTHANOREQUAL\nOP_VERIFY\nOP_1\nOP_OUTPUTVALUE\nOP_LESSTHANOREQUAL"
+    }
+  },
+  "supported": [
+    "BCH_SPEC"
+  ],
+  "version": 0
+}
