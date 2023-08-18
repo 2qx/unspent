@@ -31,12 +31,19 @@ pragma cashscript ^0.8.0;
 //
 // Perpetuity: fractional payments at regular intervals using rolling timelocks.
 //
-// [ ] BIP-68 timelocks were introducted in version 2 transactions, enforce versions.
+// [ ] BIP-68 timelocks were introduced in version 2 transactions, enforce versions.
 // [ ] The input must have aged for a predefined number of blocks (the period)
 // [ ] All utxos must be processed atomically. One coin per tx, no merging.
+//     Calculate the installment
 // [ ] Require the first output is to the receipt.
-// [ ] If installment is greater than 1000 sats, send the remainder back to the contract,
-// [ ] Otherwise, liquidate the contract via a balloon payment to the recipient.
+// If installment is greater than 1000 sats
+//   [ ] require the installment is paid,
+//   calculate the remainder value
+//   [ ] return the remainder,
+//   [ ] to the contract
+// Otherwise, 
+//   calculate the balloon payment amount
+//   [ ] require the receipt receive the balloon payment.
 //
 // 
 // String & op_return serializations:
@@ -99,7 +106,7 @@ contract Perpetuity(
     int returnedValue = currentValue - installment - executorAllowance;
     
     // require the second output match the active bytecode
-    require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
+    require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
     
     // balance was returned to the contract
     require(tx.outputs[1].value >= returnedValue);
@@ -133,10 +140,14 @@ pragma cashscript ^0.8.1;
 //
 // Faucet: pay to anyone at intervals using rolling timelocks.
 // 
-// - The input must have aged for a predefined number of blocks (the period)
-// - All utxos must be processed atomically. One coin per tx, no merging.
-// - If enough funds exist for future payout, send the remainder back to the contract,
-// - Otherwise, allow liquidation of the contract via a balloon payment to the recipient.
+// [ ] Require a version 2 transaction.
+// [ ] The input must have aged for a predefined number of blocks (the period)
+// [ ] All utxos must be processed atomically. One input per tx, no merging.
+// If enough funds exist for future payout, 
+//       [ ] calculate the value to be returned minus payout,
+//       [ ] send the remainder back to the faucet.
+// Otherwise, 
+//       [ ] allow unrestricted liquidation
 // 
 // Implementation notes: contract requires 32-byte locking bytecode style address.
 // 
@@ -190,7 +201,7 @@ contract Faucet(
       require(tx.outputs[0].value >= returnedValue);
       
       // require the first output to match the active bytecode
-      require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
+      require(tx.outputs[0].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
 
     } // otherwise output is unrestricted.
 
@@ -328,8 +339,14 @@ pragma cashscript ^0.8.1;
 // [ ] Spending transaction must use version 2.
 // [ ] The input must have aged for a predefined number of blocks (the period)
 // [ ] All utxos must be processed atomically. One coin per tx, no merging.
-// [ ] If enough funds exist for future payments, send the remainder back to the contract,
-// [ ] Otherwise, liquidate the contract via a balloon payment to the recipient.
+// [ ] Require the first payment be sent to the receipt
+// If enough funds exist for future payments, 
+//    [ ] calculate the remainder value
+//    [ ] send the installment to the receipt
+//    [ ] send the remainder back to the contract
+// Otherwise, 
+//    [ ] calculate a balloon payment
+//    [ ] require the payment to recipient exceed the ballon amount.
 // 
 // Implementation notes: contract requires 32-byte locking bytecode style address.
 // 
@@ -385,7 +402,7 @@ contract Annuity(
       require(tx.outputs[0].value >= installment);
 
       // require the second output to match the active bytecode
-      require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
+      require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
       require(tx.outputs[1].value >= returnedValue);
     } 
     // Otherwise, send a final balloon payment instead of a partial payment

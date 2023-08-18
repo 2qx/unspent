@@ -47,7 +47,9 @@
 				<a href="{base}/earn">Earn</a>
 			</li>
 			<li class:active={$page.url.pathname === '/settings'}>
-				<a href="{base}/settings">Settings</a>
+				<a class="settings" href="{base}/settings">
+          <img src="{base}/icons/gear-fill.svg" alt="Settings" />
+        </a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -118,6 +120,8 @@
 		height: 2em;
 		object-fit: contain;
 	}
+
+
 
 	nav {
 		display: flex;

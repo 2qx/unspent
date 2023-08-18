@@ -6,10 +6,14 @@ pragma cashscript ^0.8.1;
 //
 // Faucet: pay to anyone at intervals using rolling timelocks.
 // 
-// - The input must have aged for a predefined number of blocks (the period)
-// - All utxos must be processed atomically. One coin per tx, no merging.
-// - If enough funds exist for future payout, send the remainder back to the contract,
-// - Otherwise, allow liquidation of the contract via a balloon payment to the recipient.
+// [ ] Require a version 2 transaction.
+// [ ] The input must have aged for a predefined number of blocks (the period)
+// [ ] All utxos must be processed atomically. One input per tx, no merging.
+// If enough funds exist for future payout, 
+//       [ ] calculate the value to be returned minus payout,
+//       [ ] send the remainder back to the faucet.
+// Otherwise, 
+//       [ ] allow unrestricted liquidation
 // 
 // Implementation notes: contract requires 32-byte locking bytecode style address.
 // 
@@ -63,7 +67,6 @@ contract Faucet(
       require(tx.outputs[0].value >= returnedValue);
       
       // require the first output to match the active bytecode
-//      require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
       require(tx.outputs[0].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
 
     } // otherwise output is unrestricted.
