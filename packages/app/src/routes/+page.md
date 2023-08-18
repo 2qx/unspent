@@ -7,11 +7,11 @@ layout: splash
 <title>Unspent Phi</title>
 </svelte:head>
 
-# How-To Unspent Your Coins
+# How-To `Unspent` 
 
->   Rich people get money and don't spend it.
+>   **Get money and don't spend it.**
 
-If a rich person is defined as someone who made money and didn't spend it, then the goal of this tool is to make **everyone rich**. It works by giving anyone in the world access to a method to save money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
+The goal of this app is to let anyone in the world save money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
 
 There are no fiat prices, no markets. Nothing is traded. All contracts are single party. Contracts do not co-mingle funds, nor do they rely on outside data.
 
@@ -41,17 +41,17 @@ The highlighted values (Alice's address, the time frame, rate etc.) determine th
 
 Several standard plans are available paying at regular intervals that each last for several decades. The parameters can be adjusted under the advanced settings.
 
-The "Show Schedule" button should give a rough indication of how long it will day for the contract to pay out completely.
+The "Show Schedule" button should give a rough indication of how long it will take for the contract to pay out completely.
 
 ## Publish your Plan
 
-Once your plan looks right, hit the publish button. 
+Once your plan looks right, hit the "Broadcast" button. 
 
 ![broadcast](images/broadcast.png "Broadcast Button")
 
 This action should publish the details of the contract, including the parameters to unlock it and a checksum.
 
-You can verify in a block explorer that the details were recorded.  The code linked to from the publish button should match the *Serialized OpReturn* of your contract.
+You can verify in a block explorer that the details were recorded.  The data shown on the publish transaction should match the *Serialized OpReturn* of your contract.
 
 ## Fund your Contract
 

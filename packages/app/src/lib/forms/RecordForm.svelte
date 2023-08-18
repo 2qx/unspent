@@ -47,7 +47,7 @@
 <div class="margins">
 
   <p>
-		An record contract allows recording an OP_RETURN message.
+		A record contract allows recording an OP_RETURN message.
 	</p>
 
 	<!--Textfield

@@ -46,7 +46,7 @@
 
 <div class="margins">
   <p>
-		An faucet contract pays some amount to anyone after the period has elapsed.
+		A faucet contract pays some amount to anyone after the period has elapsed.
 	</p>
 
 	<Textfield
