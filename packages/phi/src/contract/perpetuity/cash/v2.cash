@@ -74,7 +74,7 @@ contract Perpetuity(
     int returnedValue = currentValue - installment - executorAllowance;
     
     // require the second output match the active bytecode
-    require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
+    require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
     
     // balance was returned to the contract
     require(tx.outputs[1].value >= returnedValue);

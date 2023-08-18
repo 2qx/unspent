@@ -63,7 +63,8 @@ contract Faucet(
       require(tx.outputs[0].value >= returnedValue);
       
       // require the first output to match the active bytecode
-      require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
+//      require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
+      require(tx.outputs[0].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
 
     } // otherwise output is unrestricted.
 

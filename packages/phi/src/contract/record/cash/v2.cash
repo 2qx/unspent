@@ -62,6 +62,8 @@ contract Record(int maxFee, int index) {
   if(newValue >= 1000){
     require(tx.outputs[1].lockingBytecode == tx.inputs[0].lockingBytecode);
     require(tx.outputs[1].value >= newValue);    
-  }  // otherwise, allow balance to be spent in an unrestricted manner.
+  }  
+  // else{}
+  //    allow balance to be spent in an unrestricted manner.
  }
 }

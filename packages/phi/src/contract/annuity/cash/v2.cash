@@ -66,7 +66,7 @@ contract Annuity(
       require(tx.outputs[0].value >= installment);
 
       // require the second output to match the active bytecode
-      require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH32(hash256(this.activeBytecode)));
+      require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
       require(tx.outputs[1].value >= returnedValue);
     } 
     // Otherwise, send a final balloon payment instead of a partial payment

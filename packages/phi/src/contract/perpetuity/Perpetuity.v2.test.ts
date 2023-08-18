@@ -17,7 +17,7 @@ describe(`Perpetuity Class Tests`, () => {
     );
     expect(p.toString()).toContain(chk);
     expect(p.toString()).toEqual(
-      "P,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1500,12,aa2041937540056af58d5b195860c75a225f68a5c117c8d2058cc93f2392b5e1819187"
+      "P,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1000,12,aa20ff9c96d932a8455160b0496865974c461455b685b46bb4aff254f037cfdebb2387"
     );
 
     const p2 = Perpetuity.fromString(p.toString());
@@ -65,7 +65,7 @@ describe(`Perpetuity Class Tests`, () => {
   });
 
   test("Should pay a Perpetuity, to completion", async () => {
-    const alice = await getAnAliceWallet(13000);
+    const alice = await getAnAliceWallet(101000);
     const bob = await RegTestWallet.newRandom();
     const charlie = await RegTestWallet.newRandom();
 
@@ -82,21 +82,21 @@ describe(`Perpetuity Class Tests`, () => {
     await alice.send([
       {
         cashaddr: p1.getAddress(),
-        value: 12000,
+        value: 14000,
         unit: "satoshis",
       },
     ]);
 
 
-    for (let x = 0; x < 3; x++) {
+    for (let x = 0; x < 4; x++) {
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
       await p1.execute(charlie.getDepositAddress());
     }
-    expect(await charlie.getBalance("sat")).toBeGreaterThan(2000);
-    expect(await bob.getBalance("sat")).toBeGreaterThan(9000);
+    expect(await charlie.getBalance("sat")).toBeGreaterThan(1710);
+    expect(await bob.getBalance("sat")).toBeGreaterThan(10000);
     expect(p1.isTestnet()).toEqual(true);
     expect(await p1.getBalance()).toBe(0n);
   });

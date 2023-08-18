@@ -293,7 +293,6 @@ describe(`Divide Class Tests`, () => {
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     let link = await d1.execute(undefined, undefined, undefined, true);
-    console.log(link)
     expect(link.length).toBeGreaterThan(100);
 
   });

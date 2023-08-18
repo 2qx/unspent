@@ -9,7 +9,7 @@ layout: splash
 
 # How-To `Unspent` 
 
->   **Get money and don't spend it.**
+>   **Get money, don't spend all of it.**
 
 The goal of this app is to let anyone in the world save money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
 

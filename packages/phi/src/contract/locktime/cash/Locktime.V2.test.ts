@@ -13,7 +13,7 @@ import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe.skip(`TimeLock Tests`, () => {
   test("Should not pay before time is met, but should pay at time", async () => {
-    expect.assertions(4);
+    
     let regTest = new ElectrumCluster(
       "CashScript Application",
       "1.4.1",
@@ -34,11 +34,11 @@ describe.skip(`TimeLock Tests`, () => {
     if (typeof lock === "string") throw lock;
     let bytecode = lock.bytecode;
     let executorAllowance = 1200n;
-    let period = 51n;
+    let period = 11n;
     let contract = new Contract(
       v2 as Artifact,
       [period, bytecode, executorAllowance],
-      {provider: regtestNetwork, addressType: 'p2sh20'}
+      { provider: regtestNetwork, addressType: 'p2sh20' }
     );
 
     // fund the contract
@@ -53,26 +53,21 @@ describe.skip(`TimeLock Tests`, () => {
 
     await mine({
       cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
-      blocks: 50,
+      blocks: 10,
     });
 
     let balance = await contract.getBalance();
-    //try {
       let fn = contract.functions["execute"]!();
 
-      // now += period;
-      await fn
-        .to([
-          { to: bob.getDepositAddress(), amount: balance - executorAllowance },
-          { to: charlie.getDepositAddress(), amount: DUST_UTXO_THRESHOLD },
-        ])
-        .withAge(Number(period))
-        .withoutChange()
-        .send();
+    await fn
+      .to([
+        { to: bob.getDepositAddress(), amount: balance - executorAllowance },
+        { to: charlie.getDepositAddress(), amount: DUST_UTXO_THRESHOLD },
+      ])
+      .withoutChange()
+      .send();
 
-    // } catch (e: any) {
-    //   expect(e.message).toContain("non-BIP68-final (code 64)");
-    // }
+
     await mine({
       cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
       blocks: 1,
@@ -89,7 +84,7 @@ describe.skip(`TimeLock Tests`, () => {
       .withoutChange()
       .send();
 
-      expect((await charlie.getBalance('sat'))).toBe(Number(546))
-      expect((await bob.getBalance('sat'))).toBe(Number(balance - executorAllowance))
+    expect((await charlie.getBalance('sat'))).toBe(Number(546))
+    expect((await bob.getBalance('sat'))).toBe(Number(balance - executorAllowance))
   });
 });

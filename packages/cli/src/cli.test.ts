@@ -70,8 +70,8 @@ describe(`Text annuity`, () => {
 
     // 
     let ex = `# Annuity paying 1200 (sat), every 4000 blocks, after a 3400 (sat) executor allowance
-# A,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1200,3400,aa2035f2176a7724e10559b7af260b6d6604454a8405b08c12682186cc7a028fcdbf87
-address:        bchreg:pv6ly9m2wujwzp2ek7hjvzmdvczy2j5yqkcgcyngyxrvc7sz3lxm7dz88kksc`
+# A,2,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,1200,3400,aa20260865a3a45a8fe581afd9a6edcf1393f8ffbf5745957ea56f8f55290d76f94987
+address:        bchreg:pvnqsedr53dglevp4lv6dmw0zwfl3lal2aze2l49d78422gdwmu5jse3yjw8t`
     let r = await mockCall(["annuity", "--regtest",  "--address", "bchreg:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwus03a55xe", "--installment", "1200"])
     expect(r[0][0]).toContain(ex);
   });
@@ -80,8 +80,8 @@ address:        bchreg:pv6ly9m2wujwzp2ek7hjvzmdvczy2j5yqkcgcyngyxrvc7sz3lxm7dz88
   test("Should print info for default faucet", async () => {
 
     let ex = `# A faucet paying 1000 (sat), every 1 blocks
-# F,2,1,1000,1,aa205b32a1e19713024fa8a4b03cccf741b37c51578da95627a0186617745a86206687
-address:        bchreg:pddn9g0pjufsynag5jcren8hgxehc52h3k54vfaqrpnpwaz6scsxvtst9f8hn`
+# F,2,1,1000,1,aa20b82311b5239c9d29a011d3a9603a7cf519b49bdbfd8dac90484f82793f8a6cf187
+address:        bchreg:pwuzxyd4ywwf62dqz8f6jcp60n63ndymm07cmtysfp8cy7fl3fk0zggt3v33n`
     let r = await mockCall(["faucet", "--regtest"])
     expect(r[0][0]).toContain(ex);
   });
@@ -96,11 +96,11 @@ address:        bchreg:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwus03a55xe`
 
   });
 
-  test("Should show info for v1 regtest faucet", async () => {
+  test("Should show info for v2 regtest faucet", async () => {
 
     let ex = `# A faucet paying 1000 (sat), every 1 blocks
-# F,2,1,1000,1,aa205b32a1e19713024fa8a4b03cccf741b37c51578da95627a0186617745a86206687
-address:        bchreg:pddn9g0pjufsynag5jcren8hgxehc52h3k54vfaqrpnpwaz6scsxvtst9f8hn`
+# F,2,1,1000,1,aa20b82311b5239c9d29a011d3a9603a7cf519b49bdbfd8dac90484f82793f8a6cf187
+address:        bchreg:pwuzxyd4ywwf62dqz8f6jcp60n63ndymm07cmtysfp8cy7fl3fk0zggt3v33n`
     let r = await mockCall(["faucet", "--regtest"])
     expect(r[0][0]).toContain(ex);
 

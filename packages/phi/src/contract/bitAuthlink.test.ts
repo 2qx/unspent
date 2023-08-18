@@ -29,7 +29,7 @@ describe(`Generate BitAuth Links Tests`, () => {
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     let link = await d1.execute(undefined, undefined, undefined, true);
-    console.log(link)
+    //console.log(link)
     expect(link.length).toBeGreaterThan(100);
 
   });
@@ -60,7 +60,7 @@ describe(`Generate BitAuth Links Tests`, () => {
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     let link = await d1.execute(undefined, undefined, undefined, true);
-    console.log(link)
+    //console.log(link)
     expect(link.length).toBeGreaterThan(100);
 
   });
@@ -77,18 +77,13 @@ describe(`Generate BitAuth Links Tests`, () => {
         cashaddr: d1.getAddress(),
         value: 41200,
         unit: "sat",
-      },
-      {
-        cashaddr: d1.getAddress(),
-        value: 41200,
-        unit: "sat",
-      },
+      }
     ]);
 
     expect(await d1.getBalance()).toBeGreaterThan(100);
 
     let link = await d1.execute(undefined, undefined, undefined, true);
-    console.log(link)
+    //console.log(link)
     expect(link.length).toBeGreaterThan(100);
 
   });
