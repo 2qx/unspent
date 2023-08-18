@@ -37,6 +37,9 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
+      <li class:active={$page.url.pathname === '/create'}>
+				<a href="{base}/create">Create</a>
+			</li>
 			<li class:active={$page.url.pathname.startsWith('/documentation')}>
 				<a href="{base}/documentation">Docs</a>
 			</li>
