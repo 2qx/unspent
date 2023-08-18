@@ -84,7 +84,11 @@
 		if (instance) balance = await instance.getBalance();
 		isFunded = balance > 0 ? true : false;
 		if (bitauth.length==0) {
-			bitauth = await instance.execute(undefined, undefined, undefined, true);
+      try{
+        bitauth = await instance.execute(undefined, undefined, undefined, true);
+      }catch (e){
+        // pass
+      }
 		}
 		if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
 			if (showSeries) {

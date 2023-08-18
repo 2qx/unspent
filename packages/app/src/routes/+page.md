@@ -7,13 +7,17 @@ layout: splash
 <title>Unspent Phi</title>
 </svelte:head>
 
->   Rich people got money and didn't spend it.
+# How-To Unspent Your Coins
 
-If a rich person is defined as someone who made money and didn't spend it, then the goal of this app is to make **everybody** that uses it  **rich**. It works by giving anyone in the world access to a method to save money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
+>   Rich people get money and don't spend it.
 
-There are no fiat prices, no markets. Nothing is traded. All contracts are single party and do not co-mingle funds. Nor do contracts rely on outside data.
+If a rich person is defined as someone who made money and didn't spend it, then the goal of this tool is to make **everyone rich**. It works by giving anyone in the world access to a method to save money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
 
-# Get some Bitcoin Cash
+There are no fiat prices, no markets. Nothing is traded. All contracts are single party. Contracts do not co-mingle funds, nor do they rely on outside data.
+
+Anyone can put their own money in and get the same money back over time. 
+
+## Get some Bitcoin Cash
 
 Get a wallet that can hold Bitcoin Cash with a private key or secret you keep and control. There are [dozens of great open-source wallets](https://awesomebitcoin.cash/#open-source-wallets) that can hold, sign and send Bitcoin Cash, but Unspent.app simply isn't one of those wallets (it's in a browser) so it doesn't hold user funds.
 
@@ -23,7 +27,7 @@ Once you have a Bitcoin Cash wallet, find some way to add some funds to your wal
 
 Any funds sent to the deposit address at an exchange or third-party institution that represent some stake or interest in as a ledger entry in an omnibus account should be assumed lost forever. (Apps that hold user funds in omnibus (grouped) accounts, are not even custodial)
 
-# Design a Plan
+## Design your Plan
 
 The Unspent Phi Perpetuity contract is like a clear drop safe with a simple crank lever.
 
@@ -35,7 +39,11 @@ Below is a simplified example for Alice's contract:
 
 The highlighted values (Alice's address, the time frame, rate etc.) determine the specific locking code for Alice's contract, and therefore the address. 
 
-# Publish the Plan
+Several standard plans are available paying at regular intervals that each last for several decades. The parameters can be adjusted under the advanced settings.
+
+The "Show Schedule" button should give a rough indication of how long it will day for the contract to pay out completely.
+
+## Publish your Plan
 
 Once your plan looks right, hit the publish button. 
 
@@ -43,9 +51,28 @@ Once your plan looks right, hit the publish button.
 
 This action should publish the details of the contract, including the parameters to unlock it and a checksum.
 
-You may verify in a block explorer that the details were recorded. 
+You can verify in a block explorer that the details were recorded.  The code linked to from the publish button should match the *Serialized OpReturn* of your contract.
 
-# Fund your contract
+## Fund your Contract
 
-That's it. You won!
+Once you have your contract published, it's time to fund it. 
 
+Here, you have to decide what amount of money you'd be okay losing; or conversely, how much you'd still like to have if you lost everything.
+
+The contract doesn't need to be funded entirely in one transaction. A small trial amount may be tested to see that the contract functions as intended and to the correct address before being funded with a larger amount. 
+
+If you selected a monthly contract, the first payment will be available the following month. A weekly contract would be spendable one week after the first input.
+
+Funds sent to the contract are not mixed or combined with others. So if ten different deposits are sent to a monthly contract for a year, the contract will payout 10 times a month. A hundred individual payments funding a weekly contract will result in a hundred payments a week, etc.
+
+THE END. [click here to proceed.](/create)
+
+
+
+
+
+
+
+
+
+.

@@ -251,7 +251,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress) {
       to.push({
         to: exAddress,
-        amount: 546n,
+        amount: 577n,
       });
 
       const size = await fn().to(to).withoutChange().build();
