@@ -208,7 +208,7 @@
 		</Wrapper>
 
 		<Wrapper>
-			<AddressQrDialog codeValue={instance.getAddress()} />
+			<AddressQrDialog codeValue={instance.getAddress()} lockingBytecode={instance.getLockingBytecode()} />
 			<Tooltip>Show qr code</Tooltip>
 		</Wrapper>
 
