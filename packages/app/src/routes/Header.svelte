@@ -72,7 +72,7 @@
 
 	.alpha {
 		width: 100%;
-		background-color: rgb(255, 0, 64);
+		background-color: rgb(225, 0, 255);
 		font-weight: 900;
 		font-size: x-large;
 		min-height: 50px;
