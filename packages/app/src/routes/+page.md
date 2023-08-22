@@ -43,6 +43,7 @@ Several standard plans are available paying at regular intervals that each last 
 
 The "Show Schedule" button should give a rough indication of how long it will take for the contract to pay out completely.
 
+<<<<<<< HEAD
 ![sample schedule](images/schedule.png "Show Schedule")
 
 ## Publish your Plan
@@ -68,6 +69,32 @@ If you selected a monthly contract, the first payment will be available the foll
 Funds sent to the contract are not mixed or combined with others. So if ten different deposits are sent to a monthly contract for a year, the contract will payout 10 times a month. A hundred individual payments funding a weekly contract will result in a hundred payments a week, etc.
 
 THE END. [click here to proceed.](/create)
+=======
+## Publish your Plan
+
+Once your plan looks right, hit the "Broadcast" button. 
+
+![broadcast](images/broadcast.png "Broadcast Button")
+
+This action should publish the details of the contract, including the parameters to unlock it and a checksum.
+
+You can verify in a block explorer that the details were recorded.  The data shown on the publish transaction should match the *Serialized OpReturn* of your contract.
+
+## Fund your Contract
+
+Once you have your contract published, it's time to fund it. 
+
+Here, you have to decide what amount of money you'd be okay losing; or conversely, how much you'd still like to have if you lost everything.
+
+The contract doesn't need to be funded entirely in one transaction. A small trial amount may be tested to see that the contract functions as intended and to the correct address before being funded with a larger amount. 
+
+If you selected a monthly contract, the first payment will be available the following month. A weekly contract would be spendable one week after the first input.
+
+Funds sent to the contract are not mixed or combined with others. So if ten different deposits are sent to a monthly contract for a year, the contract will payout 10 times a month. A hundred individual payments funding a weekly contract will result in a hundred payments a week, etc.
+
+THE END. [click here to proceed.](/create)
+
+>>>>>>> main
 
 
 
@@ -76,5 +103,8 @@ THE END. [click here to proceed.](/create)
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 .
