@@ -17,7 +17,7 @@
 	</div>
 {:else}
 	<div class="alpha">
-		This app is in development.<br/>
+		Beta
 	</div>
 {/if}
 
@@ -75,7 +75,7 @@
 		background-color: rgb(255, 0, 64);
 		font-weight: 900;
 		font-size: x-large;
-		min-height: 150px;
+		min-height: 50px;
 
 		color: white;
 		text-align: center;
