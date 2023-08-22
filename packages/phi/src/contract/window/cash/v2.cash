@@ -1,7 +1,7 @@
-pragma cashscript ^0.7.2;
+pragma cashscript ^0.8.0;
 
 contract Window(
-  // deposit rate in sat per coin per sat
+  // deposit rate in sat per coin per block
   int rate // 
 ) {
 
@@ -30,9 +30,9 @@ contract Window(
         int vaultRemainder = bankValue-coupon;
 
         // calculate the deposit script
-        bytes depositScript = bytes(locktime) + 0xb17576a9 +bytes(recipientLockingBytecode) + 0x88ac;
+        bytes depositScript = bytes(locktime) + bytes4(1200) + bytes(recipientLockingBytecode) + 0xb175c3519d00cd88c0c67c9400cca1;
 
-        bytes depositLock = new LockingBytecodeP2SH(hash160(depositScript));
+        bytes depositLock = new LockingBytecodeP2SH32(hash256(depositScript));
         require(tx.outputs[0].lockingBytecode == depositLock);
         require(tx.outputs[0].value <= maturity);
 
@@ -47,7 +47,7 @@ contract Window(
             // The locktime,
             bytes(locktime),
             // The executorFee,
-            bytes4(500),
+            bytes4(1200),
             // The new bytecode
             bytes(depositLock)
         ]);
@@ -57,11 +57,11 @@ contract Window(
         // Assure it has zero value
         require(tx.outputs[1].value == 0);
 
-        if(vaultRemainder > 546){
-        // if remainder is greater than dust value, return it
-        // assure the vault-coupon returns to the bank
-        require(tx.outputs[2].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
-        require(tx.outputs[2].value >= vaultRemainder); 
+        if(vaultRemainder > 1000){
+          // if remainder is greater than dust value, return it
+          // assure the vault-coupon returns to the bank
+          require(tx.outputs[2].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+          require(tx.outputs[2].value >= vaultRemainder); 
         }
 
         

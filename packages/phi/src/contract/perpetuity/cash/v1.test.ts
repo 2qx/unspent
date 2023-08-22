@@ -8,6 +8,7 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v1 } from "./v1.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
 describe(`Example Perpetuity Tests`, () => {
   test("Should pay a perpetuity contract", async () => {
@@ -23,7 +24,7 @@ describe(`Example Perpetuity Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(69000000);
     const bob = await RegTestWallet.fromSeed(
       "rubber amateur across squirrel deposit above dish toddler visa cherry clerk egg"
     );
@@ -43,10 +44,11 @@ describe(`Example Perpetuity Tests`, () => {
     );
 
     // fund the perp contract
+    
     await alice.send([
       {
         cashaddr: contract.address!,
-        value: 680000000,
+        value: 68000000,
         unit: "satoshis",
       },
     ]);
@@ -82,6 +84,6 @@ describe(`Example Perpetuity Tests`, () => {
       contracts.push(contract);
     }
 
-    expect(await bob.getBalance("sat")).toBeGreaterThan(25000000);
+    expect(await bob.getBalance("sat")).toBeGreaterThan(2500000);
   });
 });

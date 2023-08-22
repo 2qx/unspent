@@ -24,26 +24,33 @@ import {
 } from "../../common/util.js";
 import { artifact as v0 } from "./cash/v0.js";
 import { artifact as v1 } from "./cash/v1.js";
+import { artifact as v2 } from "./cash/v2.js";
 
 export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   public static c: string = "P";
   private static fn: string = "execute";
   public recipientLockingBytecode: Uint8Array;
-  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 220n + 20n;
+  public static minAllowance: bigint = DUST_UTXO_THRESHOLD + 220n + 50n;
 
   constructor(
-    public period: bigint|number = 4000n,
+    public period: bigint | number = 4000n,
     public address: string,
-    public executorAllowance: bigint|number,
-    public decay: bigint|number,
+    public executorAllowance: bigint | number,
+    public decay: bigint | number,
     public options: ContractOptions = DefaultOptions
   ) {
-    
+
     let script: Artifact;
 
     let lock: Uint8Array;
 
-    if (options.version === 1) {
+    if (options.version === 2) {
+      script = v2;
+      const lockingBytecode = cashAddressToLockingBytecode(address);
+      if (typeof lockingBytecode === "string") throw lockingBytecode;
+      executorAllowance = executorAllowance ? executorAllowance : 1500n;
+      lock = lockingBytecode.bytecode;
+    } else if (options.version === 1) {
       script = v1;
       const lockingBytecode = cashAddressToLockingBytecode(address);
       if (typeof lockingBytecode === "string") throw lockingBytecode;
@@ -53,7 +60,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       assurePkh(address)
       const publicKeyHash = derivePublicKeyHash(address)
       lock = publicKeyHash
-    }else {
+    } else {
       throw Error("Unrecognized Perpetuity Version");
     }
 
@@ -88,7 +95,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(this.c == p.code))
       throw `non-${this.name} serialized string passed to ${this.name} constructor`;
 
-    if (![0,1].includes(p.options.version))
+    if (![0, 1, 2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
 
     if (p.args.length != 4)
@@ -131,7 +138,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (![0,1].includes(p.options.version))
+    if (![0, 1, 2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
@@ -251,7 +258,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (!utxos || utxos?.length == 0)
       utxos = [
         {
-          satoshis: 1000000n,
+          satoshis: 10000000n,
           txid: "<example 10,000,000 (0.1 BCH) unspent output>",
           vout: 0,
           // @ts-ignore
@@ -314,66 +321,100 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
   async execute(
     exAddress?: string,
     fee?: bigint,
-    utxos?: Utxo[]
+    utxos?: Utxo[],
+    debug?: boolean
   ): Promise<string> {
-    let currentValue = 0n;
-    if (utxos && utxos?.length > 0) {
-      currentValue = utxos.reduce((a, b) => a + b.satoshis, 0n);
-    } else {
-      currentValue = await this.getBalance();
+    let balance = 0n;
+
+    // Filter to inputs of sufficient age
+    if (!utxos) utxos = await this.getUtxos(Number(this.period));
+
+    // If the contract is version 2 or higher, restrict to one input.
+    if (utxos) {
+      if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
     }
-    if (currentValue == 0n) return "No funds on contract";
+
+    if (utxos && utxos?.length > 0) {
+      balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
+    } else {
+      balance = await this.getBalance();
+    }
+    if (balance == 0n) {
+      if (!debug) { return "" }
+    }
 
     const fn = this.getFunction(Perpetuity.fn)!;
-    let installment = (currentValue / BigInt(this.decay)) + 1n;
-    let newPrincipal = currentValue - (installment + BigInt(this.executorAllowance));
+    let installment = (balance / BigInt(this.decay)) ;
+    let newPrincipal = balance - installment - BigInt(this.executorAllowance);
 
     // round up
-    installment += 2n;
-    newPrincipal += 3n;
+    installment += 1n;
+    newPrincipal += 1n;
 
-    const to = [
-      {
-        to: this.address,
-        amount: installment,
-      },
-      {
-        to: this.getAddress(),
-        amount: newPrincipal,
-      },
-    ];
+    let to = []
+    if (this.options.version == 2 && installment < 1000) {
+      to = [
+        {
+          to: this.address,
+          amount: installment + newPrincipal,
+        }
+      ];
+    } else {
+      to = [
+        {
+          to: this.address,
+          amount: installment,
+        },
+        {
+          to: this.getAddress(),
+          amount: newPrincipal,
+        },
+      ];
+    }
+
 
     let executorFee = DUST_UTXO_THRESHOLD;
     if (typeof exAddress === "string" && exAddress)
       to.push({
         to: exAddress,
-        amount: executorFee,
+        amount: DUST_UTXO_THRESHOLD,
       });
+
+    let estimator = fn();
+
+    if (utxos) estimator = estimator.from(utxos);
+
+    estimator!
+    .to(to)
+    .withAge(Number(this.period))
+    .withoutChange();
+    const size = await estimator.build();
+
+    const minerFee = fee ? BigInt(fee) : BigInt(size.length) / 2n + 2n;
+     
+    if (exAddress) {
+
+      executorFee = BigInt(this.executorAllowance) - minerFee;
+      if (executorFee > DUST_UTXO_THRESHOLD) {
+        to.pop();
+        to.push({
+          to: exAddress,
+          amount: executorFee,
+        });
+      }
+    }
 
     let tx = fn();
     if (utxos) tx = tx.from(utxos);
+    tx!.to(to).withAge(Number(this.period)).withoutChange();
 
-    const size = await tx!.to(to).withAge(Number(this.period)).withoutChange().build();
-
-    //console.log(size.length / 2)
-    if (exAddress) {
-      const minerFee = fee ? fee : BigInt(size.length / 2);
-
-      executorFee = BigInt(this.executorAllowance) - minerFee - 20n;
-      to.pop();
-      to.push({
-        to: exAddress,
-        amount: executorFee,
-      });
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
     }
+    return txn;
 
-    // // Calculate value returned to the contract
-    // int returnedValue = currentValue - installment - executorAllowance;
-    //console.log(newPrincipal, currentValue, installment, executorFee)
-
-    tx = fn();
-    if (utxos) tx = tx.from(utxos);
-    const payTx = await tx!.to(to).withAge(Number(this.period)).withoutChange().send();
-    return payTx.txid;
   }
 }

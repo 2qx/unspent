@@ -1,0 +1,98 @@
+pragma cashscript ^0.8.0;
+
+// Unspent Phi
+//
+// Perpetuity v2 
+//
+// Perpetuity: fractional payments at regular intervals using rolling timelocks.
+//
+// [ ] BIP-68 timelocks were introduced in version 2 transactions, enforce versions.
+// [ ] The input must have aged for a predefined number of blocks (the period)
+// [ ] All utxos must be processed atomically. One coin per tx, no merging.
+//     Calculate the installment
+// [ ] Require the first output is to the receipt.
+// If installment is greater than 1000 sats
+//   [ ] require the installment is paid,
+//   calculate the remainder value
+//   [ ] return the remainder,
+//   [ ] to the contract
+// Otherwise, 
+//   calculate the balloon payment amount
+//   [ ] require the receipt receive the balloon payment.
+//
+// 
+// String & op_return serializations:
+//
+// P,2,<period>,<receiptLockingBytecode>,<decay>,<contractBytecode>
+// 
+// 6a 047574786f
+// 01 50
+// 01 02
+// ...
+//
+
+contract Perpetuity(
+
+ // interval for payouts, in blocks
+ int period,
+
+ // lockingBytecode of the beneficiary, 
+ // the address receiving payments
+ bytes recipientLockingBytecode,
+
+ // extra allowance for administration of contract
+ // fees are paid from executors' allowance. 
+ int executorAllowance,
+
+ // divisor for the payout, 
+ // each payout must be greater than 
+ // the input amount
+ // divided by this number
+ int decay
+
+) {
+ function execute() {
+
+  // Force tx version greater than 2 to force BIP68 support
+  require(tx.version >= 2);
+  
+  // Check that time has passed and that time locks are enabled
+  require(tx.age >= period);
+
+  // Limit to a single utxo input
+  require(tx.inputs.length == 1);
+
+  // Get the input value on the contract
+  int currentValue = tx.inputs[this.activeInputIndex].value;
+
+  // The payout is the current value divided by the decay
+  int installment = currentValue/decay;
+  
+  // Check that the first output sends to the recipient
+  require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+  // An installment below the dust threshold isn't spendable
+  if(installment > 1000) {
+
+    // Check that the output sends a normal installment
+    require(tx.outputs[0].value >= installment);
+
+    // Calculate value returned to the contract
+    int returnedValue = currentValue - installment - executorAllowance;
+    
+    // require the second output match the active bytecode
+    require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+    
+    // balance was returned to the contract
+    require(tx.outputs[1].value >= returnedValue);
+
+  } else{
+
+    // calculate the remainder of the contract
+    int balloonPaymentValue = currentValue - executorAllowance;
+
+    // Require the balance to be liquidated
+    require(tx.outputs[0].value >= balloonPaymentValue);
+  }
+ }
+}

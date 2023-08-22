@@ -9,5 +9,6 @@
   },
   "ts-node": {
     "swc": true
-  }
+  },
+  "exclude": ["cli.cjs"]
 }

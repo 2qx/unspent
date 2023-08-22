@@ -6,6 +6,7 @@ import {
 import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact } from "./v1.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
 describe(`Faucet Contract Tests`, () => {
   test("Should pay a faucet contract 5 times in 5 blocks", async () => {
@@ -21,7 +22,7 @@ describe(`Faucet Contract Tests`, () => {
 
     let regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(520000);
     const bob = await RegTestWallet.fromSeed(
       "rubber amateur across squirrel deposit above dish toddler visa cherry clerk egg"
     );
@@ -34,7 +35,6 @@ describe(`Faucet Contract Tests`, () => {
       [period, payout, index],
       {provider: regtestNetwork, addressType:"p2sh20"}
     );
-
     // fund the faucet contract
     await alice.send([
       {
@@ -43,7 +43,6 @@ describe(`Faucet Contract Tests`, () => {
         unit: "satoshis",
       },
     ]);
-
     for (let x = 0; x < 5; x++) {
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",

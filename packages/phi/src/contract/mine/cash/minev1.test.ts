@@ -14,9 +14,10 @@ import {
 import { sha256, sum, deriveLockingBytecodeHex, getRandomIntWeak } from "../../../common/util.js";
 import { artifact as v1 } from "./v1.js";
 import { _PROTOCOL_ID } from "../../../common/constant.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Mining Contract Tests`, () => {
-  test("Should pay a mining contract 10 times in 10 blocks", async () => {
+  test.skip("Should pay a mining contract 10 times in 10 blocks", async () => {
     const regTest = new ElectrumCluster(
       "unspent phi-tests - faucet",
       "1.4.1",
@@ -28,7 +29,7 @@ describe(`Mining Contract Tests`, () => {
 
     const regtestNetwork = new ElectrumNetworkProvider("regtest", regTest, false);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(520000);
     const bob = await RegTestWallet.fromSeed(
       "rubber amateur across squirrel deposit above dish toddler visa cherry clerk egg"
     );

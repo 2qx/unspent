@@ -25,7 +25,7 @@ export const artifact = {
   "source": "pragma cashscript >= 0.7.0;\n\n// v20220609\n\n// This is an experimental faucet contract \n// see bitcoin-cash-faucet\ncontract Faucet(\n\n    // interval for payouts, in blocks\n    int period,\n\n    // amount to be paid by faucet allowance. \n    int payout,\n\n    // random number input into contract to have more than one\n    int index\n) {\n    function drip() {\n\n        // Check that time has passed and that time locks are enabled\n        require(tx.age >= period);\n            \n        // use the index\n        require(index >= 0);\n\n        // require the first output to match the active bytecode\n        require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));\n\n        // Get the total value on the contract\n        int currentValue = tx.inputs[this.activeInputIndex].value;\n\n        // Calculate value returned to the contract\n        int returnedValue = currentValue - payout;\n\n        // Check that the outputs send the correct amounts\n        require(tx.outputs[0].value >= returnedValue);\n    }\n\n}",
   "compiler": {
     "name": "cashc",
-    "version": "0.7.2"
+    "version": "0.7.3"
   },
-  "updatedAt": "2023-04-13T16:47:20.315Z"
+  "updatedAt": "2023-05-20T21:54:03.318Z"
 }

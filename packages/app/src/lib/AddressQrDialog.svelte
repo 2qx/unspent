@@ -13,7 +13,7 @@
 	} from '@bitauth/libauth';
 
 	export let codeValue: string;
-	let lockingBytecode: string;
+	export let lockingBytecode: string;
 	let backgroundImage = '';
 	let prefix: string;
 	let type: string;
@@ -24,9 +24,6 @@
 		}
 	}
 	try {
-		let lockingBytecodeResult = cashAddressToLockingBytecode(codeValue);
-		if (typeof lockingBytecodeResult === 'string') throw lockingBytecodeResult;
-		lockingBytecode = binToHex(lockingBytecodeResult.bytecode);
 
 		let addrFormat = decodeCashAddress(codeValue);
 		if (typeof addrFormat === 'string') throw addrFormat;

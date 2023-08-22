@@ -2,7 +2,7 @@
 	import { beforeUpdate } from 'svelte';
 	import Prism from 'prismjs';
 	import { Confetti } from 'svelte-confetti';
-  import { throttle } from 'throttle-debounce';
+	import { throttle } from 'throttle-debounce';
 
 	import { toast } from '@zerodevx/svelte-toast';
 	import { copy } from 'svelte-copy';
@@ -28,6 +28,7 @@
 	import BlockchairAddress from '$lib/addressLinks/BlockchairAddress.svelte';
 	import BitInfoChartsAddress from '$lib/addressLinks/BitInfoChartsAddress.svelte';
 	import SickPigAddress from '$lib/addressLinks/SickPigAddress.svelte';
+	import BitAuthLink from '$lib/transactionLinks/BitAuthLink.svelte';
 	import ErrorConsole from '$lib/ErrorConsole.svelte';
 
 	export let instance: any;
@@ -43,6 +44,7 @@
 	let showDetails = false;
 	let isFunded = false;
 	let outputs: string[] = [];
+	let bitauth = '';
 
 	let executionProgress = 0;
 	let executionProgressId;
@@ -67,22 +69,27 @@
 		});
 	}
 
-
-  const throttleUpdate = throttle(3000, async () => {
-         await updateBalance();
-    });
+	const throttleUpdate = throttle(3000, async () => {
+		await updateBalance();
+	},{ noLeading: true, noTrailing: false });
 
 	beforeUpdate(async () => {
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
-    await throttleUpdate();
+		await throttleUpdate();
+
 	});
 
 	const updateBalance = async () => {
-    
 		if (instance) balance = await instance.getBalance();
 		isFunded = balance > 0 ? true : false;
-
+		if (bitauth.length==0) {
+      try{
+        bitauth = await instance.execute(undefined, undefined, undefined, true);
+      }catch (e){
+        // pass
+      }
+		}
 		if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
 			if (showSeries) {
 				updateSeries();
@@ -162,16 +169,16 @@
 			<Badge color="secondary" square align="top-end" aria-label="contract version"
 				>v{instance.options.version}</Badge
 			>
-      <Badge color="primary"  position="outset" align="bottom-end" aria-label="contract network"
+			<Badge color="primary" position="outset" align="bottom-end" aria-label="contract network"
 				>{nodeValue}</Badge
 			>
 		</span>
 	</div>
 
 	<div>
-    <span style="padding: 1em;">
-		<p>{instance.asText()}</p>
-  </span>
+		<span style="padding: 1em;">
+			<p>{instance.asText()}</p>
+		</span>
 	</div>
 	<div style=" width: 200px;">
 		<div style="text-align:end;">
@@ -200,11 +207,10 @@
 			<Tooltip>Open permanent link in new tab</Tooltip>
 		</Wrapper>
 
-		<!--Wrapper>
-      TODO reveal again.
-			<AddressQrDialog codeValue={instance.getAddress()} />
+		<Wrapper>
+			<AddressQrDialog codeValue={instance.getAddress()} lockingBytecode={instance.getLockingBytecode()} />
 			<Tooltip>Show qr code</Tooltip>
-		</Wrapper-->
+		</Wrapper>
 
 		<SickPigAddress address={instance.getAddress()} network={nodeValue} />
 		{#if nodeValue === 'mainnet'}
@@ -241,6 +247,9 @@
 			<Label>Spend</Label>
 		</Button>
 		<Tooltip>Execute this Contract</Tooltip>
+		{#if bitauth}
+			<BitAuthLink link={bitauth} />
+		{/if}
 	</Wrapper>
 
 	{#if !address}

@@ -25,7 +25,9 @@ const config = {
 		sveltePreprocess({ sourceMap: false, handleMixedImports: true, reportDiagnostics: true }),
 		mdsvex({
 			extensions: ['.md'],
-			rehypePlugins: [rehypeSlug, [toc, { headings: ['h1', 'h2'] }]],
+			rehypePlugins: [rehypeSlug, 
+        [toc, { headings: ['h2','h3'] }]
+      ],
 			highlight: {
 				alias: { cashscript: 'solidity' }
 			}

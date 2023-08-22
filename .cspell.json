@@ -1,7 +1,32 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "import": [
     "node_modules/@generalprotocols/cspell-dictionary/cspell.json"
+  ],
+  "patterns": [
+    {
+      "name": "cashAddresses",
+      "pattern": "bitcoincash:[A-z0-9]+"
+    },
+    {
+      "name": "rbchAddresses",
+      "pattern": "bchreg:[A-z0-9]+"
+    },
+    {
+      "name": "tbchAddresses",
+      "pattern": "bchtest:[A-z0-9]+"
+    },
+    {
+      "name": "legacyAddresses",
+      "pattern": "1[A-z0-9]{33}"
+    }
+  ],
+  // Ignore the following Regular Expression patterns.
+  "ignoreRegExpList": [
+    "cashAddresses",
+    "rbchAddresses",
+    "tbchAddresses",
+    "legacyAddresses"
   ],
   "words": [
     "ACTIVEBYTECODE",
@@ -18,6 +43,7 @@
     "Btyecode",
     "bytea",
     "Bytecodes",
+    "cashaddr",
     "chaingraph",
     "CHECKSEQUENCEVERIFY",
     "chipnet",
@@ -35,9 +61,13 @@
     "nonfungible",
     "NUMEQUAL",
     "NUMEQUALVERIFY",
+    "opreturn",
     "OUTPUTBYTECODE",
     "OUTPUTVALUE",
+    "Pkhs",
     "prismjs",
+    "rbchn",
+    "reserialize",
     "shortcode",
     "smui",
     "SMUI",
@@ -46,6 +76,7 @@
     "Timelock",
     "timelocked",
     "transpiles",
+    "utxfi",
     "UTXOBYTECODE",
     "utxos",
     "UTXOVALUE",

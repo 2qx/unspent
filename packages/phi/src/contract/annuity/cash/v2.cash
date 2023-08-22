@@ -1,0 +1,85 @@
+pragma cashscript ^0.8.1;
+
+// Unspent Phi
+//
+// Annuity v2 
+//
+// Annuity: equal payments at regular intervals using rolling timelocks.
+//
+// [ ] Spending transaction must use version 2.
+// [ ] The input must have aged for a predefined number of blocks (the period)
+// [ ] All utxos must be processed atomically. One coin per tx, no merging.
+// [ ] Require the first payment be sent to the receipt
+// If enough funds exist for future payments, 
+//    [ ] calculate the remainder value
+//    [ ] send the installment to the receipt
+//    [ ] send the remainder back to the contract
+// Otherwise, 
+//    [ ] calculate a balloon payment
+//    [ ] require the payment to recipient exceed the ballon amount.
+// 
+// Implementation notes: contract requires 32-byte locking bytecode style address.
+// 
+// String & op_return serializations:
+//
+// A,2,<period>,<receiptLockingBytecode>,<installment>,<contractBytecode>
+// 
+// 6a 047574786f
+// 01 41
+// 01 02
+// ... period, receipt, installment
+// ... lockingBytecode
+
+contract Annuity(
+
+  // interval for payouts, in blocks
+  int period,
+
+  // LockingBytecode of the beneficiary, the address receiving payments
+  bytes recipientLockingBytecode,
+
+  // amount paid in each installment
+  int installment,
+
+  // extra allowance for administration of contract
+  // fees are paid from executors' allowance. 
+  int executorAllowance
+) {
+  function execute() {
+
+    // Force tx version 2 to force BIP68 support
+    require(tx.version >= 2);
+
+    // Assure a rolling timelock is satisfied
+    require(tx.age >= period);
+
+    // Limit to a single utxo input
+    require(tx.inputs.length == 1);
+
+    // Get the utxo value 
+    int currentValue = tx.inputs[this.activeInputIndex].value;
+  
+    // Check that the first output sends to the intended recipient. 
+    require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+    // if enough funds exist for a least two more payments,
+    // return the balance to the contract, minus executor's fee.
+    if(currentValue > installment*2){
+      // Calculate the value returned by the contract
+      int returnedValue = currentValue - installment - executorAllowance;
+
+      // Check that the outputs send the correct amounts
+      require(tx.outputs[0].value >= installment);
+
+      // require the second output to match the active bytecode
+      require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+      require(tx.outputs[1].value >= returnedValue);
+    } 
+    // Otherwise, send a final balloon payment instead of a partial payment
+    else{
+      int balloonPaymentValue = currentValue - executorAllowance;
+      // Check that the outputs send the correct amounts
+      require(tx.outputs[0].value >= balloonPaymentValue);
+    }
+  }
+}

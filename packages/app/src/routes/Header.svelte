@@ -17,11 +17,7 @@
 	</div>
 {:else}
 	<div class="alpha">
-		This app is in active development! <br />
-		Creation of new contracts is disabled pending a security upgrade. <br />
-		Additional funds should NOT be sent to v0 or v1 contracts.<br/>
-    Existing contracts may continue to be executed on schedule. Almost all funds on almost all contracts are safe. <br/>
-    No new contracts. Outgoing payments only. This app does not store private keys anywhere.<br/>
+		This app is in development.<br/>
 	</div>
 {/if}
 
@@ -41,14 +37,19 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<!--li class:active={$page.url.pathname.startsWith('/create')}>
+      <li class:active={$page.url.pathname === '/create'}>
 				<a href="{base}/create">Create</a>
-			</li-->
+			</li>
+			<li class:active={$page.url.pathname.startsWith('/documentation')}>
+				<a href="{base}/documentation">Docs</a>
+			</li>
 			<li class:active={$page.url.pathname === '/earn'}>
 				<a href="{base}/earn">Earn</a>
 			</li>
 			<li class:active={$page.url.pathname === '/settings'}>
-				<a href="{base}/settings">Settings</a>
+				<a class="settings" href="{base}/settings">
+          <img src="{base}/icons/gear-fill.svg" alt="Settings" />
+        </a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -119,6 +120,8 @@
 		height: 2em;
 		object-fit: contain;
 	}
+
+
 
 	nav {
 		display: flex;

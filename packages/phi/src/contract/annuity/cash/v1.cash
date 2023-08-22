@@ -1,6 +1,7 @@
 pragma cashscript >= 0.7.1;
 
-// v202205626
+// Deprecated.
+// Do not use. 
 
 // Pay equal payments at regular intervals using input locks
 contract Annuity(
@@ -29,7 +30,7 @@ contract Annuity(
     // require the second output to match the active bytecode
     require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-    // Get the total value on the contract
+    // Get the input value 
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value returned to the contract

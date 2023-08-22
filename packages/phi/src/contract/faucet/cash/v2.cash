@@ -1,0 +1,76 @@
+pragma cashscript ^0.8.1;
+
+// Unspent Phi
+//
+// Faucet v2 
+//
+// Faucet: pay to anyone at intervals using rolling timelocks.
+// 
+// [ ] Require a version 2 transaction.
+// [ ] The input must have aged for a predefined number of blocks (the period)
+// [ ] All utxos must be processed atomically. One input per tx, no merging.
+// If enough funds exist for future payout, 
+//       [ ] calculate the value to be returned minus payout,
+//       [ ] send the remainder back to the faucet.
+// Otherwise, 
+//       [ ] allow unrestricted liquidation
+// 
+// Implementation notes: contract requires 32-byte locking bytecode style address.
+// 
+// String & op_return serializations:
+//
+// F,2,<period>,<payout>,<index>,<contractBytecode>
+// 
+// 6a 047574786f
+// 01 46
+// 01 02
+// ...
+
+contract Faucet(
+
+  // interval for payouts, in blocks
+  int period,
+
+  // amount to be paid by faucet allowance. 
+  int payout,
+
+  // random number input into contract to have more than one
+  int index
+  
+) {
+  function drip() {
+
+    // Force tx version 2 to force BIP68 support
+    require(tx.version >= 2);
+
+    // Check that time has passed and that time locks are enabled
+    require(tx.age >= period);
+      
+    // Use the index to do nothing but
+    // avoid warnings from the compiler about unused variables.
+    require(index >= 0);
+
+    // Limit to a single utxo input
+    require(tx.inputs.length == 1);
+    
+    // Get the total value on the contract
+    int currentValue = tx.inputs[this.activeInputIndex].value;
+
+    // Calculate value returned to the contract
+    int returnedValue = currentValue - payout;
+
+    // If the value on the contract exceeds the payout amount
+    // then assert that the value must return to the contract
+    if(currentValue > payout){
+
+      // return the balance to the contract
+      require(tx.outputs[0].value >= returnedValue);
+      
+      // require the first output to match the active bytecode
+      require(tx.outputs[0].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+
+    } // otherwise output is unrestricted.
+
+  }
+
+}

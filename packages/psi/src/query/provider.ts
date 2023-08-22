@@ -53,6 +53,8 @@ export async function getChaingraphUnspentRecords(
   if ("code" in param) delete param.code
   //@ts-ignore
   if ("version" in param) delete param.version
+  //@ts-ignore
+  if ("after" in param) delete param.after
   
   const response = await axios({
     url: host,
@@ -64,7 +66,6 @@ export async function getChaingraphUnspentRecords(
       $exclude_pattern: String
       $limit: Int
       $offset: Int
-      $after: bigint
     ) {
             search_output_prefix(
               args: { locking_bytecode_prefix_hex: $prefix }
@@ -74,11 +75,7 @@ export async function getChaingraphUnspentRecords(
               where: {
                 _and: [
                   { locking_bytecode_pattern: {  _nlike: $exclude_pattern } }
-                  {
-                    transaction: {
-                      block_inclusions: { block: { height: { _gt: $after } } }
-                    }
-                  }
+                  
                   {
                     _or: [
                       {
@@ -344,14 +341,13 @@ export async function getHistory(host: string,
   const query = `
   query GetTransactionHistory(
     $node: String!
-    $lockingBytecode: _text!
+    $lockingBytecode: String!
     $limit: Int
     $offset: Int
   ) {
-    search_output(
-      args: {
-        locking_bytecode_hex: $lockingBytecode
-      }
+      search_output_prefix(
+        args: { locking_bytecode_prefix_hex: $lockingBytecode }
+      
       where: {
         _and: [
           {
@@ -403,7 +399,7 @@ export async function getHistory(host: string,
       query: query,
       variables: {
         ...param,
-        "lockingBytecode": `{${lockingBytecode}}`,
+        "lockingBytecode": `${lockingBytecode.substring(0, 24)}`,
       },
     }
   })
@@ -419,7 +415,7 @@ export async function getHistory(host: string,
 
   
 
-  return response.data.data.search_output.map((o: any) => {
+  return response.data.data.search_output_prefix.map((o: any) => {
     //console.log(JSON.stringify(o,undefined, 2))
     let height = o.transaction.block_inclusions.length > 0 ? o.transaction.block_inclusions[0].block.height : -1
     let timestamp = o.transaction.block_inclusions.length > 0 ? o.transaction.block_inclusions[0].block.timestamp : -1

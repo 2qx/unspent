@@ -15,8 +15,9 @@ import { Divide } from "../../divide/index.js";
 import {
   createOpReturnData,
   decodeNullDataScript,
-  hash160,
+  hash160
 } from "../../../common/util.js";
+import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Record Contract Tests`, () => {
   test("Should record a division contract.", async () => {
@@ -36,7 +37,7 @@ describe(`Record Contract Tests`, () => {
     let contract = new CashScriptContract(script, [maxFee, 2n], { provider: regtestNetwork, addressType: 'p2sh20' });
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -44,6 +45,8 @@ describe(`Record Contract Tests`, () => {
         unit: "satoshis",
       },
     ]);
+
+    
 
     let c = new Divide(
       4000n,
@@ -104,7 +107,7 @@ describe(`Record Contract Tests`, () => {
     let opReturn = c.toOpReturn();
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: contract.address!,
@@ -113,6 +116,8 @@ describe(`Record Contract Tests`, () => {
       },
     ]);
 
+    
+    
     let chunks = decodeNullDataScript(opReturn).map((c) => "0x" + binToHex(c));
     if (typeof opReturn === "string") throw opReturn;
     let checkHash = await hash160(opReturn);

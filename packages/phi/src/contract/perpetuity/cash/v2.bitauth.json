@@ -1,0 +1,111 @@
+{
+  "$schema": "https://ide.bitauth.com/authentication-template-v0.schema.json",
+  "description": "Imported from cashscriptpragma cashscript ^0.8.0;\n\n// Unspent Phi\n//\n// Perpetuity v2 \n//\n// Perpetuity: fractional payments at regular intervals using rolling timelocks.\n//\n// - Fixed executor fee of 1500 sats, \n// - The input must have aged for a predefined number of blocks (the period)\n// - All utxos must be processed atomically. One coin per tx, no merging.\n// - If installment is greater than 1000 sats, send the remainder back to the contract,\n// - Otherwise, liquidate the contract via a balloon payment to the recipient.\n// \n// String & op_return serializations:\n//\n// P,2,<period>,<receiptLockingBytecode>,<decay>,<contractBytecode>\n// \n// 6a 047574786f\n// 01 50\n// 01 02\n// ...\n//\n\ncontract Perpetuity(\n\n // interval for payouts, in blocks\n int period,\n\n // lockingBytecode of the beneficiary, \n // the address receiving payments\n bytes recipientLockingBytecode,\n\n // divisor for the payout, \n // each payout must be greater than \n // the input amount\n // divided by this number\n int decay\n\n) {\n function execute() {\n\n  // Fixed executor fee\n  int executorAllowance = 1500;\n\n  // Check that time has passed and that time locks are enabled\n  require(tx.age >= period);\n\n  // Limit to a single utxo input\n  require(tx.inputs.length == 1);\n\n  // Get the input value on the contract\n  int currentValue = tx.inputs[this.activeInputIndex].value;\n\n  // The payout is the current value divided by the decay\n  int installment = currentValue/decay;\n  \n  // Check that the first output sends to the recipient\n  require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);\n\n  // An installment below the dust threshold isn't spendable\n  if(installment > 1000) {\n\n    // Check that the output sends a normal installment\n    require(tx.outputs[0].value >= installment);\n\n    // Calculate value returned to the contract\n    int returnedValue = currentValue - installment - executorAllowance;\n    \n    // require the second output match the active bytecode\n    require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH32(sha256(this.activeBytecode)));\n    \n    // balance was returned to the contract\n    require(tx.outputs[1].value >= returnedValue);\n\n  } else{\n\n    // calculate the remainder of the contract\n    int balloonPaymentValue = currentValue - executorAllowance;\n\n    // Require the balance to be liquidated\n    require(tx.outputs[0].value >= balloonPaymentValue);\n  }\n\n\n   \n\n\n\n\n\n\n\n   \n }\n}",
+  "name": "Perpetuity",
+  "entities": {
+    "parameters": {
+      "description": "Contract creation and function parameters",
+      "name": "parameters",
+      "scripts": [
+        "lock",
+        "unlock_lock"
+      ],
+      "variables": {
+        "function_index": {
+          "description": "Script function index to execute",
+          "name": "function_index",
+          "type": "WalletData"
+        },
+        "period": {
+          "description": "\"period\" parameter of this contract",
+          "name": "period",
+          "type": "WalletData"
+        },
+        "recipient_locking_bytecode": {
+          "description": "\"recipientLockingBytecode\" parameter of this contract",
+          "name": "recipientLockingBytecode",
+          "type": "WalletData"
+        },
+        "decay": {
+          "description": "\"decay\" parameter of this contract",
+          "name": "decay",
+          "type": "WalletData"
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "evaluate_function": {
+      "data": {
+        "bytecode": {
+          "function_index": "0",
+          "period": "0x78",
+          "recipient_locking_bytecode": "0x76a91403713cbcd9a006abf492fa6cbd5321aa748d7e3988ac",
+          "decay": "0x01"
+        },
+        "currentBlockHeight": 2,
+        "currentBlockTime": 1687451278,
+        "keys": {
+          "privateKeys": {}
+        }
+      },
+      "description": "An example evaluation where this script execution passes.",
+      "name": "Evaluate",
+      "transaction": {
+        "inputs": [
+          {
+            "outpointIndex": 0,
+            "outpointTransactionHash": "e0a3f08cd040373886bb837ad87d1946488ee09a6e0dc5b8203284041374fea3",
+            "sequenceNumber": 1,
+            "unlockingBytecode": [
+              "slot"
+            ]
+          }
+        ],
+        "locktime": 348,
+        "outputs": [
+          {
+            "lockingBytecode": "76a91403713cbcd9a006abf492fa6cbd5321aa748d7e3988ac",
+            "valueSatoshis": 5666669
+          },
+          {
+            "lockingBytecode": "781976a91403713cbcd9a006abf492fa6cbd5321aa748d7e3988ac5102dc057cb275c3519dc0c676547a9600cd547a887602e803a06300cc78a2696e9453799451cd02aa20c1a87e01877e8851cc78a26975677853799400cc78a26975686d7551",
+            "valueSatoshis": 674331837
+          },
+          {
+            "lockingBytecode": "76a9145fdea61f2af32e4c72a5f7d0ebfbe3fb967fc61888ac",
+            "valueSatoshis": 700
+          }
+        ],
+        "version": 2
+      },
+      "sourceOutputs": [
+        {
+          "lockingBytecode": [
+            "slot"
+          ],
+          "valueSatoshis": 680000000
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "unlock_lock": {
+      "passes": [
+        "evaluate_function"
+      ],
+      "name": "unlock",
+      "script": "// \"execute\" function parameters\n// none\n\n// \"Perpetuity\" contract constructor parameters\n<period> // int = <0x78>\n<recipient_locking_bytecode> // bytes25 = <0x76a91403713cbcd9a006abf492fa6cbd5321aa748d7e3988ac>\n<decay> // int = <0x01>",
+      "unlocks": "lock"
+    },
+    "lock": {
+      "lockingType": "p2sh32",
+      "name": "lock",
+      "script": "<0xdc05>\nOP_SWAP\nOP_CHECKSEQUENCEVERIFY\nOP_DROP\nOP_TXINPUTCOUNT\nOP_1\nOP_NUMEQUALVERIFY\nOP_INPUTINDEX\nOP_UTXOVALUE\nOP_DUP\nOP_4\nOP_ROLL\nOP_DIV\nOP_0\nOP_OUTPUTBYTECODE\nOP_4\nOP_ROLL\nOP_EQUALVERIFY\nOP_DUP\n<0xe803>\nOP_GREATERTHAN\nOP_IF\nOP_0\nOP_OUTPUTVALUE\nOP_OVER\nOP_GREATERTHANOREQUAL\nOP_VERIFY\nOP_2DUP\nOP_SUB\nOP_3\nOP_PICK\nOP_SUB\nOP_1\nOP_OUTPUTBYTECODE\n<0xaa20>\nOP_ACTIVEBYTECODE\nOP_SHA256\nOP_CAT\n<0x87>\nOP_CAT\nOP_EQUALVERIFY\nOP_1\nOP_OUTPUTVALUE\nOP_OVER\nOP_GREATERTHANOREQUAL\nOP_VERIFY\nOP_DROP\nOP_ELSE\nOP_OVER\nOP_3\nOP_PICK\nOP_SUB\nOP_0\nOP_OUTPUTVALUE\nOP_OVER\nOP_GREATERTHANOREQUAL\nOP_VERIFY\nOP_DROP\nOP_ENDIF\nOP_2DROP\nOP_DROP\nOP_1"
+    }
+  },
+  "supported": [
+    "BCH_SPEC"
+  ],
+  "version": 0
+}

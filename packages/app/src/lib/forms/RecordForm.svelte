@@ -44,8 +44,13 @@
 	});
 </script>
 
-<div class="columns margins">
-	<Textfield
+<div class="margins">
+
+  <p>
+		A record contract allows recording an OP_RETURN message.
+	</p>
+
+	<!--Textfield
 		bind:value={maxFee}
 		on:change={() => createContract()}
 		type="number"
@@ -54,7 +59,7 @@
 		label="Max Fee (satoshis)"
 	>
 		<HelperText slot="helper">Amount available to broadcast transaction.</HelperText>
-	</Textfield>
+	</Textfield-->
 
 	<Textfield
 		bind:value={index}

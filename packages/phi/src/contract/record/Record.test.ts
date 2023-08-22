@@ -1,3 +1,4 @@
+import { hexToBin, lockingBytecodeToCashAddress } from "@bitauth/libauth";
 import { Record } from "./Record.js";
 import { Divide } from "../divide/Divide.js";
 import { Faucet } from "../faucet/index.js";
@@ -5,13 +6,15 @@ import { Faucet } from "../faucet/index.js";
 import { RegTestWallet } from "mainnet-js";
 import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Record Class Tests`, () => {
   test("Should announce itself and Faucet", async () => {
     const options = { version: 1, network: "regtest" };
     const r = new Record(850n, 0n, options);
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -19,7 +22,7 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
-
+    
     const tx2 = await r.broadcast();
     expect(r.toOpReturn(true)).toEqual(
       "6a047574786f01520101025203010017a91496e199d7ea23fb779f5764b97196824002ef811a87"
@@ -67,7 +70,7 @@ describe(`Record Class Tests`, () => {
     const r = new Record(850n, 1n, options);
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -75,6 +78,7 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
+
 
     const tx = await r.broadcast(f.toOpReturn());
     const tx2 = await r.broadcast();
@@ -110,7 +114,7 @@ describe(`Record Class Tests`, () => {
     const r = new Record(Record.minMaxFee, 1n, options);
 
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -118,6 +122,8 @@ describe(`Record Class Tests`, () => {
         unit: "satoshis",
       },
     ]);
+    
+
 
     const tx = await r.broadcast(d.toOpReturn());
     const tx2 = await r.broadcast();
@@ -147,7 +153,7 @@ describe(`Record Class Tests`, () => {
 
     const r = new Record(850n, 0n, options);
     // fund the contract
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     await alice.send([
       {
         cashaddr: r.getAddress(),
@@ -156,7 +162,11 @@ describe(`Record Class Tests`, () => {
       },
     ]);
 
+    
+
     const tx = await r.broadcast(f.toOpReturn());
+    
+
     const aBin = new Uint8Array([106, 4, 117, 116, 120, 111]);
 
     const payload = new Uint8Array([
@@ -186,11 +196,89 @@ describe(`Record Class Tests`, () => {
     // ))
   });
 
+  test("Should announce v2 itself and Divide set", async () => {
+    const payees = [
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+      "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+      "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
+      "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss",
+    ];
+    const options = { version: 2, network: "regtest" };
+    const d = new Divide(1047n, payees, options);
+    const r = new Record(Record.minMaxFee, 1n, options);
+
+
+    // fund the contract
+    const alice = await getAnAliceWallet(10000);
+    
+    await alice.send([
+      {
+        cashaddr: r.getAddress(),
+        value: 9000,
+        unit: "satoshis",
+      },
+    ]);
+
+    
+
+    const tx = await r.broadcast(d.toOpReturn());
+
+    
+    const tx2 = await r.broadcast();
+    
+  });
+
+
+  test("Should announce v2 itself and Divide set (4 x p2sh32)", async () => {
+
+    const p2sh32 = hexToBin(
+      'aa20000000000000000012345678900000000000000000000000000000000000000087'
+    );
+    
+    let cashaddr = lockingBytecodeToCashAddress(p2sh32, "bchreg")
+    if(typeof cashaddr != `string`)  throw (cashaddr)
+
+    const payees = Array(4).fill(cashaddr);
+    const options = { version: 2, network: "regtest" };
+    const d = new Divide(1047n, payees, options);
+    const r = new Record(Record.minMaxFee, 1n, options);
+
+
+    // fund the contract
+    const alice = await getAnAliceWallet(15000);
+    
+    await alice.send([
+      {
+        cashaddr: r.getAddress(),
+        value: 10000,
+        unit: "satoshis",
+      },
+    ]);
+
+    
+
+    const tx = await r.broadcast(d.toOpReturn());
+
+    
+    const tx2 = await r.broadcast();
+    
+  });
+
+
   test("Should return info", async () => {
     const options = { version: 1, network: "regtest" };
     const c1 = new Record(850n, 0n, options);
     const info = await c1.info(false);
     expect(info).toContain(c1.toString());
+    expect(info).toContain("balance");
+  });
+
+  test("Should return v2 info", async () => {
+    const options = { version: 2, network: "regtest" };
+    const c2 = new Record(850n, 0n, options);
+
+    const info = await c2.info(false);
+    expect(info).toContain(c2.toString());
     expect(info).toContain("balance");
   });
 

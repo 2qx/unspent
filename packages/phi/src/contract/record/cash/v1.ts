@@ -26,7 +26,7 @@ export const artifact = {
   "source": "pragma cashscript ^0.7.0;\n\n/* Allows publishing some OP_RETURN message,\n * given that:\n * 1. the hash160 value of the zero value OP_RETURN message is passed\n * 2. the first output has zero value\n * 3. the remaining value is pass back to the contract, mostly.\n */\n\n \ncontract Record(int maxFee, int index) {\n function execute(bytes20 dataHash) {\n\n  // this does nothing\n  // different indicies enable different contract addresses\n  require(index >= 0);\n\n  // Check that the first tx output is a zero value opcode matching the provided hash\n  require(hash160(tx.outputs[0].lockingBytecode) == dataHash);\n  require(tx.outputs[0].value == 0);\n  \n  // calculate the fee required to propagate the transaction 1 sat/ byte\n  int baseFee = 162;\n  \n  int fee = baseFee + tx.outputs[0].lockingBytecode.length;\n  require(fee<=maxFee);\n\n  // Check that the second tx output sends the change back\n  int newValue = tx.inputs[this.activeInputIndex].value - fee;\n  require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);\n  require(tx.outputs[1].value >= newValue);    \n }\n}",
   "compiler": {
     "name": "cashc",
-    "version": "0.7.2"
+    "version": "0.7.3"
   },
-  "updatedAt": "2023-04-13T16:47:20.391Z"
+  "updatedAt": "2023-08-18T19:42:03.255Z"
 }

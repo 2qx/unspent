@@ -45,6 +45,10 @@
 </script>
 
 <div class="margins">
+  <p>
+		A faucet contract pays some amount to anyone after the period has elapsed.
+	</p>
+
 	<Textfield
 		bind:value={payout}
 		on:change={() => createContract()}
@@ -63,7 +67,7 @@
 		input$min="1"
 		input$max="65535"
 		required
-		label="Period"
+		label="Period (blocks)"
 	>
 		<HelperText slot="helper">
 			How often (in blocks) the contract can pay. e.g. 1 block, ~10 minutes.</HelperText

@@ -1,11 +1,12 @@
-import { opReturn } from "@bitauth/libauth";
+import { opReturn , hexToBin, binToHex, lockingBytecodeToCashAddress} from "@bitauth/libauth";
 import { RegTestWallet } from "mainnet-js";
 import { Divide } from "./Divide.js";
 import {
   derivePublicKeyHashHex,
   createOpReturnData,
-  decodeNullDataScript,
+  decodeNullDataScript
 } from "../../common/util.js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Divide Class Tests`, () => {
   test("Should serialize a Divider", async () => {
@@ -86,7 +87,7 @@ describe(`Divide Class Tests`, () => {
     const options = { version: 1, network: "regtest" };
     const d1 = new Divide(1200n, payees, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(42000);
 
     await alice.send([
       {
@@ -132,7 +133,7 @@ describe(`Divide Class Tests`, () => {
     ];
     const d1 = new Divide(1200n, payees, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(42000);
 
     await alice.send([
       {
@@ -162,7 +163,7 @@ describe(`Divide Class Tests`, () => {
     ];
     const d1 = new Divide(1200n, payees, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(42000);
 
     await alice.send([
       {
@@ -194,5 +195,105 @@ describe(`Divide Class Tests`, () => {
     const info = await c1.info(false);
     expect(info).toContain(c1.toString());
     expect(info).toContain("balance");
+  });
+
+  test("Should generate OP_RETURN less than 223 bytes for 4 x 32 Bytes addresses", async () => {
+    const options = { version: 2, network: "regtest" };
+    const p2sh32 = hexToBin(
+      'aa20000000000000000012345678900000000000000000000000000000000000000087'
+    );
+    
+    let cashaddr = lockingBytecodeToCashAddress(p2sh32, "bchreg")
+    if(typeof cashaddr != `string`)  throw (cashaddr)
+    const payees = Array(4).fill(cashaddr);
+    const d4 = new Divide(1200n, payees, options);
+    const info = await d4.info(false);
+    expect(info).toContain(d4.toString());
+    expect(info).toContain("balance");
+
+    // console.log(d4.toOpReturn(true))
+    //
+    // 6a 
+    // 04 7574786f 
+    // 01 44
+    // 01 02
+    // 02 b004
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20000000000000000012345678900000000000000000000000000000000000000087
+    // 23 aa20bc286656f1b943079e04471387f4f7a050cd38d42f5d93ad97dd95a473fdffef87
+
+    expect(d4.toOpReturn().length).toBeLessThan(223);
+
+  });
+
+
+  test("Should pay a division v2 contract to completion", async () => {
+    const payees = [
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+      "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+      "bchreg:qr83275dydrynk3s2rskr3g2mh34eu88pqar07tslm",
+      "bchreg:qzdf6fnhey0wul647j2953svsy7pjfn98s28vgv2ss",
+    ];
+    const options = { version: 2, network: "regtest" };
+    const d1 = new Divide(1200n, payees, options);
+
+    const alice = await getAnAliceWallet(102000);
+
+    await alice.send([
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+    ]);
+
+    expect(await d1.getBalance()).toBeGreaterThan(100);
+
+    await d1.execute();
+    await d1.execute();
+
+    const receipt = await RegTestWallet.watchOnly(
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n"
+    );
+    expect(await receipt.getBalance("sat")).toBeGreaterThan(20000);
+    expect(await d1.getBalance()).toBe(0n);
+
+  });
+
+  test("Should cat a division v2 debug link", async () => {
+    const payees = [
+      "bchreg:qpddvxmjndqhqgtt747dqtrqdjjj6yacngmmah489n",
+      "bchreg:qz6285p7l8y9pdaxnr6zpeqqrnhvryxg2vtgn6rtt4",
+    ];
+    const options = { version: 2, network: "regtest" };
+    const d1 = new Divide(1200n, payees, options);
+
+    const alice = await getAnAliceWallet(102000);
+
+    await alice.send([
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+      {
+        cashaddr: d1.getAddress(),
+        value: 41200,
+        unit: "sat",
+      },
+    ]);
+
+    expect(await d1.getBalance()).toBeGreaterThan(100);
+
+    let link = await d1.execute(undefined, undefined, undefined, true);
+    expect(link.length).toBeGreaterThan(100);
+
   });
 });

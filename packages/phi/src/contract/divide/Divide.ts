@@ -16,11 +16,17 @@ import {
   sum,
   binToBigInt,
 } from "../../common/util.js";
-import { artifact as v1_2 } from "./cash/divide.2.js";
-import { artifact as v1_3 } from "./cash/divide.3.js";
-import { artifact as v1_4 } from "./cash/divide.4.js";
+import { artifact as v1_2 } from "./cash/2.v1.js";
+import { artifact as v1_3 } from "./cash/3.v1.js";
+import { artifact as v1_4 } from "./cash/4.v1.js";
+import { artifact as v2_2 } from "./cash/2.v2.js";
+import { artifact as v2_3 } from "./cash/3.v2.js";
+import { artifact as v2_4 } from "./cash/4.v2.js";
 
-const scriptMapV1: Artifact[] = [v1_2, v1_3, v1_4];
+const scriptMap: Artifact[][] = [
+  [v1_2, v1_3, v1_4],
+  [v2_2, v2_3, v2_4]
+];
 
 export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static c: string = "D";
@@ -35,9 +41,10 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     public options: ContractOptions = DefaultOptions
   ) {
     let scriptFn;
-    if (options.version === 1) {
-      scriptFn = scriptMapV1;
-    } else {
+
+    if ([1,2].includes(options.version!)){
+      scriptFn = scriptMap;
+    }else{
       throw Error("Unrecognized Divide Contract Version");
     }
 
@@ -50,7 +57,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     const divisor = BigInt(payees.length);
     if (!(divisor >= 2n && divisor <= 4n))
       throw Error(`Divide contract range must be 2-4, ${divisor} out of range`);
-    const script = scriptFn[Number(divisor - 2n)]!;
+    const script = scriptFn[options.version!-1]![Number(divisor - 2n)]!;
 
     const payeeLocks = [...payees].map((c) => {
       const lock = cashAddressToLockingBytecode(c);
@@ -84,7 +91,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     if (!(Divide.c == p.code))
       throw "non-faucet serialized string passed to faucet constructor";
 
-    if (p.options.version != 1)
+      if (![1,2].includes(p.options.version))
       throw Error(`${this.name} contract version not recognized`);
 
     const prefix = getPrefixFromNetwork(p.options.network);
@@ -115,7 +122,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
     // version
-    if (p.options.version !== 1)
+    if (![1,2].includes(p.options.version))
       throw Error(
         `Wrong version code passed to ${this.name} class: ${p.options.version}`
       );
@@ -206,15 +213,28 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   async execute(
     exAddress?: string,
     fee?: bigint,
-    utxos?: Utxo[]
+    utxos?: Utxo[],
+    debug?: boolean
   ): Promise<string> {
     let balance = 0n;
+
+    // Populate a list of utxos
+    if (!utxos) utxos = await this.getUtxos();
+
+    // If the contract is version 2 or higher, restrict to one input.
+    if(utxos){
+      if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
+    }
+
     if (utxos && utxos?.length > 0) {
       balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {
       balance = await this.getBalance();
     }
-    if (balance == 0n) return "No funds on contract";
+    if (balance == 0n) {
+      if (debug) { balance = 10000n }
+      else { throw Error("No funds on contract"); }
+    }
 
     const fn = this.getFunction(Divide.fn)!;
     const distributedValue = balance - BigInt(this.executorAllowance);
@@ -231,7 +251,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     if (exAddress) {
       to.push({
         to: exAddress,
-        amount: 546n,
+        amount: 577n,
       });
 
       const size = await fn().to(to).withoutChange().build();
@@ -241,15 +261,22 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       to.pop();
       const executorPayout =
         BigInt(this.executorAllowance) - (feeEstimate + 2n * divisor + 8n);
-      if (executorPayout > 546n)
+      if (executorPayout > 577n)
         to.push({
           to: exAddress,
           amount: executorPayout,
         });
     }
 
-    const txn = await fn().to(to).withoutChange().send();
+    let tx = fn()
+    tx.to(to).withoutChange();
 
-    return txn.txid;
+    let txn = ""
+    if (debug) {
+      txn = await this.asBitAuthUrl(tx)
+    } else {
+      txn = (await tx.send()).txid;
+    }
+    return txn;
   }
 }

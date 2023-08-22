@@ -1,9 +1,16 @@
 import { Mine } from "./Mine.js";
 import { RegTestWallet, mine as mineBlocks } from "mainnet-js";
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Mine Class Tests`, () => {
   test("Should serialize a 'mine' contract", async () => {
-    const m = new Mine();
+    const m = new Mine(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      {version:1}
+      );
     expect(m.toString()).toEqual(
       `M,1,1,5000,3,00000000000000,a914df288c9062bc5b1a7180d83ca19a7231b0fb50ad87`
     );
@@ -42,7 +49,7 @@ describe(`Mine Class Tests`, () => {
     const options = { version: 1, network: "regtest" };
     const m1 = new Mine(5n, Mine.minPayout, 2n, undefined, options);
 
-    const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);
+    const alice = await getAnAliceWallet(55000);
     const bob = await RegTestWallet.newRandom();
 
     await alice.send([
