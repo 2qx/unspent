@@ -17,7 +17,7 @@
 	</div>
 {:else}
 	<div class="alpha">
-		Beta
+		This app is in development.<br/>
 	</div>
 {/if}
 

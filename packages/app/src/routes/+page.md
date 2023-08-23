@@ -13,7 +13,7 @@ layout: splash
 
 The goal of this app is to let anyone in the world save money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
 
-There are no fiat prices, no markets. Nothing is traded. All contracts are single party. Contracts do not co-mingle funds, nor do they rely on outside data. The contract exists on the base layer of the Bitcoin Cash blockchain, and can continue to function without this webpage.
+There are no fiat prices, no markets. Nothing is traded. All contracts are single party. Contracts do not co-mingle funds, nor do they rely on outside data. The contract exists on the base layer of the Bitcoin Cash blockchain, and can continue to function without this webpage. The contract exists on the base layer of the Bitcoin Cash blockchain, and can continue to function without this webpage.
 
 Anyone can put their own money on a contract they created and get the same money back over time. This app allows anyone to do the math to calculate the locking code. This app does not provide any services.
 
@@ -61,7 +61,7 @@ Once you have your contract published, it's time to fund it.
 
 Here, you have to decide what amount of money you'd be okay losing; or conversely, how much you'd still like to have if you lost everything.
 
-The contract doesn't need to be funded in one transaction. A small trial amount may be tested to see that the contract functions as intended and to the correct address before being funded with a larger amount. 
+The contract doesn't need to be funded entirely in one transaction. A small trial amount may be tested to see that the contract functions as intended and to the correct address before being funded with a larger amount. 
 
 If you selected a monthly contract, the first payment will be available the following month. A weekly contract would be spendable one week after the first input.
 
