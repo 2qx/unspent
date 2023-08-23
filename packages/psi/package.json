@@ -1,6 +1,6 @@
 {
   "name": "@unspent/psi",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A persistent storage IndexedDB wrapper for ₿∙ϕ contracts and data using Dexie.js",
   "author": "2qx",
   "scripts": {
