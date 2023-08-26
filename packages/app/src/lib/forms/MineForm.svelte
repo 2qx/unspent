@@ -57,7 +57,7 @@
 		required
 		label="Payout (satoshis)"
 	>
-		<HelperText slot="helper">Amount contract will payout per period.</HelperText>
+		<HelperText slot="helper">Amount contract allows paying per period.</HelperText>
 	</Textfield>
 
 	<Textfield
