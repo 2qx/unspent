@@ -53,7 +53,7 @@ contract Faucet(
     // Limit to a single utxo input
     require(tx.inputs.length == 1);
     
-    // Get the total value on the contract
+    // Get the value of the input
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value returned to the contract

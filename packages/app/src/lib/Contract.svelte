@@ -69,26 +69,29 @@
 		});
 	}
 
-	const throttleUpdate = throttle(3000, async () => {
-		await updateBalance();
-	},{ noLeading: true, noTrailing: false });
+	const throttleUpdate = throttle(
+		3000,
+		async () => {
+			await updateBalance();
+		},
+		{ noLeading: true, noTrailing: false }
+	);
 
 	beforeUpdate(async () => {
 		// This fixes a bug related to the contract switch where old contracts appear
 		if (instanceType && instanceType !== instance.artifact.contractName) instance = undefined;
 		await throttleUpdate();
-
 	});
 
 	const updateBalance = async () => {
 		if (instance) balance = await instance.getBalance();
 		isFunded = balance > 0 ? true : false;
-		if (bitauth.length==0) {
-      try{
-        bitauth = await instance.execute(undefined, undefined, undefined, true);
-      }catch (e){
-        // pass
-      }
+		if (bitauth.length == 0) {
+			try {
+				bitauth = await instance.execute(undefined, undefined, undefined, true);
+			} catch (e) {
+				// pass
+			}
 		}
 		if (instance.contract.name === 'Annuity' || instance.contract.name === 'Perpetuity') {
 			if (showSeries) {
@@ -163,6 +166,7 @@
 		<br />
 		<AddressBlockie lockingBytecode={instance.getLockingBytecode()} />
 	</span>
+
 	<div>
 		<span style="position: relative; display: inline-block; padding: 1em 1em 0 0;">
 			<div style="font-size: x-large;">{instance.artifact.contractName}</div>
@@ -206,11 +210,15 @@
 			</IconButton>
 			<Tooltip>Open permanent link in new tab</Tooltip>
 		</Wrapper>
-
-		<Wrapper>
-			<AddressQrDialog codeValue={instance.getAddress()} lockingBytecode={instance.getLockingBytecode()} />
-			<Tooltip>Show qr code</Tooltip>
-		</Wrapper>
+		{#if instance.options.version >= 2}
+			<Wrapper>
+				<AddressQrDialog
+					codeValue={instance.getAddress()}
+					lockingBytecode={instance.getLockingBytecode()}
+				/>
+				<Tooltip>Show qr code</Tooltip>
+			</Wrapper>
+		{/if}
 
 		<SickPigAddress address={instance.getAddress()} network={nodeValue} />
 		{#if nodeValue === 'mainnet'}
@@ -218,7 +226,9 @@
 			<BitInfoChartsAddress {instance} />
 		{/if}
 	</div>
-
+	{#if instance.options.version < 2}
+		<b>Sending new funds to old contracts (v0 and v1) may result in loss of funds. Use a new contract (v2) for new funds.</b>
+	{/if}
 	<Address address={instance.getAddress()} />
 
 	{#if utxos.length == 0}

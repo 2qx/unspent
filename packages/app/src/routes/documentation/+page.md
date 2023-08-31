@@ -187,7 +187,7 @@ contract Faucet(
     // Limit to a single utxo input
     require(tx.inputs.length == 1);
     
-    // Get the total value on the contract
+    // Get the value of the input
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value returned to the contract
@@ -471,7 +471,29 @@ pragma cashscript ^0.8.1;
 A utility function to broadcast new contracts as OP_RETURN messages.
 
 ```solidity
-pragma cashscript ^0.7.0;
+pragma cashscript ^0.8.0;
+
+// Unspent Phi
+//
+// Record v2 
+//
+// Record: fractional payments at regular intervals using rolling timelocks.
+//
+// - The input must have aged for a predefined number of blocks (the period)
+// - All utxos must be processed atomically. One coin per tx, no merging.
+// - If installment is greater than 1000 sats, send the remainder back to the contract,
+// - Otherwise, liquidate the contract via a balloon payment to the recipient.
+// 
+// String & op_return serializations:
+//
+// R,2,<maxFee>,<index>,<contractBytecode>
+// 
+// 6a 047574786f
+// 01 52
+// 01 02
+// ...
+//
+
 
 /* Allows publishing some OP_RETURN message,
  * given that:
@@ -480,28 +502,42 @@ pragma cashscript ^0.7.0;
  * 3. the remaining value is pass back to the contract, mostly.
  */
 
-
+ 
 contract Record(int maxFee, int index) {
+
+  // Allow publishing any message 
+  //  if the hash160 digest of the message checks.
  function execute(bytes20 dataHash) {
 
   // this does nothing
-  // different indices enable different contract addresses
+  // different indicies enable different contract addresses
   require(index >= 0);
 
-  // Check that the first tx output is a zero value opcode matching the provided hash
+  // Limit to a single utxo input
+  require(tx.inputs.length == 1);
+
+  // Check that the first tx output is a zero value 
+  //  opcode matching the provided hash
   require(hash160(tx.outputs[0].lockingBytecode) == dataHash);
   require(tx.outputs[0].value == 0);
-
-  // calculate the fee required to propagate the transaction 1 sat/ byte
-  int baseFee = 162;
-
+  
+  // Calculate the fee required to
+  //   propagate the transaction 1 sat/ byte
+  int baseFee = 185;
+  
   int fee = baseFee + tx.outputs[0].lockingBytecode.length;
   require(fee<=maxFee);
 
-  // Check that the second tx output sends the change back
+  // Get the value of the input
   int newValue = tx.inputs[this.activeInputIndex].value - fee;
-  require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
-  require(tx.outputs[1].value >= newValue);
+
+  // If some value remains, return it to the contract,
+  if(newValue >= 1000){
+    require(tx.outputs[1].lockingBytecode == tx.inputs[0].lockingBytecode);
+    require(tx.outputs[1].value >= newValue);    
+  }  
+  // else{}
+  //    allow balance to be spent in an unrestricted manner.
  }
 }
 ```

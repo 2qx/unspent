@@ -1,7 +1,13 @@
 <script>
 	import { assets } from '$app/paths';
+  import { base } from '$app/paths';
 	export let data;
 </script>
+
+<footer>
+  <a href="{base}/faq">FAQ</a>
+  <a href="{base}/202308_security">&lt;=v1 exploit</a>
+</footer>
 
 {#if data && data.isDevelopment}
 	<div class="uc-image">
@@ -29,5 +35,23 @@
 		z-index: 1;
 		width: 400px;
 		pointer-events: none;
+	}
+
+  footer {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 12px;
+	}
+
+	footer a {
+		font-weight: bold;
+	}
+
+	@media (min-width: 480px) {
+		footer {
+			padding: 12px 0;
+		}
 	}
 </style>

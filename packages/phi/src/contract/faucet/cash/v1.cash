@@ -25,7 +25,7 @@ contract Faucet(
     // require the first output to match the active bytecode
     require(tx.outputs[0].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));
 
-    // Get the total value on the contract
+    // Get the value of the input
     int currentValue = tx.inputs[this.activeInputIndex].value;
 
     // Calculate value returned to the contract

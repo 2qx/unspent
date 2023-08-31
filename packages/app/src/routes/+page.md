@@ -11,9 +11,9 @@ layout: splash
 
 >   **Get money, don't spend all of it.**
 
-The goal of this app is to let anyone in the world save money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
+This app is for saving money for regular distribution over a long period of time. The core feature is a trustless irrevocable contract that anyone can customize, publish and fund themselves.
 
-There are no fiat prices, no markets. Nothing is traded. All contracts are single party. Contracts do not co-mingle funds, nor do they rely on outside data. The contract exists on the base layer of the Bitcoin Cash blockchain, and can continue to function without this webpage. The contract exists on the base layer of the Bitcoin Cash blockchain, and can continue to function without this webpage.
+There are no fiat prices, no markets. Nothing is traded. All contracts are single party. Contracts do not co-mingle funds, nor do they rely on outside data. Contracts exist on the base layer of the Bitcoin Cash blockchain, and can continue to function without this webpage.
 
 Anyone can put their own money on a contract they created and get the same money back over time. This app allows anyone to do the math to calculate the locking code. This app does not provide any services.
 
