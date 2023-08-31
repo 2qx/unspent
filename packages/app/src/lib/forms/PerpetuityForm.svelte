@@ -72,7 +72,7 @@
 
 <div class="margins">
 	<p>
-		A perpetuity contract will send a fixed fraction of total value to a predefined address on a
+		A perpetuity contract allows sending a fixed fraction of total value to a predefined address on a
 		regular schedule.
 	</p>
 	{#if showWarning}

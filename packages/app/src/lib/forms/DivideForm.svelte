@@ -58,7 +58,7 @@
 
 <div class="margins">
 	<p>
-		A divide contract splits any coins sent to it across multiple addresses.
+		A divide contract allows splitting any coins sent to it across multiple addresses.
 	</p>
 	{#each payees as payee, i}
 		<AddressOptional

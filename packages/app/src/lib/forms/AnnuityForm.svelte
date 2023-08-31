@@ -2,7 +2,7 @@
 	import { Annuity, DUST_UTXO_THRESHOLD, sanitizeAddress } from '@unspent/phi';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
-  import Button from '@smui/button';
+	import Button from '@smui/button';
 	import Radio from '@smui/radio';
 	import FormField from '@smui/form-field';
 
@@ -15,7 +15,7 @@
 	let options = { network: network, version: version };
 
 	let isPublished = false;
-  let showWarning = true;
+	let showWarning = true;
 
 	let showHelp = true;
 
@@ -49,7 +49,7 @@
 	async function createContract() {
 		if (receiptAddress && installment && period) {
 			try {
-        try {
+				try {
 					receiptAddress = await sanitizeAddress(receiptAddress);
 				} catch (e: any) {
 					if (e.message) {
@@ -73,8 +73,7 @@
 
 <div class="margins">
 	<p>
-		An annuity contract may send a fixed amount to a predefined address on a
-		regular schedule.
+		An annuity contract allows sending a fixed amount to a predefined address on a regular schedule.
 	</p>
 	{#if showWarning}
 		<ul>
