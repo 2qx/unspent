@@ -345,7 +345,7 @@ pointer-events: none;"
 						will be covered over.
 					</p>
 					<Donations {lockingBytecode} />
-					<Donations {perpLockingBytecode} />
+					<Donations lockingBytecode={"aa2076c2d330f961211025bd0760095510df60d4c6dad787"} />
 				</div>
 			</Card>
 		</div>

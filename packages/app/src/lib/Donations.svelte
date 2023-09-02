@@ -74,9 +74,9 @@
 
 
 {#if lockingBytecode}
-	<h3>Donations so far...</h3>
+<p>{lockingBytecode}</p>
 	{#if results}
-		<ImageList class="my-image-list-masonry" style="min-height:1000px;" masonry>
+		<ImageList class="my-image-list-masonry" style="min-height:500px;" masonry>
 			{#each results as txo}
 				<Item>
 					<div class="tract" style="height:{getUnevenImageSize(txo.satoshis, 80, 120, Math.abs)}px">
