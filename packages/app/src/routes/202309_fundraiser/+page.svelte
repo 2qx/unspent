@@ -8,6 +8,7 @@
 	import { Confetti } from 'svelte-confetti';
 	import { deriveLockingBytecodeHex, getDefaultElectrumProvider } from '@unspent/phi';
 
+  import Address from '$lib/Address.svelte';
 	import Donations from '$lib/Donations.svelte';
 	import AddressQrCode from '$lib/AddressQrCode.svelte';
 
@@ -87,7 +88,7 @@ pointer-events: none;"
 			x={[-5, 5]}
 			y={[0, 0.1]}
 			delay={[500, 2000]}
-			colorArray={['#0F0', '#F0F']}
+			colorArray={['#000', '#111']}
 			duration="5000"
 			amount="400"
 			fallDistance="100vh"
@@ -115,17 +116,17 @@ pointer-events: none;"
 
 					<h2>Welcome, Welcome, Welcome! This is it!</h2>
 					<p>
-						Back in May of 2022, this little project was started under the name <a
+						Back in May of 2022, this project began under the name <a
 							href="https://www.npmjs.com/package/bitcoin-cash-forever"
 							target="_blank">bitcoin-cash-forever</a
 						>
-						with the goal of creating a financial instrument that could shepherd wealth forward in time.
-						Now on the third iteration, the core feature (a simple irrevocable perpetuity contract)
+						, with the goal of creating a financial instrument that could shepherd wealth forward in
+						time. Now on the third iteration, that core feature (a simple irrevocable perpetuity contract)
 						<b> may be good enough to begin handling a modest amount of user wealth.</b>
 					</p>
 					<p>
-						As is, for a lot of users, a perpetuity may be safer place to protect (some of) their
-						long-term investment than a wallet they control. It's somewhat easy to spend the most
+						For many users, a perpetuity may be safer place to protect (at least some of) their
+						long-term investment, than a wallet they control. It's somewhat easy to spend the most
 						hyper-liquid asset in the history of finance. Passing custody of some funds to a time
 						locked contract may be a better way for many users to realize the full potential of
 						their investment over a longer period of time.
@@ -142,9 +143,10 @@ pointer-events: none;"
 					</table>
 
 					<p>
-						Part of the motivation of the project isn't monetary at all, but rather some the friends
-						we lost along the way. Bitcoin has lost so many cool and weird people. It's easy to
-						print money, but the people were the real asset in the social construct.
+						Part of the motivation of the project wasn't technical or monetary, but rather the
+						friends we lost along the way. The idea of bitcoin has been abandoned by so many cool
+						and weird people. It's easy to print money, but the ideas and hope for a freer future
+						was the real wealth of the social construct.
 					</p>
 
 					<p>
@@ -246,13 +248,14 @@ pointer-events: none;"
 
 					<p>There's two ways to support type of work: now or forever.</p>
 					<p>
-						The first address is a plain pay-to-public-key hash address. The second address is
-						the latest monthly perpetuity (with default settings) paying to the former address over the
+						The first address is a plain pay-to-public-key hash address. The second address is the
+						latest monthly perpetuity (with default settings) paying to the former address over the
 						next few decades.
 					</p>
 					<p>
 						If the second fundraiser goal is met, it will more than double the TLV secured by this
-						protocol. However, the small amount of `cash` of the first goal is also somewhat seriously needed urgently as well. u
+						protocol. However, the small amount of `cash` in the first goal is also somewhat
+						seriously needed urgently as well.
 					</p>
 					{#if cashaddr}
 						<table>
@@ -263,36 +266,48 @@ pointer-events: none;"
 							</tr>
 							<caption style="caption-side: bottom;">Pick a side, cash or code.</caption>
 						</table>
-						<table>
-							<tr>
-								<td>
-									<AddressQrCode size={200} codeValue={cashaddr} {lockingBytecode} />
-								</td>
-								<td>
-									<AddressQrCode
-										size={200}
-										codeValue={perp}
-										lockingBytecode={perpLockingBytecode}
-									/>
-								</td>
-							</tr>
-							<tr>
-								<td style="text-align: center;"> Cash is king! </td>
-								<td style="text-align: center;"> Pay to the script. </td>
-							</tr>
-							<tr>
-								<td>
-									💚 <LinearProgress progress={Number(balance) / Number(goal)} />
-								</td>
-								<td>
-									💚 <LinearProgress progress={Number(perpBalance) / Number(goal)} />
-								</td>
-							</tr>
-						</table>
+						<div style="display: flex; flex-wrap:wrap; align-items: center; justify-content: center;">
+							<div style="padding: 10px">
+								<table style="width:auto">
+									<tr>
+										<td>
+											<AddressQrCode size={225} codeValue={cashaddr} {lockingBytecode} />
+											💚 <LinearProgress progress={Number(balance) / Number(goal)} />
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align: center;"> Cash is king! </td>
+									</tr>
+                  <tr>
+                    <td style="width: 220px"><Address address={cashaddr} /></td>
+                  </tr>
+								</table>
+							</div>
+							<div style="padding: 10px">
+								<table style="width:auto">
+									<tr>
+										<td>
+											<AddressQrCode
+												size={225}
+												codeValue={perp}
+												lockingBytecode={perpLockingBytecode}
+											/>
+											💚 <LinearProgress progress={Number(perpBalance) / Number(goal)} />
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align: center;"> Pay to the script. </td>
+									</tr>
+                  <tr>
+                    <td style="width: 220px"><Address address={perp} /></td>
+                  </tr>
+								</table>
+							</div>
+						</div>
 					{/if}
 
 					<p>
-						The goal is to raise 100 BCH, 50 BCH in 'cash' and 50 BCH locked for later. Of course,
+						The goal is to raise 100 BCH, (50 BCH in 'cash' and 50 BCH locked (in the protocol) for later). Of course,
 						given the nature of the markets Bitcoin Cash is traded on, +/- a "0" on the end would
 						also be fine. The fundraiser may also end at any time, if sufficient funds have been
 						raised.
@@ -306,8 +321,7 @@ pointer-events: none;"
 					{:else}
 						<h3>Progress:</h3>
 						<p>
-							So far, {balanceText} satoshis have been raised in cash. About {percentDone} &#37; of the
-							way there.
+							So far, {balanceText} satoshis have been raised in cash and {perpBalanceText} has been locked for later distribution.
 						</p>
 					{/if}
 
@@ -325,6 +339,7 @@ pointer-events: none;"
 						will be covered over.
 					</p>
 					<Donations {lockingBytecode} />
+          <Donations {perpLockingBytecode} />
 				</div>
 			</Card>
 		</div>

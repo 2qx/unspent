@@ -3,7 +3,7 @@
 	import { base } from '$app/paths';
 	import { load } from '$lib/machinery/loader-store.js';
 	import { getUnspentOutputs } from '@unspent/psi';
-	import Address from './Address.svelte';
+
 	import ImageList, { Item, Image, Supporting, Label } from '@smui/image-list';
 	import { chaingraphHost } from '$lib/store.js';
 	import {
@@ -71,15 +71,7 @@
 	};
 </script>
 
-{#if cashaddr}
-	<p>Cashaddress: <Address address={cashaddr} /></p>
-  <p>If you have a privacy-centric browser, you may copy the cash address manually:</p>
-	<pre>{cashaddr}</pre>
-{/if}
-{#if legacy}
-	<p>Legacy Address:</p>
-	<pre>{legacy}</pre>
-{/if}
+
 
 {#if lockingBytecode}
 	<h3>Donations so far...</h3>
