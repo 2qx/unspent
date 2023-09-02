@@ -244,7 +244,7 @@ export async function getTransaction(host: string, txid: string) {
 
 export async function getUnspentOutputs(host: string, lockingBytecode: string, node?:string) {
   const query = `
-  query SearchUnspentOutputsByLockingBytecode($lockingBytecode_literal: _text!, $node: String!) {
+  query SearchUnspentOutputsByLockingBytecode($lockingBytecode_literal: _text!) {
     search_output(
       args: { locking_bytecode_hex: $lockingBytecode_literal},
       where: {_not:{spent_by:{value_satoshis:{_gt:0}}}}
@@ -263,7 +263,6 @@ export async function getUnspentOutputs(host: string, lockingBytecode: string, n
     data: {
       query: query,
       variables: {
-        node: node,
         lockingBytecode_literal: `{${lockingBytecode}}`,
       },
     },
