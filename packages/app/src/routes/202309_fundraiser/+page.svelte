@@ -124,7 +124,7 @@ pointer-events: none;"
 						<b> may be good enough to begin handling a modest amount of user wealth.</b>
 					</p>
 					<p>
-						For many users, a hard contract may be safer place to protect part of their long-term
+						For many users, a hard contract may be a safer way to protect part of their long-term
 						investment, as opposed to storing all funds in a liquid wallet they control. It's
 						somewhat easy to spend the most hyper-liquid asset in the history of finance. Passing
 						custody of some funds to a time locked contract may be a better way for many users to
@@ -153,9 +153,7 @@ pointer-events: none;"
 						this software. If this all works, no need for future fundraising is anticipated.
 					</p>
 
-          <p>
-						This is the last chance to participate in a fundraiser related to this project.
-					</p>
+					<p>This is the last chance to participate in a fundraiser related to this project.</p>
 
 					<h2>Update since the last raise, 2023 to date</h2>
 
@@ -188,7 +186,10 @@ pointer-events: none;"
 						</li>
 						<li>The transaction version is now enforced for all contracts.</li>
 						<li>
-							Of course, legacy contracts are still supported by the @unspent/phi wrapper package
+							Of course, legacy contracts are still supported by the <a
+								href="https://www.npmjs.com/package/@unspent/phi"
+								target="_blank">@unspent/phi</a
+							> wrapper package.
 						</li>
 					</ul>
 
@@ -208,7 +209,7 @@ pointer-events: none;"
 					<p>Some basic chores were completed for command line tooling.</p>
 					<ul>
 						<li>Automated deployment.</li>
-						<li>Better test coverage</li>
+						<li>Better test coverage.</li>
 					</ul>
 
 					<h3>Fun stuff too</h3>
@@ -232,7 +233,7 @@ pointer-events: none;"
 						<li>Shout out to the users who wrote bots!</li>
 						<li>Thank you Mozambique for consistent engagement!</li>
 						<li>Recognition for Taiwan's puzzlingly high web traffic.</li>
-						<li>Shout out to the current zero-timelock faucet hack-a-ton champ!</li>
+						<li>Shout out to the raining zero-timelock faucet hack-a-thon champ!</li>
 						<li>Everyone who stopped in to check things out. Thank you!</li>
 					</ul>
 
@@ -249,7 +250,7 @@ pointer-events: none;"
 						odds of success look so bad, most people lost hope of winning half a decade ago.
 					</p>
 
-					<p>There's two ways to support type of work: now or forever.</p>
+					<p>There's two ways to support this type of work: now or forever.</p>
 					<p>
 						The first address is a plain pay-to-public-key hash address. The second address is the
 						latest monthly perpetuity (with default settings) paying to the former address over the
@@ -344,8 +345,14 @@ pointer-events: none;"
 						campaign, at which point the money is whisked away for safe keeping and the little episode
 						will be covered over.
 					</p>
-					<Donations {lockingBytecode} />
-					<Donations lockingBytecode={"aa2076c2d330f961211025bd0760095510df60d4c6dad787"} />
+					<div style="display: flex; flex-wrap:wrap; align-items: center; justify-content: center;">
+						<div style="max-width:285px; padding: 10px;">
+							<Donations {lockingBytecode} />
+						</div>
+						<div style="max-width:285px; padding: 10px;">
+							<Donations lockingBytecode={'aa2076c2d330f961211025bd0760095510df60d4c6dad787'} />
+						</div>
+					</div>
 				</div>
 			</Card>
 		</div>

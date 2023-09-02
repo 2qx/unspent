@@ -46,7 +46,7 @@
 		await load({
 			load: async () => {
 				const sha256Promise = instantiateSha256();
-				results = (await getUnspentOutputs(chaingraphHostValue, lockingBytecode)).search_output;
+				results = (await getUnspentOutputs(chaingraphHostValue, lockingBytecode)).search_output_prefix;
 				results = results.map((r) => {
 					return {
 						txid: r.transaction_hash.slice(2),
@@ -74,12 +74,12 @@
 
 
 {#if lockingBytecode}
-<p>{lockingBytecode}</p>
+<p style="line-break: anywhere;">{lockingBytecode}</p>
 	{#if results}
-		<ImageList class="my-image-list-masonry" style="min-height:500px;" masonry>
+		<ImageList class="my-image-list-masonry" style="min-height:500px;"  masonry>
 			{#each results as txo}
 				<Item>
-					<div class="tract" style="height:{getUnevenImageSize(txo.satoshis, 80, 120, Math.abs)}px">
+					<div class="tract" style="height:{getUnevenImageSize(txo.satoshis, 60, 180, Math.abs)}px">
 						<h2>⚫ {txo.satoshis.toLocaleString()}</h2>
 						<a target=_blank href="https://explorer.bitcoinunlimited.info/tx/{txo.txid}" >Transaction</a>
 					</div>

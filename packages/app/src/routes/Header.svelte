@@ -13,11 +13,11 @@
 	<div class="dev">
 		This is an <b>unstable</b> development version of the unspent app. Funds may be lost using new
 		features. Please go to <a href="https://unspent.app">unspent.app</a> instead.
-		<a href="{base}/202309_fundraiser">◼️⛏️</a>
+		<a href="{base}/202309_fundraiser">Checkout the final fundraiser ◼️⛏️</a>
 	</div>
 {:else}
 	<div class="beta">
-		This app is in beta.<br/>
+		Beta Release. Checkout our <a href="{base}/202309_fundraiser">final fundraiser ◼️⛏️ </a><br/>
 	</div>
 {/if}
 

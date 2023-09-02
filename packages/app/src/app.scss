@@ -32,12 +32,12 @@
 );
 
 .my-image-list-masonry {
-	@include image-list.masonry-columns(3);
+	@include image-list.masonry-columns(2);
 	@include image-list.shape-radius(10px);
 	max-width: 680px;
 }
 
-@media (max-width: 599px) {
+@media (max-width: 299px) {
 	.my-image-list-masonry {
 		@include image-list.masonry-columns(2);
 	}
