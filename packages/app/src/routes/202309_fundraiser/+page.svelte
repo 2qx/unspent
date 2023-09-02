@@ -233,7 +233,7 @@ pointer-events: none;"
 						<li>Shout out to the users who wrote bots!</li>
 						<li>Thank you Mozambique for consistent engagement!</li>
 						<li>Recognition for Taiwan's puzzlingly high web traffic.</li>
-						<li>Shout out to the raining zero-timelock faucet hack-a-thon champ!</li>
+						<li>Shout out to the current reigning zero-timelock faucet hack-a-thon champ!</li>
 						<li>Everyone who stopped in to check things out. Thank you!</li>
 					</ul>
 
