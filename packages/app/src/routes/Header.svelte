@@ -7,17 +7,17 @@
 
 {#if data && data.isLocal}
 	<div class="local">
-		This is a local development instance, <a href="{base}/202212_fundraiser"> 🎉🍊</a>
+		This is a local development instance, <a href="{base}/202309_fundraiser">◼️⛏️</a>
 	</div>
 {:else if data && data.isDevelopment}
 	<div class="dev">
 		This is an <b>unstable</b> development version of the unspent app. Funds may be lost using new
 		features. Please go to <a href="https://unspent.app">unspent.app</a> instead.
-		<a href="{base}/202212_fundraiser">🎉🍊</a>
+		<a href="{base}/202309_fundraiser">Checkout the final fundraiser ◼️⛏️</a>
 	</div>
 {:else}
-	<div class="alpha">
-		This app is in development.<br/>
+	<div class="beta">
+		Beta Release. Checkout our <a href="{base}/202309_fundraiser">final fundraiser ◼️⛏️ </a><br/>
 	</div>
 {/if}
 
@@ -70,7 +70,7 @@
 		justify-content: space-between;
 	}
 
-	.alpha {
+	.beta {
 		width: 100%;
 		background-color: rgb(225, 0, 255);
 		font-weight: 900;
@@ -81,7 +81,7 @@
 		text-align: center;
 	}
 
-	.alpha a {
+	.beta a {
 		color: darkgreen;
 	}
 
