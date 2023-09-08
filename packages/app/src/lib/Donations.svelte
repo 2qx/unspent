@@ -80,7 +80,7 @@
 			{#each results as txo}
 				<Item>
 					<div class="tract" style="height:{getUnevenImageSize(txo.satoshis, 60, 180, Math.abs)}px">
-						<h2>⚫ {txo.satoshis.toLocaleString()}</h2>
+						<h2>⚫ {new Intl.NumberFormat().format(txo.satoshis) }</h2>
 						<a target=_blank href="https://explorer.bitcoinunlimited.info/tx/{txo.txid}" >Transaction</a>
 					</div>
 				</Item>
@@ -98,8 +98,8 @@
 	}
 	.tract h2 {
 		font-weight: 600;
+    font-size: medium;
 		color: rgb(90, 55, 5);
-    text-align: right;
 	}
   .tract a {
 		font-weight: 400;
