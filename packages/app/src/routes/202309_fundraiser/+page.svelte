@@ -24,7 +24,10 @@
 	let balance = 0n;
 	let perpBalance = 0n;
 	let balanceText = '';
+  let p2pkhBCHText = "";
 	let perpBalanceText = '';
+  let p2shBCHText = "";
+
 	let percentDone = '';
 	let perpPercentDone = '';
 	let isSuccess = false;
@@ -39,11 +42,13 @@
 			load: async () => {
 				if (cashaddr) balance = await getBalance(cashaddr);
 				balanceText = balance.toLocaleString();
+        p2pkhBCHText = (balance/100000000n).toLocaleString()
 				percentDone = Number((balance / goal) * 100n).toFixed(4);
 				isSuccess = balance > goal ? true : false;
 
 				if (cashaddr) perpBalance = await getBalance(perp);
 				perpBalanceText = perpBalance.toLocaleString();
+				p2shBCHText = (perpBalance/100000000n).toLocaleString();
 				perpPercentDone = Number((perpBalance / goal) * 100n).toFixed(4);
 				isSuccess = balance > goal ? true : false;
 			}
@@ -278,7 +283,7 @@ pointer-events: none;"
 									<tr>
 										<td>
 											<AddressQrCode size={225} codeValue={cashaddr} {lockingBytecode} />
-											💚 <LinearProgress progress={Number(balance) / Number(goal)} />
+											 {p2pkhBCHText} <b>BCH 💚</b> <LinearProgress progress={Number(balance) / Number(goal)} />
 										</td>
 									</tr>
 									<tr>
@@ -298,7 +303,7 @@ pointer-events: none;"
 												codeValue={perp}
 												lockingBytecode={perpLockingBytecode}
 											/>
-											💚 <LinearProgress progress={Number(perpBalance) / Number(goal)} />
+											{ p2shBCHText } <b>BCH 💚</b> <LinearProgress progress={Number(perpBalance) / Number(goal)} />
 										</td>
 									</tr>
 									<tr>
