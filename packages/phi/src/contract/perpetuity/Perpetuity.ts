@@ -64,7 +64,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Perpetuity Version");
     }
 
-    if (executorAllowance < Perpetuity.minAllowance)
+    if ((options.version >= 2) && (executorAllowance < Perpetuity.minAllowance))
       throw Error(
         `Executor Allowance below usable threshold ${Perpetuity.minAllowance}`
       );
