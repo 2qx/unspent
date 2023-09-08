@@ -27,6 +27,7 @@
   let p2pkhBCHText = "";
 	let perpBalanceText = '';
   let p2shBCHText = "";
+
 	let percentDone = '';
 	let perpPercentDone = '';
 	let isSuccess = false;
