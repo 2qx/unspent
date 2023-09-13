@@ -214,7 +214,11 @@ export function getRandomIntWeak(max: number) {
 }
 
 export function sum(previousValue: any, currentValue: any) {
-  return previousValue + currentValue;
+  return BigInt(previousValue) + BigInt(currentValue);
+}
+
+export function sumNumber(previousValue: any, currentValue: any) {
+  return (previousValue) + (currentValue);
 }
 
 export function parseBigInt(num:string):bigint{

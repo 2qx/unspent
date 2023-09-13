@@ -18,6 +18,8 @@ import {
 import {
   parseBigInt,
   opReturnToSerializedString,
+  opReturnToBalance,
+  getDefaultElectrumProvider,
   stringToInstance,
 } from "@unspent/phi";
 
@@ -384,24 +386,32 @@ export class QueryCommand extends NetworkCommand {
       ? this.chaingraph
       : "https://demo.chaingraph.cash/v1/graphql";
     let prefix = this.prefix ? this.prefix : "6a047574786f";
+    
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
+    let networkProvider = getDefaultElectrumProvider(node)
     let limit = !this.limit ? undefined : parseInt(this.limit);
     let offset = !this.offset ? undefined : parseInt(this.offset);
     let exclude = "6a047574786f014d0101"
     let hexRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
-    //console.log(`Found ${hexRecords.length} records`);
-    //hexRecords.map((s: string) => console.log(s));
     let contracts = [];
+    let total = 0n;
     for (let record of hexRecords) {
       try{
         let instance = opReturnToSerializedString(record, this.network);
         if (instance) contracts.push(instance.toString());
-      }catch{
+        total += (await opReturnToBalance(record, this.network, networkProvider));
+
+      }catch (e){
+        console.log(e)
         // anyone can post an OP_RETURN that doesn't parse
+        console.log('couldn\'t parse: ', record)
       }
       
+      
     }
-    console.log(`Build ${contracts.length} contracts`);
+    console.log(total)
+    console.log("sum: ", total.toLocaleString())
+    console.log(`Built ${contracts.length} contracts`);
     contracts.map((contract: string) => {
       console.log(contract);
     });

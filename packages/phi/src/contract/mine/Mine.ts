@@ -12,6 +12,7 @@ import {
   toHex,
   getRandomIntWeak,
   sum,
+  sumNumber,
   decodeNullDataScript,
   binToBigInt,
 } from "../../common/util.js";
@@ -189,12 +190,12 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
         ...nonce,
       ]);
       result = sha256.hash(msg);
-      const newBest = result.slice(0, Number(this.difficulty)).reduce(sum);
+      const newBest = result.slice(0, Number(this.difficulty)).reduce(sumNumber);
       if (newBest <= best) {
         best = newBest;
         if (verbose) console.log(newBest, result.slice(0, Number(this.difficulty)));
       }
-      if (result.slice(0, Number(this.difficulty)).reduce(sum) === 0) mined = true;
+      if (result.slice(0, Number(this.difficulty)).reduce(sumNumber) === 0) mined = true;
     }
 
     // if the number is smaller than the space allowed, prepend it by adding zeros to the right

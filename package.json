@@ -20,6 +20,7 @@
     "app:publish": "yarn workspace @unspent/app run publish;",
     "app:preview": "yarn workspace @unspent/app run build; yarn workspace @unspent/app run preview",
     "app:dev": "yarn workspace @unspent/app run dev",
+    "cash:build": "yarn workspace @unspent/chi run build",
     "build": "npx lerna build",
     "build:phi": "yarn workspace @unspent/phi run build ",
     "build:cache": "npx ts-node --esm packages/psi/scripts/buildCache.ts",
