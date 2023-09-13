@@ -36,7 +36,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile
       - run: yarn
-      - run: yarn app:cash:build
+      - run: yarn cash:build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
