@@ -399,7 +399,10 @@ export class QueryCommand extends NetworkCommand {
       try{
         let instance = opReturnToSerializedString(record, this.network);
         if (instance) contracts.push(instance.toString());
-        total += (await opReturnToBalance(record, this.network, networkProvider));
+        let subTotal = await opReturnToBalance(record, this.network, networkProvider)
+        
+        console.log(subTotal, instance)
+        total += BigInt(subTotal);
 
       }catch (e){
         console.log(e)
@@ -412,9 +415,7 @@ export class QueryCommand extends NetworkCommand {
     console.log(total)
     console.log("sum: ", total.toLocaleString())
     console.log(`Built ${contracts.length} contracts`);
-    contracts.map((contract: string) => {
-      console.log(contract);
-    });
+    
   }
 }
 

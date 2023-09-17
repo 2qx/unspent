@@ -7,13 +7,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="97.220215mm"
-   height="97.220215mm"
-   viewBox="0 0 97.220215 97.220215"
+   width="128mm"
+   height="128mm"
+   viewBox="0 0 128 128"
    version="1.1"
    id="svg1055"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="icon.inkscape.svg">
+   sodipodi:docname="icon.inkscape.svg"
+   inkscape:export-filename="/home/amnesia/projects/unspent/packages/chi/static/favicon.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs1049">
     <rect
@@ -37,8 +40,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.6069858"
-     inkscape:cx="140.26097"
-     inkscape:cy="225.71665"
+     inkscape:cx="50.029986"
+     inkscape:cy="225.71666"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -47,11 +50,12 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1422"
-     inkscape:window-height="960"
+     inkscape:window-width="1920"
+     inkscape:window-height="1176"
      inkscape:window-x="0"
-     inkscape:window-y="206"
-     inkscape:window-maximized="0" />
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     showguides="false" />
   <metadata
      id="metadata1052">
     <rdf:RDF>
@@ -68,15 +72,14 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-1.4186212,-0.08020157)">
+     transform="translate(-1.4186063,-0.08019997)">
     <path
        id="path10"
-       style="fill:#ffb200;fill-opacity:1;stroke:#000000;stroke-width:1.61251;stroke-linejoin:bevel;stroke-miterlimit:4.1;stroke-dasharray:3.22501, 1.61251;stroke-opacity:0.252974"
-       d="M 189.08594,1.109375 A 182.91732,182.91732 0 0 0 6.1679688,184.02734 182.91732,182.91732 0 0 0 189.08594,366.94336 182.91732,182.91732 0 0 0 372.00195,184.02734 182.91732,182.91732 0 0 0 189.08594,1.109375 Z m -99.626956,82.121094 54.433596,0.189453 51.05469,71.326168 28.34179,-37.54101 -18.95703,-2.25196 V 83.232422 h 91.78516 v 33.035158 l -18.39453,3.1914 -52.18164,64.00391 54.99609,67.00977 19.14648,3.0039 v 32.84766 h -53.49414 l -54.80859,-73.39258 -29.65625,39.79297 16.33008,2.06445 v 31.53321 H 87.582031 v -32.84766 l 18.958989,-3.00391 54.80859,-66.07031 -52.93164,-64.94336 -18.958986,-3.19141 z"
-       transform="scale(0.26458333)" />
+       style="fill:#ffb200;fill-opacity:1;stroke:#000000;stroke-width:0.56172;stroke-linejoin:bevel;stroke-miterlimit:4.1;stroke-dasharray:1.12343, 0.56172;stroke-opacity:0.252974"
+       d="M 65.41901,0.36105976 A 63.719294,63.719628 0 0 0 1.699488,64.080912 63.719294,63.719628 0 0 0 65.41901,127.80009 63.719294,63.719628 0 0 0 129.13785,64.080912 63.719294,63.719628 0 0 0 65.41901,0.36105976 Z M 30.713934,28.968113 49.675891,29.034106 67.460805,53.880725 77.333675,40.803236 70.729989,40.01876 V 28.968789 h 31.973391 v 11.507866 l -6.407746,1.111731 -18.177488,22.295894 19.157902,23.342994 6.669682,1.046414 V 99.716239 H 85.311032 L 66.218445,74.149785 55.887684,88.011748 l 5.688587,0.719155 v 10.98466 H 30.060096 v -11.44255 l 6.60437,-1.046419 19.092586,-23.01573 -18.43875,-22.623154 -6.604368,-1.111733 z" />
     <g
        aria-label="χ"
-       transform="matrix(9.6102624,0,0,9.6102624,-876.91952,-867.5618)"
+       transform="matrix(12.652866,0,0,12.652932,-1155.0008,-1142.2627)"
        id="text835"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Roboto Slab';-inkscape-font-specification:'Roboto Slab';white-space:pre;shape-inside:url(#rect837);fill:#000000;fill-opacity:1;stroke:none" />
   </g>

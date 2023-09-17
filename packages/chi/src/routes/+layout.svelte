@@ -1,17 +1,30 @@
 <script context="module">
-  import { waitLocale } from 'svelte-i18n'
+import '$lib/i18n' 
+import { browser } from '$app/environment'
+import { SvelteToast } from '@zerodevx/svelte-toast';  
+import Header from './Header.svelte';
+import './styles.css';
 
-  export async function preload() {
-    // awaits for the loading of the 'en-US' and 'en' dictionaries
-    return waitLocale()
-  }
-	import Header from './Header.svelte';
-	import './styles.css';
+import { locale, waitLocale , getLocaleFromNavigator, init} from 'svelte-i18n'
+
+if (browser) {
+		// init on client side only
+		// don't put this inside `load`, otherwise it will gets executed every time you changed route on client side
+    console.log(getLocaleFromNavigator())
+		init({
+			fallbackLocale: "en",
+			initialLocale: getLocaleFromNavigator(),
+		});
+	}
+
+
+
+
 </script>
 
 <div class="app">
 	<Header />
-
+<SvelteToast />
 	<main>
 		<slot />
 	</main>
