@@ -1,6 +1,12 @@
 <script>
 	import { page } from '$app/stores';
+  import { base } from '$app/paths';
 	import logo from '$lib/images/logo.svg';
+	import home from '$lib/images/home.svg';
+	import chart from '$lib/images/chart.svg';
+	import code from '$lib/images/code.svg';
+	import history from '$lib/images/history.svg';
+	import table from '$lib/images/table.svg';
 	import github from '$lib/images/github.svg';
 </script>
 
@@ -16,8 +22,30 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-				<a href="/">Home</a>
+			<li ahref="{base}" aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+        <a href="{base}/">
+				<img src={home} alt="home" />
+        </a>
+			</li>
+      <!--li  aria-current={$page.url.pathname === '/history' ? 'page' : undefined}>
+        <a href="{base}/history">
+        <img src={history} alt="history" />
+        </a>
+			</li-->
+      <li aria-current={$page.url.pathname === '/table' ? 'page' : undefined}>
+        <a href="{base}/table">
+				<img src={table} alt="table" />
+        </a>
+			</li>
+      <li aria-current={$page.url.pathname === '/chart' ? 'page' : undefined}>
+        <a href="{base}/chart">
+				<img src={chart} alt="chart" />
+        </a>
+			</li>
+      <li aria-current={$page.url.pathname === '/code' ? 'page' : undefined}>
+        <a href="{base}/code">
+				<img src={code} alt="code" />
+        </a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -107,7 +135,6 @@
 		display: flex;
 		height: 100%;
 		align-items: center;
-		padding: 0 0.5rem;
 		color: var(--color-text);
 		font-weight: 700;
 		font-size: 0.8rem;

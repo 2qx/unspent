@@ -9,7 +9,7 @@ const DefaultOptions = {
 const PROTOCOL_ID = "7574786f";
 const _PROTOCOL_ID = "0x" + PROTOCOL_ID;
 
-const DUST_UTXO_THRESHOLD = 546n;
+const DUST_UTXO_THRESHOLD = 576n;
 
 export {
   DELIMITER,

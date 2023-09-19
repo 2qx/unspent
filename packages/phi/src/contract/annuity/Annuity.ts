@@ -268,10 +268,20 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         const installment = BigInt(this.installment) + BigInt(this.executorAllowance);
         const intervalSeconds = Number(this.period) * 600;
         for (var i = 0; i < seriesLength; i++) {
-          time.push(Number(seriesStartTime + i * intervalSeconds));
-          principal.push(Number(initialPrincipal) - Number(installment) * i);
-          totalPayout.push(Number(this.installment) * i);
-          totalFee.push(Number(this.executorAllowance) * i);
+          if(installment > 1000n){
+            time.push(Number(seriesStartTime + i * intervalSeconds));
+            principal.push(Number(initialPrincipal) - Number(installment) * i);
+            totalPayout.push(Number(this.installment) * i);
+            totalFee.push(Number(this.executorAllowance) * i);
+          }else{
+            time.push(Number(seriesStartTime + i * intervalSeconds));
+            principal.push(0);
+            totalPayout.push(Number(initialPrincipal) - Number(installment) * i);
+            totalFee.push(Number(this.executorAllowance) * i);
+            break;
+          }
+          
+
         }
 
         const utxoId = `${utxo.txid}:${utxo.vout.toString()}`;

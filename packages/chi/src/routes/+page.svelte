@@ -1,78 +1,164 @@
 <script>
-	import { beforeUpdate } from 'svelte';
-  import { _ } from 'svelte-i18n';
-  import { toast } from '@zerodevx/svelte-toast';
-  import { addMessages, init } from "svelte-i18n";
-  import { Perpetuity, opReturnToInstance, sanitizeAddress } from '@unspent/phi';
-  import { deflate } from "pako";
-  // ...
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import lock from '$lib/images/lock.svg';
+	import arrow_back from '$lib/images/arrow_back.svg';
+	import arrow_down from '$lib/images/arrow_down.svg';
+	import arrow_step from '$lib/images/arrow_step.svg';
+	import month from '$lib/images/month.svg';
+	import { _ } from 'svelte-i18n';
+	import { toast } from '@zerodevx/svelte-toast';
+	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import {
+		binToBase64,
+		base64ToBin,
+		lockingBytecodeToCashAddress,
+		cashAddressToLockingBytecode
+	} from '@bitauth/libauth';
+	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
+	import { deflate, inflate } from 'pako';
+	import { receiptAddressStore } from '$lib/store.js';
 
-  export let data;
-  let receiptAddress;
-  let contract;
+	export let data;
+	export let p;
+	let balance;
+	let receiptAddress;
+	let contract;
+	let receiptAddressValid = false;
 
+	if (data.q) {
+		if (!receiptAddress) {
+			let bytecode = inflate(base64ToBin(encodeURI(data.q)));
+			receiptAddress = lockingBytecodeToCashAddress(bytecode);
+			receiptAddressValid = true;
+			createContract();
+		}
+	}
 
+	if (data.p) {
+		p = data.p;
+	}
 
-  async function createContract() {
+	async function createContract() {
 		if (receiptAddress) {
 			try {
 				try {
 					receiptAddress = await sanitizeAddress(receiptAddress);
+					receiptAddressValid = true;
+					receiptAddressStore.set(receiptAddress);
 				} catch (e) {
+					receiptAddressValid = false;
 					if (e.message) {
 						toast.push(e.message, { classes: ['warn'] });
 					} else {
 						toast.push(e, { classes: ['warn'] });
 					}
 				}
-
 				contract = new Perpetuity(4383, receiptAddress, 1500, 96);
+				let bytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
+				let q = decodeURI(binToBase64(deflate(bytecode)));
+				$page.url.searchParams.set('q', q);
+				updateBalance();
+				goto(`?${$page.url.searchParams.toString()}`);
 			} catch (e) {
 				contract = undefined;
+
 				if (e.message) {
 					toast.push(e.message, { classes: ['warn'] });
 				} else {
 					toast.push(e, { classes: ['warn'] });
 				}
 			}
+		} else {
+			contract = undefined;
+			balance = undefined;
 		}
+	}
+
+	const updateBalance = async () => {
+		if (contract) balance = await contract.getBalance();
+	};
+
+	function updateReceiptAddress() {
+		receiptAddressStore.set(receiptAddressValue);
+	}
+
+	receiptAddressStore.subscribe((value) => {
+		receiptAddress = value;
+		if (receiptAddress && !contract) createContract();
+	});
+
+	function clearReceiptAddress() {
+		receiptAddressValue = '';
+		receiptAddress.set('');
 	}
 </script>
 
 <svelte:head>
-	<title>₿∙χ</title>
+	<title>∑ ₿ᵪ</title>
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 
 <section>
-	<h1>
-		<span class="welcome">
-      
-
-		</span>
-  </h1>
-    <h1>{$_('create')}</h1>
-    <div id=form1>
-      <label for="addr">{$_('receive')} </label>
-      <textarea id="addr" bind:value={receiptAddress} />
-    </div>
-    {#if receiptAddress}
-    <div>
-      <button> {$_('ok')} </button>
-    </div>
-
-    
-    <progress id="broadcast" max="100" value="70"></progress>    
-    {#if contract}
-
-    {/if}
-    {$_('spendable')} 1.0416% {$_('year')}<br>
-    <br>
-    { data.q }
-	
-    {/if}
-
-
+	<table>
+		<tr>
+			{#if balance}
+				<td />
+				<td colspan="3">
+					<b>{balance.toLocaleString()}</b> sats
+				</td>
+			{:else}
+				<td colspan="4" />
+			{/if}
+		</tr>
+		<tr>
+			{#if contract}
+				<td><img src={lock} alt="lock" /></td>
+				<td colspan="3">
+					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
+						<div class="action">
+							<button on:click={copy}>
+								{contract.getAddress()}
+							</button>
+						</div>
+					</CopyToClipboard>
+				</td>
+			{:else}
+				<td><img src={lock} alt="lock" /></td>
+				<td colspan="4">{$_('create')}</td>
+			{/if}
+		</tr>
+		{#if receiptAddressValid}
+			<tr>
+				<td
+					><img src={month} alt="month" />
+					<p>1 m</p></td
+				>
+				<td
+					><img src={arrow_down} alt="to" />
+					<p>1/96</p></td
+				>
+				<td
+					><img src={arrow_back} alt="back" />
+					<p>95/96</p></td
+				>
+				<td
+					><img src={arrow_step} alt="step" />
+					<p>{new Intl.NumberFormat().format(1500)} sat</p></td
+				>
+			</tr>
+		{/if}
+		<tr>
+			<td />
+			<td colspan="3">{$_('receive')}:</td>
+		</tr>
+		<tr>
+			<td />
+			<td colspan="3">
+				<textarea id="addr" on:change={() => createContract()} bind:value={receiptAddress} />
+			</td>
+		</tr>
+	</table>
 </section>
 
 <style>
@@ -82,9 +168,10 @@
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
+		line-break: anywhere;
 	}
 
-  #form1 {
+	#form1 {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -92,15 +179,23 @@
 		flex: 0.6;
 	}
 
+	table {
+		border: 4mm ridge rgba(211, 220, 50, 0.6);
+	}
+	table tr td {
+		min-width: 20%;
+	}
+
+	table tr td p {
+		font-size: small;
+	}
+
 	h1 {
 		width: 100%;
 	}
 
-  textarea {
-    width: 350px;
-    height: 40px;
-  }
-
-
-	
+	textarea {
+		width: 100%;
+		height: 40px;
+	}
 </style>

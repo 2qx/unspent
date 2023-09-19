@@ -18,6 +18,7 @@
 		"@types/cookie": "^0.5.1",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
+    "@macfja/svelte-persistent-store": "2.2.1",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
 		"tslib": "^2.4.1",
@@ -27,6 +28,8 @@
 	"type": "module",
 	"dependencies": {
     "@unspent/phi": "0.2.0",
+    "lightweight-charts": "^3.8.0",
+    "svelte-lightweight-charts": "^1.6.3",
     "@zerodevx/svelte-toast": "0.8.0",
 		"svelte-i18n": "^3.7.4",
     "pako": "2.1.0"

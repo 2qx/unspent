@@ -1,11 +1,14 @@
 <script context="module">
 import '$lib/i18n' 
-import { browser } from '$app/environment'
+import { browser } from '$app/environment';
+import { goto, invalidateAll }  from '$app/navigation';
 import { SvelteToast } from '@zerodevx/svelte-toast';  
 import Header from './Header.svelte';
 import './styles.css';
 
 import { locale, waitLocale , getLocaleFromNavigator, init} from 'svelte-i18n'
+
+let currentPage;
 
 if (browser) {
 		// init on client side only
@@ -15,7 +18,7 @@ if (browser) {
 			fallbackLocale: "en",
 			initialLocale: getLocaleFromNavigator(),
 		});
-	}
+}
 
 
 
@@ -23,10 +26,10 @@ if (browser) {
 </script>
 
 <div class="app">
-	<Header />
+	<Header bind:currentPage={currentPage} />
 <SvelteToast />
 	<main>
-		<slot />
+		<slot p={currentPage} />
 	</main>
 
 	<footer>
