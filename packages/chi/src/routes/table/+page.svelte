@@ -20,7 +20,6 @@
 
 	const loadSeries = async () => {
 		utxos = await contract.getUtxos();
-		console.log(JSON.stringify(utxos));
 	};
 </script>
 
