@@ -130,22 +130,23 @@
 		</tr>
 		{#if receiptAddressValid}
 			<tr>
-				<td
-					><img src={month} alt="month" />
-					<p>1 m</p></td
-				>
-				<td
-					><img src={arrow_down} alt="to" />
-					<p>1/96</p></td
-				>
-				<td
-					><img src={arrow_back} alt="back" />
-					<p>95/96</p></td
-				>
-				<td
-					><img src={arrow_step} alt="step" />
-					<p>{new Intl.NumberFormat().format(1500)} sat</p></td
-				>
+				<td>
+					<p>1 m</p>
+					<img src={month} alt="month" />
+				</td>
+				<td>
+					<p>1/96</p>
+
+					<img src={arrow_down} alt="to" />
+				</td>
+				<td>
+					<p>95/96</p>
+					<img src={arrow_back} alt="back" />
+				</td>
+				<td>
+					<p>{new Intl.NumberFormat().format(1500)} sat</p>
+					<img src={arrow_step} alt="step" />
+				</td>
 			</tr>
 		{/if}
 		<tr>
