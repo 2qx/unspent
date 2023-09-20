@@ -5,6 +5,7 @@
 	import arrow_back from '$lib/images/arrow_back.svg';
 	import arrow_down from '$lib/images/arrow_down.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
+	import lock_clock from '$lib/images/lock_clock.svg';
 	import month from '$lib/images/month.svg';
 	import { _ } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
@@ -113,7 +114,9 @@
 		</tr>
 		<tr>
 			{#if contract}
-				<td><img src={lock} alt="lock" /></td>
+				<td>
+          <img src={lock} alt="lock" />
+        </td>
 				<td colspan="3">
 					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
 						<div class="action">
@@ -133,6 +136,7 @@
 				<td>
 					<p>1 m</p>
 					<img src={month} alt="month" />
+					<img src={lock_clock} alt="lock_clock" />
 				</td>
 				<td>
 					<p>1/96</p>

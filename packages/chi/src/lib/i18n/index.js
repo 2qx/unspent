@@ -12,7 +12,7 @@ const langs = [
   "ta", "uz@Latn", " bn", "eo", "fa", "gl", "ka", "mn", "ru", "te",
   "yue", " bs", "es_CL", "fi", "gu", "kk", "nb", "si", "tk", "zh-Hans",
   " ca", "es_CO", "fil", "hak", "km", "ne", "sk", "tl", "zh-Hant", " cmn",
-  "es_DO", "fr_CM", "he", "ko", "nl", "sl", "tr", "zh_HK"
+  "es_DO", "fr_CM", "he", "ko", "nl", "sl", "tr", "zh_HK","zh"
 ]
 
 
