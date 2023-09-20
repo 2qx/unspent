@@ -150,7 +150,7 @@
 		{/if}
 		<tr>
 			<td />
-			<td colspan="3">{$_('receive')}:</td>
+			<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
 		</tr>
 		<tr>
 			<td />

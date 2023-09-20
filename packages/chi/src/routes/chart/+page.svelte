@@ -29,6 +29,8 @@
 		<pre style="font-size:x-small;">{ts.id}</pre>
 		<ContractChart bind:series={ts.data} />
 	{/each}
+  {:else if !receiptAddress }
+	-
 {:else}
 	<progress id="progress-bar" aria-label="Content loading…" />
 {/if}

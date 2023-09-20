@@ -2,10 +2,12 @@
 	import { beforeUpdate } from 'svelte';
 	import { Perpetuity } from '@unspent/phi';
 	import { receiptAddressStore } from '$lib/store.js';
+	import { Contract } from 'cashscript';
 
 	let receiptAddress = '';
 	let utxos = [];
 	let contract;
+  
 
 	receiptAddressStore.subscribe((value) => {
 		receiptAddress = value;
@@ -20,6 +22,7 @@
 
 	const loadSeries = async () => {
 		utxos = await contract.getUtxos();
+
 	};
 </script>
 
@@ -29,6 +32,8 @@
 		<pre>{op.height}</pre>
 		<pre>{op.txid}:{op.vout}</pre>
 	{/each}
+{:else if !receiptAddress }
+	-
 {:else}
 	<progress id="progress-bar" aria-label="Content loading…" />
 {/if}
