@@ -61,8 +61,9 @@
 
 <section>
 	{#if utxos && utxos.length > 0}
+  { txid }
+  { executeError }
 		{#each utxos as op}
-			<pre>{executeError}</pre>
 			<table>
 				<tr>
 					<td>
@@ -97,7 +98,7 @@
 							<p>{op.estimateUnlockDate}</p>
 						{/if}
 					</td>
-					<td colspan="3">
+					<td colspan="3" style="line-break: anywhere;">
 						{op.txid}:{op.vout}
 					</td>
 				</tr>
@@ -132,6 +133,6 @@
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
-		line-break: anywhere;
+		line-break: normal;
 	}
 </style>

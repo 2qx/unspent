@@ -24,7 +24,7 @@
 	export let data;
 	export let p;
 	let balance;
-  let utxoCount;
+	let utxoCount;
 	let receiptAddress;
 	let contract;
 	let receiptAddressValid = false;
@@ -80,7 +80,7 @@
 
 	const updateBalance = async () => {
 		if (contract) balance = await contract.getBalance();
-    if (contract) utxoCount = (await contract.getUtxos()).length
+		if (contract) utxoCount = (await contract.getUtxos()).length;
 	};
 
 	function updateReceiptAddress() {
@@ -108,13 +108,17 @@
 		<tr>
 			{#if balance}
 				<td style="text-align: center;">
-          {#if utxoCount > 0}
-          <b>{utxoCount} UTXO(s)</b>
-          {/if}
-        </td>
+					{#if utxoCount > 0}
+						<b>{utxoCount} UTXO(s)</b>
+					{/if}
+				</td>
 				<td colspan="3">
 					<b>{balance.toLocaleString()}</b> sats <br />
-					(<i>{(Number(balance) / 100000000).toLocaleString(undefined, { minimumSignificantDigits: 6 })}</i> BCH)
+					(<i
+						>{(Number(balance) / 100000000).toLocaleString(undefined, {
+							minimumSignificantDigits: 6
+						})}</i
+					> BCH)
 				</td>
 			{:else}
 				<td colspan="4" />
@@ -123,7 +127,9 @@
 		<tr>
 			{#if contract}
 				<td>
-					<img src={lock} alt="lock" />
+					<p>
+						<img src={lock} alt="lock" />
+					</p>
 				</td>
 				<td colspan="3">
 					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
@@ -135,35 +141,43 @@
 					</CopyToClipboard>
 				</td>
 			{:else}
-				<td><img src={lock} alt="lock" /></td>
 				<td colspan="4">{$_('create')}</td>
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
 			<tr>
 				<td>
+					<p>1 m; 4383 blocks</p>
+				</td>
+				<td>
+					<p>1/96</p>
+				</td>
+				<td>
+					<p>95/96</p>
+				</td>
+				<td>
 					<p>
-						1 m
+						{new Intl.NumberFormat().format(1500)} sat
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>
 						<img src={month} alt="month" />
 						<img src={lock_clock} alt="lock_clock" />
 					</p>
 				</td>
 				<td>
-					<p>
-						1/96
-
-						<img src={arrow_down} alt="to" />
-					</p>
+					<p><img src={arrow_down} alt="to" /></p>
 				</td>
 				<td>
 					<p>
-						95/96
 						<img src={arrow_back} alt="back" />
 					</p>
 				</td>
 				<td>
 					<p>
-						{new Intl.NumberFormat().format(1500)} sat
 						<img src={arrow_step} alt="step" />
 					</p>
 				</td>
@@ -176,7 +190,9 @@
 		<tr>
 			<td>
 				{#if contract}
-					<BroadcastAction opReturnHex={contract.toOpReturn(true)} />
+					<p>
+						<BroadcastAction opReturnHex={contract.toOpReturn(true)} />
+					</p>
 				{/if}
 			</td>
 			<td colspan="3">
@@ -209,14 +225,15 @@
 	}
 	table tr td {
 		min-width: 20%;
+		justify-content: space-around;
 	}
 
 	table tr td p {
 		font-size: small;
 		display: flex;
-		justify-content: center;
+		justify-content: space-around;
 	}
-  
+
 	table tr td pre {
 		white-space: pre-wrap;
 	}
