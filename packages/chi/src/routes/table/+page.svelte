@@ -11,9 +11,9 @@
 	let contract;
 	let isLoading = true;
 
-  let executedSuccess = false;
-  let txid = '';
-  let executeError = '';
+	let executedSuccess = false;
+	let txid = '';
+	let executeError = '';
 
 	let curHeight = -1;
 	let now = Date.now();
@@ -33,13 +33,13 @@
 		}
 	});
 
-  const execute = async (utxo) => {
+	const execute = async (utxo) => {
 		executedSuccess = false;
 		try {
-			txid = await contract.execute(address, undefined, [utxo]);
+			txid = await contract.execute(receiptAddress, undefined, [utxo]);
 			executedSuccess = true;
 			executeError = '';
-		} catch (e: any) {
+		} catch (e) {
 			executeError = e;
 		}
 	};
@@ -62,10 +62,11 @@
 <section>
 	{#if utxos && utxos.length > 0}
 		{#each utxos as op}
+			<pre>{executeError}</pre>
 			<table>
 				<tr>
 					<td>
-						{#if curHeight > 0 && op.height + contract.period - curHeight > 0}
+						{#if curHeight > 0 && op.waitBlocks > 0}
 							<img src={lock_clock} alt={$_('ok')} />
 							<b>{op.waitBlocks}</b>
 						{/if}
@@ -82,18 +83,17 @@
 				</tr>
 				<tr>
 					<td>
-            {#if op.waitBlocks < 0}
-							<button>
+						{#if op.waitBlocks < 0}
+							<button on:click={async () => execute(op)}>
 								<img src={arrow_split} />
 							</button>
 						{:else}
-							<button disabled on:click={execute(op)}>
+							<button on:click={async () => execute(op)}>
 								<img src={arrow_split} />
 							</button>
 						{/if}
-            
-						{#if curHeight > 0 && op.height + contract.period - curHeight > 0}
-							
+
+						{#if curHeight > 0 && op.waitBlocks > 0}
 							<p>{op.estimateUnlockDate}</p>
 						{/if}
 					</td>
