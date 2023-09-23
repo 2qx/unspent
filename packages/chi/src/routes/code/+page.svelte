@@ -46,18 +46,20 @@
         </div>
       </CopyToClipboard>
 		</div>
-
+    {#if contract.contract.redeemScript}
 		<h3>Redeem Script Hex</h3>
 		<div class="hex">
-			{#if contract.contract.redeemScript}
-				{@html Prism.highlight(
-					binToHex(scriptToBytecode(contract.contract.redeemScript)),
-					Prism.languages['javascript']
-				)}
-			{/if}
-			<br />
+      <CopyToClipboard on:copy={() => toast.push('📋🗸')} text={binToHex(scriptToBytecode(contract.contract.redeemScript))} let:copy>
+        <div class="action">
+          <button on:click={copy}>
+            {binToHex(scriptToBytecode(contract.contract.redeemScript))}
+          </button>
+        </div>
+      </CopyToClipboard>
+			
 			<a target="_blank" href="https://explorer.bitcoinunlimited.info/decoder">decoder</a>
 		</div>
+    {/if}
 		<h3>Unlocking Bytecode</h3>
 		<div class="bytecode">
 			{@html Prism.highlight(contract.artifact.bytecode, Prism.languages['javascript'])}
@@ -80,7 +82,7 @@
 	.code {
 		font-size: small;
 		overflow-x: scroll;
-		white-space: pre;
+		white-space: pre-line;
 	}
 	.hex {
 		font-size: small;

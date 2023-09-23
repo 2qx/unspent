@@ -47,6 +47,7 @@
 	const loadSeries = async () => {
 		utxos = await contract.getUtxos();
 		curHeight = await contract.provider.getBlockHeight();
+    utxos = utxos.sort((a, b) => a.height - b.height);
 		utxos = utxos.map((u) => {
 			let waitBlocks = u.height + 4838 - curHeight;
 			return {
