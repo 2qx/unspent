@@ -1,35 +1,37 @@
 <script context="module">
-import '$lib/i18n' 
-import { browser } from '$app/environment';
-import { goto, invalidateAll }  from '$app/navigation';
-import { SvelteToast } from '@zerodevx/svelte-toast';  
-import Header from './Header.svelte';
-import './styles.css';
+	import '$lib/i18n';
+	import { browser } from '$app/environment';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
+	import Header from './Header.svelte';
+	import './styles.css';
 
-import { locale, waitLocale , getLocaleFromNavigator, init} from 'svelte-i18n'
+	import { locale, waitLocale, getLocaleFromNavigator, init } from 'svelte-i18n';
 
-let currentPage;
+	let currentPage;
 
-if (browser) {
+	if (browser) {
 		// init on client side only
 		// don't put this inside `load`, otherwise it will gets executed every time you changed route on client side
-    console.log(getLocaleFromNavigator())
+		let locale = getLocaleFromNavigator();
+		console.log(locale);
+		if (locale.includes('-')) {
+			locale = locale.split('-').shift();
+		}
+		console.log(locale);
+
 		init({
-			fallbackLocale: "en",
-			initialLocale: getLocaleFromNavigator(),
+			fallbackLocale: 'en',
+			initialLocale: locale
 		});
-}
-
-
-
-
+	}
 </script>
 
 <div class="app">
-	<Header bind:currentPage={currentPage} />
-<SvelteToast />
+	<Header bind:currentPage />
+	<SvelteToast />
 	<main>
-		<slot p={currentPage} />
+			<slot p={currentPage} />
 	</main>
 
 	<footer>
@@ -49,8 +51,9 @@ if (browser) {
 		display: flex;
 		flex-direction: column;
 		padding: 1rem;
+    align-self: center;
 		width: 100%;
-		max-width: 64rem;
+		max-width: 44rem;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}

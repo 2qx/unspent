@@ -6,6 +6,7 @@
 	import chart from '$lib/images/chart.svg';
 	import code from '$lib/images/code.svg';
 	import history from '$lib/images/history.svg';
+	import wallet from '$lib/images/wallet.svg';
 	import table from '$lib/images/table.svg';
 	import github from '$lib/images/github.svg';
 </script>
@@ -22,7 +23,7 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li ahref="{base}" aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
         <a href="{base}/">
 				<img src={home} alt="home" />
         </a>

@@ -14,8 +14,10 @@
 
 	beforeUpdate(async () => {
 		if (receiptAddress) {
-			contract = new Perpetuity(4383, receiptAddress, 1500, 96);
-			if (contract) await loadSeries();
+      if(!contract){
+        contract = new Perpetuity(4383, receiptAddress, 1500, 96);
+        if (contract) await loadSeries();
+      }
 		}
 	});
 

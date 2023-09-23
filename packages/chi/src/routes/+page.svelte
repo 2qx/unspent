@@ -10,6 +10,7 @@
 	import { _ } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import {
 		binToBase64,
 		base64ToBin,
@@ -23,6 +24,7 @@
 	export let data;
 	export let p;
 	let balance;
+  let utxoCount;
 	let receiptAddress;
 	let contract;
 	let receiptAddressValid = false;
@@ -78,6 +80,7 @@
 
 	const updateBalance = async () => {
 		if (contract) balance = await contract.getBalance();
+    if (contract) utxoCount = (await contract.getUtxos()).length
 	};
 
 	function updateReceiptAddress() {
@@ -104,9 +107,14 @@
 	<table>
 		<tr>
 			{#if balance}
-				<td />
+				<td style="text-align: center;">
+          {#if utxoCount > 0}
+          <b>{utxoCount} UTXO(s)</b>
+          {/if}
+        </td>
 				<td colspan="3">
-					<b>{balance.toLocaleString()}</b> sats
+					<b>{balance.toLocaleString()}</b> sats <br />
+					(<i>{(Number(balance) / 100000000).toLocaleString(undefined, { minimumSignificantDigits: 6 })}</i> BCH)
 				</td>
 			{:else}
 				<td colspan="4" />
@@ -115,8 +123,8 @@
 		<tr>
 			{#if contract}
 				<td>
-          <img src={lock} alt="lock" />
-        </td>
+					<img src={lock} alt="lock" />
+				</td>
 				<td colspan="3">
 					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
 						<div class="action">
@@ -134,22 +142,30 @@
 		{#if receiptAddressValid}
 			<tr>
 				<td>
-					<p>1 m</p>
-					<img src={month} alt="month" />
-					<img src={lock_clock} alt="lock_clock" />
+					<p>
+						1 m
+						<img src={month} alt="month" />
+						<img src={lock_clock} alt="lock_clock" />
+					</p>
 				</td>
 				<td>
-					<p>1/96</p>
+					<p>
+						1/96
 
-					<img src={arrow_down} alt="to" />
+						<img src={arrow_down} alt="to" />
+					</p>
 				</td>
 				<td>
-					<p>95/96</p>
-					<img src={arrow_back} alt="back" />
+					<p>
+						95/96
+						<img src={arrow_back} alt="back" />
+					</p>
 				</td>
 				<td>
-					<p>{new Intl.NumberFormat().format(1500)} sat</p>
-					<img src={arrow_step} alt="step" />
+					<p>
+						{new Intl.NumberFormat().format(1500)} sat
+						<img src={arrow_step} alt="step" />
+					</p>
 				</td>
 			</tr>
 		{/if}
@@ -158,7 +174,11 @@
 			<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
 		</tr>
 		<tr>
-			<td />
+			<td>
+				{#if contract}
+					<BroadcastAction opReturnHex={contract.toOpReturn(true)} />
+				{/if}
+			</td>
 			<td colspan="3">
 				<textarea id="addr" on:change={() => createContract()} bind:value={receiptAddress} />
 			</td>
@@ -193,6 +213,12 @@
 
 	table tr td p {
 		font-size: small;
+		display: flex;
+		justify-content: center;
+	}
+  
+	table tr td pre {
+		white-space: pre-wrap;
 	}
 
 	h1 {

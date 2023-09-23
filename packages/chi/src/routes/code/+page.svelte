@@ -5,7 +5,6 @@
   import { binToHex } from '@bitauth/libauth';
   import { scriptToBytecode } from '@cashscript/utils';
 	import { receiptAddressStore } from '$lib/store.js';
-	import { stringify } from 'querystring';
 
 	let receiptAddress = '';
 	let series = [];
@@ -17,18 +16,16 @@
 
 	beforeUpdate(async () => {
 		if (receiptAddress) {
-			contract = new Perpetuity(4383, receiptAddress, 1500, 96);
-      
-			if (contract) await loadSeries();
+			contract = new Perpetuity(4383, receiptAddress, 1500, 96);      
 		}
 	});
 
-	const loadSeries = async () => {
-		series = await contract.asSeries();
-	};
 </script>
 
 {#if contract}
+<div style="max-width:600px; align-self:center">
+
+
 <h3>Redeem Script Hex</h3>
 <div class="hex">
   {#if contract.contract.redeemScript}
@@ -46,7 +43,7 @@
 		{@html Prism.highlight(contract.artifact.source, Prism.languages['javascript'])}
 	</div>
 
-
+</div>
 
 	
 

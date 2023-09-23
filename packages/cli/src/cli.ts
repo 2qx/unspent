@@ -392,7 +392,7 @@ export class QueryCommand extends NetworkCommand {
     let limit = !this.limit ? undefined : parseInt(this.limit);
     let offset = !this.offset ? undefined : parseInt(this.offset);
     let exclude = "6a047574786f014d0101"
-    let hexRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
+    let hexRecords = await getRecords(chaingraph, prefix, limit, offset, exclude);
     let contracts = [];
     let total = 0n;
     for (let record of hexRecords) {

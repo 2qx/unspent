@@ -14,7 +14,6 @@ import { binToHex } from "@bitauth/libauth";
 export async function getRecords(
   host: string,
   prefix?: string,
-  node = "mainnet",
   limit = 25,
   offset = 0,
   exclude_pattern = "",
@@ -23,14 +22,13 @@ export async function getRecords(
 
   let param = {
     prefix: prefix,
-    node: node,
     limit: limit,
     offset: offset,
     exclude_pattern: exclude_pattern,
     after: after
-  } 
+  }
 
-  param = { ... BytecodePatternQueryDefaults, ...param}
+  param = { ...BytecodePatternQueryDefaults, ...param }
 
   let response = await getChaingraphUnspentRecords(
     host,
@@ -55,14 +53,15 @@ export async function getChaingraphUnspentRecords(
   if ("version" in param) delete param.version
   //@ts-ignore
   if ("after" in param) delete param.after
-  
+  //@ts-ignore
+  if ("node" in param) delete param.node
+
   const response = await axios({
     url: host,
     method: "post",
     data: {
       query: `query SearchOutputsByLockingBytecodePrefix(
       $prefix: String!
-      $node: String!
       $exclude_pattern: String
       $limit: Int
       $offset: Int
@@ -75,35 +74,11 @@ export async function getChaingraphUnspentRecords(
               where: {
                 _and: [
                   { locking_bytecode_pattern: {  _nlike: $exclude_pattern } }
-                  
-                  {
-                    _or: [
-                      {
-                        transaction: {
-                          block_inclusions: {
-                            block: { accepted_by: { node: { name: { _regex: $node } } } }
-                          }
-                        }
-                      }
-                      {
-                        transaction: {
-                          node_validations: { node: { name: { _regex: $node } } }
-                        }
-                      }
-                    ]
-                  }
                 ]
               }
             ) {
               locking_bytecode_pattern,
-              locking_bytecode,
-              transaction{
-                block_inclusions{
-                  block{
-                    height
-                  }
-                }
-              }
+              locking_bytecode
             }
           }`,
       variables: param,
@@ -121,17 +96,14 @@ export async function getChaingraphUnspentRecords(
     }
   }
   const results = response.data.data.search_output_prefix.map((r: ChaingraphSearchOutputResult) => {
-    let height = r.transaction.block_inclusions[0]?.block.height
-    if (typeof height === "string") height = parseInt(height)
+    
     if (r.locking_bytecode.slice(0, 2) === "\\x") {
       return {
-        record: r.locking_bytecode.slice(2),
-        height: height
+        record: r.locking_bytecode.slice(2)
       }
     } else {
       return {
-        record: r.locking_bytecode,
-        height: height
+        record: r.locking_bytecode
       }
     }
   })
@@ -139,8 +111,7 @@ export async function getChaingraphUnspentRecords(
   return results.map((o: any) => {
     return {
       "id": o.record,
-      "data": parseOpReturn(o.record),
-      "height": o.height
+      "data": parseOpReturn(o.record)
     }
   })
 }
@@ -242,7 +213,7 @@ export async function getTransaction(host: string, txid: string) {
   return response.data.data;
 }
 
-export async function getUnspentOutputs(host: string, lockingBytecode: string, node?:string) {
+export async function getUnspentOutputs(host: string, lockingBytecode: string, node?: string) {
   const query = `
   query SearchUnspentOutputsByLockingBytecode($prefix: String!) {
     search_output_prefix(
@@ -255,7 +226,7 @@ export async function getUnspentOutputs(host: string, lockingBytecode: string, n
     }
   }`
 
-  node  = node ? node: "mainnet"
+  node = node ? node : "mainnet"
 
   const response = await axios({
     url: host,
@@ -412,7 +383,7 @@ export async function getHistory(host: string,
     }
   }
 
-  
+
 
   return response.data.data.search_output_prefix.map((o: any) => {
     //console.log(JSON.stringify(o,undefined, 2))

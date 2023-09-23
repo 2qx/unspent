@@ -1,1 +1,7 @@
-{"receive":"Elija la dirección a la que se recibirán las monedas","ok":"Aceptar","create":"Crear monedero nuevo","year":"1 año","spendable":"Disponible:"}
+{
+  "receive": "Elija la dirección a la que se recibirán las monedas",
+  "ok": "Aceptar",
+  "create": "Crear monedero nuevo",
+  "year": "1 año",
+  "spendable": "Disponible:"
+}
