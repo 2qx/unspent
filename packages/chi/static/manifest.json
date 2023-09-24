@@ -1,0 +1,39 @@
+{
+	"name": "Unspent Chi",
+	"short_name": "₿ᵪ",
+	"background_color": "#ffffff",
+	"theme_color": "#ffb200",
+	"display": "minimal-ui",
+	"start_url": "/",
+	"icons": [
+		{
+			"src": "/maskable_icon_x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"density": "4.0"
+		},
+		{
+			"src": "/maskable_icon_x512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"density": "10.6",
+      "purpose":"any"
+		},
+		{
+			"src": "/maskable_icon_x512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"density": "10.6",
+      "purpose":"maskable"
+		}
+	],
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "natural",
+  "display_override": [
+    "minimal-ui"
+  ],
+  "categories": [
+    "finance"
+  ]
+}
