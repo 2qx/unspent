@@ -34,21 +34,20 @@
 			let bytecode = inflate(base64ToBin(encodeURI(data.q)));
 			receiptAddress = lockingBytecodeToCashAddress(bytecode);
 			receiptAddressValid = true;
-			createContract();
+			createContract(false);
 		}
 	}
 
-	if (data.p) {
-		p = data.p;
-	}
 
-	async function createContract() {
+	async function createContract(save=true) {
 		if (receiptAddress) {
 			try {
 				try {
 					receiptAddress = await sanitizeAddress(receiptAddress);
 					receiptAddressValid = true;
-					receiptAddressStore.set(receiptAddress);
+          if(save){
+            receiptAddressStore.set(receiptAddress);
+          }
 				} catch (e) {
 					receiptAddressValid = false;
 					if (e.message) {
@@ -58,11 +57,13 @@
 					}
 				}
 				contract = new Perpetuity(4383, receiptAddress, 1500, 96);
-				let bytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
-				let q = decodeURI(binToBase64(deflate(bytecode)));
-				$page.url.searchParams.set('q', q);
-				updateBalance();
-				goto(`?${$page.url.searchParams.toString()}`);
+        updateBalance();
+
+				// let bytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
+				// let q = decodeURI(binToBase64(deflate(bytecode)));
+				// $page.url.searchParams.set('q', q);
+				
+				// goto(`?${$page.url.searchParams.toString()}`);
 			} catch (e) {
 				contract = undefined;
 
@@ -145,11 +146,11 @@
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
-			<tr>
+			<tr style="background-color: lightgray;">
 				<td>
 					<p>1 m; 4383 blocks</p>
 				</td>
-				<td>
+				<td style="max-width: 40px;">
 					<p>1/96</p>
 				</td>
 				<td>
@@ -161,7 +162,7 @@
 					</p>
 				</td>
 			</tr>
-			<tr>
+			<tr style="background-color: lightgray;">
 				<td>
 					<p>
 						<img src={month} alt="month" />
