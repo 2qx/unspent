@@ -84,7 +84,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.67074469"
-     inkscape:cx="984.77756"
+     inkscape:cx="981.7958"
      inkscape:cy="346.70738"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -108,7 +108,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -117,6 +117,13 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0.05822718,-72.521118)">
+    <rect
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.079615;stroke-linejoin:bevel;stroke-miterlimit:4.1;stroke-dasharray:0, 0.87576299999999985;stroke-opacity:0.252974;fill-opacity:1"
+       id="rect1426"
+       width="211.66667"
+       height="211.66667"
+       x="0.42208406"
+       y="72.826248" />
     <g
        transform="translate(41.934042,112.66347)"
        id="g1692">
@@ -142,13 +149,13 @@
          y="256.60867"><tspan
            style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:semi-condensed;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans Thin Semi-Condensed';text-align:center;text-anchor:middle">UNSPENT
 </tspan></tspan><tspan
-         x="126.19994"
+         x="124.95183"
          y="263.64905"><tspan
            style="font-size:4.23333px;line-height:0.85">since</tspan><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:1.25;font-family:ocra;-inkscape-font-specification:ocra">
 </tspan></tspan><tspan
-         x="118.3429"
-         y="271.00445"><tspan
+         x="119.92371"
+         y="269.8378"><tspan
            style="font-size:4.23333px">#744,380</tspan></tspan></text>
   </g>
 </svg>

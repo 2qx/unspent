@@ -11,7 +11,7 @@ import {
   bigIntToBinUintLE,
   bigIntToVmNumber,
 } from "@bitauth/libauth";
-import { sha256, sum, deriveLockingBytecodeHex, getRandomIntWeak } from "../../../common/util.js";
+import { sha256, sumNumber, deriveLockingBytecodeHex, getRandomIntWeak } from "../../../common/util.js";
 import { artifact as v1 } from "./v1.js";
 import { _PROTOCOL_ID } from "../../../common/constant.js";
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
@@ -74,7 +74,7 @@ describe(`Mining Contract Tests`, () => {
           ...nonceBin,
         ]);
         result = await sha256(msg);
-        if (result.slice(0, Number(difficulty)).reduce(sum) === 0) mined = true;
+        if (result.slice(0, Number(difficulty)).reduce(sumNumber) === 0) mined = true;
       }
 
       if (nonceBin.length < 7) {

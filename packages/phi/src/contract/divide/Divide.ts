@@ -33,7 +33,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static fn: string = "execute";
   private payeeLocks: Uint8Array[];
   public divisor: bigint;
-  public static minAllowance = 227n + DUST_UTXO_THRESHOLD + 10n;
+  public static minAllowance = 200n + DUST_UTXO_THRESHOLD + 7n;
 
   constructor(
     public executorAllowance: bigint|number = 1200n,

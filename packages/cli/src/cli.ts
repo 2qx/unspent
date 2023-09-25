@@ -27,6 +27,8 @@ import {
   getRecords 
 } from "@unspent/psi";
 
+import { lockingBytecodeToCashAddress, hexToBin } from "@bitauth/libauth";
+
 abstract class VersionedCommand extends Command{
   version = Option.String("--version", "2", {
     description: "The unspent/phi contract version",
@@ -399,20 +401,25 @@ export class QueryCommand extends NetworkCommand {
       try{
         let instance = opReturnToSerializedString(record, this.network);
         if (instance) contracts.push(instance.toString());
+        //@ts-ignore
         let subTotal = await opReturnToBalance(record, this.network, networkProvider)
-        
-        console.log(subTotal, instance)
+        if (instance) {
+          let prefix = this.isChipnet ? 'bchtest': 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
+          let lockingBytecode = instance.split(",").pop() as string
+          let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
+          console.log(Number(subTotal), instance, contractAddr)
+        }
         total += BigInt(subTotal);
 
       }catch (e){
-        console.log(e)
+        //console.log(e)
         // anyone can post an OP_RETURN that doesn't parse
-        console.log('couldn\'t parse: ', record)
+        //console.log('couldn\'t parse: ', record)
       }
       
       
     }
-    console.log(total)
+
     console.log("sum: ", total.toLocaleString())
     console.log(`Built ${contracts.length} contracts`);
     

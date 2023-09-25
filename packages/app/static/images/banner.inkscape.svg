@@ -111,11 +111,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.607825"
-     inkscape:cx="323.41791"
-     inkscape:cy="187.63508"
+     inkscape:zoom="1.2623855"
+     inkscape:cx="144.50404"
+     inkscape:cy="290.05899"
      inkscape:document-units="px"
-     inkscape:current-layer="g86"
+     inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      showguides="true"
@@ -207,9 +207,9 @@
          style="stroke-width:0.0696825" /></text>
     <g
        id="g86"
-       transform="matrix(0.60169338,0,0,0.60169338,57.125578,4.7511142)">
+       transform="matrix(0.60169338,0,0,0.60169338,56.278471,77.109964)">
       <circle
-         style="fill:#ffb200;fill-opacity:1;stroke:#000000;stroke-width:0.132318;stroke-linejoin:bevel;stroke-miterlimit:4.1;stroke-dasharray:0.264636, 0.132318;stroke-opacity:0.252974"
+         style="fill:#ffb200;fill-opacity:1;stroke:#000000;stroke-width:0.132318;stroke-linejoin:bevel;stroke-miterlimit:4.1;stroke-dasharray:0, 1.4555;stroke-dashoffset:0;stroke-opacity:0.252974"
          id="path10"
          cx="151.12827"
          cy="10.458218"
@@ -217,11 +217,11 @@
       <text
          xml:space="preserve"
          id="text835"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Roboto Slab';-inkscape-font-specification:'Roboto Slab';white-space:pre;shape-inside:url(#rect837);fill:#000000;fill-opacity:1;stroke:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Roboto Slab';-inkscape-font-specification:'Roboto Slab';white-space:pre;shape-inside:url(#rect837);fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4.1;stroke-dasharray:none;"
          transform="matrix(2.9805139,0,0,2.9805139,-136.35426,-273.70701)"><tspan
            x="93.494141"
            y="98.157343"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Roboto Slab';-inkscape-font-specification:'Roboto Slab Bold';fill:#ffffff;fill-opacity:1">χ</tspan></tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Roboto Slab';-inkscape-font-specification:'Roboto Slab Bold';fill:#ffffff;fill-opacity:1;stroke-width:0;stroke-miterlimit:4.1;stroke-dasharray:none">χ</tspan></tspan></text>
     </g>
   </g>
   <g

@@ -245,6 +245,6 @@
 
 	textarea {
 		width: 100%;
-		height: 40px;
+		height: 100px;
 	}
 </style>

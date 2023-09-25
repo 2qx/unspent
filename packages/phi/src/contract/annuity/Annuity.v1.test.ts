@@ -18,7 +18,7 @@ describe(`Annuity Class Tests`, () => {
     );
     expect(a.toString()).toContain(chk);
     expect(a.toString()).toEqual(
-      "A,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,5000,808,a91454023b8cc291d5395b934c0284e0cb15cc47c82e87"
+      "A,1,4000,a9143d416d6b3b4f59826661d868ba4fd6f62fde537787,5000,838,a9148a1f4758f0044905ee652118c0f3daa60dae7bc287"
     );
     const a2 = Annuity.fromString(a.toString());
     expect(a.toString()).toEqual(a2.toString());
