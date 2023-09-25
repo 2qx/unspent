@@ -6,7 +6,7 @@ import {
 } from "@bitauth/libauth";
 import type { Artifact, Utxo, NetworkProvider } from "cashscript";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD, SPECIALS } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   getPrefixFromNetwork,
@@ -37,16 +37,17 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     let script: Artifact;
     if (options.version === 2) {
       script = v2;
+      if (installment < DUST_UTXO_THRESHOLD)
+        throw Error("Installment below dust threshold");
+      if (executorAllowance < Annuity.minAllowance)
+        throw Error("Executor Allowance below usable threshold");
     } else if (options.version === 1) {
       script = v1;
     } else {
       throw Error("Unrecognized Annuity Version");
     }
 
-    if (installment < DUST_UTXO_THRESHOLD)
-      throw Error("Installment below dust threshold");
-    if (executorAllowance < Annuity.minAllowance)
-      throw Error("Executor Allowance below usable threshold");
+
 
     const lock = cashAddressToLockingBytecode(recipientAddress);
     if (typeof lock === "string") throw lock;
@@ -226,6 +227,11 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       return [this.recipientLockingBytecode];
     }
+  }
+
+  isSpecial(): boolean {
+    let out = this.getOutputLockingBytecodes(true).pop()! as string;
+    return SPECIALS.includes(out)
   }
 
   async asSeries(): Promise<any> {

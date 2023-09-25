@@ -10,6 +10,7 @@ import {
   DefaultOptions,
   _PROTOCOL_ID,
   DUST_UTXO_THRESHOLD,
+  SPECIALS
 } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
@@ -247,6 +248,11 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       return [this.recipientLockingBytecode];
     }
+  }
+
+  isSpecial(): boolean {
+    let out = this.getOutputLockingBytecodes(true).pop()! as string;
+    return SPECIALS.includes(out)
   }
 
   async asSeries() {

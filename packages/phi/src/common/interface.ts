@@ -14,6 +14,8 @@ export interface UtxPhiIface {
   getBalance(): Promise<bigint>;
 
   getOutputLockingBytecodes(hex: boolean): string[] | Uint8Array[];
+  
+  isSpecial(): boolean;
 }
 
 export interface ContractOptions {

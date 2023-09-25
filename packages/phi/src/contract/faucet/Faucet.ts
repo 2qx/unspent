@@ -162,6 +162,10 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     return [];
   }
 
+  isSpecial(): boolean {
+    return false;
+  }
+
   async execute(
     exAddress?: string,
     fee?: bigint,
