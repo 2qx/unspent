@@ -19,7 +19,7 @@
 	});
 
 	let observer;
-	let width = 300;
+	let width = 400;
 	let height = 600;
 	let handleContainerReference = (element) => {
 		if (observer) {
