@@ -8,8 +8,8 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="800"
-   height="800"
-   viewBox="0 0 211.66667 211.66668"
+   height="400"
+   viewBox="0 0 211.66667 105.83334"
    version="1.1"
    id="svg952"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
@@ -17,28 +17,34 @@
   <defs
      id="defs946">
     <rect
-       x="63.911767"
+       x="150.25812"
+       y="141.84801"
+       width="58.53979"
+       height="28.168673"
+       id="rect861" />
+    <rect
+       x="63.911766"
        y="253.59293"
        width="133.07562"
-       height="32.357371"
+       height="32.357372"
        id="rect5059" />
     <rect
        x="63.768539"
-       y="90.973609"
+       y="90.97361"
        width="102.59476"
-       height="75.930295"
+       height="75.930298"
        id="rect1553" />
     <rect
-       x="36.332964"
-       y="86.086325"
+       x="36.332966"
+       y="86.086327"
        width="108.56127"
        height="129.21553"
        id="rect1547" />
     <rect
-       x="37.265875"
-       y="99.138691"
+       x="37.265877"
+       y="99.138695"
        width="104.75438"
-       height="26.873563"
+       height="26.873564"
        id="rect1541" />
     <rect
        x="36.844879"
@@ -83,9 +89,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.67074469"
-     inkscape:cx="981.7958"
-     inkscape:cy="346.70738"
+     inkscape:zoom="1.2225697"
+     inkscape:cx="282.76344"
+     inkscape:cy="199.21595"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -99,7 +105,14 @@
      inkscape:window-height="1176"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="14.316826,118.4001"
+       orientation="1,0"
+       id="guide871" />
+  </sodipodi:namedview>
   <metadata
      id="metadata949">
     <rdf:RDF>
@@ -108,7 +121,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -118,14 +131,14 @@
      id="layer1"
      transform="translate(0.05822718,-72.521118)">
     <rect
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.079615;stroke-linejoin:bevel;stroke-miterlimit:4.1;stroke-dasharray:0, 0.87576299999999985;stroke-opacity:0.252974;fill-opacity:1"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.0562963;stroke-linejoin:bevel;stroke-miterlimit:4.1;stroke-dasharray:0, 0.619258;stroke-opacity:0.252974"
        id="rect1426"
        width="211.66667"
-       height="211.66667"
-       x="0.42208406"
-       y="72.826248" />
+       height="105.83334"
+       x="-0.058227181"
+       y="72.521118" />
     <g
-       transform="translate(41.934042,112.66347)"
+       transform="matrix(0.72665484,0,0,0.72665484,58.238436,78.873335)"
        id="g1692">
       <path
          d="m 65.419,0.36106 a 63.719,63.72 0 0 0 -63.72,63.72 63.719,63.72 0 0 0 63.72,63.719 63.719,63.72 0 0 0 63.719,-63.719 63.719,63.72 0 0 0 -63.719,-63.72 z m -34.705,28.607 18.962,0.06599 17.785,24.847 9.8729,-13.077 -6.6037,-0.78448 v -11.05 h 31.973 v 11.508 l -6.4077,1.1117 -18.177,22.296 19.158,23.343 6.6697,1.0464 v 11.443 h -18.635 l -19.093,-25.566 -10.331,13.862 5.6886,0.71916 v 10.985 h -31.516 v -11.443 l 6.6044,-1.0464 19.093,-23.016 -18.439,-22.623 -6.6044,-1.1117 z"
@@ -141,21 +154,29 @@
     <text
        xml:space="preserve"
        id="text5057"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5059);fill:#000000;fill-opacity:1;stroke:none;"
-       transform="translate(-23.643739,-1.7012296)"
+       style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:3.79236px;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5059);fill:#ffffff;fill-opacity:1;stroke:none;"
+       transform="translate(-23.751492,-94.847101)"
        x="46.25425"
        y="0"><tspan
-         x="110.29433"
-         y="256.60867"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:semi-condensed;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans Thin Semi-Condensed';text-align:center;text-anchor:middle">UNSPENT
+         x="130.4502"
+         y="256.40633"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:OCRA;-inkscape-font-specification:'OCRA, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1">
 </tspan></tspan><tspan
-         x="124.95183"
-         y="263.64905"><tspan
-           style="font-size:4.23333px;line-height:0.85">since</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:1.25;font-family:ocra;-inkscape-font-specification:ocra">
+         x="125.40549"
+         y="260.41036"><tspan
+           style="font-size:2.82222px;fill:#ffffff;fill-opacity:1">since</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:OCRA;-inkscape-font-specification:'OCRA, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">
 </tspan></tspan><tspan
-         x="119.92371"
-         y="269.8378"><tspan
-           style="font-size:4.23333px">#744,380</tspan></tspan></text>
+         x="120.36077"
+         y="264.41438"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:OCRA;-inkscape-font-specification:'OCRA, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">#744,380</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       id="text859"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect861);fill:#ffffff;fill-opacity:1;stroke:none;"
+       transform="translate(-61.648505,10.391012)"><tspan
+         x="150.25781"
+         y="151.47714"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:condensed;font-size:10.5833px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Thin Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1">UNSPENT</tspan></tspan></text>
   </g>
 </svg>
