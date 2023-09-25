@@ -1,37 +1,37 @@
 {
-	"name": "@unspent/chi",
-	"version": "0.0.1",
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --plugin-search-dir . --check .",
-		"format": "prettier --plugin-search-dir . --write ."
-	},
-	"devDependencies": {
-		"@fontsource/fira-mono": "^4.5.10",
-		"@neoconfetti/svelte": "^1.0.0",
-		"@sveltejs/adapter-auto": "^2.0.0",
-		"@sveltejs/kit": "^1.20.4",
-		"@types/cookie": "^0.5.1",
-		"prettier": "^2.8.0",
-		"prettier-plugin-svelte": "^2.10.1",
+  "name": "@unspent/chi",
+  "version": "0.2.1",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "prettier --plugin-search-dir . --check .",
+    "format": "prettier --plugin-search-dir . --write ."
+  },
+  "devDependencies": {
+    "@fontsource/fira-mono": "^4.5.10",
+    "@neoconfetti/svelte": "^1.0.0",
+    "@sveltejs/adapter-auto": "^2.0.0",
+    "@sveltejs/kit": "^1.20.4",
+    "@types/cookie": "^0.5.1",
+    "prettier": "^2.8.0",
+    "prettier-plugin-svelte": "^2.10.1",
     "@macfja/svelte-persistent-store": "2.2.1",
-		"svelte": "^4.0.5",
-		"svelte-check": "^3.4.3",
-		"tslib": "^2.4.1",
-		"typescript": "^5.0.0",
-		"vite": "^4.4.2"
-	},
-	"type": "module",
-	"dependencies": {
-    "@unspent/phi": "0.2.0",
+    "svelte": "^4.0.5",
+    "svelte-check": "^3.4.3",
+    "tslib": "^2.4.1",
+    "typescript": "^5.0.0",
+    "vite": "^4.4.2"
+  },
+  "type": "module",
+  "dependencies": {
+    "@unspent/phi": "0.2.1",
     "lightweight-charts": "^3.8.0",
     "svelte-lightweight-charts": "^1.6.3",
     "@zerodevx/svelte-toast": "0.8.0",
-		"svelte-i18n": "^3.7.4",
+    "svelte-i18n": "^3.7.4",
     "pako": "2.1.0"
-	}
+  }
 }
