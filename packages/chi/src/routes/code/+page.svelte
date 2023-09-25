@@ -1,0 +1,91 @@
+<script>
+	import { beforeUpdate } from 'svelte';
+	import { Perpetuity } from '@unspent/phi';
+	import Prism from 'prismjs';
+	import { binToHex } from '@bitauth/libauth';
+	import { scriptToBytecode } from '@cashscript/utils';
+	import { receiptAddressStore } from '$lib/store.js';
+	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { toast } from '@zerodevx/svelte-toast';
+
+	let receiptAddress = '';
+	let series = [];
+	let contract;
+
+	receiptAddressStore.subscribe((value) => {
+		receiptAddress = value;
+	});
+
+	beforeUpdate(async () => {
+		if (receiptAddress) {
+			contract = new Perpetuity(4383, receiptAddress, 1500, 96);
+		}
+	});
+</script>
+
+{#if contract}
+	<div style=" align-self:center">
+		<h3>Unspent Phi Protocol (string)</h3>
+		<div class="hex">
+				<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.toString()} let:copy>
+					<div class="action">
+						<button on:click={copy}>
+							{contract.toString()}
+						</button>
+					</div>
+				</CopyToClipboard>
+		</div>
+
+		<h3>Unspent Phi Protocol (op_return)</h3>
+		<div class="hex">
+			<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={binToHex(contract.toOpReturn())} let:copy>
+        <div class="action">
+          <button on:click={copy}>
+            {binToHex(contract.toOpReturn())}
+          </button>
+        </div>
+      </CopyToClipboard>
+		</div>
+    {#if contract.contract.redeemScript}
+		<h3>Redeem Script Hex</h3>
+		<div class="hex">
+      <CopyToClipboard on:copy={() => toast.push('📋🗸')} text={binToHex(scriptToBytecode(contract.contract.redeemScript))} let:copy>
+        <div class="action">
+          <button on:click={copy}>
+            {binToHex(scriptToBytecode(contract.contract.redeemScript))}
+          </button>
+        </div>
+      </CopyToClipboard>
+			
+			<a target="_blank" href="https://explorer.bitcoinunlimited.info/decoder">decoder</a>
+		</div>
+    {/if}
+		<h3>Unlocking Bytecode</h3>
+		<div class="bytecode">
+			{@html Prism.highlight(contract.artifact.bytecode, Prism.languages['javascript'])}
+		</div>
+		<h3>CashScript</h3>
+		<div class="code">
+			{@html Prism.highlight(contract.artifact.source, Prism.languages['javascript'])}
+		</div>
+	</div>
+{:else}
+	No contract
+{/if}
+
+<style>
+	.bytecode {
+		font-size: small;
+		overflow-x: scroll;
+		white-space: pre-wrap;
+	}
+	.code {
+		font-size: small;
+		overflow-x: scroll;
+		white-space: pre-line;
+	}
+	.hex {
+		font-size: small;
+		line-break: anywhere;
+	}
+</style>

@@ -96,7 +96,7 @@ export async function opReturnToBalance(
   network = Network.MAINNET,
   networkProvider?: PsiNetworkProvider,
   blockHeight?: number
-): Promise<number> {
+): Promise<bigint> {
   if (typeof serialized === "string") {
     serialized = hexToBin(serialized);
   }

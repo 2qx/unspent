@@ -196,7 +196,7 @@ export class BaseUtxPhiContract {
     address: string,
     networkProvider: NetworkProvider
   ) {
-    const balance = (await networkProvider.getUtxos(address)).map(utxo => utxo.satoshis).filter((x) => x > 0).reduce(sum, 0)
+    const balance = (await networkProvider.getUtxos(address)).map(utxo => utxo.satoshis).filter((x) => x > 0).reduce(sum, 0n)
     return balance
   }
 

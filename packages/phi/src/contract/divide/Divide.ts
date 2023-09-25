@@ -6,7 +6,7 @@ import {
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
-import { DefaultOptions, DUST_UTXO_THRESHOLD } from "../../common/constant.js";
+import { DefaultOptions, DUST_UTXO_THRESHOLD, SPECIALS } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import {
   deriveLockingBytecodeHex,
@@ -33,7 +33,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   private static fn: string = "execute";
   private payeeLocks: Uint8Array[];
   public divisor: bigint;
-  public static minAllowance = 227n + DUST_UTXO_THRESHOLD + 10n;
+  public static minAllowance = 200n + DUST_UTXO_THRESHOLD + 7n;
 
   constructor(
     public executorAllowance: bigint|number = 1200n,
@@ -208,6 +208,14 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     } else {
       return this.payeeLocks;
     }
+  }
+
+  isSpecial(): boolean {
+    let out = this.getOutputLockingBytecodes(true);
+    let a = new Set(SPECIALS)
+    let b = new Set(out as string[])
+    let intersect = [...new Set([...a].filter(i => b.has(i)))];
+    return intersect.length>0
   }
 
   async execute(

@@ -18,12 +18,16 @@ import {
 import {
   parseBigInt,
   opReturnToSerializedString,
+  opReturnToBalance,
+  getDefaultElectrumProvider,
   stringToInstance,
 } from "@unspent/phi";
 
 import { 
   getRecords 
 } from "@unspent/psi";
+
+import { lockingBytecodeToCashAddress, hexToBin } from "@bitauth/libauth";
 
 abstract class VersionedCommand extends Command{
   version = Option.String("--version", "2", {
@@ -384,27 +388,41 @@ export class QueryCommand extends NetworkCommand {
       ? this.chaingraph
       : "https://demo.chaingraph.cash/v1/graphql";
     let prefix = this.prefix ? this.prefix : "6a047574786f";
+    
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
+    let networkProvider = getDefaultElectrumProvider(node)
     let limit = !this.limit ? undefined : parseInt(this.limit);
     let offset = !this.offset ? undefined : parseInt(this.offset);
     let exclude = "6a047574786f014d0101"
-    let hexRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
-    //console.log(`Found ${hexRecords.length} records`);
-    //hexRecords.map((s: string) => console.log(s));
+    let hexRecords = await getRecords(chaingraph, prefix, limit, offset, exclude);
     let contracts = [];
+    let total = 0n;
     for (let record of hexRecords) {
       try{
         let instance = opReturnToSerializedString(record, this.network);
         if (instance) contracts.push(instance.toString());
-      }catch{
+        //@ts-ignore
+        let subTotal = await opReturnToBalance(record, this.network, networkProvider)
+        if (instance) {
+          let prefix = this.isChipnet ? 'bchtest': 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
+          let lockingBytecode = instance.split(",").pop() as string
+          let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
+          console.log(Number(subTotal), instance, contractAddr)
+        }
+        total += BigInt(subTotal);
+
+      }catch (e){
+        //console.log(e)
         // anyone can post an OP_RETURN that doesn't parse
+        //console.log('couldn\'t parse: ', record)
       }
       
+      
     }
-    console.log(`Build ${contracts.length} contracts`);
-    contracts.map((contract: string) => {
-      console.log(contract);
-    });
+
+    console.log("sum: ", total.toLocaleString())
+    console.log(`Built ${contracts.length} contracts`);
+    
   }
 }
 

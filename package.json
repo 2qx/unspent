@@ -11,7 +11,7 @@
       "**/jest-runner/**"
     ]
   },
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
@@ -20,6 +20,8 @@
     "app:publish": "yarn workspace @unspent/app run publish;",
     "app:preview": "yarn workspace @unspent/app run build; yarn workspace @unspent/app run preview",
     "app:dev": "yarn workspace @unspent/app run dev",
+    "cash:build": "yarn workspace @unspent/chi run build",
+    "cash:preview": "yarn workspace @unspent/chi run build; yarn workspace @unspent/chi run preview",
     "build": "npx lerna build",
     "build:phi": "yarn workspace @unspent/phi run build ",
     "build:cache": "npx ts-node --esm packages/psi/scripts/buildCache.ts",

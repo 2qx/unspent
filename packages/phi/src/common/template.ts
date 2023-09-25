@@ -4,12 +4,10 @@ import { PrimitiveType } from "@cashscript/utils";
 //   Argument,
 //   encodeArgument as csEncodeArgument,
 // } from "cashscript/dist/Argument";
+//@ts-ignore
 import {
-  isSignableUtxo,
-  SignableUtxo,
-  LibauthOutput,
-  Output,
-} from "cashscript/dist/interfaces";
+  isSignableUtxo
+} from "cashscript";
 import {
   hash160,
   hexToBin,
@@ -250,10 +248,10 @@ export const buildAuthenticationTemplate = async ({
                     privateKeys: {
                       placeholder_key: binToHex(
                         manglePrivateKeys
-                          ? (csInput as SignableUtxo).template
+                          ? (csInput as any).template
                               .getPublicKey()
                               .slice(0, 32)
-                          : ((csInput as SignableUtxo).template as any)
+                          : ((csInput as any).template as any)
                               .privateKey
                       ),
                     },
@@ -280,8 +278,8 @@ export const buildAuthenticationTemplate = async ({
           result!.locktime = val?.locktime;
 
           result!.outputs = val?.outputs?.map(
-            (output: LibauthOutput, index:any) => {
-              const csOutput = (transaction as any).outputs[index] as Output;
+            (output: any, index:any) => {
+              const csOutput = (transaction as any).outputs[index] as any;
               let lockingBytecode: any = output.lockingBytecode;
               if (typeof csOutput.to === "string") {
                 if (

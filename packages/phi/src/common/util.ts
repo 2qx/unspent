@@ -66,6 +66,9 @@ export async function sanitizeAddress(wildString: string) {
   // If the address has a prefix decode it as is
   let r, cashAddr;
 
+  // in case it comes with spaces
+  wildString = wildString.trim()
+
   // Throw on segwit address
   if (
     wildString.substring(0, 3) === "bc1" ||
@@ -214,7 +217,11 @@ export function getRandomIntWeak(max: number) {
 }
 
 export function sum(previousValue: any, currentValue: any) {
-  return previousValue + currentValue;
+  return BigInt(previousValue) + BigInt(currentValue);
+}
+
+export function sumNumber(previousValue: any, currentValue: any) {
+  return (previousValue) + (currentValue);
 }
 
 export function parseBigInt(num:string):bigint{

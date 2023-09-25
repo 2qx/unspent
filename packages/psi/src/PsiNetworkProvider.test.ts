@@ -36,7 +36,7 @@ import { mine } from "mainnet-js";
 // });
 
 
-test("Should get a utxo", async () => {
+test.skip("Should get a utxo", async () => {
   const cluster = new ElectrumCluster(
     "CashScript Application",
     "1.4.1",

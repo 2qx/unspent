@@ -1,0 +1,105 @@
+hu	hu	Válassza ki a címet amivel érméket fogad
+fr	fr	Choisir l’adresse avec laquelle recevoir des pièces
+el	el	Επιλέξτε διεύθυνση παραλαβής νομισμάτων
+ta	ta	பிட்காயின்களை பெற முகவரியைத் தேர்வுசெய்யவும்
+cmn	cmn	选择接收比特币地址
+so	so	Dooro cinwaanka si aad u hesho lacagta qadaadiicda leh
+fa	fa	آدرسی که ارزها را دریافت میکند را انتخاب کنید
+pam	pam	Pilinan ing address a tumanggap coins a atin
+nl	nl	Kies het adres om munten te ontvangen
+ga	ga	Roghnaigh an seoladh chun boinn a fháil leis
+tl	tl	Piliin ang ♦address♦ kung saan tatanggap ng mga coin
+sr@latin	sr@latin	Izaberite adresu za prijem novčića
+es_MX	es_MX	Elige la dirección con la que se recibirán monedas
+mn	mn	Зооснуудыг хүлээн авах хаягийг сонгоно уу
+pt_BR	pt_BR	Escolha o endereço para receber moedas
+es_CO	es_CO	Elige la dirección con la que se recibirán monedas
+tk	tk	Teňňeleriň haýsy salgydan alynjakdygyny saýla
+tr	tr	Coinleri alacak adresi seçin
+es	es	Elija la dirección a la que se recibirán las monedas
+fi	fi	Valitse osoite kolikoiden vastaanottamiseen
+szl	szl	Ôbier adresã, na kerõ chcesz dostać mōnety
+et	et	Vali aadress müntide vastuvõtmiseks
+ms	ms	Pilih alamat untuk menerima koin dengan
+ca	ca	Trieu l'adreça on rebre les monedes
+km	km	ជ្រើសរើសអាសយដ្ឋានដើម្បីទទួលយកកាក់ជាមួយ
+ku	ku	Navnîşana ku ew ê koînan bistîne, hilbijêre
+pa	pa	ਸਿੱਕੇ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਪਤਾ ਚੁਣੋ
+is	is	Veldu veski til að taka við rafmynt
+am	am	ገንዘብ/ኮይኖች የሚቀበሉበትን አድራሻ ይምረጡ
+hr	hr	Odaberite adresu na koju ćete primiti novac
+it	it	Scegli l'indirizzo al quale ricevere bitcoin.
+en  en  Choose the address to receive coins with
+id	id	Pilih alamat untuk menerima koin dengan
+lv	lv	Izvēlies adresi ar kuru saņemt bitcoins
+fr_LU	fr_LU	Choisir l’adresse avec laquelle recevoir des pièces
+be	be	Выбраць адрас, на які атрымаць сродкі
+es_VE	es_VE	Escoja la dirección donde quiere recibir monedas
+sc	sc	Sciobera s'incarreramentu po arrici is monedas cun
+sl	sl	Izberite naslov, na katerega želite prejeti sredstva
+ku_IQ	ku_IQ	ناونیشانەکە هەڵبژێرە بۆ وەرگرتنی دراوەکان لەگەڵ
+yue	yue	选择接收比特币地址
+mr_IN	mr_IN	ज्या पत्त्यावर नाणी प्राप्त करायची आहेत तो
+uz@Latn	uz@Latn	Coinlarni qabul qilish uchun manzilni tanlang
+no	no	Velg adressen du vil motta mynter med 
+ro	ro	Alege adresa la care să primești monedele
+uk	uk	Оберіть адресу для отримання монет
+ja	ja	コインを受け取りたいアドレスを選択
+gu	gu	સિક્કા મેળવવા માટે સરનામું પસંદ કરો
+si	si	කාසි ලැබිය යුතු ලිපිනය තෝරන්න
+ur	ur	کوئین وصول کرنے والے کا پتہ
+cs	cs	Zvol adres na příjem mincí
+zh	zh	选择接收比特币地址
+de	de	Wählen Sie die Adresse aus, mit der Sie Bitcoins empfangen wollen
+lt	lt	Pasirinkite adresą su kuriuo gauti monetas
+hi	hi	कॉइन्स प्राप्त करने के लिए पता चुनें
+de_CH	de_CH	Wählen Sie die Adresse aus, mit der Sie Bitcoins empfangen wollen
+hak	hak	选择接收比特币地址
+kk	kk	Тиын қабылдайтын мекенжай таңдаңыз
+mg	mg	Fidio ny adiresy handraisana vola
+zh_TW	zh_TW	選擇要接收幣的地址
+uz@Cyrl	uz@Cyrl	Тангаларни қабул қилиш учун манзилни танланг
+de_AT	de_AT	Wählen Sie die Adresse aus, mit der Sie Bitcoins empfangen wollen
+da	da	Vælg adresse at modtage bitcoins med
+ka	ka	აირჩიეთ კოინების მიღების მისამართი
+az@latin	az@latin	Pul alınacaq ünvanı seçin
+fil	fil	Piliin ang address na tatanggap ng coins
+es_DO	es_DO	Elige la dirección para recibir monedas
+bn	bn	কয়েন গ্রহণ করার ঠিকানা বাছাই করুন।
+ne	ne	सिक्काहरु प्राप्त गर्ने ठेगाना छान्नुहोस्
+bg	bg	Избери адреса на който да получиш монети
+eo	eo	Elekti la adreson ricevi monerojn kun
+ga_IE	ga_IE	Roghnaigh an seoladh chun boinn a fháil leis
+fr_CM	fr_CM	Choisir l’adresse avec laquelle recevoir des pièces
+sq	sq	Zgjidh adresën ku do të merrni monedhat
+sr@ijekavianlatin	sr@ijekavianlatin	Одабери адресу за примање
+gl	gl	Escolle a dirección da que recibir moedas
+zh-Hans	zh-Hans	选择要用哪些地址收币
+uz	uz	Tangalarni qabul qilib olish uchun manzilni tanlang
+he	he	נא לבחור את הכתובת לקבלת המטבעות
+ar	ar	اختر العنوان الذي ترغب باستلام البتكوين فيه
+sv	sv	Välj en adress att ta emot transaktionen med
+zh_CN	zh_CN	选择接收比特币地址
+az	az	Pul alınacaq ünvanı seçin
+ru	ru	Выберите адреса для получения монет
+zh-Hant	zh-Hant	选择接收比特币地址
+sw	sw	Chagua anwani ya kupokea sarafu
+sr	sr	Одабери адресу за примање
+ug	ug	تەڭگىنى تاپشۇرۇۋالىدىغان ئادرېسنى تاللاڭ
+es_CL	es_CL	Elige la dirección para recibir las monedas
+gl_ES	gl_ES	Selecciona o enderezo do que recibir moedas
+ml	ml	നാണയങ്ങൾ സ്വീകരിക്കാൻ വിലാസം തിരഞ്ഞെടുക്കുക
+pt	pt	Escolha o endereço para receber as moedas
+eu	eu	Dirua jasotzeko helbidea hautatu
+zh_HK	zh_HK	選擇要收錢的地址
+ko	ko	코인을 받을 주소를 선택하십시오
+pl	pl	Wybierz adres, na który chcesz otrzymywać monety
+en	en	
+nb	nb	Velg adressen som skal motta myntene
+my	my	ဒင်္ဂါးများလက်ခံရယူမည့်လိပ်စာကို​​ရွေးပါ
+ha	ha	Zaɓi adireshin don karɓar kuɗi internet da shi
+bs	bs	Izaberite adresu na koju ćete primiti novac
+cy	cy	Dewis y cyfeiriad i dderbyn arian
+te	te	నాణెం అందుకోవటానికి చిరునామాను ఎంచుకోండి
+es_SV	es_SV	Escoja la dirección donde quiere recibir monedas
+mr	mr	ज्या पत्त्यावर नाणी प्राप्त करायची आहेत तो

@@ -147,6 +147,10 @@ export class Record extends BaseUtxPhiContract {
     return [];
   }
 
+  isSpecial(): boolean {
+    return false;
+  }
+
   async broadcast(
     opReturn?: Uint8Array | string,
     utxos?: Utxo[],

@@ -21,6 +21,7 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     let script: Artifact;
     if (options.version === 2) {
       script = v2;
+      if (payout < Faucet.minPayout) throw Error("Payout below dust threshold");
     } else if (options.version === 1) {
       script = v1;
     } else if (options.version === 0) {
@@ -29,7 +30,6 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
       throw Error("Unrecognized Faucet Version");
     }
 
-    if (payout < Faucet.minPayout) throw Error("Payout below dust threshold");
 
     super(options.network!, script, [BigInt(period), BigInt(payout), BigInt(index)]);
     this.options = options;
@@ -160,6 +160,10 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
   getOutputLockingBytecodes(hex = true) {
     hex;
     return [];
+  }
+
+  isSpecial(): boolean {
+    return false;
   }
 
   async execute(
