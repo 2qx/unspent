@@ -129,7 +129,7 @@
 			{#if contract}
 				<td>
 					<p>
-						<img src={lock} alt="lock" />
+						<img src={lock_clock} alt="lock_clock" />
 					</p>
 				</td>
 				<td colspan="3">
@@ -166,7 +166,6 @@
 				<td>
 					<p>
 						<img src={month} alt="month" />
-						<img src={lock_clock} alt="lock_clock" />
 					</p>
 				</td>
 				<td>
