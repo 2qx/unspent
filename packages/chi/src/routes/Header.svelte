@@ -48,8 +48,8 @@
         </a>
 			</li>
 
-      <li aria-current={$page.url.pathname === '/docs' ? 'page' : undefined}>
-        <a href="{base}/docs">
+      <li aria-current={$page.url.pathname === '/help' ? 'page' : undefined}>
+        <a href="{base}/help">
 				<img src={help} alt="help" />
         </a>
 			</li>
