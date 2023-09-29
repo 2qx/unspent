@@ -22,12 +22,7 @@
     </div>
     
     {/each}
-    <div slot="prev">
-      <!-- -->
-    </div>
-    <div slot="next">
-      <!-- -->
-    </div>
+
   </Carousel>
 {/if}
 
