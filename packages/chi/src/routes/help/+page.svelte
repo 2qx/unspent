@@ -1,7 +1,7 @@
 <script>
   import Carousel from 'svelte-carousel';
   import { browser } from '$app/environment';
-  let pagesCount = 22;
+  let pagesCount = 23;
   let pages = Array.from(Array(pagesCount).keys()).map(n => String(n+1).padStart(2, '0'))
 
   let carousel; // for calling methods of the carousel instance
