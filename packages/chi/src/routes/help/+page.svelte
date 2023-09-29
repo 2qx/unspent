@@ -18,7 +18,7 @@
   
   {#each pages as page}
     <div id=book>
-      <img src=/h/{String(page).padStart(2, '0')}.png alt="home" />
+      <img width="100%" src=/h/{String(page).padStart(2, '0')}.svg alt="home" />
     </div>
     
     {/each}
