@@ -219,14 +219,21 @@ export class BaseUtxPhiContract {
     if (ageFilter) {
       let utxos = await this.provider?.getUtxos(this.getAddress())
       let blockHeight = await this.provider?.getBlockHeight()!
-
       return utxos?.filter(u => {
+        // @ts-ignore
+        if(u.height==-1){
+          if(ageFilter==0){
+            return true;
+          }else{
+            return false;
+          }
+        }
         // @ts-ignore
         if (u.height && blockHeight) {
           // @ts-ignore
-          return ((blockHeight - u.height) > ageFilter)
+          return ((blockHeight - u.height) >= ageFilter)
         } else {
-          return true;
+          return false;
         }
       });
 
