@@ -14,6 +14,7 @@ import { binToHex } from "@bitauth/libauth";
 export async function getRecords(
   host: string,
   prefix?: string,
+  node = "mainnet",
   limit = 25,
   offset = 0,
   exclude_pattern = "",
@@ -22,6 +23,7 @@ export async function getRecords(
 
   let param = {
     prefix: prefix,
+    node: node,
     limit: limit,
     offset: offset,
     exclude_pattern: exclude_pattern,
@@ -53,8 +55,8 @@ export async function getChaingraphUnspentRecords(
   if ("version" in param) delete param.version
   //@ts-ignore
   if ("after" in param) delete param.after
-  //@ts-ignore
-  if ("node" in param) delete param.node
+
+  if ("prefix" in param) param.prefix = param.prefix!.substring(0, 20)
 
   const response = await axios({
     url: host,
@@ -62,6 +64,7 @@ export async function getChaingraphUnspentRecords(
     data: {
       query: `query SearchOutputsByLockingBytecodePrefix(
       $prefix: String!
+      $node: String!
       $exclude_pattern: String
       $limit: Int
       $offset: Int
@@ -74,11 +77,35 @@ export async function getChaingraphUnspentRecords(
               where: {
                 _and: [
                   { locking_bytecode_pattern: {  _nlike: $exclude_pattern } }
+                  
+                  {
+                    _or: [
+                      {
+                        transaction: {
+                          block_inclusions: {
+                            block: { accepted_by: { node: { name: { _regex: $node } } } }
+                          }
+                        }
+                      }
+                      {
+                        transaction: {
+                          node_validations: { node: { name: { _regex: $node } } }
+                        }
+                      }
+                    ]
+                  }
                 ]
               }
             ) {
               locking_bytecode_pattern,
-              locking_bytecode
+              locking_bytecode,
+              transaction{
+                block_inclusions{
+                  block{
+                    height
+                  }
+                }
+              }
             }
           }`,
       variables: param,
@@ -96,14 +123,17 @@ export async function getChaingraphUnspentRecords(
     }
   }
   const results = response.data.data.search_output_prefix.map((r: ChaingraphSearchOutputResult) => {
-    
+    let height = r.transaction.block_inclusions[0]?.block.height
+    if (typeof height === "string") height = parseInt(height)
     if (r.locking_bytecode.slice(0, 2) === "\\x") {
       return {
-        record: r.locking_bytecode.slice(2)
+        record: r.locking_bytecode.slice(2),
+        height: height
       }
     } else {
       return {
-        record: r.locking_bytecode
+        record: r.locking_bytecode,
+        height: height
       }
     }
   })
@@ -111,7 +141,8 @@ export async function getChaingraphUnspentRecords(
   return results.map((o: any) => {
     return {
       "id": o.record,
-      "data": parseOpReturn(o.record)
+      "data": parseOpReturn(o.record),
+      "height": o.height
     }
   })
 }
@@ -234,13 +265,14 @@ export async function getUnspentOutputs(host: string, lockingBytecode: string, n
     data: {
       query: query,
       variables: {
-        prefix: lockingBytecode,
+        prefix: lockingBytecode.substring(0, 20),
       },
     },
   }).catch((e: any) => {
     throw e;
   });
 
+  console.log(response)
   // raise errors from chaingraph
   if (response.data.error || response.data.errors) {
     if (response.data.error) {
@@ -369,7 +401,7 @@ export async function getHistory(host: string,
       query: query,
       variables: {
         ...param,
-        "lockingBytecode": `${lockingBytecode.substring(0, 24)}`,
+        "lockingBytecode": `${lockingBytecode.substring(0, 20)}`,
       },
     }
   })

@@ -5,8 +5,7 @@
 	import home from '$lib/images/home.svg';
 	import chart from '$lib/images/chart.svg';
 	import code from '$lib/images/code.svg';
-	import history from '$lib/images/history.svg';
-	import wallet from '$lib/images/wallet.svg';
+	import help from '$lib/images/help.svg';
 	import table from '$lib/images/table.svg';
 	import github from '$lib/images/github.svg';
 </script>
@@ -46,6 +45,12 @@
       <li aria-current={$page.url.pathname === '/code' ? 'page' : undefined}>
         <a href="{base}/code">
 				<img src={code} alt="code" />
+        </a>
+			</li>
+
+      <li aria-current={$page.url.pathname === '/help' ? 'page' : undefined}>
+        <a href="{base}/help">
+				<img src={help} alt="help" />
         </a>
 			</li>
 		</ul>

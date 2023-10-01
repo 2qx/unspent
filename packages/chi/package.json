@@ -29,6 +29,7 @@
   "type": "module",
   "dependencies": {
     "@unspent/phi": "0.2.3",
+    "svelte-carousel": "^1.0.25",
     "lightweight-charts": "^3.8.0",
     "svelte-lightweight-charts": "^1.6.3",
     "@zerodevx/svelte-toast": "0.8.0",

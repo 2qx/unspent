@@ -13,12 +13,7 @@ import {
   NetworkProvider
 }
   from "cashscript";
-  
-// import {
-//   asmToScript,
-//   generateRedeemScript,
-//   scriptToBytecode
-// } from "@cashscript/utils";
+
 
 import { getDefaultProvider } from "./network.js";
 
@@ -33,7 +28,7 @@ import {
 } from "./util.js";
 import { DELIMITER, PROTOCOL_ID, _PROTOCOL_ID } from "./constant.js";
 import { ParsedContractI, Network } from "./interface.js"
-import { buildAuthenticationTemplate, getBitauthUri } from "./template.js" 
+import { buildAuthenticationTemplate, getBitauthUri } from "./template.js"
 import { ContractOptions } from "cashscript/dist/interfaces.js";
 
 export class BaseUtxPhiContract {
@@ -52,7 +47,7 @@ export class BaseUtxPhiContract {
     artifact: Artifact,
     constructorArguments: Argument[]
   ) {
-    
+
     const defaultProvider = getDefaultProvider(network);
     this.provider = defaultProvider as NetworkProvider;
     this.testnet = this.provider.network == "mainnet" ? false : true;
@@ -220,13 +215,22 @@ export class BaseUtxPhiContract {
     return addr;
   }
 
-  async getUtxos(ageFilter?:number): Promise<Utxo[] | undefined> {
-    if(ageFilter){
+  async getUtxos(ageFilter?: number): Promise<Utxo[] | undefined> {
+    if (ageFilter) {
       let utxos = await this.provider?.getUtxos(this.getAddress())
       let blockHeight = await this.provider?.getBlockHeight()!
-      // @ts-ignore
-      return utxos?.filter(u => (blockHeight - u.height) > ageFilter)
-    } else{
+
+      return utxos?.filter(u => {
+        // @ts-ignore
+        if (u.height && blockHeight) {
+          // @ts-ignore
+          return ((blockHeight - u.height) > ageFilter)
+        } else {
+          return true;
+        }
+      });
+
+    } else {
       return await this.provider?.getUtxos(this.getAddress());
     }
 
@@ -277,14 +281,14 @@ export class BaseUtxPhiContract {
     }
   }
 
-  async asBitAuthUrl(transaction: Transaction | string, network?: Network){
-    const template =  await buildAuthenticationTemplate({
-      contract: this.contract, 
-      artifact: this.artifact, 
-      transaction: transaction, 
+  async asBitAuthUrl(transaction: Transaction | string, network?: Network) {
+    const template = await buildAuthenticationTemplate({
+      contract: this.contract,
+      artifact: this.artifact,
+      transaction: transaction,
       network: network,
-      manglePrivateKeys: false, 
-      includeSource:true
+      manglePrivateKeys: false,
+      includeSource: true
     })
 
     return getBitauthUri(template);

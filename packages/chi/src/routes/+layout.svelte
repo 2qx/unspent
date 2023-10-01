@@ -35,7 +35,8 @@
 	</main>
 
 	<footer>
-		<p>visit <a href="https://unspent.app">unspent.app</a> to learn more</p>
+		<p>visit <a href="https://unspent.app/documentation">unspent.app</a> to learn more</p>
+		<p> <a href="https://unspent.app/202309_fundraiser">💚 support this work 💚</a></p>
 	</footer>
 </div>
 

@@ -162,7 +162,7 @@ address:        bchreg:pwuzxyd4ywwf62dqz8f6jcp60n63ndymm07cmtysfp8cy7fl3fk0zggt3
 
   test("Should query contract info", async () => {
     let r = await mockCall(["query",  "--prefix", "6a047574786f01460101010002e502"])
-    expect(r[0][0]).toBeGreaterThan(500);
+    expect(r[0]).toBeGreaterThan(500);
   });
 
 });
