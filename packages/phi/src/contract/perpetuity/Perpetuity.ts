@@ -348,7 +348,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     if (utxos) {
       if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
     }
-    console.log(utxos)
+    
     if (utxos && utxos?.length > 0) {
       balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {

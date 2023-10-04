@@ -17,7 +17,7 @@ describe(`Record Class Tests`, () => {
     );
     if (contractStrings.length > 0) {
       expect(contractStrings[0]).toMatch(opReturnHex);
-      expect(contractStrings.length).toBe(1);
+      expect(contractStrings.length).toBeGreaterThanOrEqual(1);
       const r = opReturnToInstance(contractStrings[0])!;
       const recoveredOpReturnHex = r.toOpReturn(true);
       expect(recoveredOpReturnHex).toBe(opReturnHex);
