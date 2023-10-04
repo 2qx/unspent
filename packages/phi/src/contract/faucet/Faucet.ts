@@ -144,6 +144,11 @@ export class Faucet extends BaseUtxPhiContract implements UtxPhiIface {
     return `A faucet paying ${this.payout} (sat), every ${this.period} blocks`;
   }
 
+  override asCommand(): string{
+    let chipnetFlag = this.options.network ==  'mainnet' ? '': "--chipnet ";
+    return `unspent faucet  ${chipnetFlag} --version ${this.options.version} --address $CASHADDR --period ${this.period} --payout ${this.payout} --index ${this.index}`;
+  }
+
   toOpReturn(hex = false): string | Uint8Array {
     const chunks = [
       Faucet._PROTOCOL_ID,

@@ -98,6 +98,11 @@ export class Record extends BaseUtxPhiContract {
     return `Recording contract with up to ${this.maxFee} per broadcast, index ${this.index}`;
   }
 
+  override asCommand(): string{
+    let chipnetFlag = this.options.network ==  'mainnet' ? '': "--chipnet ";
+    return `unspent record  ${chipnetFlag} --version ${this.options.version} --maxFee ${this.maxFee} --index ${this.index} --contract <PAYLOAD>`;
+  }
+
   toOpReturn(hex = false): string | Uint8Array {
     const chunks = [
       Record._PROTOCOL_ID,

@@ -218,6 +218,7 @@ export class BaseUtxPhiContract {
   async getUtxos(ageFilter?: number): Promise<Utxo[] | undefined> {
     if (ageFilter) {
       let utxos = await this.provider?.getUtxos(this.getAddress())
+      console.log(utxos)
       let blockHeight = await this.provider?.getBlockHeight()!
       return utxos?.filter(u => {
         // @ts-ignore
@@ -261,6 +262,10 @@ export class BaseUtxPhiContract {
 
   asText(): string {
     throw Error("Cannot get contract text description from base class");
+  }
+
+  asCommand(): string {
+    throw Error("Cannot get command from base class");
   }
 
   asSeries(): Promise<any> {

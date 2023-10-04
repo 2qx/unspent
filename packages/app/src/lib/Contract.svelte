@@ -370,8 +370,10 @@
 		<h4>Serialized String:</h4>
 		<SerializedString str={instance.toString()} />
 		<h4>Serialized OpReturn:</h4>
-		<pre>{instance.toOpReturn(true)}</pre>
-
+		<SerializedString str={instance.toOpReturn(true)} />
+    <h4>Command:</h4>
+		<SerializedString str={instance.asCommand()} />
+    
 		{#if instance.getOutputLockingBytecodes().length > 0}
 			<h3>Predefined outputs:</h3>
 			<p>This contract sends funds to the following predefined output(s)</p>
