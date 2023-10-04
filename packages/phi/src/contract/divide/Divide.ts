@@ -105,6 +105,8 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
     const divide = new Divide(executorAllowance, payees, p.options);
 
+    if(divide.isSpecial()) throw Error("Contract is too special")
+
     // check that the address
     divide.checkLockingBytecode(p.lockingBytecode);
     return divide;
@@ -189,6 +191,13 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
   override asText() {
     return `A divide contract with executor allowance of ${this.executorAllowance}`;
   }
+
+  override asCommand(): string{
+    let chipnetFlag = this.options.network ==  'mainnet' ? "": "--chipnet ";
+    let addressList = this.payees.join(",")
+    return `unspent divide --version ${this.options.version} ${chipnetFlag} --addresses ${addressList} --allowance ${this.executorAllowance}`;
+  }
+
 
   toOpReturn(hex = false): string | Uint8Array {
     const chunks = [

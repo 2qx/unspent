@@ -163,6 +163,9 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       p.options
     );
 
+    if(perpetuity.isSpecial()) throw Error("Contract is too special")
+
+
     // check that the address matches
     perpetuity.checkLockingBytecode(p.lockingBytecode);
     return perpetuity;
@@ -226,6 +229,11 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   override asText(): string {
     return `Perpetuity to pay 1/${this.decay} the input, every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`;
+  }
+
+  override asCommand(): string{
+    let chipnetFlag = this.options.network ==  'mainnet' ? '': "--chipnet ";
+    return `unspent perpetuity  ${chipnetFlag} --version ${this.options.version} --address ${this.address} --period ${this.period} --allowance ${this.executorAllowance} --decay ${this.decay}`;
   }
 
   toOpReturn(hex = false): string | Uint8Array {
@@ -335,12 +343,12 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     // Filter to inputs of sufficient age
     if (!utxos) utxos = await this.getUtxos(Number(this.period));
 
-    
+    console.log(utxos)
     // If the contract is version 2 or higher, restrict to one input.
     if (utxos) {
       if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)
     }
-
+    console.log(utxos)
     if (utxos && utxos?.length > 0) {
       balance = utxos.reduce((a, b) => a + b.satoshis, 0n);
     } else {

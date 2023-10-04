@@ -142,6 +142,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       p.options
     );
 
+    if(annuity.isSpecial()) throw Error("Contract is too special")
     // check that the address is the same
     annuity.checkLockingBytecode(p.lockingBytecode);
     return annuity;
@@ -205,6 +206,11 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
   override asText() {
     return `Annuity paying ${this.installment} (sat), every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`;
+  }
+
+  override asCommand(): string{
+    let chipnetFlag = this.options.network ==  'mainnet' ? "": "--chipnet ";
+    return `unspent annuity --version ${this.options.version} ${chipnetFlag} --address ${this.recipientAddress} --period ${this.period} --allowance ${this.executorAllowance} --installment ${this.installment}`;
   }
 
   toOpReturn(hex = false): string | Uint8Array {
