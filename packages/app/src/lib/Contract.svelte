@@ -8,7 +8,8 @@
 	import { copy } from 'svelte-copy';
 	import { base } from '$app/paths';
 
-	import { hexToBin, lockingBytecodeToCashAddress } from '@bitauth/libauth';
+	import { hexToBin, binToHex, lockingBytecodeToCashAddress } from '@bitauth/libauth';
+	import { scriptToBytecode } from '@cashscript/utils';
 
 	import Badge from '@smui-extra/badge';
 	import Tooltip, { Wrapper } from '@smui/tooltip';
@@ -371,6 +372,15 @@
 		<SerializedString str={instance.toString()} />
 		<h4>Serialized OpReturn:</h4>
 		<SerializedString str={instance.toOpReturn(true)} />
+
+    <h3>Redeem Script Hex</h3>
+    <p>parameters and unlocking script for
+      independent verification in a <a target="_blank" href="https://explorer.bitcoinunlimited.info/decoder"
+        >decoder</a
+      ></p>
+
+		<SerializedString str={binToHex(scriptToBytecode(instance.contract.redeemScript))} />
+    
     <h4>Command:</h4>
 		<SerializedString str={instance.asCommand()} />
     

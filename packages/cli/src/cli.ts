@@ -242,7 +242,7 @@ export class MineCommand extends CustomFeeCommand {
   period = Option.String("--period", {
     required: false,
     description:
-      "how often (in blocks) the contract pays (default: 4000, about monthly)",
+      "how often (in blocks) the contract pays (default: 4383, about monthly)",
   });
   payout = Option.String("--payout", {
     required: false,
@@ -326,10 +326,10 @@ export class PerpetuityCommand extends CustomFeeCommand {
       : this.isRegtest
       ? "regtest"
       : "mainnet";
-    const defaultPeriod = this.isChipnet ? 1 : 4000;
-    const defaultDecay = this.isChipnet ? 8 : 120;
+    const defaultPeriod = this.isChipnet ? 0 : 4383;
+    const defaultDecay = this.isChipnet ? 8 : 96;
     let periodInt = !this.period ? defaultPeriod : parseBigInt(this.period);
-    let allowanceInt = !this.allowance ? 3400 : parseBigInt(this.allowance);
+    let allowanceInt = !this.allowance ? 1500 : parseBigInt(this.allowance);
     let decayInt = !this.decay ? defaultDecay : parseBigInt(this.decay);
     let feeOverride = !this.fee ? undefined : parseBigInt(this.fee);
     let version = parseInt(this.version)

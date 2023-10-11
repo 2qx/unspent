@@ -272,7 +272,6 @@ export async function getUnspentOutputs(host: string, lockingBytecode: string, n
     throw e;
   });
 
-  console.log(response)
   // raise errors from chaingraph
   if (response.data.error || response.data.errors) {
     if (response.data.error) {
