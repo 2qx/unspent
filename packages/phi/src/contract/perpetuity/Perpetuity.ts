@@ -343,7 +343,6 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     // Filter to inputs of sufficient age
     if (!utxos) utxos = await this.getUtxos(Number(this.period));
 
-    console.log(utxos)
     // If the contract is version 2 or higher, restrict to one input.
     if (utxos) {
       if (this.options!.version! >= 2 && utxos!.length > 1) utxos = utxos.slice(-1)

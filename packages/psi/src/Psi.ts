@@ -66,8 +66,7 @@ export class Psi
       .catch(function (error) {
         // Log or display the error
         console.error(error.stack || error);
-      });
-      console.log(lastBlock)
+      }); 
     // -1 is no blockheight
     return lastBlock ? lastBlock : { id: -1, timestamp: (new Date()).getTime()/1000 }
   }
