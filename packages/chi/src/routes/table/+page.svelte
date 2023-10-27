@@ -49,7 +49,7 @@
 		curHeight = await contract.provider.getBlockHeight();
     utxos = utxos.sort((a, b) => a.height - b.height);
 		utxos = utxos.map((u) => {
-			let waitBlocks = u.height + 4838 - curHeight;
+			let waitBlocks = u.height + 4383 - curHeight;
 			return {
 				...u,
 				estimateUnlockDate: new Date(now + waitBlocks * 600000).toLocaleString(),
