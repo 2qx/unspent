@@ -32,7 +32,7 @@ export class PsiNetworkProvider implements NetworkProvider {
     public fuzz?: number
   ) {
 
-    this.chaingraphHost = chaingraphHost ? chaingraphHost : "https://gql.chaingraph.pat.mn/v1/graphql"
+    this.chaingraphHost = chaingraphHost ? chaingraphHost : "https://demo.chaingraph.cash/v1/graphql"
     this.db = new Psi(network)
 
     failoverProvider = failoverProvider ? failoverProvider : undefined
