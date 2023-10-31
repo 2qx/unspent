@@ -7,7 +7,8 @@ export let protocol = persist(writable('utxo'), createLocalStorage(true), 'proto
 
 export let chaingraphHost = persist(
   // https://demo.chaingraph.cash/v1/graphql
-	writable('https://gql.chaingraph.pat.mn/v1/graphql'),
+	//writable('https://gql.chaingraph.pat.mn/v1/graphql'),
+	writable('https://demo.chaingraph.cash/v1/graphql'),
 	createLocalStorage(true),
 	'chaingraphHost'
 );
