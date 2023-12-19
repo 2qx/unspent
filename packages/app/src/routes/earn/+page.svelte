@@ -35,7 +35,7 @@
 	let noResults = false;
 
 	let pageSizes = [5, 10, 25];
-	let pageSize = 10;
+	let pageSize = 5;
 	let page = 0;
 
 	let contractFilter = '';

@@ -62,7 +62,7 @@
 		await load({
 			load: async () => {
 				if (opReturnHex.length > 0) {
-					let queryHex = opReturnHex.length > 20 ? opReturnHex.slice(0, 20) : opReturnHex;
+          let queryHex = opReturnHex.length > 60 ? opReturnHex.slice(0, 60) : opReturnHex;
 					let records = await getRecords(chaingraphHostValue, queryHex);
 					records = records.filter((r) => r == opReturnHex);
 					isPublished = records.length > 0 ? true : false;

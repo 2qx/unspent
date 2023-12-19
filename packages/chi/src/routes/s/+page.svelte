@@ -1,11 +1,14 @@
 <script>
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import lock from '$lib/images/lock.svg';
 	import arrow_back from '$lib/images/arrow_back.svg';
 	import arrow_down from '$lib/images/arrow_down.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
+	import lock from '$lib/images/lock.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
+  import chart from '$lib/images/chart.svg';
+	import table from '$lib/images/table.svg';
+	import share from '$lib/images/share.svg';
 	import month from '$lib/images/month.svg';
 	import { _ } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
@@ -19,7 +22,8 @@
 	} from '@bitauth/libauth';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
 	import { deflate, inflate } from 'pako';
-	import { receiptAddressStore } from '$lib/store.js';
+	import ContractChartSection from '$lib/ContractChartSection.svelte';
+	import UtxoSection from '$lib/UtxoSection.svelte';
 
 	export let data;
 	export let p;
@@ -28,19 +32,22 @@
 	let receiptAddress;
 	let contract;
 	let receiptAddressValid = false;
-  let lockingBytecode;
 
+	if (data.q) {
+		if (!receiptAddress) {
+			let bytecode = inflate(base64ToBin(encodeURI(data.q)));
+			receiptAddress = lockingBytecodeToCashAddress(bytecode);
+			receiptAddressValid = true;
+			createContract(false);
+		}
+	}
 
-
-	async function createContract(save=true) {
+	async function createContract(save = true) {
 		if (receiptAddress) {
 			try {
 				try {
 					receiptAddress = await sanitizeAddress(receiptAddress);
 					receiptAddressValid = true;
-          if(save){
-            receiptAddressStore.set(receiptAddress);
-          }
 				} catch (e) {
 					receiptAddressValid = false;
 					if (e.message) {
@@ -50,13 +57,13 @@
 					}
 				}
 				contract = new Perpetuity(4383, receiptAddress, 1500, 96);
-        updateBalance();
+				updateBalance();
 
-				lockingBytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
-				// let q = decodeURI(binToBase64(deflate(bytecode)));
-				// $page.url.searchParams.set('q', q);
-				
-				// goto(`?${$page.url.searchParams.toString()}`);
+				let bytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
+				let q = decodeURI(binToBase64(deflate(bytecode)));
+				$page.url.searchParams.set('q', q);
+
+				goto(`?${$page.url.searchParams.toString()}`);
 			} catch (e) {
 				contract = undefined;
 
@@ -77,19 +84,7 @@
 		if (contract) utxoCount = (await contract.getUtxos()).length;
 	};
 
-	function updateReceiptAddress() {
-		receiptAddressStore.set(receiptAddressValue);
-	}
-
-	receiptAddressStore.subscribe((value) => {
-		receiptAddress = value;
-		if (receiptAddress && !contract) createContract();
-	});
-
-	function clearReceiptAddress() {
-		receiptAddressValue = '';
-		receiptAddress.set('');
-	}
+	
 </script>
 
 <svelte:head>
@@ -135,7 +130,7 @@
 					</CopyToClipboard>
 				</td>
 			{:else}
-				<td colspan="4">{$_('create')}</td>
+				<td colspan="4">error</td>
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
@@ -178,23 +173,36 @@
 		{/if}
 		<tr>
 			<td />
-			<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
+			<td style="line-break:auto;" colspan="3" />
 		</tr>
 		<tr>
 			<td>
-				{#if contract}
-					<p>
-						<BroadcastAction opReturnHex={contract.toOpReturn(true)} lockingBytecode={lockingBytecode}/>
-					</p>
-				{/if}
-			</td>
-			<td colspan="3">
-				<textarea id="addr" on:change={() => createContract()} bind:value={receiptAddress} />
+        <p>
+          <img src={lock} alt="lock" />
+        </p>
+      </td>
+			<td style="line-break:auto;" colspan="3">
+				<p>
+					{#if receiptAddress}
+						<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={receiptAddress} let:copy>
+							<div class="action">
+								<button on:click={copy}>
+									{receiptAddress}
+								</button>
+							</div>
+						</CopyToClipboard>
+					{/if}
+				</p>
 			</td>
 		</tr>
 	</table>
 </section>
-
+<hr/>
+<h4><img src={table} alt="table" /></h4>
+<UtxoSection receiptAddress={receiptAddress}/>
+<hr/>
+<h4><img src={chart} alt="chart" /></h4>
+<ContractChartSection receiptAddress={receiptAddress}/>
 <style>
 	section {
 		display: flex;
@@ -214,8 +222,8 @@
 	}
 
 	table {
-		border: 4mm ridge rgba(211, 220, 50, 0.6);
-		background-color: white;
+		border: 1mm ridge rgba(192, 50, 220, 0.6);
+    background-color: white;
 	}
 	table tr td {
 		min-width: 20%;

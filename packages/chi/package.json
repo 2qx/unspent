@@ -1,6 +1,6 @@
 {
   "name": "@unspent/chi",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -28,7 +28,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@unspent/phi": "0.2.6",
+    "@unspent/phi": "0.2.7",
     "svelte-carousel": "^1.0.25",
     "lightweight-charts": "^3.8.0",
     "svelte-lightweight-charts": "^1.6.3",

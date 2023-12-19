@@ -5,8 +5,10 @@
 	import announce from '$lib/images/announce.svg';
 	import { Record } from '@unspent/phi';
 	import { getRecords } from '@unspent/psi';
+  import ShareLink from './ShareLink.svelte';
 
 	export let opReturnHex: string;
+  export let lockingBytecode: string;
 
 	let preRecord = '';
 	let isPublished: boolean;
@@ -46,9 +48,9 @@
 
 	const check = async () => {
 		if (opReturnHex.length > 0) {
-			let queryHex = opReturnHex.length > 50 ? opReturnHex.slice(0, 50) : opReturnHex;
+			let queryHex = opReturnHex.length > 60 ? opReturnHex.slice(0, 60) : opReturnHex;
 			let records = await getRecords(
-				'https://gql.chaingraph.pat.mn/v1/graphql',
+				'https://demo.chaingraph.cash/v1/graphql',
 				queryHex
 			);
 			records = records.filter((r) => r == opReturnHex);
@@ -83,7 +85,7 @@
 	</div>
 {:else if isPublished == true}
 	<div class="action">
-		<button disabled> {$_('ok')} </button>
+    <ShareLink lockingBytecode={lockingBytecode}/>
 	</div>
 {:else}
 	<div >

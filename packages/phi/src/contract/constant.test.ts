@@ -1,4 +1,8 @@
 import { contractMap } from "./constant.js";
+import type { IdentitySnapshot } from "mainnet-js";
+
+const a: IdentitySnapshot; 
+
 
 describe(`Test class map`, () => {
   test("Should import a class", async () => {
