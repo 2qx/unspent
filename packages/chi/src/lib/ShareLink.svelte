@@ -13,7 +13,7 @@
 	if (lockingBytecode) {
 		let q = decodeURI(binToBase64(deflate(lockingBytecode)));
 		$page.url.searchParams.set('q', q);
-    linkText = $page.url.host + "/s?" + $page.url.searchParams.toString();
+    linkText = "https://" + $page.url.host + "/s?" + $page.url.searchParams.toString();
 	}
 
 </script>
