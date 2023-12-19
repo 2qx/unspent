@@ -177,11 +177,13 @@
 		</tr>
 		<tr>
 			<td>
+        {#if receiptAddress}
         <p>
           <img src={lock} alt="lock" />
         </p>
+        {/if}
       </td>
-			<td style="line-break:auto;" colspan="3">
+			<td style="line-break:anywhere;" colspan="3">
 				<p>
 					{#if receiptAddress}
 						<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={receiptAddress} let:copy>
