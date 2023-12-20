@@ -14,30 +14,30 @@
 		carousel.goToNext();
 	};
 </script>
+
 <div id="book">
-  <ul>
-    <li style="background-color:white;">
-      <a target="_blank" href="https://www.paytaca.com/#wallet">
-        <img src={wallet} /><br>
-        Paytaca
-      </a>
-    </li>
-    <li style="background-color:white;">
-      <a target="_blank" href="https://selene.cash/">
-        <img src={wallet} /><br>
-        Selene
-      </a>
-    </li>
-    <li style="background-color:white;">
-      <img src={download} /><br>
-      <img src={touch} />
-    </li>
-    
-  </ul>
+	<ul>
+		<li style="background-color:white;">
+			<a target="_blank" href="https://www.paytaca.com/#wallet">
+				<img src={wallet} /><br />
+				Paytaca
+			</a>
+		</li>
+		<li style="background-color:white;">
+			<a target="_blank" href="https://selene.cash/">
+				<img src={wallet} /><br />
+				Selene
+			</a>
+		</li>
+		<li style="background-color:white;">
+			<img src={download} /><br />
+			<img src={touch} />
+		</li>
+	</ul>
 </div>
 
 {#if browser}
-	<Carousel autoplay={true} autoplayDuration="6000" bind:this={carousel}>
+	<Carousel bind:this={carousel}>
 		{#each pages as page}
 			<div id="book">
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
@@ -54,7 +54,6 @@
 {/if}
 
 <button on:click={handleNextClick}>Next</button>
-
 
 <style>
 	#book {

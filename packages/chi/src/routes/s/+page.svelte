@@ -4,16 +4,14 @@
 	import arrow_back from '$lib/images/arrow_back.svg';
 	import arrow_down from '$lib/images/arrow_down.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
-	import lock from '$lib/images/lock.svg';
+	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
-  import chart from '$lib/images/chart.svg';
+	import chart from '$lib/images/chart.svg';
 	import table from '$lib/images/table.svg';
 	import share from '$lib/images/share.svg';
-	import month from '$lib/images/month.svg';
 	import { _ } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
-	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import {
 		binToBase64,
 		base64ToBin,
@@ -83,8 +81,6 @@
 		if (contract) balance = await contract.getBalance();
 		if (contract) utxoCount = (await contract.getUtxos()).length;
 	};
-
-	
 </script>
 
 <svelte:head>
@@ -117,7 +113,7 @@
 			{#if contract}
 				<td>
 					<p>
-						<img src={lock_clock} alt="lock_clock" /><img src={month} alt="month" />
+						<img src={lock_clock} alt="lock_clock" />
 					</p>
 				</td>
 				<td colspan="3">
@@ -134,7 +130,7 @@
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
-			<tr >
+			<tr>
 				<td>
 					<p>1 m; 4383 blocks</p>
 				</td>
@@ -150,9 +146,8 @@
 					</p>
 				</td>
 			</tr>
-			<tr >
-				<td>
-				</td>
+			<tr>
+				<td />
 				<td>
 					<p><img src={arrow_down} alt="to" /></p>
 				</td>
@@ -174,34 +169,29 @@
 		</tr>
 		<tr>
 			<td>
-        {#if receiptAddress}
-        <p>
-          <img src={lock} alt="lock" />
-        </p>
-        {/if}
-      </td>
+				{#if receiptAddress}
+					<p>
+            <img src={wallet} alt="wallet" />
+					</p>
+				{/if}
+			</td>
 			<td style="line-break:anywhere;" colspan="3">
 				<p>
 					{#if receiptAddress}
-						<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={receiptAddress} let:copy>
-							<div class="action">
-								<button on:click={copy}>
-									{receiptAddress}
-								</button>
-							</div>
-						</CopyToClipboard>
+						{receiptAddress}
 					{/if}
 				</p>
 			</td>
 		</tr>
 	</table>
 </section>
-<hr/>
+<hr />
 <h4><img src={table} alt="table" /></h4>
-<UtxoSection receiptAddress={receiptAddress}/>
-<hr/>
+<UtxoSection {receiptAddress} />
+<hr />
 <h4><img src={chart} alt="chart" /></h4>
-<ContractChartSection receiptAddress={receiptAddress}/>
+<ContractChartSection {receiptAddress} />
+
 <style>
 	section {
 		display: flex;
@@ -222,7 +212,7 @@
 
 	table {
 		border: 1mm ridge rgba(192, 50, 220, 0.6);
-    background-color: white;
+		background-color: white;
 	}
 	table tr td {
 		min-width: 20%;

@@ -114,7 +114,7 @@
 			{#if contract}
 				<td>
 					<p>
-						<img src={lock_clock} alt="lock_clock" /><img src={month} alt="month" />
+						<img src={lock_clock} alt="lock_clock" />
 					</p>
 				</td>
 				<td colspan="3">
@@ -169,7 +169,7 @@
 			<td >
         {#if contract}
 					<p>
-						<img src={lock} alt="lock" /><img src={wallet} alt="wallet" />
+						<img src={wallet} alt="wallet" />
 					</p>
 				{/if}
       </td>
@@ -183,7 +183,7 @@
 					</p>
 				{:else}
 					<p>
-						<img src={lock} alt="lock" /><img src={wallet} alt="wallet" /><img src={arrow_right} alt="arrow_right" />
+						<img src={wallet} alt="wallet" /><img src={arrow_right} alt="arrow_right" />
 					</p>
 				{/if}
 			</td>
