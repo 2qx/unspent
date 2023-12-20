@@ -1,10 +1,10 @@
 <script>
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import lock from '$lib/images/lock.svg';
 	import arrow_back from '$lib/images/arrow_back.svg';
 	import arrow_down from '$lib/images/arrow_down.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
+	import arrow_right from '$lib/images/arrow_right.svg';
+	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import month from '$lib/images/month.svg';
 	import { _ } from 'svelte-i18n';
@@ -12,13 +12,9 @@
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import {
-		binToBase64,
-		base64ToBin,
-		lockingBytecodeToCashAddress,
 		cashAddressToLockingBytecode
 	} from '@bitauth/libauth';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
-	import { deflate, inflate } from 'pako';
 	import { receiptAddressStore } from '$lib/store.js';
 
 	export let data;
@@ -28,19 +24,17 @@
 	let receiptAddress;
 	let contract;
 	let receiptAddressValid = false;
-  let lockingBytecode;
+	let lockingBytecode;
 
-
-
-	async function createContract(save=true) {
+	async function createContract(save = true) {
 		if (receiptAddress) {
 			try {
 				try {
 					receiptAddress = await sanitizeAddress(receiptAddress);
 					receiptAddressValid = true;
-          if(save){
-            receiptAddressStore.set(receiptAddress);
-          }
+					if (save) {
+						receiptAddressStore.set(receiptAddress);
+					}
 				} catch (e) {
 					receiptAddressValid = false;
 					if (e.message) {
@@ -50,12 +44,12 @@
 					}
 				}
 				contract = new Perpetuity(4383, receiptAddress, 1500, 96);
-        updateBalance();
+				updateBalance();
 
 				lockingBytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
 				// let q = decodeURI(binToBase64(deflate(bytecode)));
 				// $page.url.searchParams.set('q', q);
-				
+
 				// goto(`?${$page.url.searchParams.toString()}`);
 			} catch (e) {
 				contract = undefined;
@@ -101,11 +95,9 @@
 	<table>
 		<tr>
 			{#if balance}
-				<td style="text-align: center;">
-					{#if utxoCount > 0}
-						<b>{utxoCount} UTXO(s)</b>
-					{/if}
-				</td>
+				<td>
+          
+        </td>
 				<td colspan="3">
 					<b>{balance.toLocaleString()}</b> sats <br />
 					(<i
@@ -122,7 +114,7 @@
 			{#if contract}
 				<td>
 					<p>
-						<img src={lock_clock} alt="lock_clock" />
+						<img src={lock_clock} alt="lock_clock" /><img src={month} alt="month" />
 					</p>
 				</td>
 				<td colspan="3">
@@ -135,31 +127,28 @@
 					</CopyToClipboard>
 				</td>
 			{:else}
-				<td colspan="4">{$_('create')}</td>
+				<td colspan="4"> {$_('create')}</td>
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
-			<tr style="background-color: lightgray;">
+			<tr >
 				<td>
 					<p>1 m; 4383 blocks</p>
 				</td>
 				<td style="max-width: 40px;">
-					<p>1/96</p>
+					<p><b>1/96</b></p>
 				</td>
 				<td>
-					<p>95/96</p>
+					<p><b>95/96</b></p>
 				</td>
 				<td>
 					<p>
-						{new Intl.NumberFormat().format(1500)} sat
+						<b>{new Intl.NumberFormat().format(1500)} sat</b>
 					</p>
 				</td>
 			</tr>
-			<tr style="background-color: lightgray;">
+			<tr >
 				<td>
-					<p>
-						<img src={month} alt="month" />
-					</p>
 				</td>
 				<td>
 					<p><img src={arrow_down} alt="to" /></p>
@@ -177,19 +166,34 @@
 			</tr>
 		{/if}
 		<tr>
-			<td />
+			<td >
+        {#if contract}
+					<p>
+						<img src={lock} alt="lock" /><img src={wallet} alt="wallet" />
+					</p>
+				{/if}
+      </td>
 			<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
 		</tr>
 		<tr>
 			<td>
 				{#if contract}
 					<p>
-						<BroadcastAction opReturnHex={contract.toOpReturn(true)} lockingBytecode={lockingBytecode}/>
+						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
+					</p>
+				{:else}
+					<p>
+						<img src={lock} alt="lock" /><img src={wallet} alt="wallet" /><img src={arrow_right} alt="arrow_right" />
 					</p>
 				{/if}
 			</td>
 			<td colspan="3">
-				<textarea id="addr" on:change={() => createContract()} bind:value={receiptAddress} />
+				<textarea
+					id="addr"
+					on:change={() => createContract()}
+					bind:value={receiptAddress}
+					placeholder="bitcoincash:qz...... ........vj4"
+				/>
 			</td>
 		</tr>
 	</table>

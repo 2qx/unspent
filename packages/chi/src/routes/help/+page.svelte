@@ -1,6 +1,8 @@
 <script>
 	import Carousel from 'svelte-carousel';
 	import { browser } from '$app/environment';
+	import touch from '$lib/images/touch.svg';
+	import download from '$lib/images/download.svg';
 	import wallet from '$lib/images/wallet.svg';
 
 	let pagesCount = 23;
@@ -12,6 +14,29 @@
 		carousel.goToNext();
 	};
 </script>
+<div id="book">
+  <ul>
+    <li style="background-color:white;">
+      <img src={download} />
+    </li>
+    <li style="background-color:white;">
+      <a href="https://www.paytaca.com/#wallet">
+        <img src={wallet} />
+        Paytaca
+      </a>
+    </li>
+    <li style="background-color:white;">
+      <a href="https://selene.cash/">
+        <img src={wallet} />
+        Selene
+      </a>
+    </li>
+    <li style="background-color:white;">
+      <img src={touch} />
+    </li>
+    
+  </ul>
+</div>
 
 {#if browser}
 	<Carousel autoplay={true} autoplayDuration="6000" bind:this={carousel}>
@@ -31,20 +56,7 @@
 {/if}
 
 <button on:click={handleNextClick}>Next</button>
-<ul>
-	<li>
-		<a href="https://www.paytaca.com/#wallet">
-			<img src={wallet} />
-			Paytaca
-		</a>
-	</li>
-	<li>
-		<a href="https://selene.cash/">
-			<img src={wallet} />
-			Selene
-		</a>
-	</li>
-</ul>
+
 
 <style>
 	#book {
@@ -60,7 +72,7 @@
 		font-size: larger;
 	}
 	ul li {
-		padding: 30px;
+		padding: 20px;
 	}
 	ul {
 		display: inline-flex;

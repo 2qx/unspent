@@ -91,7 +91,7 @@
 	<title>∑ ₿ᵪ</title>
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
-
+<h4><img src={share} alt="share" /></h4>
 <section>
 	<table>
 		<tr>
@@ -117,7 +117,7 @@
 			{#if contract}
 				<td>
 					<p>
-						<img src={lock_clock} alt="lock_clock" />
+						<img src={lock_clock} alt="lock_clock" /><img src={month} alt="month" />
 					</p>
 				</td>
 				<td colspan="3">
@@ -134,27 +134,24 @@
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
-			<tr style="background-color: lightgray;">
+			<tr >
 				<td>
 					<p>1 m; 4383 blocks</p>
 				</td>
 				<td style="max-width: 40px;">
-					<p>1/96</p>
+					<p><b>1/96</b></p>
 				</td>
 				<td>
-					<p>95/96</p>
+					<p><b>95/96</b></p>
 				</td>
 				<td>
 					<p>
-						{new Intl.NumberFormat().format(1500)} sat
+						<b>{new Intl.NumberFormat().format(1500)} sat</b>
 					</p>
 				</td>
 			</tr>
-			<tr style="background-color: lightgray;">
+			<tr >
 				<td>
-					<p>
-						<img src={month} alt="month" />
-					</p>
 				</td>
 				<td>
 					<p><img src={arrow_down} alt="to" /></p>
