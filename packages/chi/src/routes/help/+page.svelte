@@ -17,21 +17,19 @@
 <div id="book">
   <ul>
     <li style="background-color:white;">
-      <img src={download} />
-    </li>
-    <li style="background-color:white;">
-      <a href="https://www.paytaca.com/#wallet">
-        <img src={wallet} />
+      <a target="_blank" href="https://www.paytaca.com/#wallet">
+        <img src={wallet} /><br>
         Paytaca
       </a>
     </li>
     <li style="background-color:white;">
-      <a href="https://selene.cash/">
-        <img src={wallet} />
+      <a target="_blank" href="https://selene.cash/">
+        <img src={wallet} /><br>
         Selene
       </a>
     </li>
     <li style="background-color:white;">
+      <img src={download} /><br>
       <img src={touch} />
     </li>
     
