@@ -1,7 +1,11 @@
 <script>
 	import Carousel from 'svelte-carousel';
 	import { browser } from '$app/environment';
-	import wallet from '$lib/images/wallet.svg';
+	import touch from '$lib/images/touch.svg';
+	import download from '$lib/images/download.svg';
+	import paytaca from '$lib/images/paytaca.svg';
+	import selene from '$lib/images/selene.svg';
+	import whitepaper from '$lib/images/whitepaper.svg';
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
@@ -13,8 +17,35 @@
 	};
 </script>
 
+<div id="book">
+	<ul>
+    <li style="background-color:white;">
+			<a
+				target="_blank"
+				href="https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"
+			>
+				<img src={whitepaper} /><br />
+				<img src={touch} />
+			</a>
+		</li>
+		<li style="background-color:white;">
+			<a target="_blank" href="https://www.paytaca.com/#wallet">
+				<img src={paytaca} /><br />
+				Paytaca
+			</a>
+		</li>
+		<li style="background-color:white;">
+			<a target="_blank" href="https://selene.cash/">
+				<img src={selene} /><br />
+				Selene
+			</a>
+		</li>
+		
+	</ul>
+</div>
+
 {#if browser}
-	<Carousel autoplay={true} autoplayDuration="6000" bind:this={carousel}>
+	<Carousel bind:this={carousel}>
 		{#each pages as page}
 			<div id="book">
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
@@ -31,20 +62,6 @@
 {/if}
 
 <button on:click={handleNextClick}>Next</button>
-<ul>
-	<li>
-		<a href="https://www.paytaca.com/#wallet">
-			<img src={wallet} />
-			Paytaca
-		</a>
-	</li>
-	<li>
-		<a href="https://selene.cash/">
-			<img src={wallet} />
-			Selene
-		</a>
-	</li>
-</ul>
 
 <style>
 	#book {
@@ -60,7 +77,7 @@
 		font-size: larger;
 	}
 	ul li {
-		padding: 30px;
+		padding: 20px;
 	}
 	ul {
 		display: inline-flex;

@@ -1,5 +1,6 @@
 import { contractMap } from "./constant.js";
 
+
 describe(`Test class map`, () => {
   test("Should import a class", async () => {
     const fClass = contractMap["F"];

@@ -1,21 +1,27 @@
 <script>
-	import lock from '$lib/images/lock.svg';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import arrow_back from '$lib/images/arrow_back.svg';
 	import arrow_down from '$lib/images/arrow_down.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
-	import arrow_right from '$lib/images/arrow_right.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
-	import month from '$lib/images/month.svg';
+	import chart from '$lib/images/chart.svg';
+	import table from '$lib/images/table.svg';
+	import share from '$lib/images/share.svg';
 	import { _ } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
-	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import {
+		binToBase64,
+		base64ToBin,
+		lockingBytecodeToCashAddress,
 		cashAddressToLockingBytecode
 	} from '@bitauth/libauth';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
-	import { receiptAddressStore } from '$lib/store.js';
+	import { deflate, inflate } from 'pako';
+	import ContractChartSection from '$lib/ContractChartSection.svelte';
+	import UtxoSection from '$lib/UtxoSection.svelte';
 
 	export let data;
 	export let p;
@@ -24,7 +30,15 @@
 	let receiptAddress;
 	let contract;
 	let receiptAddressValid = false;
-	let lockingBytecode;
+
+	if (data.q) {
+		if (!receiptAddress) {
+			let bytecode = inflate(base64ToBin(encodeURI(data.q)));
+			receiptAddress = lockingBytecodeToCashAddress(bytecode);
+			receiptAddressValid = true;
+			createContract(false);
+		}
+	}
 
 	async function createContract(save = true) {
 		if (receiptAddress) {
@@ -32,9 +46,6 @@
 				try {
 					receiptAddress = await sanitizeAddress(receiptAddress);
 					receiptAddressValid = true;
-					if (save) {
-						receiptAddressStore.set(receiptAddress);
-					}
 				} catch (e) {
 					receiptAddressValid = false;
 					if (e.message) {
@@ -46,11 +57,11 @@
 				contract = new Perpetuity(4383, receiptAddress, 1500, 96);
 				updateBalance();
 
-				lockingBytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
-				// let q = decodeURI(binToBase64(deflate(bytecode)));
-				// $page.url.searchParams.set('q', q);
+				let bytecode = cashAddressToLockingBytecode(receiptAddress).bytecode;
+				let q = decodeURI(binToBase64(deflate(bytecode)));
+				$page.url.searchParams.set('q', q);
 
-				// goto(`?${$page.url.searchParams.toString()}`);
+				goto(`?${$page.url.searchParams.toString()}`);
 			} catch (e) {
 				contract = undefined;
 
@@ -70,34 +81,22 @@
 		if (contract) balance = await contract.getBalance();
 		if (contract) utxoCount = (await contract.getUtxos()).length;
 	};
-
-	function updateReceiptAddress() {
-		receiptAddressStore.set(receiptAddressValue);
-	}
-
-	receiptAddressStore.subscribe((value) => {
-		receiptAddress = value;
-		if (receiptAddress && !contract) createContract();
-	});
-
-	function clearReceiptAddress() {
-		receiptAddressValue = '';
-		receiptAddress.set('');
-	}
 </script>
 
 <svelte:head>
 	<title>∑ ₿ᵪ</title>
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
-
+<h4><img src={share} alt="share" /></h4>
 <section>
 	<table>
 		<tr>
 			{#if balance}
-				<td>
-          
-        </td>
+				<td style="text-align: center;">
+					{#if utxoCount > 0}
+						<b>{utxoCount} UTXO(s)</b>
+					{/if}
+				</td>
 				<td colspan="3">
 					<b>{balance.toLocaleString()}</b> sats <br />
 					(<i
@@ -127,11 +126,11 @@
 					</CopyToClipboard>
 				</td>
 			{:else}
-				<td colspan="4"> {$_('create')}</td>
+				<td colspan="4">error</td>
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
-			<tr >
+			<tr>
 				<td>
 					<p>1 m; 4383 blocks</p>
 				</td>
@@ -147,9 +146,8 @@
 					</p>
 				</td>
 			</tr>
-			<tr >
-				<td>
-				</td>
+			<tr>
+				<td />
 				<td>
 					<p><img src={arrow_down} alt="to" /></p>
 				</td>
@@ -166,38 +164,33 @@
 			</tr>
 		{/if}
 		<tr>
-			<td >
-        {#if contract}
-					<p>
-						<img src={wallet} alt="wallet" />
-					</p>
-				{/if}
-      </td>
-			<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
+			<td />
+			<td style="line-break:auto;" colspan="3" />
 		</tr>
 		<tr>
 			<td>
-				{#if contract}
+				{#if receiptAddress}
 					<p>
-						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
-					</p>
-				{:else}
-					<p>
-						<img src={wallet} alt="wallet" /><img src={arrow_right} alt="arrow_right" />
+            <img src={wallet} alt="wallet" />
 					</p>
 				{/if}
 			</td>
-			<td colspan="3">
-				<textarea
-					id="addr"
-					on:change={() => createContract()}
-					bind:value={receiptAddress}
-					placeholder="bitcoincash:qz...... ........vj4"
-				/>
+			<td style="line-break:anywhere;" colspan="3">
+				<p>
+					{#if receiptAddress}
+						{receiptAddress}
+					{/if}
+				</p>
 			</td>
 		</tr>
 	</table>
 </section>
+<hr />
+<h4><img src={table} alt="table" /></h4>
+<UtxoSection {receiptAddress} />
+<hr />
+<h4><img src={chart} alt="chart" /></h4>
+<ContractChartSection {receiptAddress} />
 
 <style>
 	section {
@@ -218,7 +211,7 @@
 	}
 
 	table {
-		border: 4mm ridge rgba(211, 220, 50, 0.6);
+		border: 1mm ridge rgba(192, 50, 220, 0.6);
 		background-color: white;
 	}
 	table tr td {

@@ -11,7 +11,7 @@
       "**/jest-runner/**"
     ]
   },
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {

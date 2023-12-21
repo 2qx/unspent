@@ -56,7 +56,7 @@ export async function getChaingraphUnspentRecords(
   //@ts-ignore
   if ("after" in param) delete param.after
 
-  if ("prefix" in param) param.prefix = param.prefix!.substring(0, 20)
+  if ("prefix" in param) param.prefix = param.prefix!.substring(0, 40)
 
   const response = await axios({
     url: host,
