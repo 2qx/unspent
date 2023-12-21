@@ -3,7 +3,8 @@
 	import { browser } from '$app/environment';
 	import touch from '$lib/images/touch.svg';
 	import download from '$lib/images/download.svg';
-	import wallet from '$lib/images/wallet.svg';
+	import paytaca from '$lib/images/paytaca.svg';
+	import selene from '$lib/images/selene.svg';
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
@@ -19,13 +20,13 @@
 	<ul>
 		<li style="background-color:white;">
 			<a target="_blank" href="https://www.paytaca.com/#wallet">
-				<img src={wallet} /><br />
+				<img src={paytaca} /><br />
 				Paytaca
 			</a>
 		</li>
 		<li style="background-color:white;">
 			<a target="_blank" href="https://selene.cash/">
-				<img src={wallet} /><br />
+				<img src={selene} /><br />
 				Selene
 			</a>
 		</li>
