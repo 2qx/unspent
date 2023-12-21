@@ -5,6 +5,7 @@
 	import download from '$lib/images/download.svg';
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
+	import whitepaper from '$lib/images/whitepaper.svg';
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
@@ -18,6 +19,15 @@
 
 <div id="book">
 	<ul>
+    <li style="background-color:white;">
+			<a
+				target="_blank"
+				href="https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"
+			>
+				<img src={whitepaper} /><br />
+				<img src={touch} />
+			</a>
+		</li>
 		<li style="background-color:white;">
 			<a target="_blank" href="https://www.paytaca.com/#wallet">
 				<img src={paytaca} /><br />
@@ -30,10 +40,7 @@
 				Selene
 			</a>
 		</li>
-		<li style="background-color:white;">
-			<img src={download} /><br />
-			<img src={touch} />
-		</li>
+		
 	</ul>
 </div>
 
