@@ -1,1 +1,8 @@
-{"receive":"选择要用哪些地址收币","ok":"确定","create":"创建一个新的钱包","year":"1 年","spendable":"可动用:"}
+{
+  "receive": "选择要用哪些地址收币",
+  "ok": "确定",
+  "create": "创建一个新的钱包",
+  "year": "1 年",
+  "spendable": "可动用:",
+  "whitepaper": "https://web.archive.org/web/20230315051200/https://whitepaper.coinspice.io/cn"
+}

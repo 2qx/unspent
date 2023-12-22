@@ -1,12 +1,10 @@
 <script>
-	import lock from '$lib/images/lock.svg';
 	import arrow_back from '$lib/images/arrow_back.svg';
 	import arrow_down from '$lib/images/arrow_down.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
 	import arrow_right from '$lib/images/arrow_right.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
-	import month from '$lib/images/month.svg';
 	import { _ } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';

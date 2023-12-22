@@ -2,6 +2,7 @@
 	import Carousel from 'svelte-carousel';
 	import { browser } from '$app/environment';
 	import touch from '$lib/images/touch.svg';
+	import { _, isLoading } from 'svelte-i18n';
 	import download from '$lib/images/download.svg';
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
@@ -9,9 +10,8 @@
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
-
+	let locale;
 	let carousel; // for calling methods of the carousel instance
-
 	const handleNextClick = () => {
 		carousel.goToNext();
 	};
@@ -19,14 +19,18 @@
 
 <div id="book">
 	<ul>
-    <li style="background-color:white;">
-			<a
-				target="_blank"
-				href="https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"
-			>
-				<img src={whitepaper} /><br />
-				<img src={touch} />
-			</a>
+		<li style="background-color:white;">
+			{#if $isLoading}
+				<a target="_blank" href="">
+					<img src={whitepaper} /><br />
+					<img src={touch} />
+				</a>
+			{:else}
+				<a target="_blank" href={$_('whitepaper')}>
+					<img src={whitepaper} /><br />
+					<img src={touch} />
+				</a>
+			{/if}
 		</li>
 		<li style="background-color:white;">
 			<a target="_blank" href="https://www.paytaca.com/#wallet">
@@ -40,7 +44,6 @@
 				Selene
 			</a>
 		</li>
-		
 	</ul>
 </div>
 
