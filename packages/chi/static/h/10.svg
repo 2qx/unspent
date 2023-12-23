@@ -36,13 +36,13 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1834"
+     inkscape:window-width="1866"
      inkscape:window-height="1018"
      id="namedview13270"
      showgrid="false"
-     inkscape:zoom="2.8271676"
-     inkscape:cx="107.04491"
-     inkscape:cy="189.6635"
+     inkscape:zoom="1.2772317"
+     inkscape:cx="300.24447"
+     inkscape:cy="134.44956"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
@@ -84,13 +84,14 @@
      stroke-miterlimit="4.1"
      stroke-opacity="0.25297"
      stroke-width="0.217513"
-     id="rect13218" />
+     id="rect13218"
+     style="fill:#f39609;fill-opacity:1" />
   <path
      d="m 46.552212,39.129622 9.042609,-0.02492 -4.218759,4.242112 0.830731,0.82031 5.624964,-5.656104 -5.656103,-5.624962 -0.826192,0.824822 4.242039,4.218753 -9.042608,0.02492 z"
      stroke-width="0.0176271"
      id="path13222" />
   <rect
-     style="fill:#dd62dd;fill-opacity:1;stroke-width:1.83314;stroke-linejoin:round;stroke-dashoffset:7.35"
+     style="fill:#cb8de6;fill-opacity:1;stroke-width:1.83314;stroke-linejoin:round;stroke-dashoffset:7.35"
      id="rect13837"
      width="28.197599"
      height="21.495604"
