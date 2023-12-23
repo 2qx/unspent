@@ -1,5 +1,6 @@
 <script>
 	import Carousel from 'svelte-carousel';
+	import CustomDot from '$lib/CustomDot.svelte';
 	import { browser } from '$app/environment';
 	import touch from '$lib/images/touch.svg';
 	import { _, isLoading } from 'svelte-i18n';
@@ -8,6 +9,11 @@
 	import selene from '$lib/images/selene.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
 
+	/**
+	 * Current page indicator dots
+	 */
+	export let dots = true;
+	let currentPageIndex = 0;
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
@@ -15,6 +21,10 @@
 	let carousel; // for calling methods of the carousel instance
 	const handleNextClick = () => {
 		carousel.goToNext();
+		currentPageIndex = carousel.get;
+	};
+	const showPage = (p) => {
+		carousel.goTo(p);
 	};
 </script>
 
@@ -47,7 +57,7 @@
 </div>
 
 {#if browser}
-	<Carousel bind:this={carousel}>
+	<Carousel bind:this={carousel} on:pageChange={(event) => (currentPageIndex = event.detail)} `) }>
 		{#each pages as page}
 			<div id="book">
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
@@ -58,6 +68,15 @@
 		</div>
 		<div slot="next">
 			<!-- -->
+		</div>
+		<div slot="dots" class="custom-dots">
+			{#each Array(pagesCount) as _, pageIndex (pageIndex)}
+				<CustomDot
+					symbol={pageIndex + 1}
+					active={currentPageIndex === pageIndex}
+					on:click={() => showPage(pageIndex)}
+				/>
+			{/each}
 		</div>
 		<!-- -->
 	</Carousel>
@@ -85,5 +104,14 @@
 		display: inline-flex;
 		justify-content: center;
 		list-style: none;
+	}
+
+	/* custom dots */
+	.custom-dots {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		padding: 0 20px;
 	}
 </style>
