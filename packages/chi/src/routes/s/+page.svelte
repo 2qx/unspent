@@ -1,9 +1,8 @@
 <script>
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import arrow_back from '$lib/images/arrow_back.svg';
 	import arrow_down from '$lib/images/arrow_down.svg';
-	import arrow_step from '$lib/images/arrow_step.svg';
+	import month from '$lib/images/month.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import chart from '$lib/images/chart.svg';
@@ -132,33 +131,22 @@
 		{#if receiptAddressValid}
 			<tr>
 				<td>
-					<p>1 m; 4383 blocks</p>
-				</td>
-				<td style="max-width: 40px;">
-					<p><b>1/96</b></p>
-				</td>
-				<td>
-					<p><b>95/96</b></p>
-				</td>
-				<td>
-					<p>
-						<b>{new Intl.NumberFormat().format(1500)} sat</b>
-					</p>
-				</td>
-			</tr>
-			<tr>
-				<td />
-				<td>
 					<p><img src={arrow_down} alt="to" /></p>
 				</td>
 				<td>
 					<p>
-						<img src={arrow_back} alt="back" />
+						<img src={month} alt="month" />
+					</p>
+				</td>
+
+				<td>
+					<p>
+						<b>1.04% / month</b>
 					</p>
 				</td>
 				<td>
 					<p>
-						<img src={arrow_step} alt="step" />
+						<b>11.8% / year</b>
 					</p>
 				</td>
 			</tr>
@@ -171,7 +159,7 @@
 			<td>
 				{#if receiptAddress}
 					<p>
-            <img src={wallet} alt="wallet" />
+						<img src={wallet} alt="wallet" />
 					</p>
 				{/if}
 			</td>

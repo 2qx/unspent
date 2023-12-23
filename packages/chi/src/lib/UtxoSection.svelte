@@ -17,8 +17,6 @@
 	let curHeight = -1;
 	let now = Date.now();
 
-
-
 	beforeUpdate(async () => {
 		if (receiptAddress) {
 			if (!contract) {
@@ -44,7 +42,7 @@
 	const loadSeries = async () => {
 		utxos = await contract.getUtxos();
 		curHeight = await contract.provider.getBlockHeight();
-    utxos = utxos.sort((a, b) => a.height - b.height);
+		utxos = utxos.sort((a, b) => a.height - b.height);
 		utxos = utxos.map((u) => {
 			let waitBlocks = u.height + 4383 - curHeight;
 			return {
@@ -59,8 +57,8 @@
 
 <section>
 	{#if utxos && utxos.length > 0}
-  { txid }
-  { executeError }
+		{txid}
+		{executeError}
 		{#each utxos as op}
 			<table>
 				<tr>
@@ -91,13 +89,12 @@
 								<img src={arrow_split} />
 							</button>
 						{/if}
-
+					</td>
+					<td colspan="3" style="line-break: anywhere;">
 						{#if curHeight > 0 && op.waitBlocks > 0}
 							<p>{op.estimateUnlockDate}</p>
 						{/if}
-					</td>
-					<td colspan="3" style="line-break: anywhere;">
-						{op.txid}:{op.vout}
+						<b>{(op.satoshis / 96n).toLocaleString()}</b> sats <br />
 					</td>
 				</tr>
 			</table>

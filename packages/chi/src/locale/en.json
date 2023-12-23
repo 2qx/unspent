@@ -1,7 +1,7 @@
 {
   "receive": "Choose the address to receive coins with",
   "ok": "Okay",
-  "create": "Create a new wallet",
+  "create": "Create a new perpetuity",
   "monthly": "per month",
   "spendable": "Spendable:",
   "whitepaper":"https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"

@@ -5,13 +5,12 @@
 	import arrow_right from '$lib/images/arrow_right.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
+	import month from '$lib/images/month.svg';
 	import { _ } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
-	import {
-		cashAddressToLockingBytecode
-	} from '@bitauth/libauth';
+	import { cashAddressToLockingBytecode } from '@bitauth/libauth';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
 	import { receiptAddressStore } from '$lib/store.js';
 
@@ -93,9 +92,7 @@
 	<table>
 		<tr>
 			{#if balance}
-				<td>
-          
-        </td>
+				<td />
 				<td colspan="3">
 					<b>{balance.toLocaleString()}</b> sats <br />
 					(<i
@@ -129,48 +126,37 @@
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
-			<tr >
-				<td>
-					<p>1 m; 4383 blocks</p>
-				</td>
-				<td style="max-width: 40px;">
-					<p><b>1/96</b></p>
-				</td>
-				<td>
-					<p><b>95/96</b></p>
-				</td>
-				<td>
-					<p>
-						<b>{new Intl.NumberFormat().format(1500)} sat</b>
-					</p>
-				</td>
-			</tr>
-			<tr >
-				<td>
-				</td>
+			<tr>
 				<td>
 					<p><img src={arrow_down} alt="to" /></p>
 				</td>
-				<td>
+        <td>
 					<p>
-						<img src={arrow_back} alt="back" />
+						<img src={month} alt="month" />
 					</p>
 				</td>
+
 				<td>
 					<p>
-						<img src={arrow_step} alt="step" />
+						<b>1.04% / month</b>
+					</p>
+				</td>
+
+				<td>
+					<p>
+						<b>11.8% / year</b>
 					</p>
 				</td>
 			</tr>
 		{/if}
 		<tr>
-			<td >
-        {#if contract}
+			<td>
+				{#if contract}
 					<p>
 						<img src={wallet} alt="wallet" />
 					</p>
 				{/if}
-      </td>
+			</td>
 			<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
 		</tr>
 		<tr>
