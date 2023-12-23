@@ -27,7 +27,6 @@
 		carousel.goTo(p);
 	};
 </script>
-
 <div id="book">
 	<ul>
 		<li style="background-color:white;">

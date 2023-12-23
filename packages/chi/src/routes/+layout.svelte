@@ -33,9 +33,7 @@
 	<main>
 			<slot p={currentPage} />
 	</main>
-
 	<footer>  
-
     <p>
       ₿∙ϕ:
       <a target="_blank" href="https://unspent.app/create" >adv</a> 
