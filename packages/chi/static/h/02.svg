@@ -23,13 +23,13 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1812"
+     inkscape:window-width="1839"
      inkscape:window-height="1145"
      id="namedview26"
      showgrid="false"
-     inkscape:zoom="1.053803"
-     inkscape:cx="-7.6024237"
-     inkscape:cy="170.64116"
+     inkscape:zoom="0.90866877"
+     inkscape:cx="-195.89474"
+     inkscape:cy="284.90287"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
@@ -101,47 +101,19 @@
     </g>
   </g>
   <text
-     x="56.676792"
-     y="24.753469"
+     x="47.859917"
+     y="29.437487"
      fill="#000000"
      font-family="sans-serif"
-     font-size="10.583px"
-     stroke-width="0.26458"
+     font-size="28.5869px"
+     stroke-width="0.714685"
      style="line-height:1.25"
      xml:space="preserve"
      id="text94"><tspan
-       x="56.676792"
-       y="24.753469"
-       stroke-width="0.26458"
+       x="47.859917"
+       y="29.437487"
+       stroke-width="0.714685"
        id="tspan92">:</tspan></text>
-  <text
-     x="56.676792"
-     y="90.410355"
-     fill="#000000"
-     font-family="sans-serif"
-     font-size="10.583px"
-     stroke-width="0.26458"
-     style="line-height:1.25"
-     xml:space="preserve"
-     id="text94-3"><tspan
-       x="56.676792"
-       y="90.410355"
-       stroke-width="0.26458"
-       id="tspan92-5">:</tspan></text>
-  <text
-     x="56.676792"
-     y="58.268368"
-     fill="#000000"
-     font-family="sans-serif"
-     font-size="10.583px"
-     stroke-width="0.26458"
-     style="line-height:1.25"
-     xml:space="preserve"
-     id="text94-6"><tspan
-       x="56.676792"
-       y="58.268368"
-       stroke-width="0.26458"
-       id="tspan92-2">:</tspan></text>
   <g
      transform="matrix(2.1542397,0,0,2.1542397,-152.57242,-83.056367)"
      id="g14">
@@ -191,18 +163,46 @@
        stroke-width="0.00420527"
        id="path4" />
     <text
-       x="110.40057"
-       y="36.163742"
+       x="110.38441"
+       y="36.440071"
        fill="#000000"
        font-family="sans-serif"
-       font-size="3.39278px"
-       stroke-width="0.0848213"
+       font-size="3.71619px"
+       stroke-width="0.0929068"
        style="line-height:1.25"
        xml:space="preserve"
        id="text94-5"><tspan
-         x="110.40057"
-         y="36.163742"
-         stroke-width="0.0848213"
+         x="110.38441"
+         y="36.440071"
+         stroke-width="0.0929068"
          id="tspan92-3">:</tspan></text>
   </g>
+  <text
+     x="47.859917"
+     y="61.522549"
+     fill="#000000"
+     font-family="sans-serif"
+     font-size="28.5869px"
+     stroke-width="0.714685"
+     style="line-height:1.25"
+     xml:space="preserve"
+     id="text94-36"><tspan
+       x="47.859917"
+       y="61.522549"
+       stroke-width="0.714685"
+       id="tspan92-7">:</tspan></text>
+  <text
+     x="47.859917"
+     y="93.647385"
+     fill="#000000"
+     font-family="sans-serif"
+     font-size="28.5869px"
+     stroke-width="0.714685"
+     style="line-height:1.25"
+     xml:space="preserve"
+     id="text94-53"><tspan
+       x="47.859917"
+       y="93.647385"
+       stroke-width="0.714685"
+       id="tspan92-56">:</tspan></text>
 </svg>
