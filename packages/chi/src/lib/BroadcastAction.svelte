@@ -2,7 +2,7 @@
 	import { beforeUpdate } from 'svelte';
 	import { base } from '$app/paths';
   import { _ } from 'svelte-i18n';
-	import announce from '$lib/images/announce.svg';
+	import heart from '$lib/images/heart.svg';
 	import { Record } from '@unspent/phi';
 	import { getRecords } from '@unspent/psi';
   import ShareLink from './ShareLink.svelte';
@@ -90,7 +90,7 @@
 {:else}
 	<div >
 		<button class="hitMe" on:click={broadcast}>
-			<img src={announce} alt="announce" />
+			<img src={heart} alt="heart" />
 		</button>
 	</div>
 

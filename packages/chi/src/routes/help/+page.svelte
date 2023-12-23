@@ -8,6 +8,7 @@
 	import selene from '$lib/images/selene.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
 
+
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 	let locale;
@@ -23,12 +24,10 @@
 			{#if $isLoading}
 				<a target="_blank" href="">
 					<img src={whitepaper} /><br />
-					<img src={touch} />
 				</a>
 			{:else}
 				<a target="_blank" href={$_('whitepaper')}>
 					<img src={whitepaper} /><br />
-					<img src={touch} />
 				</a>
 			{/if}
 		</li>
@@ -64,7 +63,7 @@
 	</Carousel>
 {/if}
 
-<button on:click={handleNextClick}>Next</button>
+<button style="padding:20px;" on:click={handleNextClick}>Next</button>
 
 <style>
 	#book {

@@ -19,7 +19,7 @@
 <header>
 	<div class="corner">
 		<a href="/">
-			<img src={logo} alt="Unspent Chi" />
+			<img src={logo} alt="Unspent Cash" />
 		</a>
 	</div>
 
