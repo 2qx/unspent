@@ -56,11 +56,13 @@
 	</ul>
 </div>
 
+
+<!-- autoplay autoplayDuration={4400} -->
+
 {#if browser}
 	<Carousel 
   bind:this={carousel} 
-  autoplay
-  autoplayDuration={4400}
+  
   on:pageChange={(event) => (currentPageIndex = event.detail)}
   >
 		{#each pages as page}
