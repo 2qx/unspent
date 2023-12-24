@@ -7,6 +7,7 @@
 	import download from '$lib/images/download.svg';
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
+	import arrow_right from '$lib/images/arrow_right.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
 
 	/**
@@ -56,7 +57,12 @@
 </div>
 
 {#if browser}
-	<Carousel bind:this={carousel} on:pageChange={(event) => (currentPageIndex = event.detail)} `) }>
+	<Carousel 
+  bind:this={carousel} 
+  autoplay
+  autoplayDuration={4400}
+  on:pageChange={(event) => (currentPageIndex = event.detail)}
+  >
 		{#each pages as page}
 			<div id="book">
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
@@ -81,7 +87,9 @@
 	</Carousel>
 {/if}
 
-<button style="padding:20px;" on:click={handleNextClick}>Next</button>
+<button style="padding:20px;" on:click={handleNextClick}>
+  <img src={arrow_right} />
+</button>
 
 <style>
 	#book {

@@ -138,15 +138,12 @@
 						<img src={month} alt="month" />
 					</p>
 				</td>
-
-				<td>
+				<td colspan="2">
 					<p>
-						<b>1.04% / month</b>
+						<b>1.04% month</b>
 					</p>
-				</td>
-				<td>
 					<p>
-						<b>11.8% / year</b>
+						<b>11.8% year</b>
 					</p>
 				</td>
 			</tr>
