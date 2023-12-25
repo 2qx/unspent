@@ -187,11 +187,11 @@
 		</tr>
 	</table>
 	{#if !contract}
-		<p class="hitMe">
-			<a href="{base}/help">
-				<img width="200" src={help} alt="help" />
+		<div >
+			<a class="hitMe" href="{base}/help">
+				<img width="100" src={help} alt="help" />
 			</a>
-		</p>
+		</div>
 	{/if}
 </section>
 
