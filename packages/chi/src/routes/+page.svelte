@@ -91,9 +91,7 @@
 </svelte:head>
 <section>
 	{#if !contract}
-		<img src={banner} />
-    <br>
-    <br>
+		<img width="250px" src={banner} />
 	{/if}
 
 	<table>
@@ -171,7 +169,7 @@
 					</p>
 				{:else}
 					<p>
-						<img src={wallet} alt="wallet" /><img src={arrow_right} alt="arrow_right" />
+						<img width="50px" src={wallet} alt="wallet" /><img width="50px" src={arrow_right} alt="arrow_right" />
 					</p>
 				{/if}
 			</td>
@@ -180,7 +178,7 @@
 					id="addr"
 					on:change={() => createContract()}
 					bind:value={receiptAddress}
-					placeholder="bitcoincash:qz...... ........vj4"
+					placeholder="bitcoincash:q... ..."
 				/>
 			</td>
 		</tr>
@@ -188,7 +186,7 @@
 	{#if !contract}
 		<div >
 			<a class="hitMe" href="{base}/help">
-				<img width="100" src={help} alt="help" />
+				<img width="100px" src={help} alt="help" />
 			</a>
 		</div>
 	{/if}

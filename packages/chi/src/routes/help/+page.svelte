@@ -102,10 +102,9 @@
 		text-decoration: none;
 		color: black;
 		font-weight: 700;
-		font-size: larger;
 	}
 	ul li {
-		padding: 20px;
+		padding: 10px;
 	}
 	ul {
 		display: inline-flex;
