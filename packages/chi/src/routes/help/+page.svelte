@@ -16,7 +16,7 @@
 	export let dots = true;
 	let currentPageIndex = 0;
 
-	let pagesCount = 24;
+	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 	let locale;
 	let carousel; // for calling methods of the carousel instance
