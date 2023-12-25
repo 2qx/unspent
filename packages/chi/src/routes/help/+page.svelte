@@ -2,13 +2,16 @@
 	import Carousel from 'svelte-carousel';
 	import CustomDot from '$lib/CustomDot.svelte';
 	import { browser } from '$app/environment';
-	import touch from '$lib/images/touch.svg';
 	import { _, isLoading } from 'svelte-i18n';
-	import download from '$lib/images/download.svg';
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
 	import arrow_right from '$lib/images/arrow_right.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
+	import { receiptAddressStore } from '$lib/store.js';
+	import { page } from '$app/stores';
+
+	let receiptAddress;
+
 
 	/**
 	 * Current page indicator dots
@@ -18,7 +21,14 @@
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
-	let locale;
+  
+  receiptAddressStore.subscribe((value) => {
+		receiptAddress = value;
+    if(receiptAddress){
+      pagesCount = 26;
+    }
+	});
+
 	let carousel; // for calling methods of the carousel instance
 	const handleNextClick = () => {
 		carousel.goToNext();
