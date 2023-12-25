@@ -89,7 +89,6 @@
 	<title>∑ ₿ᵪ</title>
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
-
 <section>
 	{#if !contract}
 		<img src={banner} />
