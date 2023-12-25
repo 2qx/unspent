@@ -1,8 +1,10 @@
 <script>
-	import arrow_back from '$lib/images/arrow_back.svg';
+	import { base } from '$app/paths';
+	import help from '$lib/images/help.svg';
+
 	import arrow_down from '$lib/images/arrow_down.svg';
-	import arrow_step from '$lib/images/arrow_step.svg';
 	import arrow_right from '$lib/images/arrow_right.svg';
+	import banner from '$lib/images/banner.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import month from '$lib/images/month.svg';
@@ -89,6 +91,12 @@
 </svelte:head>
 
 <section>
+	{#if !contract}
+		<img src={banner} />
+    <br>
+    <br>
+	{/if}
+
 	<table>
 		<tr>
 			{#if balance}
@@ -178,6 +186,13 @@
 			</td>
 		</tr>
 	</table>
+	{#if !contract}
+		<p class="hitMe">
+			<a href="{base}/help">
+				<img width="200" src={help} alt="help" />
+			</a>
+		</p>
+	{/if}
 </section>
 
 <style>
@@ -224,5 +239,15 @@
 	textarea {
 		width: 100%;
 		height: 100px;
+	}
+
+	.hitMe {
+		animation: blinker 1s linear infinite;
+	}
+
+	@keyframes blinker {
+		50% {
+			opacity: 80;
+		}
 	}
 </style>

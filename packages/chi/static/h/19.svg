@@ -5,11 +5,35 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="400"
    height="400"
    version="1.1"
    viewBox="0 0 105.83 105.83"
-   id="svg20">
+   id="svg20"
+   sodipodi:docname="19.svg"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1176"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="1.3351651"
+     inkscape:cx="152.26546"
+     inkscape:cy="209.52061"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg20" />
   <metadata
      id="metadata26">
     <rdf:RDF>
@@ -18,12 +42,22 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs24" />
+     id="defs24">
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Blur"
+       id="filter882">
+      <feGaussianBlur
+         stdDeviation="2 2"
+         result="blur"
+         id="feGaussianBlur880" />
+    </filter>
+  </defs>
   <rect
      width="105.49"
      height="105.49"
@@ -66,29 +100,29 @@
      id="path18"
      style="stroke-width:0.26378127;stroke-miterlimit:4;stroke-dasharray:none" />
   <g
-     transform="matrix(-0.01457441,0,0,0.01457441,40.755191,2.1802631)"
-     id="g36"
-     style="fill:none;stroke:#686868;stroke-width:9.91697;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+     transform="matrix(-0.00908798,0,0,0.00908798,33.01317,20.996405)"
+     id="g36-3"
+     style="fill:none;stroke:#20721f;stroke-width:9.91175;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter882)">
     <g
        transform="matrix(0.04188,0,0,0.04188,75.616,54.993)"
        fill="#8dc351"
-       id="g30"
-       style="fill:none;stroke:#686868;stroke-width:236.795;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+       id="g30-6"
+       style="fill:none;stroke:#20721f;stroke-width:236.67;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
       <path
          d="m 7525,15989 c -349,-23 -745,-74 -1074,-139 -1411,-279 -2741,-944 -3806,-1903 -103,-94 -479,-466 -575,-572 -245,-266 -540,-648 -754,-974 -84,-128 -216,-339 -216,-346 0,-2 -17,-32 -38,-66 -48,-80 -130,-233 -220,-414 C 359,10611 82,9566 10,8445 -3,8240 -3,7750 10,7545 113,5935 655,4458 1610,3185 c 239,-319 428,-535 744,-850 286,-286 436,-420 706,-632 C 4666,442 6732,-162 8765,35 c 1734,169 3354,891 4645,2071 632,577 1156,1241 1589,2014 64,113 231,450 301,605 345,767 574,1625 659,2470 32,311 41,496 41,810 0,808 -118,1588 -356,2359 -526,1697 -1613,3186 -3064,4197 -1216,848 -2616,1332 -4135,1429 -181,11 -740,11 -920,-1 z"
-         id="path28"
-         style="fill:none;stroke:#686868;stroke-width:236.795;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         id="path28-7"
+         style="fill:none;stroke:#20721f;stroke-width:236.67;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
        transform="matrix(0.04188,0,0,0.04188,75.616,54.993)"
        fill="#ffffff"
-       id="g34"
-       style="fill:none;stroke:#686868;stroke-width:236.795;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+       id="g34-5"
+       style="fill:none;stroke:#20721f;stroke-width:236.67;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
       <path
          d="m 7751,13046 c -6,-17 -62,-222 -127,-456 -195,-713 -262,-951 -266,-956 -3,-2 -398,103 -879,234 -481,131 -875,238 -877,237 -3,-3 -112,-1041 -112,-1071 0,-17 8,-23 33,-28 75,-14 558,-147 627,-172 101,-38 181,-113 204,-193 28,-95 21,-155 -43,-390 -33,-119 -139,-504 -236,-856 -97,-352 -239,-867 -315,-1145 -76,-278 -193,-703 -260,-945 -67,-242 -142,-514 -166,-605 -25,-91 -57,-185 -72,-210 -44,-77 -110,-138 -190,-177 -67,-34 -84,-38 -171,-41 -134,-6 -233,16 -734,162 -81,23 -120,30 -122,22 -7,-20 -247,-901 -249,-910 0,-4 87,-33 194,-62 107,-30 499,-138 870,-241 371,-102 678,-189 682,-192 4,-3 -81,-323 -188,-711 -107,-388 -192,-710 -190,-715 2,-6 28,-17 57,-24 30,-8 222,-61 428,-117 206,-57 376,-103 377,-101 1,1 88,315 193,697 106,382 194,696 196,698 2,2 137,-35 302,-83 164,-48 318,-92 343,-100 35,-10 44,-17 42,-31 -2,-11 -87,-320 -188,-689 -101,-368 -184,-674 -184,-680 0,-9 858,-250 865,-243 2,2 91,322 198,711 107,389 196,710 199,712 2,3 42,-2 89,-10 416,-74 899,-94 1184,-51 672,104 1078,440 1283,1061 196,592 97,1085 -302,1499 l -73,76 h 118 c 828,0 1344,393 1564,1190 130,470 135,910 15,1273 -41,126 -137,313 -218,427 -145,205 -419,444 -699,612 -277,166 -754,378 -1083,483 -30,10 -58,20 -62,24 -4,3 71,290 166,636 96,347 185,671 198,721 l 25,91 -426,117 c -234,64 -431,116 -436,116 -6,0 -98,-318 -204,-707 -107,-390 -195,-709 -196,-710 -1,-2 -143,35 -316,81 -173,46 -329,87 -346,91 -18,3 -33,12 -33,18 0,11 16,68 259,952 71,259 128,471 126,473 -1,1 -196,56 -433,121 l -431,118 z m 442,-2762 c 928,-243 1429,-470 1733,-785 93,-98 132,-151 179,-252 54,-113 70,-186 69,-317 0,-211 -79,-419 -214,-563 -317,-339 -883,-384 -1824,-143 -226,58 -696,197 -696,207 0,4 117,433 260,953 143,520 260,948 260,951 0,10 22,5 233,-51 z M 7391,7495 c 657,-172 1015,-321 1295,-540 97,-76 161,-145 225,-243 60,-91 87,-161 107,-277 19,-113 7,-234 -39,-369 -102,-305 -310,-473 -660,-532 -82,-13 -140,-16 -298,-11 -227,6 -400,32 -681,103 -171,42 -609,170 -618,179 -4,4 126,484 431,1588 24,87 46,147 53,147 6,0 90,-20 185,-45 z"
          fill="#ffffff"
-         id="path32"
-         style="fill:none;stroke:#686868;stroke-width:236.795;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         id="path32-3"
+         style="fill:none;stroke:#20721f;stroke-width:236.67;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
   </g>
 </svg>

@@ -4,6 +4,9 @@
 	import { _ } from 'svelte-i18n';
 	import arrow_split from '$lib/images/arrow_split.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
+	import copy from '$lib/images/copy.svg';
+	import { toast } from '@zerodevx/svelte-toast';
+	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 
 	export let receiptAddress = '';
 	let utxos = [];
@@ -100,7 +103,41 @@
 			</table>
 		{/each}
 	{:else if !isLoading && utxos.length == 0}
-		0 sats
+		{#if contract}
+			<table width="300px">
+				<tr>
+					<td>
+						<p>
+							<img src={lock_clock} alt={$_('ok')} />
+						</p>
+					</td>
+					<td>
+						<p><b>0 ₿</b></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="line-break:anywhere;" colspan="2">
+						<img src={copy} />
+						<CopyToClipboard
+							on:copy={() => toast.push('📋🗸')}
+							text={contract.getAddress()}
+							let:copy
+						>
+							<div class="action">
+								<button on:click={copy}>
+									{contract.getAddress()}
+								</button>
+							</div>
+						</CopyToClipboard>
+					</td>
+				</tr>
+			</table>
+		{/if}
+		<br />
+		<br />
+		<p>
+			<img width="300px" src="/h/13.svg" alt="send bitcoin" />
+		</p>
 	{:else}
 		<progress id="progress-bar" aria-label="Content loading…" />
 	{/if}
