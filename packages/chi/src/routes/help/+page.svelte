@@ -29,8 +29,8 @@
 	 */
 	export let dots = true;
 	let currentPageIndex;
-  let carousel; // for calling methods of the carousel instance
-  
+	let carousel; // for calling methods of the carousel instance
+
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 
@@ -43,11 +43,10 @@
 		stateValue = Number(value);
 		pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 	});
-	
+
 	pageStore.subscribe((value) => {
 		if (value) {
 			currentPageIndex = Number(value);
-      
 		} else {
 			currentPageIndex = 0;
 		}
@@ -72,13 +71,12 @@
 		}
 	}
 
-
 	const handleNextClick = () => {
 		carousel.goToNext();
-    pageStore.set(currentPageIndex+1);
+		pageStore.set(currentPageIndex + 1);
 	};
 	const showPage = (p) => {
-    pageStore.set(p)
+		pageStore.set(p);
 		carousel.goTo(p);
 	};
 </script>
@@ -97,7 +95,8 @@
 				</div>
 			{/if}
 		</li>
-		{#if !(stateValue < 1 && currentPageIndex < 3)}
+
+		{#if (stateValue == 1 && currentPageIndex > 2) || stateValue > 1}
 			<li on:click={() => handleWalletClick('paytaca')} style="background-color:white;">
 				<img src={paytaca} /><br />
 				Paytaca
@@ -113,10 +112,11 @@
 <!-- autoplay autoplayDuration={4400} -->
 
 {#if browser}
-	<Carousel 
-  initialPageIndex={currentPageIndex}
-  bind:this={carousel} 
-  on:pageChange={(event) => (currentPageIndex = event.detail)}>
+	<Carousel
+		initialPageIndex={currentPageIndex}
+		bind:this={carousel}
+		on:pageChange={(event) => (currentPageIndex = event.detail)}
+	>
 		{#each pages as page}
 			<div id="book">
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
