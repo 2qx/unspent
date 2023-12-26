@@ -8,7 +8,7 @@
 	import arrow_right from '$lib/images/arrow_right.svg';
 	import boss from '$lib/images/boss.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
-	import { stateStore } from '$lib/store.js';
+	import { stateStore, pageStore } from '$lib/store.js';
 
 	// 0  2 overview
 	// 1  4 whitepaperClicked
@@ -22,15 +22,15 @@
 
 	const DOC_MAP = [2, 4, 9, 10, 11, 12, 13, 23, 26];
 
-	let receiptAddress;
 	let stateValue;
 
 	/**
 	 * Current page indicator dots
 	 */
 	export let dots = true;
-	let currentPageIndex = 0;
-
+	let currentPageIndex;
+  let carousel; // for calling methods of the carousel instance
+  
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 
@@ -43,7 +43,15 @@
 		stateValue = Number(value);
 		pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 	});
-
+	
+	pageStore.subscribe((value) => {
+		if (value) {
+			currentPageIndex = Number(value);
+      
+		} else {
+			currentPageIndex = 0;
+		}
+	});
 
 	const handleWpClick = () => {
 		if (stateValue < 1) {
@@ -56,7 +64,6 @@
 		if (stateValue < 2) {
 			stateStore.set('2');
 		}
-    console.log(walletIdx)
 		if (walletIdx == 'selene') {
 			window.location = 'https://selene.cash/';
 		}
@@ -65,12 +72,13 @@
 		}
 	}
 
-	let carousel; // for calling methods of the carousel instance
+
 	const handleNextClick = () => {
 		carousel.goToNext();
-		currentPageIndex = carousel.get;
+    pageStore.set(currentPageIndex+1);
 	};
 	const showPage = (p) => {
+    pageStore.set(p)
 		carousel.goTo(p);
 	};
 </script>
@@ -105,7 +113,10 @@
 <!-- autoplay autoplayDuration={4400} -->
 
 {#if browser}
-	<Carousel bind:this={carousel} on:pageChange={(event) => (currentPageIndex = event.detail)}>
+	<Carousel 
+  initialPageIndex={currentPageIndex}
+  bind:this={carousel} 
+  on:pageChange={(event) => (currentPageIndex = event.detail)}>
 		{#each pages as page}
 			<div id="book">
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
@@ -135,7 +146,7 @@
 	</button>
 </div>
 
-<div class="girl-boss"><img src={boss} />{stateValue+1}</div>
+<div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
 
 <style>
 	#book {
@@ -188,9 +199,9 @@
 		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
 	}
 
-  .girl-boss {
+	.girl-boss {
 		align-self: left;
-    font-weight: 700;
-    font-size: larger;
-  }
+		font-weight: 700;
+		font-size: larger;
+	}
 </style>
