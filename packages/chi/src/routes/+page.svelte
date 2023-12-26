@@ -86,7 +86,7 @@
 </script>
 
 <svelte:head>
-	<title>∑ ₿ᵪ</title>
+	<title>Unspent Cash</title>
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <section>

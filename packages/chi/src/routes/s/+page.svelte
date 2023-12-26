@@ -83,7 +83,7 @@
 </script>
 
 <svelte:head>
-	<title>∑ ₿ᵪ</title>
+	<title>unspent.cash</title>
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <h4><img src={share} alt="share" /></h4>

@@ -1,7 +1,6 @@
 <script context="module">
 	import '$lib/i18n';
 	import { browser } from '$app/environment';
-	import { goto, invalidateAll } from '$app/navigation';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Header from './Header.svelte';
   import CopyToClipboard from '$lib/CopyToClipboard.svelte';
