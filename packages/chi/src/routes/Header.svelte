@@ -8,11 +8,17 @@
 	import help from '$lib/images/help.svg';
 	import table from '$lib/images/table.svg';
 	import github from '$lib/images/github.svg';
-	import { receiptAddressStore } from '$lib/store.js';
+	import { receiptAddressStore, stateStore } from '$lib/store.js';
 
 	let addressIsSet = false;
+	let stateValue;
 	receiptAddressStore.subscribe((value) => {
 		addressIsSet = value ? true : false;
+	});
+
+	stateStore.subscribe((value) => {
+		stateValue = Number(value);
+		console.log(stateValue);
 	});
 </script>
 
@@ -38,22 +44,26 @@
         <img src={history} alt="history" />
         </a>
 			</li-->
-			{#if addressIsSet}
-				<li aria-current={$page.url.pathname === '/table' ? 'page' : undefined}>
-					<a href="{base}/table">
-						<img src={table} alt="table" />
-					</a>
-				</li>
+			{#if stateValue > 3}
+				{#if stateValue > 5}
+					<li aria-current={$page.url.pathname === '/table' ? 'page' : undefined}>
+						<a href="{base}/table">
+							<img src={table} alt="table" />
+						</a>
+					</li>
+				{/if}
 				<li aria-current={$page.url.pathname === '/chart' ? 'page' : undefined}>
 					<a href="{base}/chart">
 						<img src={chart} alt="chart" />
 					</a>
 				</li>
-				<li aria-current={$page.url.pathname === '/code' ? 'page' : undefined}>
-					<a href="{base}/code">
-						<img src={code} alt="code" />
-					</a>
-				</li>
+				{#if stateValue > 5}
+					<li aria-current={$page.url.pathname === '/code' ? 'page' : undefined}>
+						<a href="{base}/code">
+							<img src={code} alt="code" />
+						</a>
+					</li>
+				{/if}
 			{/if}
 			<li aria-current={$page.url.pathname === '/help' ? 'page' : undefined}>
 				<a href="{base}/help">

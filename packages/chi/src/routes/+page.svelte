@@ -98,8 +98,10 @@
 	});
 
 	const handleCopyClick = async () => {
-		if (stateValue < 6) {
-			stateStore.set('6');
+		if (stateValue > 4) {
+			if (stateValue < 6) {
+				stateStore.set('6');
+			}
 		}
 		toast.push('📋🗸');
 	};
