@@ -14,13 +14,14 @@
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import { cashAddressToLockingBytecode } from '@bitauth/libauth';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
-	import { receiptAddressStore } from '$lib/store.js';
+	import { receiptAddressStore, stateStore } from '$lib/store.js';
 
 	export let data;
 	export let p;
 	let balance;
 	let utxoCount;
 	let receiptAddress;
+	let stateValue;
 	let contract;
 	let receiptAddressValid = false;
 	let lockingBytecode;
@@ -68,21 +69,40 @@
 	const updateBalance = async () => {
 		if (contract) balance = await contract.getBalance();
 		if (contract) utxoCount = (await contract.getUtxos()).length;
+		if (balance > 0) {
+			if (stateValue < 7) {
+				stateStore.set('7');
+			}
+		}	
+    if (balance > 100e6) {
+			if (stateValue < 8) {
+				stateStore.set('8');
+			}
+		}
 	};
 
 	function updateReceiptAddress() {
 		receiptAddressStore.set(receiptAddressValue);
 	}
 
+	stateStore.subscribe((value) => {
+		stateValue = Number(value);
+	});
+
 	receiptAddressStore.subscribe((value) => {
 		receiptAddress = value;
 		if (receiptAddress && !contract) createContract();
+		if (receiptAddress && stateValue < 3) {
+			stateStore.set('3');
+		}
 	});
 
-	function clearReceiptAddress() {
-		receiptAddressValue = '';
-		receiptAddress.set('');
-	}
+	const handleCopyClick = async () => {
+		if (stateValue < 6) {
+			stateStore.set('6');
+		}
+		toast.push('📋🗸');
+	};
 </script>
 
 <svelte:head>
@@ -118,7 +138,7 @@
 					</p>
 				</td>
 				<td colspan="3">
-					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
+					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
 						<div class="action">
 							<button on:click={copy}>
 								{contract.getAddress()}
@@ -169,7 +189,11 @@
 					</p>
 				{:else}
 					<p>
-						<img width="50px" src={wallet} alt="wallet" /><img width="50px" src={arrow_right} alt="arrow_right" />
+						<img width="50px" src={wallet} alt="wallet" /><img
+							width="50px"
+							src={arrow_right}
+							alt="arrow_right"
+						/>
 					</p>
 				{/if}
 			</td>
@@ -184,8 +208,8 @@
 		</tr>
 	</table>
 	{#if !contract}
-		<div >
-			<a class="hitMe" href="{base}/help">
+		<div>
+			<a href="{base}/help">
 				<img width="100px" src={help} alt="help" />
 			</a>
 		</div>
@@ -236,15 +260,5 @@
 	textarea {
 		width: 100%;
 		height: 100px;
-	}
-
-	.hitMe {
-		animation: blinker 1s linear infinite;
-	}
-
-	@keyframes blinker {
-		50% {
-			opacity: 80;
-		}
 	}
 </style>

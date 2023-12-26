@@ -6,12 +6,24 @@
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
 	import arrow_right from '$lib/images/arrow_right.svg';
+	import boss from '$lib/images/boss.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
-	import { receiptAddressStore } from '$lib/store.js';
-	import { page } from '$app/stores';
+	import { stateStore } from '$lib/store.js';
+
+	// 0  2 overview
+	// 1  4 whitepaperClicked
+	// 2  9 walletClicked
+	// 3 10 hasReceiptAddress
+	// 4 11 isBroadcasted
+	// 5 12 viewedChart
+	// 6 13 copiedAddr or Link
+	// 7 23 hasBalance
+	// 8 26 girlBoss
+
+	const DOC_MAP = [2, 4, 9, 10, 11, 12, 13, 23, 26];
 
 	let receiptAddress;
-
+	let stateValue;
 
 	/**
 	 * Current page indicator dots
@@ -21,13 +33,37 @@
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
-  
-  receiptAddressStore.subscribe((value) => {
-		receiptAddress = value;
-    if(receiptAddress){
-      pagesCount = 26;
-    }
+
+	stateStore.subscribe((value) => {
+		if (value) {
+			pagesCount = DOC_MAP[Number(value)];
+		} else {
+			pagesCount = DOC_MAP[0];
+		}
+		stateValue = Number(value);
+		pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 	});
+
+
+	const handleWpClick = () => {
+		if (stateValue < 1) {
+			stateStore.set('1');
+		}
+		window.location = $_('whitepaper');
+	};
+
+	function handleWalletClick(walletIdx) {
+		if (stateValue < 2) {
+			stateStore.set('2');
+		}
+    console.log(walletIdx)
+		if (walletIdx == 'selene') {
+			window.location = 'https://selene.cash/';
+		}
+		if (walletIdx == 'paytaca') {
+			window.location = 'https://www.paytaca.com/#wallet';
+		}
+	}
 
 	let carousel; // for calling methods of the carousel instance
 	const handleNextClick = () => {
@@ -43,28 +79,26 @@
 	<ul>
 		<li style="background-color:white;">
 			{#if $isLoading}
-				<a target="_blank" href="">
+				<div on:click={handleWpClick}>
 					<img src={whitepaper} /><br />
-				</a>
+				</div>
 			{:else}
-				<a target="_blank" href={$_('whitepaper')}>
+				<div on:click={handleWpClick}>
 					<img src={whitepaper} /><br />
 					BCH
-				</a>
+				</div>
 			{/if}
 		</li>
-		<li style="background-color:white;">
-			<a target="_blank" href="https://www.paytaca.com/#wallet">
+		{#if !(stateValue < 1 && currentPageIndex < 3)}
+			<li on:click={() => handleWalletClick('paytaca')} style="background-color:white;">
 				<img src={paytaca} /><br />
 				Paytaca
-			</a>
-		</li>
-		<li style="background-color:white;">
-			<a target="_blank" href="https://selene.cash/">
+			</li>
+			<li on:click={() => handleWalletClick('selene')} style="background-color:white;">
 				<img src={selene} /><br />
 				Selene
-			</a>
-		</li>
+			</li>
+		{/if}
 	</ul>
 </div>
 
@@ -101,6 +135,8 @@
 	</button>
 </div>
 
+<div class="girl-boss"><img src={boss} />{stateValue+1}</div>
+
 <style>
 	#book {
 		align-items: center;
@@ -114,9 +150,11 @@
 		font-weight: 700;
 	}
 	ul li {
-		padding: 10px;
+		padding: 15px;
 	}
+
 	ul {
+		border-radius: 10px;
 		display: inline-flex;
 		justify-content: center;
 		list-style: none;
@@ -141,7 +179,7 @@
 		border-radius: 40px;
 		border-width: 5px;
 		background-color: rgrgb(214, 214, 214);
-    background-image: linear-gradient(
+		background-image: linear-gradient(
 			to top left,
 			rgba(0, 0, 0, 0.2),
 			rgba(0, 0, 0, 0.2) 30%,
@@ -149,4 +187,10 @@
 		);
 		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
 	}
+
+  .girl-boss {
+		align-self: left;
+    font-weight: 700;
+    font-size: larger;
+  }
 </style>
