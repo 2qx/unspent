@@ -189,6 +189,7 @@
 			<td colspan="2">
 				<textarea
 					id="addr"
+          rows="3" 
 					on:change={() => createContract()}
 					bind:value={receiptAddress}
 					placeholder="bitcoincash:q... ..."
@@ -258,6 +259,5 @@
 
 	textarea {
 		width: 90%;
-		height: max-content;
 	}
 </style>
