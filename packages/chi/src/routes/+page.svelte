@@ -3,7 +3,6 @@
 	import help from '$lib/images/help.svg';
 
 	import arrow_down from '$lib/images/arrow_down.svg';
-	import arrow_right from '$lib/images/arrow_right.svg';
 	import banner from '$lib/images/banner.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
@@ -73,8 +72,8 @@
 			if (stateValue < 7) {
 				stateStore.set('7');
 			}
-		}	
-    if (balance > 100e6) {
+		}
+		if (balance > 100e6) {
 			if (stateValue < 8) {
 				stateStore.set('8');
 			}
@@ -112,15 +111,38 @@
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <section>
-	{#if !contract}
-		<img width="250px" src={banner} />
-	{/if}
-
 	<table>
+		<tr>
+			<td colspan="4"> <h1>unspent.cash</h1></td>
+		</tr>
+		<tr>
+			{#if contract}
+				<td style="text-align: center;">
+					<img width="125px" src={banner} />
+				</td>
+				<td colspan="3">
+					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
+						<div style="max-width: 80%;" class="action">
+							<button on:click={copy}>
+								{contract.getAddress()}
+							</button>
+						</div>
+					</CopyToClipboard>
+				</td>
+			{:else}
+				<td style="text-align: center;">
+					<img width="125px" src={banner} />
+				</td>
+				<td colspan="3"><b> {$_('create')}</b></td>
+			{/if}
+		</tr>
 		<tr>
 			{#if balance}
 				<td />
-				<td colspan="3">
+				<td style="width:30px;">
+					<img src={lock_clock} alt="lock_clock" />
+				</td>
+				<td colspan="2">
 					<b>{balance.toLocaleString()}</b> sats <br />
 					(<i
 						>{(Number(balance) / 100000000).toLocaleString(undefined, {
@@ -129,41 +151,20 @@
 					> BCH)
 				</td>
 			{:else}
-				<td colspan="4" />
-			{/if}
-		</tr>
-		<tr>
-			{#if contract}
-				<td>
-					<p>
-						<img src={lock_clock} alt="lock_clock" />
-					</p>
+				<td />
+				<td style="width:30px;">
+					<img src={lock_clock} alt="lock_clock" />
 				</td>
-				<td colspan="3">
-					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-						<div class="action">
-							<button on:click={copy}>
-								{contract.getAddress()}
-							</button>
-						</div>
-					</CopyToClipboard>
-				</td>
-			{:else}
-				<td colspan="4"> {$_('create')}</td>
+				<td colspan="2" />
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
 			<tr>
+				<td />
 				<td>
 					<p><img src={arrow_down} alt="to" /></p>
 				</td>
 				<td>
-					<p>
-						<img src={month} alt="month" />
-					</p>
-				</td>
-
-				<td colspan="2">
 					<p>
 						<b>1.04% month</b>
 					</p>
@@ -171,35 +172,21 @@
 						<b>11.8% year</b>
 					</p>
 				</td>
+				<td>
+					<p>
+						<img src={month} alt="month" />
+					</p>
+				</td>
 			</tr>
 		{/if}
 		<tr>
-			<td>
-				{#if contract}
-					<p>
-						<img src={wallet} alt="wallet" />
-					</p>
-				{/if}
+			<td />
+			<td style="width=30px;">
+				<p>
+					<img src={wallet} alt="wallet" />
+				</p>
 			</td>
-			<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
-		</tr>
-		<tr>
-			<td>
-				{#if contract}
-					<p>
-						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
-					</p>
-				{:else}
-					<p>
-						<img width="50px" src={wallet} alt="wallet" /><img
-							width="50px"
-							src={arrow_right}
-							alt="arrow_right"
-						/>
-					</p>
-				{/if}
-			</td>
-			<td colspan="3">
+			<td colspan="2">
 				<textarea
 					id="addr"
 					on:change={() => createContract()}
@@ -207,6 +194,16 @@
 					placeholder="bitcoincash:q... ..."
 				/>
 			</td>
+		</tr>
+		<tr>
+			<td />
+			{#if contract}
+				<td style="text-align: end; padding: 20px;" colspan="3">
+					<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
+				</td>
+			{:else}
+				<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
+			{/if}
 		</tr>
 	</table>
 	{#if !contract}
@@ -237,11 +234,9 @@
 	}
 
 	table {
-		border: 4mm ridge rgba(211, 220, 50, 0.6);
 		background-color: white;
 	}
 	table tr td {
-		min-width: 20%;
 		justify-content: space-around;
 	}
 
@@ -257,10 +252,12 @@
 
 	h1 {
 		width: 100%;
+		font-weight: 900;
+		color: #d99b22;
 	}
 
 	textarea {
-		width: 100%;
-		height: 100px;
+		width: 90%;
+		height: max-content;
 	}
 </style>

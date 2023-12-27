@@ -5,6 +5,7 @@
 	import month from '$lib/images/month.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
+  import banner from '$lib/images/banner.svg';
 	import chart from '$lib/images/chart.svg';
 	import table from '$lib/images/table.svg';
 	import share from '$lib/images/share.svg';
@@ -90,13 +91,36 @@
 <section>
 	<table>
 		<tr>
-			{#if balance}
+			<td colspan="4"> <h1>unspent.cash</h1></td>
+		</tr>
+		<tr>
+			{#if contract}
 				<td style="text-align: center;">
-					{#if utxoCount > 0}
-						<b>{utxoCount} UTXO(s)</b>
-					{/if}
+					<img width="125px" src={banner} />
 				</td>
 				<td colspan="3">
+					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
+						<div style="max-width: 80%;"  class="action">
+							<button on:click={copy}>
+								{contract.getAddress()}
+							</button>
+						</div>
+					</CopyToClipboard>
+				</td>
+			{:else}
+				<td style="text-align: center;">
+					<img width="125px" src={banner} />
+				</td>
+				<td colspan="3"><b> {$_('create')}</b></td>
+			{/if}
+		</tr>
+		<tr>
+			{#if balance}
+				<td />
+				<td style="width:30px;">
+					<img src={lock_clock} alt="lock_clock" />
+				</td>
+				<td colspan="2">
 					<b>{balance.toLocaleString()}</b> sats <br />
 					(<i
 						>{(Number(balance) / 100000000).toLocaleString(undefined, {
@@ -105,40 +129,20 @@
 					> BCH)
 				</td>
 			{:else}
-				<td colspan="4" />
-			{/if}
-		</tr>
-		<tr>
-			{#if contract}
-				<td>
-					<p>
-						<img src={lock_clock} alt="lock_clock" />
-					</p>
+				<td />
+				<td style="width:30px;">
+					<img src={lock_clock} alt="lock_clock" />
 				</td>
-				<td colspan="3">
-					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
-						<div class="action">
-							<button on:click={copy}>
-								{contract.getAddress()}
-							</button>
-						</div>
-					</CopyToClipboard>
-				</td>
-			{:else}
-				<td colspan="4">error</td>
+				<td colspan="2" />
 			{/if}
 		</tr>
 		{#if receiptAddressValid}
 			<tr>
+				<td />
 				<td>
 					<p><img src={arrow_down} alt="to" /></p>
 				</td>
 				<td>
-					<p>
-						<img src={month} alt="month" />
-					</p>
-				</td>
-				<td colspan="2">
 					<p>
 						<b>1.04% month</b>
 					</p>
@@ -146,21 +150,21 @@
 						<b>11.8% year</b>
 					</p>
 				</td>
+				<td>
+					<p>
+						<img src={month} alt="month" />
+					</p>
+				</td>
 			</tr>
 		{/if}
 		<tr>
 			<td />
-			<td style="line-break:auto;" colspan="3" />
-		</tr>
-		<tr>
-			<td>
-				{#if receiptAddress}
-					<p>
-						<img src={wallet} alt="wallet" />
-					</p>
-				{/if}
+			<td style="width=30px;">
+				<p>
+					<img src={wallet} alt="wallet" />
+				</p>
 			</td>
-			<td style="line-break:anywhere;" colspan="3">
+			<td style="line-break:anywhere;" colspan="2">
 				<p>
 					{#if receiptAddress}
 						{receiptAddress}
@@ -168,7 +172,9 @@
 				</p>
 			</td>
 		</tr>
+		
 	</table>
+	
 </section>
 <hr />
 <h4><img src={table} alt="table" /></h4>
@@ -200,7 +206,7 @@
 		background-color: white;
 	}
 	table tr td {
-		min-width: 20%;
+		min-width: 10%;
 		justify-content: space-around;
 	}
 
@@ -216,10 +222,8 @@
 
 	h1 {
 		width: 100%;
+		font-weight: 900;
+		color: #d99b22;
 	}
 
-	textarea {
-		width: 100%;
-		height: 100px;
-	}
 </style>

@@ -104,6 +104,7 @@
 	</div>
 
 	{#if !executionProgressClosed}
+    <br>
 		<progress id="progress-bar" aria-label="Content loading…" />
 	{/if}
 	{#if executeError}

@@ -20,8 +20,8 @@
 
 <style>
   .custom-dot__dot-container {
-    height: 10px;
-    width: 10px;
+    height: 20px;
+    width: 20px;
     background-color: #727272;
     border-radius: 50%;
     opacity: 0.7;
@@ -39,7 +39,7 @@
     background-color: #67a323;
   }
   .custom-dot__symbol {
-    font-size: 6px;
+    font-size: 12px;
     color: #eaeaea;
   }
 </style>

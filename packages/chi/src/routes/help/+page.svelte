@@ -73,7 +73,9 @@
 
 	const handleNextClick = () => {
 		carousel.goToNext();
-		pageStore.set(currentPageIndex + 1);
+		if (currentPageIndex < pagesCount) {
+			pageStore.set(currentPageIndex + 1);
+		}
 	};
 	const showPage = (p) => {
 		pageStore.set(p);
@@ -114,6 +116,7 @@
 {#if browser}
 	<Carousel
 		initialPageIndex={currentPageIndex}
+		infinite={false}
 		bind:this={carousel}
 		on:pageChange={(event) => (currentPageIndex = event.detail)}
 	>
