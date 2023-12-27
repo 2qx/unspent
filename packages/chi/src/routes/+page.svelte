@@ -122,8 +122,8 @@
 				</td>
 				<td colspan="3">
 					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-						<div style="max-width: 80%;" class="action">
-							<button on:click={copy}>
+						<div style="max-width: 95%;" class="contract-div">
+							<button class="styled" on:click={copy}>
 								{contract.getAddress()}
 							</button>
 						</div>
@@ -189,7 +189,7 @@
 			<td colspan="2">
 				<textarea
 					id="addr"
-          rows="3" 
+					rows="3"
 					on:change={() => createContract()}
 					bind:value={receiptAddress}
 					placeholder="bitcoincash:q... ..."
@@ -259,5 +259,31 @@
 
 	textarea {
 		width: 90%;
+		border-radius: 10px;
+		background: #f4ffee;
+		border-width: 5px;
+		font-weight: 500;
+	}
+
+	.styled {
+		border-color: #000;
+		font-size: 1rem;
+		text-align: center;
+		color: #000;
+		border-radius: 10px;
+		background-color: #fff3e2;
+		font-weight: 700;
+    padding: 5px;
+    box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+	}
+
+	.styled:hover {
+		background-color: rgb(255, 184, 54);
+	}
+
+	.styled:active {
+		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
 	}
 </style>

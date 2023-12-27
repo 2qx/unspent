@@ -72,11 +72,18 @@
 	}
 
 	const handleNextClick = () => {
-		carousel.goToNext();
-		if (currentPageIndex < pagesCount) {
+		console.log(pagesCount, currentPageIndex)
+    
+    // loop on level 8 ending
+		if (pagesCount == 23 && currentPageIndex == 22) {
+      pageStore.set("0");
+      carousel.goTo(0);
+		} else if (currentPageIndex < pagesCount) {
 			pageStore.set(currentPageIndex + 1);
+      carousel.goToNext();
 		}
 	};
+
 	const showPage = (p) => {
 		pageStore.set(p);
 		carousel.goTo(p);

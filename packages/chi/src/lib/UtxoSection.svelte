@@ -124,7 +124,7 @@
 							let:copy
 						>
 							<div class="action">
-								<button on:click={copy}>
+								<button class="styled" on:click={copy}>
 									{contract.getAddress()}
 								</button>
 							</div>
@@ -166,5 +166,27 @@
 		align-items: center;
 		flex: 0.6;
 		line-break: normal;
+	}
+
+  .styled {
+		border-color: #000;
+		font-size: 1rem;
+		text-align: center;
+		color: #000;
+		border-radius: 10px;
+		background-color: #fff3e2;
+		font-weight: 700;
+    padding: 5px;
+    box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+	}
+
+	.styled:hover {
+		background-color: rgb(255, 184, 54);
+	}
+
+	.styled:active {
+		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
 	}
 </style>
