@@ -1,1 +1,6 @@
-{"receive":"Wählen Sie die Adresse aus, mit der Sie Bitcoins empfangen wollen","create":"Neues Wallet erstellen","year":"1 Jahr","spendable":"Verfügbar:"}
+{
+  "receive": "Wählen Sie die Adresse aus, mit der Sie Bitcoins empfangen wollen",
+  "create": "Neues Wallet erstellen",
+  "year": "Jahr",
+  "spendable": "Verfügbar:"
+}

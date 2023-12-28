@@ -1,1 +1,7 @@
-{"receive":"Elekti la adreson ricevi monerojn kun","ok":"Bone","create":"Krei novan monujon","year":"1 jaro","spendable":"Elspezebla:"}
+{
+  "receive": "Elekti la adreson ricevi monerojn kun",
+  "ok": "Bone",
+  "create": "Krei novan monujon",
+  "year": "jaro",
+  "spendable": "Elspezebla:"
+}

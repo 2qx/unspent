@@ -153,7 +153,6 @@
 			{:else}
 				<td />
 				<td style="width:30px;">
-					<img src={lock_clock} alt="lock_clock" />
 				</td>
 				<td colspan="2" />
 			{/if}
@@ -166,16 +165,14 @@
 				</td>
 				<td>
 					<p>
-						<b>1.04% month</b>
-					</p>
+						<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
+          </p>
 					<p>
-						<b>11.8% year</b>
+						<b>11.8% {$_('year')}</b>
 					</p>
 				</td>
 				<td>
-					<p>
-						<img src={month} alt="month" />
-					</p>
+					
 				</td>
 			</tr>
 		{/if}
@@ -243,7 +240,6 @@
 
 	table tr td p {
 		font-size: small;
-		display: flex;
 		justify-content: space-around;
 	}
 
