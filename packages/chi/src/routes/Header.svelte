@@ -1,14 +1,17 @@
 <script>
 	import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
+  import arrow_step from '$lib/images/arrow_step.svg';
 	import logo from '$lib/images/logo.svg';
 	import home from '$lib/images/home.svg';
 	import chart from '$lib/images/chart.svg';
 	import code from '$lib/images/code.svg';
 	import help from '$lib/images/help.svg';
+	import restart from '$lib/images/restart.svg';
 	import table from '$lib/images/table.svg';
 	import github from '$lib/images/github.svg';
-	import { receiptAddressStore, stateStore } from '$lib/store.js';
+	import { receiptAddressStore, stateStore, pageStore } from '$lib/store.js';
 
 	let addressIsSet = false;
 	let stateValue;
@@ -20,6 +23,28 @@
 		stateValue = Number(value);
 		console.log(stateValue);
 	});
+
+	const resetState = () => {
+		stateStore.set('');
+		receiptAddressStore.set('');
+		pageStore.set('');
+	};
+
+	const skipState = () => {
+		if (stateValue < 7) stateValue += 1;
+		stateStore.set(String(stateValue));
+    reloadPage();
+	};
+
+  function reloadPage() {
+        const thisPage = window.location.pathname;
+
+        console.log('goto ' + thisPage);
+
+        goto('/').then(
+            () => goto(thisPage)
+        );
+    }
 </script>
 
 <header>
@@ -80,6 +105,14 @@
 		<a href="https://github.com/2qx/unspent">
 			<img src={github} alt="GitHub" />
 		</a>
+		<div on:click={resetState}>
+			<img src={restart} alt="restart" />
+			<p>reset</p>
+		</div>
+		<button on:click={skipState} style="background-color:white;">
+			<img src={arrow_step} />
+			Skip
+		</button>
 	</div>
 </header>
 

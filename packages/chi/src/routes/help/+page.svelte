@@ -35,6 +35,7 @@
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 
 	stateStore.subscribe((value) => {
+    console.log(value)
 		if (value) {
 			pagesCount = DOC_MAP[Number(value)];
 		} else {
@@ -49,7 +50,7 @@
 			currentPageIndex = Number(value);
 		} else {
 			currentPageIndex = 0;
-      pageStore.set('0');
+			pageStore.set('0');
 		}
 	});
 
@@ -59,6 +60,8 @@
 		}
 		window.location = $_('whitepaper');
 	};
+
+
 
 	function handleWalletClick(walletIdx) {
 		if (stateValue < 2) {
@@ -72,40 +75,39 @@
 		}
 	}
 
-  const updatePage = (p) => {
-    currentPageIndex=p;
-    console.log(currentPageIndex, pagesCount)
-    pageStore.set(p);
-  }
+	const updatePage = (p) => {
+		currentPageIndex = p;
+		console.log(currentPageIndex, pagesCount);
+		pageStore.set(p);
+	};
 
 	const handleNextClick = () => {
-    
 		if (currentPageIndex < pagesCount) {
-      carousel.goToNext();
-    }
+			carousel.goToNext();
+		}
 	};
 
 	const showPage = (p) => {
-    console.log(currentPageIndex, pagesCount)
-    currentPageIndex=p;
+		currentPageIndex = p;
 		pageStore.set(p);
-    carousel.goTo(p);
-  };
-
+		carousel.goTo(p);
+	};
 </script>
 
 <div id="book">
 	<ul>
 		<li style="background-color:white;">
-			{#if $isLoading}
-				<div on:click={handleWpClick}>
-					<img src={whitepaper} /><br />
-				</div>
-			{:else}
-				<div on:click={handleWpClick}>
-					<img src={whitepaper} /><br />
-					BCH
-				</div>
+			{#if currentPageIndex > 0}
+				{#if $isLoading}
+					<div on:click={handleWpClick}>
+						<img src={whitepaper} /><br />
+					</div>
+				{:else}
+					<div on:click={handleWpClick}>
+						<img src={whitepaper} /><br />
+						BCH
+					</div>
+				{/if}
 			{/if}
 		</li>
 
@@ -119,6 +121,8 @@
 				Selene
 			</li>
 		{/if}
+
+
 	</ul>
 </div>
 
@@ -133,8 +137,10 @@
 	<Carousel
 		initialPageIndex={currentPageIndex}
 		infinite={false}
+    timingFunction={"linear"}
 		bind:this={carousel}
-		on:pageChange={(event) => (updatePage(event.detail))}
+		on:pageChange={(event) => updatePage(event.detail)}
+    
 	>
 		{#each pages as page}
 			<div id="book">
@@ -161,6 +167,7 @@
 	<button class="next-button" on:click={handleNextClick}>
 		<img src={arrow_right} />
 	</button>
+  
 </div>
 
 <div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
@@ -202,8 +209,8 @@
 	}
 
 	.caption {
-    min-height: 3ex;
-    padding: 1ex;
+		min-height: 3ex;
+		padding: 1ex;
 		text-align: center;
 		font-size: x-large;
 		font-weight: 700;
