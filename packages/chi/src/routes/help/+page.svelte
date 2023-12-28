@@ -72,15 +72,15 @@
 	}
 
 	const handleNextClick = () => {
-		console.log(pagesCount, currentPageIndex)
-    
-    // loop on level 8 ending
+		console.log(pagesCount, currentPageIndex);
+
+		// loop on level 8 ending
 		if (pagesCount == 23 && currentPageIndex == 22) {
-      pageStore.set("0");
-      carousel.goTo(0);
+			pageStore.set('0');
+			carousel.goTo(0);
 		} else if (currentPageIndex < pagesCount) {
 			pageStore.set(currentPageIndex + 1);
-      carousel.goToNext();
+			carousel.goToNext();
 		}
 	};
 
@@ -121,6 +121,9 @@
 <!-- autoplay autoplayDuration={4400} -->
 
 {#if browser}
+	{#if !$isLoading}
+		<p style="text-align:center; font-weight:600;">{$_(String(currentPageIndex))}</p>
+	{/if}
 	<Carousel
 		initialPageIndex={currentPageIndex}
 		infinite={false}
@@ -132,12 +135,11 @@
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
 			</div>
 		{/each}
+
 		<div slot="prev">
 			<!-- -->
 		</div>
-		<div slot="next">
-			<!-- -->
-		</div>
+		<div slot="next" />
 		<div slot="dots" class="custom-dots">
 			{#each Array(pagesCount) as _, pageIndex (pageIndex)}
 				<CustomDot
@@ -147,7 +149,6 @@
 				/>
 			{/each}
 		</div>
-		<!-- -->
 	</Carousel>
 {/if}
 <div class="button-box">
