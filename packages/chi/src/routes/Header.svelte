@@ -28,6 +28,7 @@
 		stateStore.set('');
 		receiptAddressStore.set('');
 		pageStore.set('');
+    goto('/');
 	};
 
 	const skipState = () => {
@@ -38,8 +39,6 @@
 
   function reloadPage() {
         const thisPage = window.location.pathname;
-
-        console.log('goto ' + thisPage);
 
         goto('/').then(
             () => goto(thisPage)
@@ -55,6 +54,9 @@
 	</div>
 
 	<nav>
+    <span on:click={resetState}>
+			<img src={restart} alt="restart" />
+		</span>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
@@ -99,20 +101,16 @@
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
 		</svg>
+
+		<span on:click={skipState} >
+			<img src={arrow_step} />
+		</span>
 	</nav>
 
 	<div class="corner">
 		<a href="https://github.com/2qx/unspent">
 			<img src={github} alt="GitHub" />
 		</a>
-		<div on:click={resetState}>
-			<img src={restart} alt="restart" />
-			<p>reset</p>
-		</div>
-		<button on:click={skipState} style="background-color:white;">
-			<img src={arrow_step} />
-			Skip
-		</button>
 	</div>
 </header>
 
