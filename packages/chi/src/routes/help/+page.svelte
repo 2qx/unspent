@@ -49,6 +49,7 @@
 			currentPageIndex = Number(value);
 		} else {
 			currentPageIndex = 0;
+      pageStore.set('0');
 		}
 	});
 
@@ -71,22 +72,24 @@
 		}
 	}
 
-	const handleNextClick = () => {
-		console.log(pagesCount, currentPageIndex);
+  const updatePage = (p) => {
+    currentPageIndex=p;
+    console.log(currentPageIndex, pagesCount)
+    pageStore.set(p);
+  }
 
-		// loop on level 8 ending
-		if (pagesCount == 23 && currentPageIndex == 22) {
-			pageStore.set('0');
-			carousel.goTo(0);
-		} else if (currentPageIndex < pagesCount) {
-			pageStore.set(currentPageIndex + 1);
-			carousel.goToNext();
-		}
+	const handleNextClick = () => {
+    
+		if (currentPageIndex < pagesCount) {
+      carousel.goToNext();
+    }
 	};
 
 	const showPage = (p) => {
-		carousel.goTo(p);
+    console.log(currentPageIndex, pagesCount)
+    currentPageIndex=p;
 		pageStore.set(p);
+    carousel.goTo(p);
   };
 
 </script>
@@ -131,7 +134,7 @@
 		initialPageIndex={currentPageIndex}
 		infinite={false}
 		bind:this={carousel}
-		on:pageChange={(event) => (currentPageIndex = event.detail)}
+		on:pageChange={(event) => (updatePage(event.detail))}
 	>
 		{#each pages as page}
 			<div id="book">
