@@ -122,7 +122,7 @@
 
 {#if browser}
 	{#if !$isLoading}
-		<div style="text-align:center; font-size:small; font-weight:600; background-color:white;">
+		<div class="caption">
 			{$_(String(currentPageIndex))}
 		</div>
 	{/if}
@@ -196,6 +196,16 @@
 	.button-box {
 		align-self: center;
 	}
+
+	.caption {
+    min-height: 3ex;
+    padding: 1ex;
+		text-align: center;
+		font-size: x-large;
+		font-weight: 700;
+		background-color: white;
+	}
+
 	.next-button {
 		padding: 0 30px;
 		width: max-content;
