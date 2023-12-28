@@ -85,9 +85,10 @@
 	};
 
 	const showPage = (p) => {
-		pageStore.set(p);
 		carousel.goTo(p);
-	};
+		pageStore.set(p);
+  };
+
 </script>
 
 <div id="book">
