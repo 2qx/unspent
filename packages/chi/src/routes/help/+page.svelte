@@ -122,7 +122,7 @@
 
 {#if browser}
 	{#if !$isLoading}
-		<p style="text-align:center; font-weight:600;">{$_(String(currentPageIndex))}</p>
+		<div style="text-align:center; font-size:small; font-weight:600; background-color:white;">{$_(String(currentPageIndex))}</div>
 	{/if}
 	<Carousel
 		initialPageIndex={currentPageIndex}
