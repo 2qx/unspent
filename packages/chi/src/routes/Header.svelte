@@ -1,8 +1,8 @@
 <script>
 	import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
-  import arrow_step from '$lib/images/arrow_step.svg';
+
 	import logo from '$lib/images/logo.svg';
 	import home from '$lib/images/home.svg';
 	import chart from '$lib/images/chart.svg';
@@ -28,22 +28,8 @@
 		stateStore.set('');
 		receiptAddressStore.set('');
 		pageStore.set('');
-    goto('/');
+		goto('/');
 	};
-
-	const skipState = () => {
-		if (stateValue < 7) stateValue += 1;
-		stateStore.set(String(stateValue));
-    reloadPage();
-	};
-
-  function reloadPage() {
-        const thisPage = window.location.pathname;
-
-        goto('/').then(
-            () => goto(thisPage)
-        );
-    }
 </script>
 
 <header>
@@ -54,9 +40,6 @@
 	</div>
 
 	<nav>
-    <span on:click={resetState}>
-			<img src={restart} alt="restart" />
-		</span>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
@@ -101,16 +84,16 @@
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
 		</svg>
-
-		<span on:click={skipState} >
-			<img src={arrow_step} />
-		</span>
 	</nav>
 
 	<div class="corner">
+    <span on:click={resetState}>
+			<img src={restart} alt="restart" />
+		</span>
 		<a href="https://github.com/2qx/unspent">
 			<img src={github} alt="GitHub" />
 		</a>
+		
 	</div>
 </header>
 

@@ -62,7 +62,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		padding: 3px;
     align-self: center;
 		width: 100%;
 		max-width: 44rem;

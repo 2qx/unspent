@@ -1,4 +1,5 @@
 <script>
+  import { goto } from '$app/navigation';
 	import Carousel from 'svelte-carousel';
 	import CustomDot from '$lib/CustomDot.svelte';
 	import { browser } from '$app/environment';
@@ -6,6 +7,7 @@
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
 	import arrow_right from '$lib/images/arrow_right.svg';
+  import arrow_step from '$lib/images/arrow_step.svg';
 	import boss from '$lib/images/boss.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
 	import { stateStore, pageStore } from '$lib/store.js';
@@ -33,6 +35,18 @@
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
+
+	const skipState = () => {
+		if (stateValue < 7) stateValue += 1;
+		stateStore.set(String(stateValue));
+		reloadPage();
+	};
+
+	function reloadPage() {
+		const thisPage = window.location.pathname;
+
+		goto('/').then(() => goto(thisPage));
+	}
 
 	stateStore.subscribe((value) => {
 		if (value) {
@@ -93,7 +107,7 @@
 
 <div id="book">
 	<ul>
-		<li style="background-color:white;">
+		<li>
 			{#if $isLoading}
 				<div on:click={handleWpClick}>
 					<img src={whitepaper} /><br />
@@ -161,7 +175,12 @@
 	</button>
 </div>
 
+
+
 <div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
+<span style="align:right; width: 10px;"on:click={skipState}>
+  <img src={arrow_step} />
+</span>
 
 <style>
 	#book {
@@ -176,10 +195,14 @@
 		font-weight: 700;
 	}
 	ul li {
-		padding: 15px;
+		padding: 10px;
 	}
 
 	ul {
+		background-color: white;
+		border-radius: 50px;
+		padding-left: 0px;
+		margin: 5px;
 		border-radius: 10px;
 		display: inline-flex;
 		justify-content: center;
