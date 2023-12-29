@@ -31,5 +31,6 @@
   "create": "Create a new perpetuity",
   "monthly": "per month",
   "spendable": "Spendable:",
+  "locale": "en",
   "whitepaper": "https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"
 }

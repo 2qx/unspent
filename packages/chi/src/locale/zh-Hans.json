@@ -4,5 +4,6 @@
   "create": "创建一个新的钱包",
   "year": "1 年",
   "spendable": "可动用:",
+  "locale": "zh",
   "whitepaper": "https://web.archive.org/web/20230315051200/https://whitepaper.coinspice.io/cn"
 }

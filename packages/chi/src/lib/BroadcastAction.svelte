@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-	import { base } from '$app/paths';
 	import { _ } from 'svelte-i18n';
 	import heart from '$lib/images/heart.svg';
 	import { Record } from '@unspent/phi';

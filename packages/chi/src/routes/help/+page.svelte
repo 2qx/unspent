@@ -1,5 +1,5 @@
 <script>
-  import { goto } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import Carousel from 'svelte-carousel';
 	import CustomDot from '$lib/CustomDot.svelte';
 	import { browser } from '$app/environment';
@@ -7,7 +7,8 @@
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
 	import arrow_right from '$lib/images/arrow_right.svg';
-  import arrow_step from '$lib/images/arrow_step.svg';
+	import arrow_right_white from '$lib/images/arrow_right_white.svg';
+	import arrow_step from '$lib/images/arrow_step.svg';
 	import boss from '$lib/images/boss.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
 	import { stateStore, pageStore } from '$lib/store.js';
@@ -71,7 +72,8 @@
 		if (stateValue < 1) {
 			stateStore.set('1');
 		}
-		window.location = $_('whitepaper');
+    window.location = $_('whitepaper');
+		//goto('/whitepaper');
 	};
 
 	function handleWalletClick(walletIdx) {
@@ -170,16 +172,18 @@
 	</Carousel>
 {/if}
 <div class="button-box">
-	<button class="next-button" on:click={handleNextClick}>
-		<img src={arrow_right} />
+	<button
+		class="next-button"
+		disabled={currentPageIndex == pagesCount - 1}
+		on:click={handleNextClick}
+	>
+		<img src={arrow_right_white} />
 	</button>
 </div>
 
-
-
 <div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
-<span style="align:right; width: 10px;"on:click={skipState}>
-  <img src={arrow_step} />
+<span style="align:right; width: 10px;" on:click={skipState}>
+	<img src={arrow_step} />
 </span>
 
 <style>
@@ -196,6 +200,12 @@
 	}
 	ul li {
 		padding: 10px;
+    font-weight: 700;
+    align-self: center;
+	}
+
+	ul li img{
+		min-height: 45px;
 	}
 
 	ul {
@@ -232,19 +242,25 @@
 	}
 
 	.next-button {
-		padding: 0 30px;
+		padding: 50px;
 		width: max-content;
 		border-color: black;
-		border-radius: 40px;
-		border-width: 5px;
-		background-color: rgrgb(214, 214, 214);
+		border-radius: 80px;
+		border-width: 2px;
+		background-color: #8dc351;
 		background-image: linear-gradient(
 			to top left,
-			rgba(0, 0, 0, 0.2),
-			rgba(0, 0, 0, 0.2) 30%,
-			rgba(0, 0, 0, 0)
+			rgba(129, 129, 129, 0.2),
+			rgba(158, 158, 158, 0.2) 30%,
+			rgba(151, 151, 151, 0)
 		);
 		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+	}
+
+	.next-button:disabled {
+		background-color: rgb(245, 245, 245);
+		color: linen;
+		opacity: 1;
 	}
 
 	.girl-boss {
