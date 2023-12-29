@@ -1,9 +1,10 @@
 <script context="module">
 	import '$lib/i18n';
 	import { browser } from '$app/environment';
-	import { goto, invalidateAll } from '$app/navigation';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Header from './Header.svelte';
+  import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+  import { toast } from '@zerodevx/svelte-toast';
 	import './styles.css';
 
 	import { locale, waitLocale, getLocaleFromNavigator, init } from 'svelte-i18n';
@@ -14,11 +15,9 @@
 		// init on client side only
 		// don't put this inside `load`, otherwise it will gets executed every time you changed route on client side
 		let locale = getLocaleFromNavigator();
-		console.log(locale);
 		if (locale.includes('-')) {
 			locale = locale.split('-').shift();
 		}
-		console.log(locale);
 
 		init({
 			fallbackLocale: 'en',
@@ -33,10 +32,22 @@
 	<main>
 			<slot p={currentPage} />
 	</main>
-
-	<footer>
-		<p>visit <a href="https://unspent.app/documentation">unspent.app</a> to learn more</p>
-		<p> <a href="https://unspent.cash/s?q=eJwrWymyJ1Nv2YHoo8r%2FFrOdZj3kkVok9vluxxoAnkYMog%3D%3D">💚 support this app 💚</a></p>
+	<footer>  
+    <p>
+      ₿∙ϕ:
+      <a target="_blank" href="https://unspent.app/documentation">docs</a>
+      <a target="_blank" href="https://unspent.app/earn">earn</a>
+      <a target="_blank" href="https://unspent.app/create" >adv</a>  |
+      <a target="_blank" href="https://t.me/unspent_cash" >telegram</a>
+    </p>
+    <CopyToClipboard on:copy={() => toast.push('bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4 📋💚🗸 ')} text="bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4" let:copy>
+      <div class="action">
+        <button on:click={copy}>
+          💚 Support Unspent 💚          
+        </button>
+      </div>
+    </CopyToClipboard>
+  
 	</footer>
 </div>
 
@@ -51,7 +62,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		padding: 3px;
     align-self: center;
 		width: 100%;
 		max-width: 44rem;

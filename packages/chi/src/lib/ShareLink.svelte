@@ -1,29 +1,40 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import share from '$lib/images/share.svg';
-  import CopyToClipboard from './CopyToClipboard.svelte';
-  import { toast } from '@zerodevx/svelte-toast';
+	import CopyToClipboard from './CopyToClipboard.svelte';
+	import { toast } from '@zerodevx/svelte-toast';
 	import { binToBase64 } from '@bitauth/libauth';
 	import { deflate } from 'pako';
-	
-  export let lockingBytecode: string;
+	import { stateStore } from '$lib/store.js';
+	let stateValue;
 
-  let linkText;
+	export let lockingBytecode: string;
+
+	let linkText;
 
 	if (lockingBytecode) {
 		let q = decodeURI(binToBase64(deflate(lockingBytecode)));
 		$page.url.searchParams.set('q', q);
-    linkText = "https://" + $page.url.host + "/s?" + $page.url.searchParams.toString();
+		linkText = 'https://' + $page.url.host + '/s?' + $page.url.searchParams.toString();
 	}
 
+	stateStore.subscribe((value) => {
+		stateValue = Number(value);
+	});
+
+	const handleClick = async () => {
+		if (stateValue > 4) {
+			if (stateValue < 6) {
+				stateStore.set('6');
+			}
+		}
+
+		toast.push('link copied');
+	};
 </script>
 
 {#if lockingBytecode}
-	<CopyToClipboard
-		on:copy={() => toast.push('link copied')}
-		text={linkText}
-		let:copy
-	>
+	<CopyToClipboard on:copy={handleClick} text={linkText} let:copy>
 		<div class="action">
 			<button class="hitMe" on:click={copy}>
 				<img src={share} alt="share" />
@@ -38,10 +49,9 @@
 	}
 
 	.hitMe {
-
 		border: 0;
 		line-height: 2.5;
-		padding: 20px;
+		padding: 15px;
 		font-size: 1rem;
 		text-align: center;
 		color: #fff;

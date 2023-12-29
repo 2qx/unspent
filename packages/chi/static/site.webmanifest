@@ -1,6 +1,6 @@
 {
-	"name": "Unspent Chi",
-	"short_name": "₿ᵪ",
+	"name": "Unspent Cash",
+	"short_name": "Unspent",
 	"background_color": "#ffffff",
 	"theme_color": "#ffb200",
 	"display": "minimal-ui",

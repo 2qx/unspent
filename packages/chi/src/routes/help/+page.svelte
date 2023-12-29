@@ -1,67 +1,186 @@
 <script>
+  import { goto } from '$app/navigation';
 	import Carousel from 'svelte-carousel';
+	import CustomDot from '$lib/CustomDot.svelte';
 	import { browser } from '$app/environment';
-	import touch from '$lib/images/touch.svg';
-	import download from '$lib/images/download.svg';
+	import { _, isLoading } from 'svelte-i18n';
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
+	import arrow_right from '$lib/images/arrow_right.svg';
+  import arrow_step from '$lib/images/arrow_step.svg';
+	import boss from '$lib/images/boss.svg';
 	import whitepaper from '$lib/images/whitepaper.svg';
+	import { stateStore, pageStore } from '$lib/store.js';
+
+	// 0  2 overview
+	// 1  4 whitepaperClicked
+	// 2  9 walletClicked
+	// 3 10 hasReceiptAddress
+	// 4 11 isBroadcasted
+	// 5 12 viewedChart
+	// 6 13 copiedAddr or Link
+	// 7 23 hasBalance
+	// 8 26 girlBoss
+
+	const DOC_MAP = [2, 4, 9, 10, 11, 12, 13, 23, 26];
+
+	let stateValue;
+
+	/**
+	 * Current page indicator dots
+	 */
+	export let dots = true;
+	let currentPageIndex;
+	let carousel; // for calling methods of the carousel instance
 
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 
-	let carousel; // for calling methods of the carousel instance
+	const skipState = () => {
+		if (stateValue < 7) stateValue += 1;
+		stateStore.set(String(stateValue));
+		reloadPage();
+	};
+
+	function reloadPage() {
+		const thisPage = window.location.pathname;
+
+		goto('/').then(() => goto(thisPage));
+	}
+
+	stateStore.subscribe((value) => {
+		if (value) {
+			pagesCount = DOC_MAP[Number(value)];
+		} else {
+			pagesCount = DOC_MAP[0];
+		}
+		stateValue = Number(value);
+		pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
+	});
+
+	pageStore.subscribe((value) => {
+		if (value) {
+			currentPageIndex = Number(value);
+		} else {
+			currentPageIndex = 0;
+			pageStore.set('0');
+		}
+	});
+
+	const handleWpClick = () => {
+		if (stateValue < 1) {
+			stateStore.set('1');
+		}
+		window.location = $_('whitepaper');
+	};
+
+	function handleWalletClick(walletIdx) {
+		if (stateValue < 2) {
+			stateStore.set('2');
+		}
+		if (walletIdx == 'selene') {
+			window.location = 'https://selene.cash/';
+		}
+		if (walletIdx == 'paytaca') {
+			window.location = 'https://www.paytaca.com/#wallet';
+		}
+	}
+
+	const updatePage = (p) => {
+		currentPageIndex = p;
+		console.log(currentPageIndex, pagesCount);
+		pageStore.set(p);
+	};
 
 	const handleNextClick = () => {
-		carousel.goToNext();
+		if (currentPageIndex < pagesCount) {
+			carousel.goToNext();
+		}
+	};
+
+	const showPage = (p) => {
+		currentPageIndex = p;
+		pageStore.set(p);
+		carousel.goTo(p);
 	};
 </script>
 
 <div id="book">
 	<ul>
-    <li style="background-color:white;">
-			<a
-				target="_blank"
-				href="https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"
-			>
-				<img src={whitepaper} /><br />
-				<img src={touch} />
-			</a>
+		<li>
+			{#if $isLoading}
+				<div on:click={handleWpClick}>
+					<img src={whitepaper} /><br />
+				</div>
+			{:else}
+				<div on:click={handleWpClick}>
+					<img src={whitepaper} /><br />
+					BCH
+				</div>
+			{/if}
 		</li>
-		<li style="background-color:white;">
-			<a target="_blank" href="https://www.paytaca.com/#wallet">
+
+		{#if (stateValue == 1 && currentPageIndex > 2) || stateValue > 1}
+			<li on:click={() => handleWalletClick('paytaca')} style="background-color:white;">
 				<img src={paytaca} /><br />
 				Paytaca
-			</a>
-		</li>
-		<li style="background-color:white;">
-			<a target="_blank" href="https://selene.cash/">
+			</li>
+			<li on:click={() => handleWalletClick('selene')} style="background-color:white;">
 				<img src={selene} /><br />
 				Selene
-			</a>
-		</li>
-		
+			</li>
+		{/if}
 	</ul>
 </div>
 
+<!-- autoplay autoplayDuration={4400} -->
+
 {#if browser}
-	<Carousel bind:this={carousel}>
+	{#if !$isLoading}
+		<div class="caption">
+			{$_(String(currentPageIndex))}
+		</div>
+	{/if}
+	<Carousel
+		initialPageIndex={currentPageIndex}
+		infinite={false}
+		timingFunction={'linear'}
+		bind:this={carousel}
+		on:pageChange={(event) => updatePage(event.detail)}
+	>
 		{#each pages as page}
 			<div id="book">
 				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
 			</div>
 		{/each}
+
 		<div slot="prev">
 			<!-- -->
 		</div>
-		<div slot="next">
-			<!-- -->
+		<div slot="next" />
+		<div slot="dots" class="custom-dots">
+			{#each Array(pagesCount) as _, pageIndex (pageIndex)}
+				<CustomDot
+					symbol={pageIndex + 1}
+					active={currentPageIndex === pageIndex}
+					on:click={() => showPage(pageIndex)}
+				/>
+			{/each}
 		</div>
-		<!-- -->
 	</Carousel>
 {/if}
+<div class="button-box">
+	<button class="next-button" on:click={handleNextClick}>
+		<img src={arrow_right} />
+	</button>
+</div>
 
-<button on:click={handleNextClick}>Next</button>
+
+
+<div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
+<span style="align:right; width: 10px;"on:click={skipState}>
+  <img src={arrow_step} />
+</span>
 
 <style>
 	#book {
@@ -74,14 +193,63 @@
 		text-decoration: none;
 		color: black;
 		font-weight: 700;
-		font-size: larger;
 	}
 	ul li {
-		padding: 20px;
+		padding: 10px;
 	}
+
 	ul {
+		background-color: white;
+		border-radius: 50px;
+		padding-left: 0px;
+		margin: 5px;
+		border-radius: 10px;
 		display: inline-flex;
 		justify-content: center;
 		list-style: none;
+	}
+
+	/* custom dots */
+	.custom-dots {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		padding: 0 20px;
+	}
+
+	.button-box {
+		align-self: center;
+	}
+
+	.caption {
+		min-height: 3ex;
+		padding: 1ex;
+		text-align: center;
+		font-size: x-large;
+		font-weight: 700;
+		background-color: white;
+	}
+
+	.next-button {
+		padding: 0 30px;
+		width: max-content;
+		border-color: black;
+		border-radius: 40px;
+		border-width: 5px;
+		background-color: rgrgb(214, 214, 214);
+		background-image: linear-gradient(
+			to top left,
+			rgba(0, 0, 0, 0.2),
+			rgba(0, 0, 0, 0.2) 30%,
+			rgba(0, 0, 0, 0)
+		);
+		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+	}
+
+	.girl-boss {
+		align-self: left;
+		font-weight: 700;
+		font-size: larger;
 	}
 </style>

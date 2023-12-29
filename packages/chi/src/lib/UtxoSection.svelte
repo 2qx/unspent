@@ -4,6 +4,9 @@
 	import { _ } from 'svelte-i18n';
 	import arrow_split from '$lib/images/arrow_split.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
+	import copy from '$lib/images/copy.svg';
+	import { toast } from '@zerodevx/svelte-toast';
+	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 
 	export let receiptAddress = '';
 	let utxos = [];
@@ -16,8 +19,6 @@
 
 	let curHeight = -1;
 	let now = Date.now();
-
-
 
 	beforeUpdate(async () => {
 		if (receiptAddress) {
@@ -44,7 +45,7 @@
 	const loadSeries = async () => {
 		utxos = await contract.getUtxos();
 		curHeight = await contract.provider.getBlockHeight();
-    utxos = utxos.sort((a, b) => a.height - b.height);
+		utxos = utxos.sort((a, b) => a.height - b.height);
 		utxos = utxos.map((u) => {
 			let waitBlocks = u.height + 4383 - curHeight;
 			return {
@@ -59,8 +60,8 @@
 
 <section>
 	{#if utxos && utxos.length > 0}
-  { txid }
-  { executeError }
+		{txid}
+		{executeError}
 		{#each utxos as op}
 			<table>
 				<tr>
@@ -91,19 +92,52 @@
 								<img src={arrow_split} />
 							</button>
 						{/if}
-
+					</td>
+					<td colspan="3" style="line-break: anywhere;">
 						{#if curHeight > 0 && op.waitBlocks > 0}
 							<p>{op.estimateUnlockDate}</p>
 						{/if}
-					</td>
-					<td colspan="3" style="line-break: anywhere;">
-						{op.txid}:{op.vout}
+						<b>{(op.satoshis / 96n).toLocaleString()}</b> sats <br />
 					</td>
 				</tr>
 			</table>
 		{/each}
 	{:else if !isLoading && utxos.length == 0}
-		0 sats
+		{#if contract}
+			<table width="300px">
+				<tr>
+					<td>
+						<p>
+							<img src={lock_clock} alt={$_('ok')} />
+						</p>
+					</td>
+					<td>
+						<p><b>0 ₿</b></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="line-break:anywhere;" colspan="2">
+						<img src={copy} />
+						<CopyToClipboard
+							on:copy={() => toast.push('📋🗸')}
+							text={contract.getAddress()}
+							let:copy
+						>
+							<div class="action">
+								<button class="styled" on:click={copy}>
+									{contract.getAddress()}
+								</button>
+							</div>
+						</CopyToClipboard>
+					</td>
+				</tr>
+			</table>
+		{/if}
+		<br />
+		<br />
+		<p>
+			<img width="300px" src="/h/13.svg" alt="send bitcoin" />
+		</p>
 	{:else}
 		<progress id="progress-bar" aria-label="Content loading…" />
 	{/if}
@@ -132,5 +166,27 @@
 		align-items: center;
 		flex: 0.6;
 		line-break: normal;
+	}
+
+  .styled {
+		border-color: #000;
+		font-size: 1rem;
+		text-align: center;
+		color: #000;
+		border-radius: 10px;
+		background-color: #fff3e2;
+		font-weight: 700;
+    padding: 5px;
+    box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+	}
+
+	.styled:hover {
+		background-color: rgb(255, 184, 54);
+	}
+
+	.styled:active {
+		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
 	}
 </style>

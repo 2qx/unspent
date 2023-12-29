@@ -7,13 +7,10 @@ describe(`Record Class Tests`, () => {
   const host = "https://demo.chaingraph.cash/v1/graphql";
 
   test("Should get unspent record", async () => {
-    const opReturnHex =
-      "6a04" +
-      PROTOCOL_ID +
-      "01520101023601010017a914e2c8cacae07977ccbbcd39c0099c6a5b6426e70887";
+    const opReturnHex = "6a047574786f01520101025203010017a91496e199d7ea23fb779f5764b97196824002ef811a87"
     const contractStrings = await getRecords(
       host,
-      "6a04" + PROTOCOL_ID + "01520101025203010017a91496e199"
+      "6a04" + PROTOCOL_ID + "01520101025203010017a91496e199d7"
     );
     if (contractStrings.length > 0) {
       expect(contractStrings[0]).toMatch(opReturnHex);
