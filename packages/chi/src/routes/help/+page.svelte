@@ -72,7 +72,7 @@
 		if (stateValue < 1) {
 			stateStore.set('1');
 		}
-    window.location = $_('whitepaper');
+		window.location = $_('whitepaper');
 		//goto('/whitepaper');
 	};
 
@@ -135,8 +135,6 @@
 	</ul>
 </div>
 
-<!-- autoplay autoplayDuration={4400} -->
-
 {#if browser}
 	{#if !$isLoading}
 		<div class="caption">
@@ -159,7 +157,19 @@
 		<div slot="prev">
 			<!-- -->
 		</div>
-		<div slot="next" />
+		<div slot="next">
+			<!-- autoplay autoplayDuration={4400} -->
+			<div class="button-box">
+				<button
+					class="next-button"
+					disabled={currentPageIndex == pagesCount - 1}
+					on:click={handleNextClick}
+				>
+					<img src={arrow_right_white} />
+				</button>
+			</div>
+		</div>
+
 		<div slot="dots" class="custom-dots">
 			{#each Array(pagesCount) as _, pageIndex (pageIndex)}
 				<CustomDot
@@ -171,15 +181,6 @@
 		</div>
 	</Carousel>
 {/if}
-<div class="button-box">
-	<button
-		class="next-button"
-		disabled={currentPageIndex == pagesCount - 1}
-		on:click={handleNextClick}
-	>
-		<img src={arrow_right_white} />
-	</button>
-</div>
 
 <div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
 <span style="align:right; width: 10px;" on:click={skipState}>
@@ -200,11 +201,11 @@
 	}
 	ul li {
 		padding: 10px;
-    font-weight: 700;
-    align-self: center;
+		font-weight: 700;
+		align-self: center;
 	}
 
-	ul li img{
+	ul li img {
 		min-height: 45px;
 	}
 
@@ -221,6 +222,7 @@
 
 	/* custom dots */
 	.custom-dots {
+    background-color: white;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
@@ -230,10 +232,12 @@
 
 	.button-box {
 		align-self: center;
+		width: 100%;
+		z-index: 100;
 	}
 
 	.caption {
-		min-height: 3ex;
+		height: 6ex;
 		padding: 1ex;
 		text-align: center;
 		font-size: x-large;
@@ -242,10 +246,10 @@
 	}
 
 	.next-button {
-		padding: 50px;
+		padding: 15px;
 		width: max-content;
 		border-color: black;
-		border-radius: 80px;
+		border-radius: 60px;
 		border-width: 2px;
 		background-color: #8dc351;
 		background-image: linear-gradient(
@@ -255,6 +259,9 @@
 			rgba(151, 151, 151, 0)
 		);
 		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+		position: absolute;
+    transform: translate(-110%,-50%);
+    top:  1ex;
 	}
 
 	.next-button:disabled {
