@@ -205,9 +205,9 @@
 		</tr>
 	</table>
 	{#if !contract}
-		<div>
+		<div style="text-align:center; background:white; width:100%; padding:15px;">
 			<a href="{base}/help">
-				<img width="100px" src={help} alt="help" />
+				<img class="flashing"  width="100px" src={help} alt="help" />
 			</a>
 		</div>
 	{/if}
@@ -282,4 +282,15 @@
 	.styled:active {
 		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
 	}
+
+  .flashing {
+		animation: blinker 3s linear infinite;
+	}
+
+  @keyframes blinker {
+		50% {
+			opacity: 0;
+		}
+	}
+  
 </style>

@@ -72,7 +72,7 @@
 		if (stateValue < 1) {
 			stateStore.set('1');
 		}
-    reloadPage();
+		reloadPage();
 		//window.location = $_('whitepaper');
 		//goto('/whitepaper');
 	};
@@ -81,9 +81,9 @@
 		if (stateValue < 2) {
 			stateStore.set('2');
 		}
-    reloadPage();
-    // this could be saved for later 
-    walletIdx
+		reloadPage();
+		// this could be saved for later
+		walletIdx;
 	}
 
 	const updatePage = (p) => {
@@ -164,18 +164,32 @@
 			<!-- -->
 		</div>
 		<div slot="next">
-			<!-- autoplay autoplayDuration={4400} -->
-			<div class="button-box">
-				<button
-					class="next-button"
-					disabled={currentPageIndex == pagesCount - 1}
-					on:click={handleNextClick}
-				>
-					<img src={arrow_right_white} />
-				</button>
-			</div>
+			
+				{#if currentPageIndex == 0}
+        <div class="button-box flashing">
+					<button
+						class="next-button"
+						disabled={currentPageIndex == pagesCount - 1}
+						on:click={handleNextClick}
+					>
+						<img src={arrow_right_white} />
+					</button>
+        </div>
+				{:else}
+        <div class="button-box">
+					<button
+						class="next-button"
+						disabled={currentPageIndex == pagesCount - 1}
+						on:click={handleNextClick}
+					>
+						<img src={arrow_right_white} />
+					</button>
+        </div>
+				{/if}
+		
 		</div>
 
+		<!-- autoplay autoplayDuration={4400} -->
 		<div slot="dots" class="custom-dots">
 			{#each Array(pagesCount) as _, pageIndex (pageIndex)}
 				<CustomDot
@@ -280,5 +294,15 @@
 		align-self: left;
 		font-weight: 700;
 		font-size: larger;
+	}
+
+	.flashing {
+		animation: blinker 3s linear infinite;
+	}
+
+	@keyframes blinker {
+		50% {
+			opacity: 0;
+		}
 	}
 </style>
