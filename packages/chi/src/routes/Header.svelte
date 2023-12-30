@@ -44,7 +44,7 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+			<li class="{(stateValue == 5 || stateValue == 2 || stateValue == 3) ? 'flashing' : ''}" aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
 				<a href="{base}/">
 					<img src={home} alt="home" />
 				</a>
@@ -62,7 +62,7 @@
 						</a>
 					</li>
 				{/if}
-				<li aria-current={$page.url.pathname === '/chart' ? 'page' : undefined}>
+				<li class="{(stateValue == 4) ? 'flashing' : ''}" aria-current={$page.url.pathname === '/chart' ? 'page' : undefined}>
 					<a href="{base}/chart">
 						<img src={chart} alt="chart" />
 					</a>
@@ -183,5 +183,16 @@
 
 	a:hover {
 		color: var(--color-theme-1);
+	}
+
+
+	.flashing {
+		animation: blinker 3s linear infinite;
+	}
+
+	@keyframes blinker {
+		50% {
+			opacity: 0;
+		}
 	}
 </style>

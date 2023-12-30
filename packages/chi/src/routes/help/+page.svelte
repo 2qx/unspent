@@ -113,7 +113,12 @@
 					<img src={whitepaper} /><br />
 				</div>
 			{:else}
-				<a on:click={handleWpClick} target="_blank" href={$_('whitepaper')}>
+				<a
+					class="{(currentPageIndex == 1) ? 'flashing' : ''}"
+					on:click={handleWpClick}
+					target="_blank"
+					href={$_('whitepaper')}
+				>
 					<img src={whitepaper} /><br />
 					BCH
 				</a>
@@ -125,6 +130,7 @@
 				<a
 					href="https://www.paytaca.com/#wallet"
 					target="_blank"
+					class="{(currentPageIndex == 3) ? 'flashing' : ''}"
 					on:click={() => handleWalletClick('paytaca')}
 				>
 					<img src={paytaca} /><br />
@@ -132,7 +138,12 @@
 				</a>
 			</li>
 			<li style="background-color:white;">
-				<a href="https://selene.cash/" target="_blank" on:click={() => handleWalletClick('selene')}>
+				<a
+					class="{(currentPageIndex == 3) ? 'flashing' : ''}"
+					href="https://selene.cash/"
+					target="_blank"
+					on:click={() => handleWalletClick('selene')}
+				>
 					<img src={selene} /><br />
 					Selene
 				</a>
@@ -164,29 +175,15 @@
 			<!-- -->
 		</div>
 		<div slot="next">
-			
-				{#if currentPageIndex == 0}
-        <div class="button-box flashing">
-					<button
-						class="next-button"
-						disabled={currentPageIndex == pagesCount - 1}
-						on:click={handleNextClick}
-					>
-						<img src={arrow_right_white} />
-					</button>
-        </div>
-				{:else}
-        <div class="button-box">
-					<button
-						class="next-button"
-						disabled={currentPageIndex == pagesCount - 1}
-						on:click={handleNextClick}
-					>
-						<img src={arrow_right_white} />
-					</button>
-        </div>
-				{/if}
-		
+			<div class="button-box {(currentPageIndex == 0) ? 'flashing' : ''}">
+				<button
+					class="next-button"
+					disabled={currentPageIndex == pagesCount - 1}
+					on:click={handleNextClick}
+				>
+					<img src={arrow_right_white} />
+				</button>
+			</div>
 		</div>
 
 		<!-- autoplay autoplayDuration={4400} -->
