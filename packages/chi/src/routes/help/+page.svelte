@@ -72,7 +72,8 @@
 		if (stateValue < 1) {
 			stateStore.set('1');
 		}
-		window.location = $_('whitepaper');
+    reloadPage();
+		//window.location = $_('whitepaper');
 		//goto('/whitepaper');
 	};
 
@@ -80,12 +81,9 @@
 		if (stateValue < 2) {
 			stateStore.set('2');
 		}
-		if (walletIdx == 'selene') {
-			window.location = 'https://selene.cash/';
-		}
-		if (walletIdx == 'paytaca') {
-			window.location = 'https://www.paytaca.com/#wallet';
-		}
+    reloadPage();
+    // this could be saved for later 
+    walletIdx
 	}
 
 	const updatePage = (p) => {
@@ -115,21 +113,29 @@
 					<img src={whitepaper} /><br />
 				</div>
 			{:else}
-				<div on:click={handleWpClick}>
+				<a on:click={handleWpClick} target="_blank" href={$_('whitepaper')}>
 					<img src={whitepaper} /><br />
 					BCH
-				</div>
+				</a>
 			{/if}
 		</li>
 
 		{#if (stateValue == 1 && currentPageIndex > 2) || stateValue > 1}
-			<li on:click={() => handleWalletClick('paytaca')} style="background-color:white;">
-				<img src={paytaca} /><br />
-				Paytaca
+			<li style="background-color:white;">
+				<a
+					href="https://www.paytaca.com/#wallet"
+					target="_blank"
+					on:click={() => handleWalletClick('paytaca')}
+				>
+					<img src={paytaca} /><br />
+					Paytaca
+				</a>
 			</li>
-			<li on:click={() => handleWalletClick('selene')} style="background-color:white;">
-				<img src={selene} /><br />
-				Selene
+			<li style="background-color:white;">
+				<a href="https://selene.cash/" target="_blank" on:click={() => handleWalletClick('selene')}>
+					<img src={selene} /><br />
+					Selene
+				</a>
 			</li>
 		{/if}
 	</ul>
@@ -222,12 +228,12 @@
 
 	/* custom dots */
 	.custom-dots {
-    background-color: white;
+		background-color: white;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: center;
-		padding: 0 20px;
+		width: 100%;
 	}
 
 	.button-box {
@@ -260,8 +266,8 @@
 		);
 		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
 		position: absolute;
-    transform: translate(-110%,-50%);
-    top:  1ex;
+		transform: translate(-110%, -50%);
+		top: 1ex;
 	}
 
 	.next-button:disabled {

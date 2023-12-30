@@ -4,8 +4,8 @@
 
 
 <svelte:head>
-	<title>Bitcoin White Paper Webcomic</title>
-	<meta name="description" content="Bitcoin White Paper Webcomic" />
+	<title>The Bitcoin White Paper Webcomic</title>
+	<meta name="description" content="The Bitcoin White Paper Webcomic" />
 </svelte:head>
 <section>
   {#if $isLoading}
@@ -29,6 +29,7 @@
 	<img src="/wp/{$_('locale')}/51-55.jpg" class="img-fluid" />
 	<img src="/wp/{$_('locale')}/56-58.jpg" class="img-fluid" />
   {/if}
+  <a href="https://web.archive.org/web/20100704213649if_/http://www.bitcoin.org:80/bitcoin.pdf">original whitepaper</a>
 </section>
 
 <style>

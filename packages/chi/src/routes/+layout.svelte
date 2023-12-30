@@ -3,8 +3,8 @@
 	import { browser } from '$app/environment';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Header from './Header.svelte';
-  import CopyToClipboard from '$lib/CopyToClipboard.svelte';
-  import { toast } from '@zerodevx/svelte-toast';
+	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { toast } from '@zerodevx/svelte-toast';
 	import './styles.css';
 
 	import { locale, waitLocale, getLocaleFromNavigator, init } from 'svelte-i18n';
@@ -30,24 +30,26 @@
 	<Header bind:currentPage />
 	<SvelteToast />
 	<main>
-			<slot p={currentPage} />
+		<slot p={currentPage} />
 	</main>
-	<footer>  
-    <p>
-      ₿∙ϕ:
-      <a target="_blank" href="https://unspent.app/documentation">docs</a>
-      <a target="_blank" href="https://unspent.app/earn">earn</a>
-      <a target="_blank" href="https://unspent.app/create" >adv</a>  |
-      <a target="_blank" href="https://t.me/unspent_cash" >telegram</a>
-    </p>
-    <CopyToClipboard on:copy={() => toast.push('bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4 📋💚🗸 ')} text="bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4" let:copy>
-      <div class="action">
-        <button on:click={copy}>
-          💚 Support Unspent 💚          
-        </button>
-      </div>
-    </CopyToClipboard>
-  
+	<footer>
+		<p>
+			₿∙ϕ:
+			<a target="_blank" href="https://unspent.app/documentation">docs</a>
+			<a target="_blank" href="https://unspent.app/earn">earn</a>
+			<a target="_blank" href="https://unspent.app/create">adv</a> |
+			<a target="_blank" href="https://t.me/unspent_cash">telegram</a>
+		</p>
+
+		<CopyToClipboard
+			on:copy={() => toast.push('bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4 📋💚🗸 ')}
+			text="bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4"
+			let:copy
+		>
+			<div class="donate">
+				<button on:click={copy}> 💚 support unspent.cash 💚 </button>
+			</div>
+		</CopyToClipboard>
 	</footer>
 </div>
 
@@ -63,11 +65,19 @@
 		display: flex;
 		flex-direction: column;
 		padding: 3px;
-    align-self: center;
+		align-self: center;
 		width: 100%;
 		max-width: 44rem;
 		margin: 0 auto;
 		box-sizing: border-box;
+	}
+
+	.donate button {
+    border-radius: 10px;
+		color: #333a31;
+		font-weight: 800;
+    background-color: rgb(201, 201, 201);
+    font-size: small;
 	}
 
 	footer {
