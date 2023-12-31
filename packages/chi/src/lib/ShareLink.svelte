@@ -50,13 +50,12 @@
 
 	.hitMe {
 		border: 0;
-		line-height: 2.5;
 		padding: 15px;
 		font-size: 1rem;
 		text-align: center;
 		color: #fff;
 		text-shadow: 1px 1px 1px #000;
-		border-radius: 10px;
+		border-radius: 50px;
 		background-color: rgb(178, 134, 207);
 		background-image: linear-gradient(
 			to top left,

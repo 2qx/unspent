@@ -114,14 +114,20 @@
 <section>
 	<table>
 		<tr>
-			<td colspan="4"> <h1>unspent.cash</h1></td>
+      <td style="text-align: center;">
+        <img width="125px" src={banner} />
+      </td>
+			<td colspan="3"> <h1>unspent.cash</h1></td>
 		</tr>
 		<tr>
 			{#if contract}
 				<td style="text-align: center;">
-					<img width="125px" src={banner} />
+					
 				</td>
-				<td colspan="3">
+        <td>
+          <img src={lock_clock} alt="lock_clock" />
+        </td>
+				<td colspan="2">
 					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
 						<div style="max-width: 95%;" on:click={bumpLevel} class="contract-div">
 							<button class="styled" on:click={copy}>
@@ -132,7 +138,6 @@
 				</td>
 			{:else}
 				<td style="text-align: center;">
-					<img width="125px" src={banner} />
 				</td>
 				<td colspan="3"><b> {$_('create')}</b></td>
 			{/if}
@@ -141,7 +146,7 @@
 			{#if balance}
 				<td />
 				<td style="width:30px;">
-					<img src={lock_clock} alt="lock_clock" />
+
 				</td>
 				<td colspan="2">
 					<b>{balance.toLocaleString()}</b> sats <br />
@@ -233,6 +238,7 @@
 
 	table {
 		background-color: white;
+    border-radius: 60px;
 	}
 	table tr td {
 		justify-content: space-around;

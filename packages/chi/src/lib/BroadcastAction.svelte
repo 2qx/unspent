@@ -124,7 +124,7 @@
 		text-align: center;
 		color: #fff;
 		text-shadow: 1px 1px 1px #000;
-		border-radius: 10px;
+		border-radius: 50px;
 		background-color: rgb(220, 132, 0);
 		background-image: linear-gradient(
 			to top left,
