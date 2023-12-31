@@ -152,8 +152,7 @@
 				</td>
 			{:else}
 				<td />
-				<td style="width:30px;">
-				</td>
+				<td style="width:30px;" />
 				<td colspan="2" />
 			{/if}
 		</tr>
@@ -166,14 +165,12 @@
 				<td>
 					<p>
 						<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
-          </p>
+					</p>
 					<p>
 						<b>11.8% {$_('year')}</b>
 					</p>
 				</td>
-				<td>
-					
-				</td>
+				<td />
 			</tr>
 		{/if}
 		<tr>
@@ -200,17 +197,19 @@
 					<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
 				</td>
 			{:else}
-				<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
+				<td style="line-break:auto;" colspan="3">{$_('receive')}</td>
 			{/if}
 		</tr>
+		{#if !contract && !stateValue}
+			<tr>
+				<td colspan="4" style="text-align:center; padding:50px;">
+					<a href="{base}/help">
+						<img class={!stateValue ? 'flashing' : ''} width="100px" src={help} alt="help" />
+					</a>
+				</td>
+			</tr>
+		{/if}
 	</table>
-	{#if !contract}
-		<div style="text-align:center; background:white; width:100%; padding:15px;">
-			<a href="{base}/help">
-				<img class="flashing"  width="100px" src={help} alt="help" />
-			</a>
-		</div>
-	{/if}
 </section>
 
 <style>
@@ -269,10 +268,8 @@
 		border-radius: 10px;
 		background-color: #fff3e2;
 		font-weight: 700;
-    padding: 5px;
-    box-shadow:
-    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
-    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+		padding: 5px;
+		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
 	}
 
 	.styled:hover {
@@ -283,14 +280,13 @@
 		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
 	}
 
-  .flashing {
+	.flashing {
 		animation: blinker 3s linear infinite;
 	}
 
-  @keyframes blinker {
+	@keyframes blinker {
 		50% {
-			opacity: 0;
+			opacity: 0.2;
 		}
 	}
-  
 </style>

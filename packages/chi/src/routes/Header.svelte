@@ -44,7 +44,7 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li class="{(stateValue == 5 || stateValue == 2 || stateValue == 3) ? 'flashing' : ''}" aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+			<li  aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
 				<a href="{base}/">
 					<img src={home} alt="home" />
 				</a>
@@ -192,7 +192,7 @@
 
 	@keyframes blinker {
 		50% {
-			opacity: 0;
+			opacity: 0.2;
 		}
 	}
 </style>

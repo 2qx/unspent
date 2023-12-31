@@ -74,7 +74,7 @@
 		}
 		reloadPage();
 		//window.location = $_('whitepaper');
-		//goto('/whitepaper');
+		//goto('/bitcoin.jpg');
 	};
 
 	function handleWalletClick(walletIdx) {
@@ -299,7 +299,7 @@
 
 	@keyframes blinker {
 		50% {
-			opacity: 0;
+			opacity: 0.2;
 		}
 	}
 </style>
