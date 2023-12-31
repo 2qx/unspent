@@ -96,12 +96,13 @@
 		}
 	});
 
-	const handleCopyClick = async () => {
-		if (stateValue > 4) {
-			if (stateValue < 6) {
-				stateStore.set('6');
-			}
+  const bumpLevel = async () => {
+		if (stateValue < 6) {
+			stateStore.set('6');
 		}
+	};
+
+	const handleCopyClick = async () => {
 		toast.push('📋🗸');
 	};
 </script>
@@ -122,7 +123,7 @@
 				</td>
 				<td colspan="3">
 					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-						<div style="max-width: 95%;" class="contract-div">
+						<div style="max-width: 95%;" on:click={bumpLevel} class="contract-div">
 							<button class="styled" on:click={copy}>
 								{contract.getAddress()}
 							</button>
