@@ -8574,6 +8574,11 @@ globrex@^0.1.2:
   resolved "https://registry.yarnpkg.com/globrex/-/globrex-0.1.2.tgz#dd5d9ec826232730cd6793a5e33a9302985e6098"
   integrity sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==
 
+google-translate-api-x@^10.6.7:
+  version "10.6.7"
+  resolved "https://registry.yarnpkg.com/google-translate-api-x/-/google-translate-api-x-10.6.7.tgz#8d680f9a464949edb1ebc62304f7365569019f7e"
+  integrity sha512-xw20Kjv5u84Q3FwKTk4CU1PZrYoOsRcKq0z7J3a98aIcscOCZnW3T43Rb/SOl/JPUj/QYyjJiRW9G+MQhxUnAw==
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2, graceful-fs@^4.2.4, graceful-fs@^4.2.9:
   version "4.2.10"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
