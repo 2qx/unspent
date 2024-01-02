@@ -15,9 +15,6 @@
 		// init on client side only
 		// don't put this inside `load`, otherwise it will gets executed every time you changed route on client side
 		let locale = getLocaleFromNavigator();
-		if (locale.includes('-')) {
-			locale = locale.split('-').shift();
-		}
 
 		init({
 			fallbackLocale: 'en',

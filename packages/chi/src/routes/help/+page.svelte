@@ -88,7 +88,6 @@
 
 	const updatePage = (p) => {
 		currentPageIndex = p;
-		console.log(currentPageIndex, pagesCount);
 		pageStore.set(p);
 	};
 

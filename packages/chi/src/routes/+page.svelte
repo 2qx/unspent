@@ -7,7 +7,7 @@
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import month from '$lib/images/month.svg';
-	import { _ } from 'svelte-i18n';
+  import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -112,6 +112,9 @@
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <section>
+  {#if $isLoading}
+  loading...
+  {:else}
 	<table>
 		<tr>
       <td style="text-align: center;">
@@ -216,6 +219,7 @@
 			</tr>
 		{/if}
 	</table>
+  {/if}
 </section>
 
 <style>
