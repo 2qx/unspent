@@ -32,5 +32,6 @@
   "receive": "コインを受信するアドレスを選択してください",
   "month": "月",
   "year": "年",
-  "locale": "ja"
+  "locale": "ja",
+  "whitepaper":"https://web.archive.org/web/20200217125719/https://www.bitcoin.jp/what-is-bitcoin/bitcoin-whitepaper-comic/"
 }

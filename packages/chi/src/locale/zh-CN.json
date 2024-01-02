@@ -32,5 +32,6 @@
   "create": "创建一个新的永久性",
   "receive": "选择接收硬币的地址",
   "spendable": "可以花",
-  "locale": "zh-CN"
+  "locale": "zh",
+  "whitepaper": "https://web.archive.org/web/20230315051200/https://whitepaper.coinspice.io/cn"
 }
