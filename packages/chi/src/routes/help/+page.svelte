@@ -116,7 +116,7 @@
 					class="{(currentPageIndex == 1) ? 'flashing' : ''}"
 					on:click={handleWpClick}
 					target="_blank"
-					href={$_('whitepaper')}
+					href={$_('bitcoin.jpg')}
 				>
 					<img src={whitepaper} /><br />
 					BCH
