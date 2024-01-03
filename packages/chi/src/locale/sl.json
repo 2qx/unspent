@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "receive": "Izberite naslov za prejemanje kovancev z",
+  "ok": "v redu",
+  "spendable": "porabo",
   "year": "leto",
   "month": "mesec",
-  "ok": "v redu",
-  "create": "Ustvari novo večnost",
-  "spendable": "porabo",
+  "create": "Ustvari novo pogodbo o večnosti",
   "locale": "sl"
 }

@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "month": "Monato",
-  "create": "Kreu novan eternecon",
-  "year": "Jaro",
   "receive": "Elektu la adreson por ricevi monerojn kun",
-  "ok": "Bone",
   "spendable": "elspezebla",
+  "ok": "Bone",
+  "month": "Monato",
+  "year": "Jaro",
+  "create": "Krei novan eternan kontrakton",
   "locale": "eo"
 }

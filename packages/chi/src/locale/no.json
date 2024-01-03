@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "spendable": "brukbar",
-  "ok": "Greit",
-  "receive": "Velg adressen for å motta mynter med",
-  "create": "Skape en ny evighet",
-  "month": "måned",
   "year": "år",
+  "month": "måned",
+  "receive": "Velg adressen for å motta mynter med",
+  "ok": "Greit",
+  "create": "Opprett en ny evigvarende kontrakt",
   "locale": "no"
 }

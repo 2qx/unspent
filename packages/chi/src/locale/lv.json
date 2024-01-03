@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "spendable": "iztērējams",
-  "ok": "Labi",
   "month": "mēnesis",
-  "create": "Izveidojiet jaunu mūžību",
   "year": "gads",
+  "ok": "Labi",
   "receive": "Izvēlieties adresi, lai saņemtu monētas ar",
+  "create": "Izveidojiet jaunu mūžības līgumu",
   "locale": "lv"
 }

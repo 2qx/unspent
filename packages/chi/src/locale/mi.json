@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "spendable": "whakapau",
-  "create": "Waihangahia he taapiri hou",
-  "receive": "Whiriwhiria te wahitau kia whiwhi moni me",
-  "ok": "Pai",
   "month": "marama",
+  "receive": "Whiriwhiria te wahitau kia whiwhi moni me",
   "year": "tau",
+  "ok": "Pai",
+  "create": "Waihangahia he kirimana hakari hou",
   "locale": "mi"
 }

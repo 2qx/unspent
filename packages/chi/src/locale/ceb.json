@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "create": "Paghimo usa ka Bag-ong Perpetuity",
-  "spendable": "magamit",
+  "year": "tuig",
   "ok": "Dili",
   "receive": "Pilia ang adres aron makadawat mga sensilyo",
   "month": "buwan",
-  "year": "tuig",
+  "spendable": "magamit",
+  "create": "Paghimo usa ka bag-ong kontrata sa Perpetuity",
   "locale": "ceb"
 }

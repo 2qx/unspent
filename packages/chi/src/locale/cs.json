@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Vyberte adresu, jak přijímat mince",
-  "ok": "dobře",
-  "spendable": "utratit",
   "year": "rok",
-  "create": "Vytvořte novou věčnost",
+  "spendable": "utratit",
+  "receive": "Vyberte adresu, jak přijímat mince",
   "month": "Měsíc",
+  "ok": "dobře",
+  "create": "Vytvořte novou smlouvu na trvalost",
   "locale": "cs"
 }

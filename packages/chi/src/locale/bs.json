@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Odaberite adresu za primanje kovanica sa",
-  "ok": "U redu",
   "month": "mjesec",
-  "spendable": "nepošten",
+  "ok": "U redu",
   "year": "godine",
-  "create": "Stvoriti novu vježbu",
+  "spendable": "nepošten",
+  "receive": "Odaberite adresu za primanje kovanica sa",
+  "create": "Stvorite novi vječni ugovor",
   "locale": "bs"
 }

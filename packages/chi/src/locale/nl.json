@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "spendable": "uithoudbaar",
-  "ok": "Oké",
-  "receive": "Kies het adres om munten mee te ontvangen",
   "year": "jaar",
+  "receive": "Kies het adres om munten mee te ontvangen",
   "month": "maand",
-  "create": "Creëer een nieuwe eeuwigheid",
+  "ok": "Oké",
+  "create": "Een nieuw eeuwigheidscontract creëren",
   "locale": "nl"
 }

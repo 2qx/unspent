@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Tamam",
-  "create": "Yeni Bir Süreklilik Oluşturun",
-  "year": "yıl",
   "spendable": "harcanabilir",
-  "receive": "Para almak için adresi seçin",
+  "ok": "Tamam",
   "month": "ay",
+  "receive": "Para almak için adresi seçin",
+  "year": "yıl",
+  "create": "Yeni Bir Süreklilik Sözleşmesi Oluşturun",
   "locale": "tr"
 }

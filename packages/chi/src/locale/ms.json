@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
+  "spendable": "boleh dibelanjakan",
+  "receive": "Pilih alamat untuk menerima duit syiling dengan",
   "month": "bulan",
   "year": "tahun",
   "ok": "baik",
-  "receive": "Pilih alamat untuk menerima duit syiling dengan",
-  "create": "Buat kesamaan baru",
-  "spendable": "boleh dibelanjakan",
+  "create": "Buat kontrak berterusan baru",
   "locale": "ms"
 }

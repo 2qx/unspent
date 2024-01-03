@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
+  "spendable": "Inaweza kutumika",
+  "ok": "Sawa",
+  "receive": "Chagua anwani kupokea sarafu na",
   "year": "mwaka",
   "month": "mwezi",
-  "ok": "Sawa",
-  "spendable": "Inaweza kutumika",
-  "receive": "Chagua anwani kupokea sarafu na",
-  "create": "Unda uboreshaji mpya",
+  "create": "Unda mkataba mpya wa kudumu",
   "locale": "sw"
 }

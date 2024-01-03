@@ -27,11 +27,10 @@
   "25": "",
   "26": "",
   "spendable": "使いやすい",
-  "create": "新しい永続性を作成します",
-  "ok": "わかった",
   "receive": "コインを受信するアドレスを選択してください",
-  "month": "月",
   "year": "年",
-  "locale": "ja",
-  "bitcoin.jpg":"https://web.archive.org/web/20200217125719/https://www.bitcoin.jp/what-is-bitcoin/bitcoin-whitepaper-comic/"
+  "month": "月",
+  "ok": "わかった",
+  "create": "新しい永久契約を作成します",
+  "locale": "ja"
 }

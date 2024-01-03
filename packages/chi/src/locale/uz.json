@@ -28,9 +28,9 @@
   "26": "",
   "ok": "xop",
   "spendable": "sarflanadigan",
-  "year": "yil",
-  "create": "Yangi abadiylikni yarating",
-  "month": "oy",
   "receive": "Tangalarni olish uchun manzilni tanlang",
+  "month": "oy",
+  "year": "yil",
+  "create": "Yangi doimiylik shartnomasini yarating",
   "locale": "uz"
 }

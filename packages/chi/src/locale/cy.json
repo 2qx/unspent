@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "month": "misoedd",
-  "year": "blwyddyn",
-  "ok": "iawn",
   "receive": "Dewiswch y cyfeiriad i dderbyn darnau arian gyda",
-  "create": "Creu Perpetuity newydd",
+  "ok": "iawn",
   "spendable": "ngwariadwy",
+  "year": "blwyddyn",
+  "create": "Creu contract peryglus newydd",
   "locale": "cy"
 }

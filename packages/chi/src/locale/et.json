@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "kulutatav",
-  "ok": "Okei",
-  "year": "aasta",
-  "create": "Looge uus püsivus",
-  "month": "kuu",
   "receive": "Valige müntide vastuvõtmiseks aadress",
+  "year": "aasta",
+  "spendable": "kulutatav",
+  "month": "kuu",
+  "ok": "Okei",
+  "create": "Looge uus püsivusleping",
   "locale": "et"
 }

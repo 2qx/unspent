@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "year": "năm",
-  "ok": "Đồng ý",
-  "create": "Tạo ra một sự vĩnh viễn mới",
-  "month": "tháng",
   "spendable": "có thể chi tiêu",
   "receive": "Chọn địa chỉ để nhận tiền với",
+  "ok": "Đồng ý",
+  "month": "tháng",
+  "create": "Tạo một hợp đồng vĩnh viễn mới",
+  "year": "năm",
   "locale": "vi"
 }

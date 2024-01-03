@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "month": "lună",
-  "create": "Creați o nouă perpetuitate",
-  "spendable": "cheltuibil",
-  "ok": "Bine",
   "receive": "Alegeți adresa pentru a primi monede cu",
+  "ok": "Bine",
   "year": "an",
+  "spendable": "cheltuibil",
+  "month": "lună",
+  "create": "Creați un nou contract de perpetuitate",
   "locale": "ro"
 }

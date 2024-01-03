@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "gastable",
   "receive": "Elija la dirección para recibir monedas con",
-  "year": "año",
-  "create": "Crear una nueva perpetuidad",
-  "month": "mes",
   "ok": "Bueno",
+  "spendable": "gastable",
+  "month": "mes",
+  "year": "año",
+  "create": "Crear un nuevo contrato de perpetuidad",
   "locale": "es"
 }

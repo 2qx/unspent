@@ -64,12 +64,18 @@
 		}
 	};
 
+  function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
 	const broadcast = async () => {
 		try {
 			setProgress();
 			executedSuccess = false;
 			let options = { network: 'mainnet', version: 2 };
-			let r = new Record(undefined, undefined, options);
+      let index = randomInteger(0,3)
+			let r = new Record(undefined, index, options);
 			txid = await r.broadcast(opReturnHex);
 			isPublished = true;
 			executedSuccess = true;

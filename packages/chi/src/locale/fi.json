@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
+  "spendable": "kuluttaa",
   "month": "kuukausi",
   "receive": "Valitse osoite vastaanottaa kolikoita",
-  "spendable": "kuluttaa",
-  "ok": "Okei",
   "year": "vuosi",
-  "create": "Luo uusi pysyvyys",
+  "ok": "Okei",
+  "create": "Luo uusi pysyvyyssopimus",
   "locale": "fi"
 }

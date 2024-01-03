@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "ok": "Okay",
-  "spendable": "spandeerbaar",
   "receive": "Kies die adres om muntstukke te ontvang",
-  "create": "Skep 'n nuwe ewigheid",
-  "year": "jaar",
   "month": "maand",
+  "year": "jaar",
+  "spendable": "spandeerbaar",
+  "create": "Skep 'n nuwe ewigheidskontrak",
   "locale": "af"
 }

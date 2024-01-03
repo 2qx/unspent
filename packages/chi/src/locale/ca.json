@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Bé",
+  "receive": "Trieu l'adreça per rebre monedes",
   "spendable": "gastable",
+  "ok": "Bé",
   "month": "mes",
   "year": "curs",
-  "receive": "Trieu l'adreça per rebre monedes",
-  "create": "Creeu una nova perpetuitat",
+  "create": "Creeu un nou contracte perpetuitat",
   "locale": "ca"
 }

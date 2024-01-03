@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "create": "Buaniúlacht nua a chruthú",
   "receive": "Roghnaigh an seoladh chun boinn a fháil le",
-  "ok": "ceart go leor",
-  "month": "mí",
   "spendable": "inúsáidte",
+  "month": "mí",
+  "ok": "ceart go leor",
   "year": "bliain",
+  "create": "Conradh suthaineachta nua a chruthú",
   "locale": "ga"
 }

@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "year": "ár",
-  "month": "Mánuður",
-  "ok": "allt í lagi",
   "spendable": "eytt",
   "receive": "Veldu heimilisfang til að fá mynt með",
-  "create": "Búðu til nýtt ævarandi",
+  "month": "Mánuður",
+  "year": "ár",
+  "ok": "allt í lagi",
+  "create": "Búðu til nýjan ævarandi samning",
   "locale": "is"
 }

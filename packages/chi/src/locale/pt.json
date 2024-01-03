@@ -27,10 +27,10 @@
   "25": "",
   "26": "",
   "ok": "OK",
-  "spendable": "gastável",
   "receive": "Escolha o endereço para receber moedas com",
-  "create": "Crie uma nova perpetuidade",
-  "month": "mês",
+  "spendable": "gastável",
   "year": "ano",
+  "month": "mês",
+  "create": "Crie um novo contrato de perpetuidade",
   "locale": "pt"
 }

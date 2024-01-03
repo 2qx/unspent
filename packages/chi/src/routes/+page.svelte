@@ -118,7 +118,7 @@
 	<table>
 		<tr>
       <td style="text-align: center;">
-        <img width="125px" src={banner} />
+        <img width="125px" height="125px" src={banner} />
       </td>
 			<td colspan="3"> <h1>unspent.cash</h1></td>
 		</tr>
@@ -260,7 +260,7 @@
 	h1 {
 		width: 100%;
 		font-weight: 900;
-		color: #d99b22;
+		color: #5c4007;
 	}
 
 	textarea {

@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Hlawula adirese leswaku u kuma mali ya nsimbi leyi nga ni .",
-  "ok": "Swi lulamile",
   "spendable": "Ku tirhisiwa ka mali .",
-  "create": "Endla perpetuity leyintshwa .",
-  "year": "lembe",
   "month": "n'hweti",
+  "year": "lembe",
+  "ok": "Swi lulamile",
+  "receive": "Hlawula adirese leswaku u kuma mali ya nsimbi leyi nga ni .",
+  "create": "Ku tumbuluxa kontiraka leyintshwa ya perpetuity .",
   "locale": "ts"
 }

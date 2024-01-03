@@ -28,9 +28,9 @@
   "26": "",
   "receive": "Välj adressen för att ta emot mynt med",
   "month": "månad",
-  "spendable": "tillbringande",
-  "create": "Skapa en ny evighet",
   "year": "år",
   "ok": "Okej",
+  "spendable": "tillbringande",
+  "create": "Skapa ett nytt evighetskontrakt",
   "locale": "sv"
 }

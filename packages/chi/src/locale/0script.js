@@ -4,15 +4,6 @@ import  translate from 'google-translate-api-x';
 import { languages } from 'google-translate-api-x';
 import en from './0en.json' assert { type: "json" };
 
-// "am", "ar", "az",  "bg", "bn", "bs", "ca", "cs", "da", "de", "el", "eo", "es", "et", "eu", "fa", "fi", 
-// "fr",  "ga",  "gl",
-// "gu",  "he", "hi", "hr", "hu", "it", "ja", "ka", "kk", "km", "ko", "la", "lt", "lv", "mg", "ml", "mn", 
-
-// "es_CL", "es_CO", "es_DO", "es_SV", "es_VE", "fil", "fr_CM", "fr_LU", "ga_IE", "gl_ES","hak","nb", 
-// "pt_BR", "sr@ijekavianlatin", "sr@latin","uz@Cyrl", "uz@Latn",  "yue", "zh-Hans", "zh-Hant", "zh_HK", "zh_TW"
-
-//let locales = [   "ne", "nl", "pa", "pl", "pt", "ro", "ru", "si", "sk", "sl", "sr", "sv", "ta", "te", "tk", "tl", "tr", "uk", "ur", "uz",  "zh", ];
-//console.log(JSON.stringify(languages))
 let locales = Object.keys(languages)
 
 async function translateLocale(localeTag) {
@@ -23,6 +14,21 @@ async function translateLocale(localeTag) {
     locale[key] = res[key].text
   }
   locale['locale'] = localeTag
+
+  if(localeTag == "he" || localeTag =="ar"){
+    locale['direction'] = "rtl"
+  }
+
+  if(localeTag == "zh" || localeTag =="zh-CN"){
+    locale['bitcoin.jpg'] = "https://web.archive.org/web/20230315051200/https://whitepaper.coinspice.io/cn"
+  }
+  if(localeTag == "jp"){
+    locale['bitcoin.jpg'] =  "https://web.archive.org/web/20200217125719/https://www.bitcoin.jp/what-is-bitcoin/bitcoin-whitepaper-comic/"
+  }
+  if(localeTag == "en"){
+    locale['bitcoin.jpg'] =  "https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"
+    locale['direction'] = "ltr"
+  }
 
   writeFile(localeTag + '.json', JSON.stringify(locale, null, 2), (error) => {
     if (error) {

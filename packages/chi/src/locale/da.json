@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "create": "Opret en ny evighed",
-  "receive": "Vælg den adresse, der skal modtages mønter med",
   "spendable": "Udgiftelig",
-  "month": "måned",
+  "receive": "Vælg den adresse, der skal modtages mønter med",
   "ok": "okay",
+  "month": "måned",
   "year": "år",
+  "create": "Opret en ny evighedskontrakt",
   "locale": "da"
 }

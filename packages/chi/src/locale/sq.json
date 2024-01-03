@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Mirë",
-  "receive": "Zgjidhni adresën për të marrë monedha me",
-  "spendable": "i pakalueshëm",
-  "create": "Krijoni një përjetësi të re",
-  "month": "muaj",
   "year": "vit",
+  "ok": "Mirë",
+  "spendable": "i pakalueshëm",
+  "receive": "Zgjidhni adresën për të marrë monedha me",
+  "month": "muaj",
+  "create": "Krijoni një kontratë të re të përjetësisë",
   "locale": "sq"
 }

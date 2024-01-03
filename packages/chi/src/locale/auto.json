@@ -26,13 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Choose the address to receive coins with",
-  "year": "year",
   "spendable": "spendable",
   "month": "month",
+  "year": "year",
+  "receive": "Choose the address to receive coins with",
   "ok": "Okay",
   "create": "Create a new perpetuity contract",
-  "locale": "en",
-  "bitcoin.jpg": "https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/",
-  "direction": "ltr"
+  "locale": "auto"
 }

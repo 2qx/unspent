@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "derbas kirin",
-  "create": "Perwestek nû biafirînin",
-  "ok": "Baş",
   "year": "sal",
-  "receive": "Navnîşa hilbijêrin da ku hûn coinan bistînin",
   "month": "meh",
+  "ok": "Baş",
+  "receive": "Navnîşa hilbijêrin da ku hûn coinan bistînin",
+  "spendable": "derbas kirin",
+  "create": "Peymana pejirandina nû ava bikin",
   "locale": "ku"
 }

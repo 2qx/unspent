@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "create": "Crea unha nova perpetuidade",
+  "spendable": "gastable",
+  "month": "mes",
+  "year": "ano",
   "ok": "Vale",
   "receive": "Escolla o enderezo para recibir moedas con",
-  "year": "ano",
-  "month": "mes",
-  "spendable": "gastable",
+  "create": "Crea un novo contrato de perpetuidade",
   "locale": "gl"
 }

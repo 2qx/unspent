@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "Wydawane",
-  "year": "rok",
-  "month": "miesiąc",
-  "receive": "Wybierz adres, aby otrzymywać monety",
-  "create": "Utwórz nową wieczność",
   "ok": "Dobra",
+  "month": "miesiąc",
+  "year": "rok",
+  "receive": "Wybierz adres, aby otrzymywać monety",
+  "create": "Utwórz nową umowę na wieczność",
+  "spendable": "Wydawane",
   "locale": "pl"
 }

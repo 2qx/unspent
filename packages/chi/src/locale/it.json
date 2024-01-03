@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Va bene",
-  "spendable": "spendibile",
-  "create": "Crea una nuova perpetuità",
   "receive": "Scegli l'indirizzo per ricevere monete con",
-  "month": "mese",
+  "ok": "Va bene",
   "year": "anno",
+  "month": "mese",
+  "spendable": "spendibile",
+  "create": "Crea un nuovo contratto perpetuo",
   "locale": "it"
 }

@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "create": "Dala ukwenziwa okusha",
-  "ok": "Kulungile",
-  "receive": "Khetha ikheli ukuze uthole izinhlamvu zemali nge",
   "spendable": "-yekela",
+  "receive": "Khetha ikheli ukuze uthole izinhlamvu zemali nge",
   "month": "inyanga",
+  "ok": "Kulungile",
   "year": "unyaka",
+  "create": "Dala inkontileka entsha yokuqina",
   "locale": "zu"
 }

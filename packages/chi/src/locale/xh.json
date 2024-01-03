@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "create": "Yenza intshabalalo entsha",
-  "ok": "Kulungile",
-  "spendable": "ichithe",
-  "month": "inyanga",
-  "year": "unyaka",
   "receive": "Khetha idilesi yokufumana iingqekembe zemali",
+  "spendable": "ichithe",
+  "year": "unyaka",
+  "month": "inyanga",
+  "ok": "Kulungile",
+  "create": "Yenza ikhontrakthi entsha yokwenzeka",
   "locale": "xh"
 }

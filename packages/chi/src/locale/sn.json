@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "zvinoshandiswa",
-  "create": "Gadzira hutsva hutsva",
-  "receive": "Sarudza kero kuti ugamuchire mari ne",
+  "ok": "Zvakanaka",
   "year": "gore",
   "month": "mwedzi",
-  "ok": "Zvakanaka",
+  "spendable": "zvinoshandiswa",
+  "receive": "Sarudza kero kuti ugamuchire mari ne",
+  "create": "Gadzira chibvumirano chitsva chesimba",
   "locale": "sn"
 }

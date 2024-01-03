@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Sige",
-  "create": "Lumikha ng isang bagong magpakailanman",
-  "year": "taon",
-  "spendable": "gastusin",
   "month": "Buwan",
+  "spendable": "gastusin",
+  "year": "taon",
+  "ok": "Sige",
   "receive": "Piliin ang address upang makatanggap ng mga barya",
+  "create": "Lumikha ng isang bagong kontrata ng Perpetuity",
   "locale": "tl"
 }

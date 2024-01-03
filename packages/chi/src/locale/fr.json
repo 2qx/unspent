@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "year": "année",
-  "ok": "D'accord",
-  "create": "Créer une nouvelle perpétuité",
   "receive": "Choisissez l'adresse pour recevoir des pièces avec",
-  "spendable": "dépensable",
+  "year": "année",
   "month": "mois",
+  "ok": "D'accord",
+  "spendable": "dépensable",
+  "create": "Créer un nouveau contrat de perpétuité",
   "locale": "fr"
 }

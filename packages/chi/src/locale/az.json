@@ -26,11 +26,11 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "yüklü",
-  "create": "Yeni bir əbədi yaradın",
-  "ok": "Tamam",
-  "receive": "İlə pul almaq üçün ünvanı seçin",
-  "month": "ay",
   "year": "il",
+  "receive": "İlə pul almaq üçün ünvanı seçin",
+  "spendable": "yüklü",
+  "ok": "Tamam",
+  "month": "ay",
+  "create": "Yeni bir əbədi müqavilə yaradın",
   "locale": "az"
 }
