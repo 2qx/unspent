@@ -104,104 +104,111 @@
 	};
 </script>
 
-<div id="book">
-	<ul>
-		<li>
-			{#if $isLoading}
-				<div on:click={handleWpClick}>
-					<img src={whitepaper} /><br />
-				</div>
-			{:else}
-				<a
-					class="{(currentPageIndex == 1) ? 'flashing' : ''}"
-					on:click={handleWpClick}
-					target="_blank"
-					href={$_('bitcoin.jpg')}
-				>
-					<img src={whitepaper} /><br />
-					BCH
-				</a>
-			{/if}
-		</li>
+<svelte:head>
+	<title>Unspent Cash</title>
+	<meta name="description" content="Unspent Cash" />
+</svelte:head>
+<section>
+  <div id="book">
+    <ul>
+      <li>
+        {#if $isLoading}
+          <div on:click={handleWpClick}>
+            <img src={whitepaper} /><br />
+          </div>
+        {:else}
+          <a
+            class="{(currentPageIndex == 1) ? 'flashing' : ''}"
+            on:click={handleWpClick}
+            target="_blank"
+            href={$_('bitcoin.jpg')}
+          >
+            <img src={whitepaper} /><br />
+            BCH
+          </a>
+        {/if}
+      </li>
+  
+      {#if (stateValue == 1 && currentPageIndex > 2) || stateValue > 1}
+        <li style="background-color:white;">
+          <a
+            href="https://www.paytaca.com/#wallet"
+            target="_blank"
+            class="{(currentPageIndex == 3) ? 'flashing' : ''}"
+            on:click={() => handleWalletClick('paytaca')}
+          >
+            <img src={paytaca} /><br />
+            Paytaca
+          </a>
+        </li>
+        <li style="background-color:white;">
+          <a
+            class="{(currentPageIndex == 3) ? 'flashing' : ''}"
+            href="https://selene.cash/"
+            target="_blank"
+            on:click={() => handleWalletClick('selene')}
+          >
+            <img src={selene} /><br />
+            Selene
+          </a>
+        </li>
+      {/if}
+    </ul>
+  </div>
+  
+  {#if browser}
+    {#if !$isLoading}
+      <div class="caption" dir="{$_('direction')}">
+        {$_(String(currentPageIndex))}
+      </div>
+    {/if}
+    <Carousel
+      initialPageIndex={currentPageIndex}
+      infinite={false}
+      timingFunction={'linear'}
+      bind:this={carousel}
+      on:pageChange={(event) => updatePage(event.detail)}
+    >
+      {#each pages as page}
+        <div id="book">
+          <img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
+        </div>
+      {/each}
+  
+      <div slot="prev">
+        <!-- -->
+      </div>
+      <div slot="next">
+        <div class="button-box {(currentPageIndex == 0) ? 'flashing' : ''}">
+          <button
+            class="next-button"
+            disabled={currentPageIndex == pagesCount - 1}
+            on:click={handleNextClick}
+          >
+            <img src={arrow_right_white} />
+          </button>
+        </div>
+      </div>
+  
+      <!-- autoplay autoplayDuration={4400} -->
+      <div slot="dots" class="custom-dots">
+        {#each Array(pagesCount) as _, pageIndex (pageIndex)}
+          <CustomDot
+            symbol={pageIndex + 1}
+            active={currentPageIndex === pageIndex}
+            on:click={() => showPage(pageIndex)}
+          />
+        {/each}
+      </div>
+    </Carousel>
+  {/if}
+  
+  <div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
+  <span style="align:right; width: 10px;" on:click={skipState}>
+    <img src={arrow_step} />
+  </span>
+</section>
 
-		{#if (stateValue == 1 && currentPageIndex > 2) || stateValue > 1}
-			<li style="background-color:white;">
-				<a
-					href="https://www.paytaca.com/#wallet"
-					target="_blank"
-					class="{(currentPageIndex == 3) ? 'flashing' : ''}"
-					on:click={() => handleWalletClick('paytaca')}
-				>
-					<img src={paytaca} /><br />
-					Paytaca
-				</a>
-			</li>
-			<li style="background-color:white;">
-				<a
-					class="{(currentPageIndex == 3) ? 'flashing' : ''}"
-					href="https://selene.cash/"
-					target="_blank"
-					on:click={() => handleWalletClick('selene')}
-				>
-					<img src={selene} /><br />
-					Selene
-				</a>
-			</li>
-		{/if}
-	</ul>
-</div>
-
-{#if browser}
-	{#if !$isLoading}
-		<div class="caption" dir="{$_('direction')}">
-			{$_(String(currentPageIndex))}
-		</div>
-	{/if}
-	<Carousel
-		initialPageIndex={currentPageIndex}
-		infinite={false}
-		timingFunction={'linear'}
-		bind:this={carousel}
-		on:pageChange={(event) => updatePage(event.detail)}
-	>
-		{#each pages as page}
-			<div id="book">
-				<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
-			</div>
-		{/each}
-
-		<div slot="prev">
-			<!-- -->
-		</div>
-		<div slot="next">
-			<div class="button-box {(currentPageIndex == 0) ? 'flashing' : ''}">
-				<button
-					class="next-button"
-					disabled={currentPageIndex == pagesCount - 1}
-					on:click={handleNextClick}
-				>
-					<img src={arrow_right_white} />
-				</button>
-			</div>
-		</div>
-
-		<!-- autoplay autoplayDuration={4400} -->
-		<div slot="dots" class="custom-dots">
-			{#each Array(pagesCount) as _, pageIndex (pageIndex)}
-				<CustomDot
-					symbol={pageIndex + 1}
-					active={currentPageIndex === pageIndex}
-					on:click={() => showPage(pageIndex)}
-				/>
-			{/each}
-		</div>
-	</Carousel>
-{/if}
-
-<div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
-<span style="align:right; width: 10px;" on:click={skipState}>
-	<img src={arrow_step} />
-</span>
 
 <style>
 	#book {
