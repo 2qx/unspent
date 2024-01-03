@@ -33,5 +33,6 @@
   "create": "Create a new perpetuity",
   "receive": "Choose the address to receive coins with",
   "locale": "en",
+  "direction":"ltr",
   "bitcoin.jpg": "https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/"
 }

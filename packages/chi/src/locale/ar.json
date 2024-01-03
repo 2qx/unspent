@@ -32,5 +32,6 @@
   "receive": "اختر العنوان لتلقي العملات المعدنية مع",
   "month": "شهر",
   "year": "سنة",
-  "locale": "ar"
+  "locale": "ar",
+  "direction":"rtl"
 }

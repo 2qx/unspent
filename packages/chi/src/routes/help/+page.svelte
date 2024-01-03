@@ -153,7 +153,7 @@
 
 {#if browser}
 	{#if !$isLoading}
-		<div class="caption">
+		<div class="caption" dir="{$_('direction')}">
 			{$_(String(currentPageIndex))}
 		</div>
 	{/if}

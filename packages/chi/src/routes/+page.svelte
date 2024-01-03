@@ -113,7 +113,7 @@
 </svelte:head>
 <section>
   {#if $isLoading}
-  loading...
+  loading ...
   {:else}
 	<table>
 		<tr>
@@ -142,7 +142,7 @@
 			{:else}
 				<td style="text-align: center;">
 				</td>
-				<td colspan="3"><b> {$_('create')}</b></td>
+				<td colspan="3" dir="{$_('direction')}"><b> {$_('create')}</b></td>
 			{/if}
 		</tr>
 		<tr>
@@ -206,7 +206,7 @@
 					<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
 				</td>
 			{:else}
-				<td style="line-break:auto;" colspan="3">{$_('receive')}</td>
+				<td style="line-break:auto;" dir="{$_('direction')}" colspan="3">{$_('receive')}</td>
 			{/if}
 		</tr>
 		{#if !contract && !stateValue}

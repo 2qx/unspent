@@ -32,5 +32,6 @@
   "receive": "בחר את הכתובת לקבלת מטבעות עם",
   "create": "צור תמיד חדש",
   "month": "חוֹדֶשׁ",
-  "locale": "he"
+  "locale": "he",
+  "direction":"rtl"
 }
