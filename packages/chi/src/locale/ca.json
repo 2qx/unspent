@@ -29,8 +29,12 @@
   "receive": "Trieu l'adreça per rebre monedes",
   "spendable": "gastable",
   "ok": "Bé",
+  "create": "Creeu un nou contracte perpetuitat",
   "month": "mes",
   "year": "curs",
-  "create": "Creeu un nou contracte perpetuitat",
+  "short_01": "Emet el vostre contracte perpetuït.",
+  "short_00": "Introduïu la vostra adreça de recepció.",
+  "short_02": "Fineu la vostra perpetuïtat.",
+  "overview": "Creeu un contracte per distribuir aproximadament un percentatge del saldo mensualment a perpetuïtat.",
   "locale": "ca"
 }

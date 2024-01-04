@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Go lokile",
   "receive": "Kgetha aterese ya go amogela ditšhelete tša tšhipi tše di nago le .",
-  "year": "ngwaga",
-  "month": "kgwedi",
   "spendable": "Spendable .",
+  "ok": "Go lokile",
+  "month": "kgwedi",
+  "year": "ngwaga",
   "create": "Hlama Konteraka ye Mpsha ya Perpetuity .",
+  "short_01": "Kgaša konteraka ya gago ya go se fele.",
+  "overview": "Hlama konteraka ya go aba mo e ka bago tee lekgolong ya tekatekano kgwedi le kgwedi ka go se fele.",
+  "short_02": "Ditšhelete tša gago tša go se fele.",
+  "short_00": "Tsenya aterese ya gago ya go amogela.",
   "locale": "nso"
 }

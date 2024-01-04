@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
+  "create": "Yeni Bir Süreklilik Sözleşmesi Oluşturun",
   "spendable": "harcanabilir",
+  "year": "yıl",
+  "receive": "Para almak için adresi seçin",
   "ok": "Tamam",
   "month": "ay",
-  "receive": "Para almak için adresi seçin",
-  "year": "yıl",
-  "create": "Yeni Bir Süreklilik Sözleşmesi Oluşturun",
+  "short_01": "Sürekli sözleşmenizi yayınlayın.",
+  "short_02": "Sürekliliğinizi finanse edin.",
+  "short_00": "Alma adresinizi girin.",
+  "overview": "Bakiyenin yaklaşık yüzde birini kalıcı olarak dağıtmak için bir sözleşme oluşturun.",
   "locale": "tr"
 }

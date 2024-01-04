@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "lilo",
   "receive": "E koho i ka leka e loaʻa ai nā kālā me",
   "ok": "Oha oka",
-  "year": "makahiki",
-  "month": "mahina",
+  "spendable": "lilo",
   "create": "E hana i kahi kuʻikahi kūikawā hou",
+  "month": "mahina",
+  "year": "makahiki",
+  "short_01": "Hoʻolaha i kāuʻaelike mau loa.",
+  "short_00": "E hoʻokomo i kāu leka uila.",
+  "overview": "E hana i kahiʻaelike e hāʻawi i kahi pākēneka e pili ana i hoʻokahi pākēneka o ka uku kaulike i ka nui.",
+  "short_02": "Kālā kālā i kāu mau.",
   "locale": "haw"
 }

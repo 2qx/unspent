@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Paw address a wode begye sika a .",
-  "spendable": "Nneɛma a Wɔde Di Dwuma .",
   "year": "afe",
-  "ok": "Yoo",
+  "spendable": "Nneɛma a Wɔde Di Dwuma .",
   "month": "bosome",
   "create": "Yɛ daa daa apam foforo .",
+  "receive": "Paw address a wode begye sika a .",
+  "ok": "Yoo",
+  "overview": "Yɛ apam a ɛbɛma wɔakyekyɛ sika a aka no bɛyɛ ɔha biara mu biako ɔsram biara.",
+  "short_00": "Hyehyɛ wo address a woregye no.",
+  "short_01": "Fa wo daa apam no to gua.",
+  "short_02": "Fa sika ma wo daa.",
   "locale": "ak"
 }

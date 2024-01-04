@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "Ojepurukuaáva .",
-  "year": "ary",
   "receive": "Eiporavo pe dirección regueraha hag̃ua umi monéda orekóva .",
+  "create": "Ojapo peteî contrato de perpetuidad pyahu .",
+  "spendable": "Ojepurukuaáva .",
   "month": "jasy",
   "ok": "Néi",
-  "create": "Ojapo peteî contrato de perpetuidad pyahu .",
+  "year": "ary",
+  "short_02": "Efinancia nde perpetuidad.",
+  "short_01": "Omosarambi nde contrato de perpetuidad.",
+  "short_00": "Emoinge nde dirección recibida.",
+  "overview": "Omoheñói peteî contrato odistribui haguã haimete un por ciento saldo mensualmente perpetuidad-pe.",
   "locale": "gn"
 }

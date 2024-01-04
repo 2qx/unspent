@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Dobra",
+  "spendable": "Wydawane",
   "month": "miesiąc",
+  "create": "Utwórz nową umowę na wieczność",
   "year": "rok",
   "receive": "Wybierz adres, aby otrzymywać monety",
-  "create": "Utwórz nową umowę na wieczność",
-  "spendable": "Wydawane",
+  "ok": "Dobra",
+  "overview": "Utwórz umowę na rozdzielanie około jednego procentu salda co miesiąc pod względem wieczności.",
+  "short_00": "Wprowadź swój adres odbierający.",
+  "short_02": "Sfinansuj swoją wieczność.",
+  "short_01": "Nadał swoją umowę na wieczność.",
   "locale": "pl"
 }

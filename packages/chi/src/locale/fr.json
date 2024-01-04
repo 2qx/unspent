@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Choisissez l'adresse pour recevoir des pièces avec",
-  "year": "année",
-  "month": "mois",
   "ok": "D'accord",
+  "receive": "Choisissez l'adresse pour recevoir des pièces avec",
   "spendable": "dépensable",
   "create": "Créer un nouveau contrat de perpétuité",
+  "month": "mois",
+  "short_00": "Entrez votre adresse de réception.",
+  "short_02": "Financer votre perpétuité.",
+  "overview": "Créez un contrat pour distribuer environ un pour cent de l'équilibre mensuellement à perpétuité.",
+  "short_01": "Diffuser votre contrat de perpétuité.",
+  "year": "année",
   "locale": "fr"
 }

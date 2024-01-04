@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Izberite naslov za prejemanje kovancev z",
-  "ok": "v redu",
-  "spendable": "porabo",
   "year": "leto",
+  "receive": "Izberite naslov za prejemanje kovancev z",
   "month": "mesec",
+  "spendable": "porabo",
+  "ok": "v redu",
   "create": "Ustvari novo pogodbo o večnosti",
+  "overview": "Ustvarite pogodbo, s katero boste mesečno distribuirali približno en odstotek stanja.",
+  "short_01": "Oddajate vašo večno pogodbo.",
+  "short_00": "Vnesite svoj prejemni naslov.",
+  "short_02": "Financirati svojo večnost.",
   "locale": "sl"
 }

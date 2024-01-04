@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "nefqa",
   "ok": "Okay",
   "receive": "Agħżel l-indirizz biex tirċievi muniti ma '",
+  "spendable": "nefqa",
+  "create": "Oħloq kuntratt ta 'perpetwità ġdid",
   "year": "sena",
   "month": "xahar",
-  "create": "Oħloq kuntratt ta 'perpetwità ġdid",
+  "short_02": "Iffinanzja l-perpetwità tiegħek.",
+  "overview": "Oħloq kuntratt biex tqassam madwar wieħed fil-mija tal-bilanċ kull xahar għal dejjem.",
+  "short_00": "Daħħal l-indirizz li jirċievi tiegħek.",
+  "short_01": "Xandir il-kuntratt ta 'perpetwità tiegħek.",
   "locale": "mt"
 }

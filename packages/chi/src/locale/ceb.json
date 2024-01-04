@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "year": "tuig",
-  "ok": "Dili",
   "receive": "Pilia ang adres aron makadawat mga sensilyo",
-  "month": "buwan",
+  "ok": "Dili",
+  "year": "tuig",
   "spendable": "magamit",
   "create": "Paghimo usa ka bag-ong kontrata sa Perpetuity",
+  "month": "buwan",
+  "overview": "Paghimo usa ka kontrata aron ipanghatag mga usa ka porsyento sa balanse matag bulan sa pagpadayon.",
+  "short_01": "Broadcast ang imong Padayon nga Kontrata.",
+  "short_02": "Pondo ang imong pagpadayon.",
+  "short_00": "Pagsulud sa imong pagdawat address.",
   "locale": "ceb"
 }

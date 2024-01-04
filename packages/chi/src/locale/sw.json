@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "Inaweza kutumika",
   "ok": "Sawa",
+  "spendable": "Inaweza kutumika",
   "receive": "Chagua anwani kupokea sarafu na",
+  "create": "Unda mkataba mpya wa kudumu",
   "year": "mwaka",
   "month": "mwezi",
-  "create": "Unda mkataba mpya wa kudumu",
+  "short_01": "Tangaza mkataba wako wa kudumu.",
+  "short_02": "Mfuko wa maendeleo yako.",
+  "overview": "Unda mkataba wa kusambaza karibu asilimia moja ya mizani kila mwezi katika kudumu.",
+  "short_00": "Ingiza anwani yako ya kupokea.",
   "locale": "sw"
 }

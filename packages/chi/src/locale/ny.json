@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Sankhani adilesi kuti mulandire ndalama ndi",
   "spendable": "kuthengo",
-  "year": "chaka",
-  "ok": "Chabwino",
   "month": "mwezi",
+  "receive": "Sankhani adilesi kuti mulandire ndalama ndi",
   "create": "Pangani mgwirizano watsopano",
+  "ok": "Chabwino",
+  "short_01": "Kuwunikira mgwirizano wanu.",
+  "short_00": "Lowetsani adilesi yanu yolandila.",
+  "short_02": "Thumba lanu.",
+  "overview": "Pangani mgwirizano kuti ugawire pafupifupi peresenti imodzi ya ndalama pamwezi.",
+  "year": "chaka",
   "locale": "ny"
 }

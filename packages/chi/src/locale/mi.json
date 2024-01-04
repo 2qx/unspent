@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
+  "receive": "Whiriwhiria te wahitau kia whiwhi moni me",
+  "create": "Waihangahia he kirimana hakari hou",
+  "ok": "Pai",
   "spendable": "whakapau",
   "month": "marama",
-  "receive": "Whiriwhiria te wahitau kia whiwhi moni me",
   "year": "tau",
-  "ok": "Pai",
-  "create": "Waihangahia he kirimana hakari hou",
+  "short_02": "Tahua to moni.",
+  "overview": "Waihangahia he kirimana hei tohatoha mo te kotahi miriona o te pauna marama i te wa tonu.",
+  "short_00": "Whakauruhia to wahitau whiwhi.",
+  "short_01": "Pānuihia to kirimana ātete.",
   "locale": "mi"
 }

@@ -27,10 +27,14 @@
   "25": "",
   "26": "",
   "ok": "Purus",
-  "receive": "Eligere oratio recipere denarios",
   "spendable": "APPOSITUS",
-  "year": "annus",
   "create": "Create novum perpetuitatem contractus",
+  "receive": "Eligere oratio recipere denarios",
+  "year": "annus",
   "month": "menses",
+  "short_02": "Fund vestri perpetuum.",
+  "overview": "Create contractus distribute de uno percent in statera menstrua in perpetuum.",
+  "short_00": "Intra accepto inscriptio.",
+  "short_01": "Iaci tui perpetuitas contractus.",
   "locale": "la"
 }

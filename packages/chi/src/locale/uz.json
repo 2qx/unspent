@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "xop",
-  "spendable": "sarflanadigan",
   "receive": "Tangalarni olish uchun manzilni tanlang",
-  "month": "oy",
+  "ok": "xop",
   "year": "yil",
+  "spendable": "sarflanadigan",
   "create": "Yangi doimiylik shartnomasini yarating",
+  "month": "oy",
+  "overview": "Balansning bir foizini har oyda distalash uchun shartnoma tuzish.",
+  "short_00": "Qabul qilish manzilingizni kiriting.",
+  "short_01": "Doimiylik shartnomangizni uzating.",
+  "short_02": "Doimiylikni himoya qiling.",
   "locale": "uz"
 }

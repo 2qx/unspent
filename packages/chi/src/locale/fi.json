@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "kuluttaa",
   "month": "kuukausi",
-  "receive": "Valitse osoite vastaanottaa kolikoita",
-  "year": "vuosi",
   "ok": "Okei",
   "create": "Luo uusi pysyvyyssopimus",
+  "spendable": "kuluttaa",
+  "year": "vuosi",
+  "receive": "Valitse osoite vastaanottaa kolikoita",
+  "overview": "Luo sopimus noin prosentin jakautumisesta noin prosentilla jatkuvasti.",
+  "short_00": "Kirjoita vastaanottava osoite.",
+  "short_01": "Lähetä pysyvyyssopimuksesi.",
+  "short_02": "Rahoita jatkuvasti.",
   "locale": "fi"
 }

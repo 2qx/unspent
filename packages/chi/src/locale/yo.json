@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Dara",
   "spendable": "kikan",
-  "year": "ọdun",
-  "receive": "Yan adirẹsi lati gba awọn owó pẹlu",
   "month": "oṣu",
   "create": "Ṣẹda adehun akọkọ ti tuntun",
+  "ok": "Dara",
+  "receive": "Yan adirẹsi lati gba awọn owó pẹlu",
+  "short_00": "Tẹ adirẹsi oluyẹwo rẹ sii.",
+  "overview": "Ṣẹda adehun si pin kaakiri nipa ida ọgọrun ti idagbasoke ni oṣu ni lilo.",
+  "short_01": "Igbohunsile rẹ adehun.",
+  "short_02": "Ṣe inawo rẹ.",
+  "year": "ọdun",
   "locale": "yo"
 }

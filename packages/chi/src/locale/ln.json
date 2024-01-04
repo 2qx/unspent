@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
+  "ok": "Malamu",
+  "create": "Bosala contrat ya sika ya perpétuité .",
+  "receive": "Pona adresse ya kozwa mbongo ya bibende na .",
   "year": "mbula",
   "spendable": "Speedable .",
-  "ok": "Malamu",
-  "receive": "Pona adresse ya kozwa mbongo ya bibende na .",
   "month": "sanza",
-  "create": "Bosala contrat ya sika ya perpétuité .",
+  "short_00": "Tyá adresi na yo ya boyambi.",
+  "short_01": "Kopesa emision ya contrat na yo ya perpétuité.",
+  "overview": "Bosala contrat mpo na kokabola pene na moko na mokama ya solde sanza na sanza na perpétuité.",
+  "short_02": "Bopesa mbongo ya libela na bino.",
   "locale": "ln"
 }

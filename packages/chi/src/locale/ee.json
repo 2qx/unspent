@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Enyo",
   "receive": "Tia adrɛs si dzi nàxɔ gaku le kple .",
   "month": "ɣleti",
-  "spendable": "Woate ŋu azãe .",
   "year": "ƒe",
+  "spendable": "Woate ŋu azãe .",
+  "ok": "Enyo",
   "create": "Wɔ nubabla yeye si woawɔ be wòanɔ anyi ɖaa .",
+  "short_02": "Ga na wò ɣeyiɣi madzudzɔmadzudzɔe.",
+  "short_01": "Broadcast your perpetuity contract.",
+  "overview": "Wɔ nubabla aɖe be wòama ga si susɔ la ƒe alafa memama ɖeka ɣleti sia ɣleti tegbee.",
+  "short_00": "Ŋlɔ wò adrɛs si nèxɔna la ɖe eme.",
   "locale": "ee"
 }

@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
+  "ok": "Kulungile",
   "receive": "Khetha idilesi yokufumana iingqekembe zemali",
   "spendable": "ichithe",
+  "create": "Yenza ikhontrakthi entsha yokwenzeka",
   "year": "unyaka",
   "month": "inyanga",
-  "ok": "Kulungile",
-  "create": "Yenza ikhontrakthi entsha yokwenzeka",
+  "short_02": "Fundlwanga gestity yakho.",
+  "overview": "Yenza ikhontrakthi yokusasaza malunga nepesenti enye yemali eseleyo rhoqo ngenyanga.",
+  "short_01": "Usasaza ikhontrakthi yakho eyahlukileyo.",
+  "short_00": "Ngenisa idilesi yakho yokufumana.",
   "locale": "xh"
 }

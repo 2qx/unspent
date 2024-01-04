@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "Udgiftelig",
-  "receive": "Vælg den adresse, der skal modtages mønter med",
   "ok": "okay",
   "month": "måned",
   "year": "år",
   "create": "Opret en ny evighedskontrakt",
+  "spendable": "Udgiftelig",
+  "receive": "Vælg den adresse, der skal modtages mønter med",
+  "short_00": "Indtast din modtagende adresse.",
+  "short_01": "Sender din evighedskontrakt.",
+  "overview": "Opret en kontrakt for at fordele ca. en procent af balancen månedligt i evighed.",
+  "short_02": "Fund din evighed.",
   "locale": "da"
 }

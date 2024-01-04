@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "gastanapaq .",
-  "month": "killa",
+  "create": "Musuq wiñaypaq contratota ruway .",
   "year": "wata",
+  "month": "killa",
+  "spendable": "gastanapaq .",
   "receive": "Akllay Dirección nisqa qullqita chaskinaykipaq .",
   "ok": "Kusa",
-  "create": "Musuq wiñaypaq contratota ruway .",
+  "short_01": "Difusión de tu contrato de perpetuidad.",
+  "short_02": "qolqe qoy wiñaypaq kayniykipaq.",
+  "short_00": "Chaskiy direccionniykita qillqay.",
+  "overview": "Huk contratota ruway, sapa pachakmanta huk saldomanta sapa killa wiñaypaq rakinapaq.",
   "locale": "qu"
 }

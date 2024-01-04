@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "year": "rok",
-  "spendable": "utratit",
+  "create": "Vytvořte novou smlouvu na trvalost",
   "receive": "Vyberte adresu, jak přijímat mince",
   "month": "Měsíc",
+  "year": "rok",
+  "spendable": "utratit",
+  "short_01": "Vysílejte svou trvalou smlouvu.",
+  "short_00": "Zadejte svou přijímací adresu.",
+  "short_02": "Financovat vaši věčnost.",
   "ok": "dobře",
-  "create": "Vytvořte novou smlouvu na trvalost",
+  "overview": "Vytvořte smlouvu na distribuci přibližně jedno procento rovnováhy měsíčně.",
   "locale": "cs"
 }

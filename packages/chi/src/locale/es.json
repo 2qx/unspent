@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Elija la dirección para recibir monedas con",
   "ok": "Bueno",
   "spendable": "gastable",
-  "month": "mes",
   "year": "año",
+  "receive": "Elija la dirección para recibir monedas con",
+  "month": "mes",
   "create": "Crear un nuevo contrato de perpetuidad",
+  "short_02": "Financiar su perpetuidad.",
+  "short_01": "Transmitir su contrato de perpetuidad.",
+  "short_00": "Ingrese su dirección de recepción.",
+  "overview": "Cree un contrato para distribuir alrededor del uno por ciento del saldo mensualmente a perpetuidad.",
   "locale": "es"
 }

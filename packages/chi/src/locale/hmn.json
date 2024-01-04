@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Xaiv qhov chaw nyob kom tau txais nyiaj npib nrog",
   "ok": "Tsi tsi",
   "spendable": "siv tau",
   "year": "lub xyoo",
+  "receive": "Xaiv qhov chaw nyob kom tau txais nyiaj npib nrog",
   "month": "lub hlis",
   "create": "Tsim kev cog lus tshiab",
+  "short_00": "Nkag mus rau koj qhov chaw nyob.",
+  "short_01": "Tshaj tawm koj daim ntawv cog lus sib tw.",
+  "overview": "Tsim cov ntawv cog lus faib rau ib feem pua ntawm qhov sib npaug txhua hli hauv perpetuity.",
+  "short_02": "Pab nyiaj rau koj qhov kev vam meej.",
   "locale": "hmn"
 }

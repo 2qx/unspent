@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
+  "create": "Vytvorte novú zmluvu o veciach",
   "spendable": "utrácať",
   "ok": "V poriadku",
-  "receive": "Vyberte adresu na prijímanie mincí s",
-  "year": "rok",
   "month": "mesiac",
-  "create": "Vytvorte novú zmluvu o veciach",
+  "year": "rok",
+  "receive": "Vyberte adresu na prijímanie mincí s",
+  "short_00": "Zadajte svoju prijímaciu adresu.",
+  "short_01": "Vysielajte svoju zmluvu o trvalej konci.",
+  "short_02": "Financujte svoju trvalosť.",
+  "overview": "Vytvorte zmluvu na distribúciu asi jedného percenta zostatku mesačne.",
   "locale": "sk"
 }

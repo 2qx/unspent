@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Elektu la adreson por ricevi monerojn kun",
-  "spendable": "elspezebla",
   "ok": "Bone",
-  "month": "Monato",
+  "receive": "Elektu la adreson por ricevi monerojn kun",
   "year": "Jaro",
+  "month": "Monato",
+  "spendable": "elspezebla",
   "create": "Krei novan eternan kontrakton",
+  "short_01": "Elsendu vian eternan kontrakton.",
+  "short_02": "Financu vian eternecon.",
+  "short_00": "Enigu vian ricevan adreson.",
+  "overview": "Kreu kontrakton por disdoni ĉirkaŭ unu procenton de la ekvilibro ĉiumonate en eterneco.",
   "locale": "eo"
 }

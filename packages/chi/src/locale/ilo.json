@@ -27,10 +27,14 @@
   "25": "",
   "26": "",
   "spendable": "Mabalin nga aggasto .",
-  "receive": "Pilien ti adres tapno makaawat kadagiti sinsilio nga addaan iti .",
   "ok": "Mayat",
-  "month": "bulan",
   "year": "tawen",
+  "receive": "Pilien ti adres tapno makaawat kadagiti sinsilio nga addaan iti .",
+  "month": "bulan",
   "create": "Mangaramid iti baro a kontrata ti perpetuity .",
+  "overview": "Mangaramid iti kontrata a mangiwaras iti agarup maysa a porsiento iti balanse iti binulan a agnanayon.",
+  "short_00": "Isuratmo ti receiving address-mo.",
+  "short_01": "Ibrodkas ti kontratam iti perpetuity.",
+  "short_02": "Pondoan ti perpetuity-mo.",
   "locale": "ilo"
 }

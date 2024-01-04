@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "uithoudbaar",
+  "ok": "Oké",
   "year": "jaar",
   "receive": "Kies het adres om munten mee te ontvangen",
+  "spendable": "uithoudbaar",
   "month": "maand",
-  "ok": "Oké",
+  "overview": "Een contract creëren om ongeveer één procent van het saldo maandelijks voor altijd te distribueren.",
   "create": "Een nieuw eeuwigheidscontract creëren",
+  "short_00": "Voer uw ontvangstadres in.",
+  "short_02": "Fonds uw eeuwigheid.",
+  "short_01": "Uitzend uw eeuwigheidscontract.",
   "locale": "nl"
 }

@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "year": "bliadhna",
   "spendable": "a 'caitheamh",
   "month": "mìos",
-  "ok": "Ceart gu leor",
-  "receive": "Tagh an seòladh gus buinn fhaighinn leis",
   "create": "Cruthaich cùmhnant foirpeachd ùr",
+  "ok": "Ceart gu leor",
+  "year": "bliadhna",
+  "receive": "Tagh an seòladh gus buinn fhaighinn leis",
+  "overview": "Cruthaich cùmhnant airson a bhith a 'sgaoileadh mu aon cheud den chothromachadh gach mìos.",
+  "short_00": "Cuir a-steach do sheòladh faighinn.",
+  "short_02": "Maoineachadh do rud mòr.",
+  "short_01": "Craoladh do chùmhnant foirpeas.",
   "locale": "gd"
 }

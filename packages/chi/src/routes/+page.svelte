@@ -7,7 +7,7 @@
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import month from '$lib/images/month.svg';
-  import { _, isLoading } from 'svelte-i18n';
+	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -96,7 +96,7 @@
 		}
 	});
 
-  const bumpLevel = async () => {
+	const bumpLevel = async () => {
 		if (stateValue < 6) {
 			stateStore.set('6');
 		}
@@ -112,114 +112,121 @@
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <section>
-  {#if $isLoading}
-  loading ...
-  {:else}
-	<table>
-		<tr>
-      <td style="text-align: center;">
-        <img width="125px" height="125px" src={banner} />
-      </td>
-			<td colspan="3"> <h1>unspent.cash</h1></td>
-		</tr>
-		<tr>
-			{#if contract}
+	{#if $isLoading}
+		loading ...
+	{:else}
+		<table>
+			<tr>
 				<td style="text-align: center;">
-					
+					<img width="125px" height="125px" src={banner} />
 				</td>
-        <td>
-          <img src={lock_clock} alt="lock_clock" />
-        </td>
-				<td colspan="2">
-					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-						<div style="max-width: 95%;" on:click={bumpLevel} class="contract-div">
-							<button class="styled" on:click={copy}>
-								{contract.getAddress()}
-							</button>
-						</div>
-					</CopyToClipboard>
-				</td>
-			{:else}
-				<td style="text-align: center;">
-				</td>
-				<td colspan="3" dir="{$_('direction')}"><b> {$_('create')}</b></td>
+				<td colspan="3" style="line-break: auto;"> <h1>unspent&hairsp;.cash</h1></td>
+			</tr>
+			<tr>
+				{#if contract}
+					<td style="text-align: center;" />
+					<td>
+						<img src={lock_clock} alt="lock_clock" />
+					</td>
+					<td colspan="2">
+						<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
+							<div style="max-width: 95%;" on:click={bumpLevel} class="contract-div">
+								<button class="styled" on:click={copy}>
+									{contract.getAddress()}
+								</button>
+							</div>
+						</CopyToClipboard>
+					</td>
+				{:else}
+					<td style="text-align: center;" />
+					<td colspan="3" dir={$_('direction')}><b> {$_('create')}</b></td>
+				{/if}
+			</tr>
+			<tr>
+				{#if balance}
+					<td />
+					<td style="width:30px;" />
+					<td colspan="2">
+						<b>{balance.toLocaleString()}</b> sats <br />
+						(<i
+							>{(Number(balance) / 100000000).toLocaleString(undefined, {
+								minimumSignificantDigits: 6
+							})}</i
+						> BCH)
+					</td>
+				{:else}
+					<td />
+					<td style="width:30px;" />
+					<td colspan="2" />
+				{/if}
+			</tr>
+			{#if receiptAddressValid}
+				<tr>
+					<td />
+					<td>
+						<p><img src={arrow_down} alt="to" /></p>
+					</td>
+					<td>
+						<p>
+							<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
+						</p>
+						<p>
+							<b>11.8% {$_('year')}</b>
+						</p>
+					</td>
+					<td />
+				</tr>
 			{/if}
-		</tr>
-		<tr>
-			{#if balance}
-				<td />
-				<td style="width:30px;">
-
-				</td>
-				<td colspan="2">
-					<b>{balance.toLocaleString()}</b> sats <br />
-					(<i
-						>{(Number(balance) / 100000000).toLocaleString(undefined, {
-							minimumSignificantDigits: 6
-						})}</i
-					> BCH)
-				</td>
-			{:else}
-				<td />
-				<td style="width:30px;" />
-				<td colspan="2" />
-			{/if}
-		</tr>
-		{#if receiptAddressValid}
 			<tr>
 				<td />
-				<td>
-					<p><img src={arrow_down} alt="to" /></p>
-				</td>
-				<td>
+				<td style="width=30px;">
 					<p>
-						<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
-					</p>
-					<p>
-						<b>11.8% {$_('year')}</b>
+						<img src={wallet} alt="wallet" />
 					</p>
 				</td>
-				<td />
+				<td colspan="2">
+					<textarea
+						id="addr"
+						rows="3"
+						on:change={() => createContract()}
+						bind:value={receiptAddress}
+						placeholder="bitcoincash:q... ..."
+					/>
+				</td>
 			</tr>
-		{/if}
-		<tr>
-			<td />
-			<td style="width=30px;">
-				<p>
-					<img src={wallet} alt="wallet" />
-				</p>
-			</td>
-			<td colspan="2">
-				<textarea
-					id="addr"
-					rows="3"
-					on:change={() => createContract()}
-					bind:value={receiptAddress}
-					placeholder="bitcoincash:q... ..."
-				/>
-			</td>
-		</tr>
-		<tr>
-			<td />
-			{#if contract}
-				<td style="text-align: end; padding: 20px;" colspan="3">
-					<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
-				</td>
-			{:else}
-				<td style="line-break:auto;" dir="{$_('direction')}" colspan="3">{$_('receive')}</td>
-			{/if}
-		</tr>
-		{#if !contract && !stateValue}
 			<tr>
-				<td colspan="4" style="text-align:center; padding:50px;">
-					<a href="{base}/help">
-						<img class={!stateValue ? 'flashing' : ''} width="100px" src={help} alt="help" />
-					</a>
-				</td>
+				<td />
+				{#if contract}
+					<td style="text-align: end; padding: 20px;" colspan="3">
+						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
+					</td>
+				{:else}
+					<td style="line-break:auto;" dir={$_('direction')} colspan="3">{$_('receive')}</td>
+				{/if}
 			</tr>
-		{/if}
-	</table>
-  {/if}
+			{#if !contract}
+				<tr>
+					<td colspan="3" />
+					<td style="text-align:center; padding:20px;">
+						<a href="{base}/help">
+							<img class={!stateValue ? 'flashing' : ''} width="100px" src={help} alt="help" />
+						</a>
+					</td>
+				</tr>
+				<tr dir={$_('direction')}>
+          <td></td>
+					<td colspan="3" style="line-break:auto; font-size:medium; padding:10px;">
+						<p style="line-break:auto; font-size:medium;">{$_('overview')}</p>
+						<ol>
+							<li>{$_('short_00')}</li>
+							<li>{$_('short_01')}</li>
+							<li>{$_('short_02')}</li>
+						</ol>
+					</td>
+				</tr>
+			{/if}
+		</table>
+	{/if}
 </section>
 
 <style>
@@ -242,7 +249,7 @@
 
 	table {
 		background-color: white;
-    border-radius: 60px;
+		border-radius: 60px;
 	}
 	table tr td {
 		justify-content: space-around;

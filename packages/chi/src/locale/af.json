@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "ok": "Okay",
-  "receive": "Kies die adres om muntstukke te ontvang",
+  "create": "Skep 'n nuwe ewigheidskontrak",
   "month": "maand",
+  "receive": "Kies die adres om muntstukke te ontvang",
+  "ok": "Okay",
   "year": "jaar",
   "spendable": "spandeerbaar",
-  "create": "Skep 'n nuwe ewigheidskontrak",
+  "overview": "Skep 'n kontrak om ongeveer een persent van die balans maandeliks in ewigheid te versprei.",
+  "short_01": "Uitreik u ewigheidskontrak.",
+  "short_00": "Voer u ontvangadres in.",
+  "short_02": "Finansier u ewigdurende.",
   "locale": "af"
 }

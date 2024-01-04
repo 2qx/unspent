@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "BALLUU Danda'u .",
   "month": "ji'a",
   "ok": "Tole",
-  "year": "waggaa",
-  "receive": "Teessoo saantima itti argatan filadhu .",
   "create": "Waliigaltee bara baraa haaraa uumuu .",
+  "receive": "Teessoo saantima itti argatan filadhu .",
+  "spendable": "BALLUU Danda'u .",
+  "year": "waggaa",
+  "short_01": "Kontiraata bara baraa keessan tamsaasa.",
+  "short_02": "Perpetuity kee maallaqaan gargaaraa.",
+  "overview": "Ji’a ji’aan gara dhibbeentaa tokkoo bara baraan raabsuuf waliigaltee uumuu.",
+  "short_00": "Teessoo fudhannaa keessan galchaa.",
   "locale": "om"
 }

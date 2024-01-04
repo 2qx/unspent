@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "month": "bil",
-  "spendable": "waqti la bixin karo",
+  "create": "Abuur qandaraas cusub oo guri",
   "year": "sannad",
+  "spendable": "waqti la bixin karo",
+  "month": "bil",
   "receive": "Xulo cinwaanka si aad u hesho qadaadiic",
   "ok": "Hagaak",
-  "create": "Abuur qandaraas cusub oo guri",
+  "overview": "Abuur qandaraas si aad u qaybiso qiyaas ahaan boqolkiiba hal isku-dheelitirka bil kasta ku jira perettuity.",
+  "short_02": "Maalgaliso gurigaaga.",
+  "short_01": "Baahin heshiiskaaga daryeelka.",
+  "short_00": "Gali cinwaankaaga helitaanka.",
   "locale": "so"
 }

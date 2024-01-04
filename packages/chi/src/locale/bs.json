@@ -27,10 +27,14 @@
   "25": "",
   "26": "",
   "month": "mjesec",
-  "ok": "U redu",
-  "year": "godine",
   "spendable": "nepošten",
+  "ok": "U redu",
   "receive": "Odaberite adresu za primanje kovanica sa",
   "create": "Stvorite novi vječni ugovor",
+  "year": "godine",
+  "short_01": "Emitirajte svoj vječitelj ugovora.",
+  "overview": "Stvorite ugovor o distribuciji oko jednog procenta ravnoteže mjesečno u vjeznosti.",
+  "short_00": "Unesite svoju adresu za primanje.",
+  "short_02": "Fonbite svoju vježbu.",
   "locale": "bs"
 }

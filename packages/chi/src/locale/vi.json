@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "có thể chi tiêu",
-  "receive": "Chọn địa chỉ để nhận tiền với",
   "ok": "Đồng ý",
-  "month": "tháng",
+  "spendable": "có thể chi tiêu",
   "create": "Tạo một hợp đồng vĩnh viễn mới",
+  "month": "tháng",
   "year": "năm",
+  "receive": "Chọn địa chỉ để nhận tiền với",
+  "short_01": "Phát sóng hợp đồng vĩnh viễn của bạn.",
+  "overview": "Tạo một hợp đồng để phân phối khoảng một phần trăm số dư hàng tháng vĩnh viễn.",
+  "short_00": "Nhập địa chỉ nhận của bạn.",
+  "short_02": "Tài trợ cho sự vĩnh cửu của bạn.",
   "locale": "vi"
 }

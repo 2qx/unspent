@@ -27,10 +27,14 @@
   "25": "",
   "26": "",
   "receive": "Teňňeler almak üçin salgy saýlaň",
-  "spendable": "harabalyk",
-  "month": "aý",
-  "year": "ýyl",
   "ok": "Bolýar",
+  "spendable": "harabalyk",
+  "year": "ýyl",
   "create": "Täze butparazlyk şertnamasyny dörediň",
+  "month": "aý",
+  "overview": "Aýgytly balansy her aý perfetkasynda paýlamak üçin şertnama dörediň.",
+  "short_02": "Perfetkaňyzy maliýeleşdiriň.",
+  "short_00": "Alýan salgyňyzy giriziň.",
+  "short_01": "Perfeterliklik şertnamasyny ýaýlyma beriň.",
   "locale": "tk"
 }

@@ -27,10 +27,14 @@
   "25": "",
   "26": "",
   "year": "omwaka",
-  "ok": "Kaale",
   "spendable": "Ensasaanya .",
-  "month": "omwezi",
   "receive": "Londa endagiriro gy’olina okufunamu ssente .",
   "create": "Tonda endagaano empya ey'olubeerera .",
+  "month": "omwezi",
+  "ok": "Kaale",
+  "short_02": "Funza emirembe gyo.",
+  "overview": "Tonda endagaano okugaba nga kimu ku buli kikumi ku bbalansi buli mwezi mu perpetuity.",
+  "short_01": "Kuweereza endagaano yo ey’obutaggwaawo.",
+  "short_00": "Yingiza endagiriro yo ey’okufuna.",
   "locale": "lg"
 }

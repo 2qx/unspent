@@ -27,10 +27,14 @@
   "25": "",
   "26": "",
   "spendable": "gastable",
+  "create": "Crea un novo contrato de perpetuidade",
   "month": "mes",
-  "year": "ano",
   "ok": "Vale",
   "receive": "Escolla o enderezo para recibir moedas con",
-  "create": "Crea un novo contrato de perpetuidade",
+  "year": "ano",
+  "short_01": "Emitiu o seu contrato de perpetuidade.",
+  "overview": "Crea un contrato para distribuír aproximadamente un por cento do saldo mensual en perpetuidade.",
+  "short_00": "Introduza o seu enderezo de recepción.",
+  "short_02": "Financia a súa perpetuidade.",
   "locale": "gl"
 }

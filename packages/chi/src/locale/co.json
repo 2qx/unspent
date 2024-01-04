@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Sceglite l'indirizzu per riceve muniti cù",
+  "create": "Crea un novu cuntrattu di perpetuità",
   "spendable": "passata",
   "year": "annu",
-  "ok": "Va bè",
   "month": "mese",
-  "create": "Crea un novu cuntrattu di perpetuità",
+  "ok": "Va bè",
+  "receive": "Sceglite l'indirizzu per riceve muniti cù",
+  "short_01": "Broadcast u vostru cuntrattu di perpetuità.",
+  "overview": "Crea un cuntrattu per distribuisce annantu à un percentu di u bilanciu mensuale in perpetuità.",
+  "short_02": "Finanzà a vostra perpetuità.",
+  "short_00": "Ingressu u vostru indirizzu di riceve.",
   "locale": "co"
 }

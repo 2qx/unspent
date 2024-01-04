@@ -27,10 +27,14 @@
   "25": "",
   "26": "",
   "ok": "Oké",
-  "month": "moanne",
   "receive": "Kies it adres om munten mei te ûntfangen",
+  "create": "Meitsje in nij PERPETUITY CONTRACT",
+  "month": "moanne",
   "year": "jier",
   "spendable": "trochbringe",
-  "create": "Meitsje in nij PERPETUITY CONTRACT",
+  "short_00": "Fier jo ûntfangende adres yn.",
+  "short_01": "Útstjoere jo perpetuity-kontrakt.",
+  "overview": "Meitsje in kontrakt oan om te fersprieden oer ien prosint fan it lykwicht fan 'e lykwicht yn perpetuity.",
+  "short_02": "Fund jo perpetuity.",
   "locale": "fy"
 }

@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "year": "selemo",
+  "spendable": "Sebetsa",
   "receive": "Khetha aterese ho fumana lichelete tsa tšepe le",
+  "create": "Theha konteraka e ncha ea boitšoaro bo bocha",
+  "year": "selemo",
   "ok": "Ho lokile",
   "month": "Khoeli",
-  "spendable": "Sebetsa",
-  "create": "Theha konteraka e ncha ea boitšoaro bo bocha",
+  "short_00": "Kenya aterese ea hau ea ho amohela.",
+  "short_01": "E phatlalatsa konteraka ea hau ea boitšoaro bo botle.",
+  "short_02": "Letlole la hau le futsanehileng.",
+  "overview": "Theha konteraka ea ho tsamaisa liperesente tse le 'ngoe tsa Tekanyo khoeli le khoeli ho Perperuity.",
   "locale": "st"
 }

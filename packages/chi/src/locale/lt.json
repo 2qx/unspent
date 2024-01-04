@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "Išleidžia",
-  "ok": "Gerai",
   "year": "metai",
+  "spendable": "Išleidžia",
+  "create": "Sukurkite naują amžinybės sutartį",
   "receive": "Pasirinkite adresą, kad gautumėte monetas",
   "month": "mėnuo",
-  "create": "Sukurkite naują amžinybės sutartį",
+  "short_00": "Įveskite savo gaunamąjį adresą.",
+  "short_02": "Finansuokite savo amžinumą.",
+  "overview": "Sukurkite sutartį paskirstyti maždaug vieną procentą balanso per mėnesį.",
+  "short_01": "Transliuokite savo amžinybės sutartį.",
+  "ok": "Gerai",
   "locale": "lt"
 }

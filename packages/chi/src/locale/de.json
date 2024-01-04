@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "receive": "Wählen Sie die Adresse aus, um Münzen mit zu empfangen",
   "spendable": "ausgeben",
-  "ok": "Okay",
-  "month": "Monat",
   "year": "Jahr",
   "create": "Erstellen Sie einen neuen Perpetuity -Vertrag",
+  "receive": "Wählen Sie die Adresse aus, um Münzen mit zu empfangen",
+  "ok": "Okay",
+  "month": "Monat",
+  "short_02": "Finanzieren Sie Ihre Ewigkeit.",
+  "overview": "Erstellen Sie einen Vertrag, um monatlich etwa ein Prozent des Guthabens auf Dauer zu verteilen.",
+  "short_00": "Geben Sie Ihre Empfangsadresse ein.",
+  "short_01": "Übertragen Sie Ihren Perpetuity -Vertrag.",
   "locale": "de"
 }

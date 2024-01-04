@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
-  "spendable": "eytt",
-  "receive": "Veldu heimilisfang til að fá mynt með",
+  "create": "Búðu til nýjan ævarandi samning",
   "month": "Mánuður",
   "year": "ár",
+  "spendable": "eytt",
+  "receive": "Veldu heimilisfang til að fá mynt með",
   "ok": "allt í lagi",
-  "create": "Búðu til nýjan ævarandi samning",
+  "overview": "Búðu til samning til að dreifa um eitt prósent af jafnvæginu mánaðarlega í ævarandi.",
+  "short_02": "Fjármagna ævarandi.",
+  "short_01": "Sendu út ævarandi samning þinn.",
+  "short_00": "Sláðu inn móttöku heimilisfangið þitt.",
   "locale": "is"
 }

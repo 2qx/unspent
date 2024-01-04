@@ -26,11 +26,15 @@
   "24": "",
   "25": "",
   "26": "",
+  "ok": "Tamam",
+  "create": "Yeni bir əbədi müqavilə yaradın",
   "year": "il",
   "receive": "İlə pul almaq üçün ünvanı seçin",
-  "spendable": "yüklü",
-  "ok": "Tamam",
   "month": "ay",
-  "create": "Yeni bir əbədi müqavilə yaradın",
+  "spendable": "yüklü",
+  "overview": "Aydınlıq içində aylıq balansın təxminən bir faizini yaymaq üçün müqavilə yaradın.",
+  "short_00": "Qəbul edilmiş ünvanınızı daxil edin.",
+  "short_01": "Əbədi müqavilənizi yayımlayın.",
+  "short_02": "Əbədiyyətinizi maliyyələşdirin.",
   "locale": "az"
 }
