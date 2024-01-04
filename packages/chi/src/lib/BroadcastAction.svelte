@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-	import { base } from '$app/paths';
 	import { _ } from 'svelte-i18n';
 	import heart from '$lib/images/heart.svg';
 	import { Record } from '@unspent/phi';
@@ -65,12 +64,18 @@
 		}
 	};
 
+  function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
 	const broadcast = async () => {
 		try {
 			setProgress();
 			executedSuccess = false;
 			let options = { network: 'mainnet', version: 2 };
-			let r = new Record(undefined, undefined, options);
+      let index = randomInteger(0,3)
+			let r = new Record(undefined, index, options);
 			txid = await r.broadcast(opReturnHex);
 			isPublished = true;
 			executedSuccess = true;
@@ -125,7 +130,7 @@
 		text-align: center;
 		color: #fff;
 		text-shadow: 1px 1px 1px #000;
-		border-radius: 10px;
+		border-radius: 50px;
 		background-color: rgb(220, 132, 0);
 		background-image: linear-gradient(
 			to top left,

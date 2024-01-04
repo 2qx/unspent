@@ -18,7 +18,7 @@ const config = {
       // these options are set automatically — see below
       pages: buildDir,
       assets: buildDir,
-      fallback: undefined,
+      fallback: '404.html',
       precompress: false,
       strict: true
     })

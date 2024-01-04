@@ -22,20 +22,20 @@
 		stateValue = Number(value);
 	});
 
-	const handleClick = async () => {
-		if (stateValue > 4) {
-			if (stateValue < 6) {
-				stateStore.set('6');
-			}
+	const bumpLevel = async () => {
+		if (stateValue < 6) {
+			stateStore.set('6');
 		}
+	};
 
+	const handleClick = async () => {
 		toast.push('link copied');
 	};
 </script>
 
 {#if lockingBytecode}
 	<CopyToClipboard on:copy={handleClick} text={linkText} let:copy>
-		<div class="action">
+		<div class="action" on:click={bumpLevel}>
 			<button class="hitMe" on:click={copy}>
 				<img src={share} alt="share" />
 			</button>
@@ -50,13 +50,12 @@
 
 	.hitMe {
 		border: 0;
-		line-height: 2.5;
 		padding: 15px;
 		font-size: 1rem;
 		text-align: center;
 		color: #fff;
 		text-shadow: 1px 1px 1px #000;
-		border-radius: 10px;
+		border-radius: 50px;
 		background-color: rgb(178, 134, 207);
 		background-image: linear-gradient(
 			to top left,

@@ -7,7 +7,7 @@
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import month from '$lib/images/month.svg';
-	import { _ } from 'svelte-i18n';
+	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
@@ -96,12 +96,13 @@
 		}
 	});
 
-	const handleCopyClick = async () => {
-		if (stateValue > 4) {
-			if (stateValue < 6) {
-				stateStore.set('6');
-			}
+	const bumpLevel = async () => {
+		if (stateValue < 6) {
+			stateStore.set('6');
 		}
+	};
+
+	const handleCopyClick = async () => {
 		toast.push('📋🗸');
 	};
 </script>
@@ -111,105 +112,120 @@
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <section>
-	<table>
-		<tr>
-			<td colspan="4"> <h1>unspent.cash</h1></td>
-		</tr>
-		<tr>
-			{#if contract}
+	{#if $isLoading}
+		loading ...
+	{:else}
+		<table>
+			<tr>
 				<td style="text-align: center;">
-					<img width="125px" src={banner} />
+					<img width="125px" height="125px" src={banner} />
 				</td>
-				<td colspan="3">
-					<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-						<div style="max-width: 95%;" class="contract-div">
-							<button class="styled" on:click={copy}>
-								{contract.getAddress()}
-							</button>
-						</div>
-					</CopyToClipboard>
-				</td>
-			{:else}
-				<td style="text-align: center;">
-					<img width="125px" src={banner} />
-				</td>
-				<td colspan="3"><b> {$_('create')}</b></td>
+				<td colspan="3" style="line-break: auto;"> <h1>unspent&hairsp;.cash</h1></td>
+			</tr>
+			<tr>
+				{#if contract}
+					<td style="text-align: center;" />
+					<td>
+						<img src={lock_clock} alt="lock_clock" />
+					</td>
+					<td colspan="2">
+						<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
+							<div style="max-width: 95%;" on:click={bumpLevel} class="contract-div">
+								<button class="styled" on:click={copy}>
+									{contract.getAddress()}
+								</button>
+							</div>
+						</CopyToClipboard>
+					</td>
+				{:else}
+					<td style="text-align: center;" />
+					<td colspan="3" dir={$_('direction')}><b> {$_('create')}</b></td>
+				{/if}
+			</tr>
+			<tr>
+				{#if balance}
+					<td />
+					<td style="width:30px;" />
+					<td colspan="2">
+						<b>{balance.toLocaleString()}</b> sats <br />
+						(<i
+							>{(Number(balance) / 100000000).toLocaleString(undefined, {
+								minimumSignificantDigits: 6
+							})}</i
+						> BCH)
+					</td>
+				{:else}
+					<td />
+					<td style="width:30px;" />
+					<td colspan="2" />
+				{/if}
+			</tr>
+			{#if receiptAddressValid}
+				<tr>
+					<td />
+					<td>
+						<p><img src={arrow_down} alt="to" /></p>
+					</td>
+					<td>
+						<p>
+							<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
+						</p>
+						<p>
+							<b>11.8% {$_('year')}</b>
+						</p>
+					</td>
+					<td />
+				</tr>
 			{/if}
-		</tr>
-		<tr>
-			{#if balance}
-				<td />
-				<td style="width:30px;">
-					<img src={lock_clock} alt="lock_clock" />
-				</td>
-				<td colspan="2">
-					<b>{balance.toLocaleString()}</b> sats <br />
-					(<i
-						>{(Number(balance) / 100000000).toLocaleString(undefined, {
-							minimumSignificantDigits: 6
-						})}</i
-					> BCH)
-				</td>
-			{:else}
-				<td />
-				<td style="width:30px;">
-				</td>
-				<td colspan="2" />
-			{/if}
-		</tr>
-		{#if receiptAddressValid}
 			<tr>
 				<td />
-				<td>
-					<p><img src={arrow_down} alt="to" /></p>
-				</td>
-				<td>
+				<td style="width=30px;">
 					<p>
-						<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
-          </p>
-					<p>
-						<b>11.8% {$_('year')}</b>
+						<img src={wallet} alt="wallet" />
 					</p>
 				</td>
-				<td>
-					
+				<td colspan="2">
+					<textarea
+						id="addr"
+						rows="3"
+						on:change={() => createContract()}
+						bind:value={receiptAddress}
+						placeholder="bitcoincash:q... ..."
+					/>
 				</td>
 			</tr>
-		{/if}
-		<tr>
-			<td />
-			<td style="width=30px;">
-				<p>
-					<img src={wallet} alt="wallet" />
-				</p>
-			</td>
-			<td colspan="2">
-				<textarea
-					id="addr"
-					rows="3"
-					on:change={() => createContract()}
-					bind:value={receiptAddress}
-					placeholder="bitcoincash:q... ..."
-				/>
-			</td>
-		</tr>
-		<tr>
-			<td />
-			{#if contract}
-				<td style="text-align: end; padding: 20px;" colspan="3">
-					<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
-				</td>
-			{:else}
-				<td style="line-break:auto;" colspan="3">{$_('receive')}:</td>
+			<tr>
+				<td />
+				{#if contract}
+					<td style="text-align: end; padding: 20px;" colspan="3">
+						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
+					</td>
+				{:else}
+					<td style="line-break:auto;" dir={$_('direction')} colspan="3">{$_('receive')}</td>
+				{/if}
+			</tr>
+			{#if !contract}
+				<tr>
+					<td colspan="3" />
+					<td style="text-align:center; padding:20px;">
+						<a href="{base}/help">
+							<img class={!stateValue ? 'flashing' : ''} width="100px" src={help} alt="help" />
+						</a>
+					</td>
+				</tr>
+				<tr dir={$_('direction')}>
+          <td></td>
+					<td colspan="3" style="line-break:auto; font-size:medium; padding:10px;">
+						<p style="line-break:auto; font-size:medium;">{$_('overview')}</p>
+						<ol>
+							<li>{$_('short_00')}</li>
+							<li>{$_('short_01')}</li>
+							<li>{$_('short_02')}</li>
+						</ol>
+					</td>
+				</tr>
 			{/if}
-		</tr>
-	</table>
-	{#if !contract}
-		<div>
-			<a href="{base}/help">
-				<img width="100px" src={help} alt="help" />
-			</a>
-		</div>
+		</table>
 	{/if}
 </section>
 
@@ -233,6 +249,7 @@
 
 	table {
 		background-color: white;
+		border-radius: 60px;
 	}
 	table tr td {
 		justify-content: space-around;
@@ -250,7 +267,7 @@
 	h1 {
 		width: 100%;
 		font-weight: 900;
-		color: #d99b22;
+		color: #5c4007;
 	}
 
 	textarea {
@@ -269,10 +286,8 @@
 		border-radius: 10px;
 		background-color: #fff3e2;
 		font-weight: 700;
-    padding: 5px;
-    box-shadow:
-    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
-    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+		padding: 5px;
+		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
 	}
 
 	.styled:hover {
@@ -281,5 +296,15 @@
 
 	.styled:active {
 		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+	}
+
+	.flashing {
+		animation: blinker 3s linear infinite;
+	}
+
+	@keyframes blinker {
+		50% {
+			opacity: 0.2;
+		}
 	}
 </style>

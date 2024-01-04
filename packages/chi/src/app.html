@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 
 		<meta charset="utf-8" />
-		<meta name="description" content="Unspent Cash - The Bitcoin Cash App in Perpetuity" />
+		<meta name="description" content="Create a contract to distribute about one percent of the balance monthly in perpetuity." />
+    <title>Unspent: Your Bitcoin Cash Perpetuity App</title>
 
 		<!-- Open Graph data -->
 		<meta property="og:title" content="Unspent Cash" />
@@ -23,24 +24,39 @@
 			href="%sveltekit.assets%/site.webmanifest"
 			type="application/manifest+json"
 		/>
-		<script src="%sveltekit.assets%/pwa.js"></script>
+		<script defer src="%sveltekit.assets%/pwa.js"></script>
 
 		<meta name="msapplication-TileColor" content="#ffb200" />
 		<meta name="theme-color" content="#ffb200" />
 
 
-		<meta name="viewport" content="width=device-width" />
+
+    <meta property="og:article:section" content="Technology">
+    <meta property="og:article:tag" content="Unspent Cash">
+    <meta property="og:article:tag" content="Bitcoin Cash">
+    <meta property="og:article:tag" content="Perpetuity">
+
     <meta property="og:locale" content="en" />
-		<meta property="og:locale:alternate" content="fr" />
-		<meta property="og:locale:alternate" content="it" />
-		<meta property="og:locale:alternate" content="de" />
-		<meta property="og:locale:alternate" content="nl" />
-		<meta property="og:locale:alternate" content="es" />
-		<meta property="og:locale:alternate" content="ca" />
-		<meta property="og:locale:alternate" content="se" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+		<meta property="og:locale:alternate" content="es_ES" />
+    <meta property="og:locale:alternate" content="en_US" />
+		<meta property="og:locale:alternate" content="ar_AR" />
+		<meta property="og:locale:alternate" content="hi_IN" />
+		<meta property="og:locale:alternate" content="bn_IN" />
+    <meta property="og:locale:alternate" content="pt_PT" />
+		<meta property="og:locale:alternate" content="ru_RU" />
+		<meta property="og:locale:alternate" content="ja_JP" />
+		<meta property="og:locale:alternate" content="ur_PK" />
+    
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
+    
 		<div style="display: contents">%sveltekit.body%</div>
+    <noscript>
+      <h1>Unspent: Your Bitcoin Cash Perpetuity App</h1>
+      <p>Unspent Cash allows users to create a contract that distributes about one percent of the balance monthly in perpetuity.</p>
+    </noscript>
+    
 	</body>
 </html>

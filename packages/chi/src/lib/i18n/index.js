@@ -1,18 +1,19 @@
 // src/lib/i18n.ts
-import { browser } from '$app/environment'
-import { init, register } from 'svelte-i18n';
-const defaultLocale = 'en'
+import { register } from 'svelte-i18n';
+
+
+register("en", () => import(`../../locale/en.json`))
 
 const langs = [
-  "am", "cs", "es", "fr", "hi", "la", "pa", "sr@ijekavianlatin",
-  "uk", "zh_TW", "ar", "da", "es_SV", "fr_LU", "hr", "lt", "pl",
-  "sr", "ur", "az", "de", "es_VE", "ga_IE", "hu", "lv", "pt_BR",
-  "sr@latin", "uz@Cyrl", "az@latin", "el", "et", "ga", "it", "mg",
-  "pt", "sv", "uz", "bg", "en", "eu", "gl_ES", "ja", "ml", "ro",
-  "ta", "uz@Latn", "bn", "eo", "fa", "gl", "ka", "mn", "ru", "te",
-  "yue", "bs", "es_CL", "fi", "gu", "kk", "nb", "si", "tk", "zh-Hans",
-  "ca", "es_CO", "fil", "hak", "km", "ne", "sk", "tl", "zh-Hant", "cmn",
-  "es_DO", "fr_CM", "he", "ko", "nl", "sl", "tr", "zh_HK","zh"
+  "af", "ak", "am", "ar", "as", "ay", "az", "be", "bg", "bho", "bm", "bn", "bs", "ca",
+  "ceb", "ckb", "co", "cs", "cy", "da", "de", "doi", "dv", "ee", "el", "en", "eo", "es", "et", "eu",
+  "fa", "fi", "fr", "fy", "ga", "gd", "gl", "gn", "gom", "gu", "ha", "haw", "he", "hi", "hmn", "hr",
+  "ht", "hu", "hy", "id", "ig", "ilo", "is", "it", "iw", "ja", "jw", "ka", "kk", "km", "kn", "ko",
+  "kri", "ku", "ky", "la", "lb", "lg", "ln", "lo", "lt", "lus", "lv", "mai", "mg", "mi", "mk", "ml",
+  "mn", "mni-Mtei", "mr", "ms", "mt", "my", "ne", "nl", "no", "nso", "ny", "om", "or", "pa", "pl",
+  "ps", "pt", "qu", "ro", "ru", "rw", "sa", "sd", "si", "sk", "sl", "sm", "sn", "so", "sq", "sr",
+  "st", "su", "sv", "sw", "ta", "te", "tg", "th", "ti", "tk", "tl", "tr", "ts", "tt", "ug", "uk",
+  "ur", "uz", "vi", "xh", "yi", "yo", "zh", "zh-CN", "zh-TW", "zu"
 ]
 
 
