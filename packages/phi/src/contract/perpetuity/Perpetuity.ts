@@ -77,6 +77,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       BigInt(decay),
     ]);
     this.recipientLockingBytecode = deriveLockingBytecode(address);
+    if(SPECIALS.includes(binToHex(lock))) throw Error("Contract is too special")
     this.options = options;
   }
 
@@ -162,9 +163,6 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
       decay,
       p.options
     );
-
-    if(perpetuity.isSpecial()) throw Error("Contract is too special")
-
 
     // check that the address matches
     perpetuity.checkLockingBytecode(p.lockingBytecode);

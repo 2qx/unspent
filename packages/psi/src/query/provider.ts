@@ -338,37 +338,15 @@ export async function getHistory(host: string,
 
   if (typeof lockingBytecode !== "string") lockingBytecode = binToHex(lockingBytecode)
   param = { ...HistoryIDefaults, ...param };
-
+  
   const query = `
   query GetTransactionHistory(
-    $node: String!
     $lockingBytecode: String!
     $limit: Int
     $offset: Int
   ) {
       search_output_prefix(
         args: { locking_bytecode_prefix_hex: $lockingBytecode }
-      
-      where: {
-        _and: [
-          {
-            _or: [
-              {
-                transaction: {
-                  block_inclusions: {
-                    block: { accepted_by: { node: { name: { _regex: $node } } } }
-                  }
-                }
-              }
-              {
-                transaction: {
-                  node_validations: { node: { name: { _regex: $node } } }
-                }
-              }
-            ]
-          }
-        ]
-      }
       limit: $limit
       offset: $offset
       order_by: { transaction: { internal_id: desc } }
@@ -400,7 +378,7 @@ export async function getHistory(host: string,
       query: query,
       variables: {
         ...param,
-        "lockingBytecode": `${lockingBytecode.substring(0, 20)}`,
+        "lockingBytecode": `${lockingBytecode.substring(0, 40)}`,
       },
     }
   })
@@ -409,7 +387,6 @@ export async function getHistory(host: string,
     if (response.data.error) {
       throw Error(response.data.error);
     } else {
-      console.log(response.data.errors)
       throw Error(response.data.errors[0].message);
     }
   }

@@ -6,6 +6,7 @@
     "paths": {
       "phi": ["phi/src"],
       "psi": ["psi/src"],
+      "cat": ["cat/src"],
       "cli": ["cli/src"],
       "app": ["app/src"]
     }
