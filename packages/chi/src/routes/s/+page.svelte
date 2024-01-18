@@ -212,14 +212,12 @@
 		background-color: white;
 	}
 	table tr td {
-		min-width: 10%;
-		justify-content: space-around;
+		min-width: 5%;
 	}
 
 	table tr td p {
 		font-size: small;
 		display: flex;
-		justify-content: space-around;
 	}
 
 	table tr td pre {
