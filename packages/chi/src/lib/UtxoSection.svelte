@@ -3,7 +3,7 @@
 	import { Perpetuity } from '@unspent/phi';
 	import { _ } from 'svelte-i18n';
 	import arrow_split from '$lib/images/arrow_split.svg';
-  import arrow_right_white from '$lib/images/arrow_right_white.svg';
+	import arrow_right_white from '$lib/images/arrow_right_white.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import copy from '$lib/images/copy.svg';
 	import { toast } from '@zerodevx/svelte-toast';
@@ -48,7 +48,13 @@
 		curHeight = await contract.provider.getBlockHeight();
 		utxos = utxos.sort((a, b) => a.height - b.height);
 		utxos = utxos.map((u) => {
-			let waitBlocks = u.height + 4383 - curHeight;
+			let waitBlocks;
+			if (u.height == -1) {
+				waitBlocks = 4383;
+			} else {
+				waitBlocks = u.height + 4383 - curHeight;
+			}
+
 			return {
 				...u,
 				estimateUnlockDate: new Date(now + waitBlocks * 600000).toLocaleString(),
@@ -84,16 +90,15 @@
 				</tr>
 				<tr>
 					<td>
-            <div class="button-box">
-              <button 
-              class="next-button"
-              disabled={!(op.waitBlocks < 0)}
-              on:click={async () => execute(op)}>
+						<div class="button-box">
+							<button
+								class="next-button"
+								disabled={!(op.waitBlocks < 0)}
+								on:click={async () => execute(op)}
+							>
 								<img src={arrow_right_white} />
 							</button>
-            </div>
-							
-						
+						</div>
 					</td>
 					<td colspan="3" style="line-break: anywhere;">
 						{#if curHeight > 0 && op.waitBlocks > 0}
@@ -170,7 +175,7 @@
 		line-break: normal;
 	}
 
-  .styled {
+	.styled {
 		border-color: #000;
 		font-size: 1rem;
 		text-align: center;
@@ -178,10 +183,8 @@
 		border-radius: 10px;
 		background-color: #fff3e2;
 		font-weight: 700;
-    padding: 5px;
-    box-shadow:
-    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
-    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+		padding: 5px;
+		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
 	}
 
 	.styled:hover {
@@ -192,7 +195,7 @@
 		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
 	}
 
-  .next-button {
+	.next-button {
 		padding: 15px;
 		width: max-content;
 		border-color: black;
@@ -215,10 +218,9 @@
 		opacity: 1;
 	}
 
-  .button-box {
+	.button-box {
 		align-self: center;
 		width: 100%;
 		z-index: 100;
 	}
-  
 </style>

@@ -286,7 +286,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         const allowance = [];
         let blocksToWait = 0;
         // @ts-ignore
-        if (utxo.height == 0) {
+        if (utxo.height <= 0) {
           blocksToWait = Number(this.period);
         } else {
           // @ts-ignore
