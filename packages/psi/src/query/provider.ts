@@ -92,6 +92,13 @@ export async function getChaingraphUnspentRecords(
                           node_validations: { node: { name: { _regex: $node } } }
                         }
                       }
+                      {
+                        transaction:{
+                          node_validations:{
+                            node_internal_id:{_is_null:true}
+                          }
+                        }
+                      }
                     ]
                   }
                 ]
