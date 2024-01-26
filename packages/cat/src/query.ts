@@ -69,15 +69,15 @@ export async function getBlockTimestamps(host: string, offset: number, limit: nu
   });
 }
 
-export async function getBalanceHistory(lockingBytecode: string) {
-  return await getBalanceHistoryRaw(CHAINGRAPH,
+export async function getOutputs(lockingBytecode: string) {
+  return (await getOutputsRaw(CHAINGRAPH,
     lockingBytecode,
     0,
     50
-  )
+  )).flat()
 }
 
-export async function getBalanceHistoryRaw(host: string, lockingBytecode: string, offset: number, limit: number) {
+export async function getOutputsRaw(host: string, lockingBytecode: string, offset: number, limit: number) {
   const query = `
   query GetTransactionHistory(
     $lockingBytecode: String!
@@ -96,6 +96,14 @@ export async function getBalanceHistoryRaw(host: string, lockingBytecode: string
           output_index
           value_satoshis
           locking_bytecode
+        }
+        inputs{
+          value_satoshis
+          input_index
+          unlocking_bytecode
+          outpoint{
+            locking_bytecode
+          }
         }
         block_inclusions {
           block {
@@ -133,13 +141,26 @@ export async function getBalanceHistoryRaw(host: string, lockingBytecode: string
 
   // TODO cleanup response
   let matchingOutputs = response.data.data.search_output_prefix.map((tx: any) => {
-    let output = tx.transaction.outputs.filter((o: any) => o.locking_bytecode.includes(lockingBytecode) > 0)[0]
-    return {
-      id: tx.transaction.hash.substring(3) + ":" + output.output_index,
-      value: parseInt(output.value_satoshis),
-      height: parseInt(tx.transaction.block_inclusions[0].block.height),
-      locking_bytecode: lockingBytecode
-    }
+    let outputs = tx.transaction.outputs.filter((o: any) => o.locking_bytecode.includes(lockingBytecode) > 0)
+    let inputs = tx.transaction.inputs.filter((i: any) => i.outpoint.locking_bytecode.includes(lockingBytecode) > 0)
+    return [
+      ...outputs.map(output => {
+        return {
+          id: tx.transaction.hash.substring(3) + ":o:" + output.output_index,
+          value: -parseInt(output.value_satoshis),
+          height: parseInt(tx.transaction.block_inclusions[0].block.height),
+          locking_bytecode: lockingBytecode
+        }
+      }),
+      ...inputs.map(input => {
+        return {
+          id: tx.transaction.hash.substring(3) + ":i:" + input.input_index,
+          value: parseInt(input.value_satoshis),
+          height: parseInt(tx.transaction.block_inclusions[0].block.height),
+          locking_bytecode: lockingBytecode
+        }
+      })
+    ]
   }
   )
 

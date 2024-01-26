@@ -10,7 +10,7 @@ import {
 } from '@bitauth/libauth';
 
 import { INCEPTION } from './config.js';
-import { getBlockHistory, getBalanceHistory } from "./query.js";
+import { getBlockHistory, getOutputs } from "./query.js";
 
 export default class StorageProvider {
 
@@ -138,7 +138,8 @@ export default class StorageProvider {
   }
 
   public async syncOutputHistory(lockingBytecode: string) {
-    let outpoints = await getBalanceHistory(lockingBytecode)
+    let outpoints = await getOutputs(lockingBytecode)
+    console.log(outpoints)
     await this.putOutputs(outpoints)
   }
 
