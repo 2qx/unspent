@@ -122,6 +122,27 @@
 				</td>
 				<td colspan="3" style="line-break: auto;"> <h1>unspent&hairsp;.cash</h1></td>
 			</tr>
+			{#if !contract}
+				<tr style="height:4el;">
+					<td colspan="4" />
+				</tr>
+				<tr dir={$_('direction')}>
+					<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
+						<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
+						<ol>
+							<li>{$_('short_00')}</li>
+							<li>{$_('short_01')}</li>
+							<li>{$_('short_02')}</li>
+						</ol>
+					</td>
+					<td style="text-align:center; width:25%">
+						<a href="{base}/help">
+							<img class={!stateValue ? 'flashing' : ''} width="80px" src={help} alt="help" />
+						</a>
+					</td>
+				</tr>
+			{/if}
+
 			<tr>
 				{#if contract}
 					<td>
@@ -193,7 +214,7 @@
 					/>
 				</td>
 			</tr>
-			<tr >
+			<tr>
 				<td />
 				{#if contract}
 					<td style="text-align: end; padding: 20px;" colspan="3">
@@ -203,30 +224,6 @@
 					<td style="line-break:auto;" dir={$_('direction')} colspan="3">{$_('receive')}</td>
 				{/if}
 			</tr>
-			{#if !contract}
-      <tr style="height:4el;">
-        <td colspan="4" ></td>
-      </tr>
-				<tr dir={$_('direction')}>
-          <td />
-					<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
-						<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
-						<ol>
-							<li>{$_('short_00')}</li>
-							<li>{$_('short_01')}</li>
-							<li>{$_('short_02')}</li>
-						</ol>
-					</td>
-				</tr>
-        <tr>
-					<td  />
-					<td colspan="3" style="text-align:center; padding:20px;">
-						<a href="{base}/help">
-							<img class={!stateValue ? 'flashing' : ''} width="100px" src={help} alt="help" />
-						</a>
-					</td>
-				</tr>
-			{/if}
 		</table>
 	{/if}
 </section>
@@ -251,7 +248,7 @@
 	table {
 		background-color: white;
 		border-radius: 40px;
-    border-collapse: collapse;
+		border-collapse: collapse;
 	}
 	table tr td {
 		justify-content: space-around;

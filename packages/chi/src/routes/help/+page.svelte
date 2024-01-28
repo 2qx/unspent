@@ -293,10 +293,10 @@
 	}
 
 	.caption {
-		height: 6ex;
+		height: 8ex;
 		padding: 1ex;
 		text-align: center;
-		font-size: x-large;
+		font-size: large;
 		font-weight: 700;
 		background-color: white;
 	}

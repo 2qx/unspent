@@ -37,6 +37,6 @@
   "short_01": "广播您的永久合同。",
   "overview": "创建一份合同，以永久分每月分配余额的百分之一。",
   "locale": "zh",
-  "bitcoin.jpg": "https://web.archive.org/web/20230315051200/https://whitepaper.coinspice.io/cn",
+  "bitcoin.jpg":"/bitcoin.jpg",
   "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_zh_cn.pdf"
 }
