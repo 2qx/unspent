@@ -1,37 +1,49 @@
 <script>
 	import { _, isLoading } from 'svelte-i18n';
-
-  
+	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { toast } from '@zerodevx/svelte-toast';
 </script>
-
 
 <svelte:head>
 	<title>The Bitcoin White Paper Webcomic</title>
 	<meta name="description" content="The Bitcoin White Paper Webcomic" />
 </svelte:head>
 <section>
-  {#if $isLoading}
-  ...
-  {:else}
-	<img
-		src="/wp/{$_('locale')}/00-title.jpg"
-		class="img-fluid"
-		alt="White Paper comic first tile"
-	/>
-	<img src="/wp/{$_('locale')}/01-05.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/06-10.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/11-15.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/16-20.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/21-25.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/26-30.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/31-35.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/36-40.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/41-45.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/46-50.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/51-55.jpg" class="img-fluid" />
-	<img src="/wp/{$_('locale')}/56-58.jpg" class="img-fluid" />
-  <a href="{$_('bitcoin.pdf')}">original whitepaper</a>
-  {/if}
+	{#if $isLoading}
+		...
+	{:else}
+		<img
+			src="/wp/{$_('locale')}/00-title.jpg"
+			class="img-fluid"
+			alt="White Paper comic first tile"
+		/>
+		<img src="/wp/{$_('locale')}/01-05.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/06-10.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/11-15.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/16-20.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/21-25.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/26-30.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/31-35.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/36-40.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/41-45.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/46-50.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/51-55.jpg" class="img-fluid" />
+		<img src="/wp/{$_('locale')}/56-58.jpg" class="img-fluid" />
+
+		<CopyToClipboard
+			on:copy={() => toast.push('bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc 📋💚🗸 ')}
+			text="bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc"
+			let:copy
+		>
+			<div class="donate">
+				<button on:click={copy}> Donate to Scott McCloud </button>
+			</div>
+		</CopyToClipboard>
+		<p>donations: bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc</p>
+		<div style="height:10ex;" />
+		<a href={$_('bitcoin.pdf')}>original whitepaper</a>
+		<div style="height:10ex;" />
+	{/if}
 </section>
 
 <style>
