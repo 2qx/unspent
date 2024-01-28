@@ -256,21 +256,21 @@
 		font-weight: 700;
 	}
 	ul li {
-		padding: 10px;
+		padding: 0px 20px;
 		font-weight: 700;
 		align-self: center;
 	}
 
 	ul li img {
-		min-height: 45px;
+		min-height: 30px;
 	}
 
 	ul {
 		background-color: white;
 		border-radius: 50px;
-		padding-left: 0px;
-		margin: 5px;
-		border-radius: 10px;
+		padding: 10px;
+		margin: 0px;
+		border-radius: 40px;
 		display: inline-flex;
 		justify-content: center;
 		list-style: none;
