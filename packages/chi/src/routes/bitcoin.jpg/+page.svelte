@@ -30,8 +30,8 @@
 	<img src="/wp/{$_('locale')}/46-50.jpg" class="img-fluid" />
 	<img src="/wp/{$_('locale')}/51-55.jpg" class="img-fluid" />
 	<img src="/wp/{$_('locale')}/56-58.jpg" class="img-fluid" />
-  {/if}
   <a href="{$_('bitcoin.pdf')}">original whitepaper</a>
+  {/if}
 </section>
 
 <style>
