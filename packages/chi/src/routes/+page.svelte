@@ -204,7 +204,7 @@
 				{/if}
 			</tr>
 			{#if !contract}
-      <tr style="height:150px;">
+      <tr style="height:4el;">
         <td colspan="4" ></td>
       </tr>
 				<tr dir={$_('direction')}>
