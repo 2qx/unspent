@@ -36,5 +36,6 @@
   "overview": "Tạo một hợp đồng để phân phối khoảng một phần trăm số dư hàng tháng vĩnh viễn.",
   "short_00": "Nhập địa chỉ nhận của bạn.",
   "short_02": "Tài trợ cho sự vĩnh cửu của bạn.",
-  "locale": "vi"
+  "locale": "vi",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_vi.pdf"
 }

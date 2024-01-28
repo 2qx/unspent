@@ -37,5 +37,6 @@
   "month": "شهر",
   "overview": "إنشاء عقد لتوزيع حوالي واحد في المئة من الرصيد شهريا إلى الأبد.",
   "locale": "ar",
-  "direction": "rtl"
+  "direction": "rtl",
+  "bitcoin.pdf":  ":https://bitcoin.org/files/bitcoin-paper/bitcoin_ar.pdf"
 }

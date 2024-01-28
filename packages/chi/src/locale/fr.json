@@ -36,5 +36,6 @@
   "overview": "Créez un contrat pour distribuer environ un pour cent de l'équilibre mensuellement à perpétuité.",
   "short_01": "Diffuser votre contrat de perpétuité.",
   "year": "année",
-  "locale": "fr"
+  "locale": "fr",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_fr.pdf"
 }

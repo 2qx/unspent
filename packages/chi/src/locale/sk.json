@@ -36,5 +36,6 @@
   "short_01": "Vysielajte svoju zmluvu o trvalej konci.",
   "short_02": "Financujte svoju trvalosť.",
   "overview": "Vytvorte zmluvu na distribúciu asi jedného percenta zostatku mesačne.",
-  "locale": "sk"
+  "locale": "sk",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_sk.pdf"
 }

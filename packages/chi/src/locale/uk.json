@@ -36,5 +36,6 @@
   "short_02": "Фінансуйте свою вічність.",
   "short_01": "Транслюйте свій контракт на вічність.",
   "short_00": "Введіть свою приймальну адресу.",
-  "locale": "uk"
+  "locale": "uk",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_uk.pdf"
 }

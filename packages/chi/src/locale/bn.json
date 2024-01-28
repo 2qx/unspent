@@ -36,5 +36,6 @@
   "short_02": "আপনার চিরস্থায়ী তহবিল।",
   "short_00": "আপনার প্রাপ্তি ঠিকানা লিখুন।",
   "ok": "ঠিক আছে",
-  "locale": "bn"
+  "locale": "bn",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_bn.pdf"
 }

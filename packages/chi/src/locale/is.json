@@ -36,5 +36,6 @@
   "short_02": "Fjármagna ævarandi.",
   "short_01": "Sendu út ævarandi samning þinn.",
   "short_00": "Sláðu inn móttöku heimilisfangið þitt.",
-  "locale": "is"
+  "locale": "is",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_is.pdf"
 }

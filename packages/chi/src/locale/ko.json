@@ -36,5 +36,6 @@
   "short_02": "당신의 영속성에 자금을 지원하십시오.",
   "month": "월",
   "year": "년도",
-  "locale": "ko"
+  "locale": "ko",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_ko.pdf"
 }

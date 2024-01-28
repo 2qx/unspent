@@ -36,5 +36,6 @@
   "short_02": "Фондовати своје вечности.",
   "ok": "Добро",
   "year": "година",
-  "locale": "sr"
+  "locale": "sr",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_sr.pdf"
 }

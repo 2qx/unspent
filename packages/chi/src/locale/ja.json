@@ -36,5 +36,6 @@
   "month": "月",
   "year": "年",
   "short_02": "あなたの永続性に資金を提供してください。",
-  "locale": "ja"
+  "locale": "ja",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_jp.pdf"
 }

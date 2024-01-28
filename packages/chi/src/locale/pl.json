@@ -36,5 +36,6 @@
   "short_00": "Wprowadź swój adres odbierający.",
   "short_02": "Sfinansuj swoją wieczność.",
   "short_01": "Nadał swoją umowę na wieczność.",
-  "locale": "pl"
+  "locale": "pl",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_pl.pdf"
 }

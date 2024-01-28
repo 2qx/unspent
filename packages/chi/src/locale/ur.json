@@ -36,5 +36,6 @@
   "short_01": "اپنے مستقل معاہدے کو نشر کریں۔",
   "short_00": "اپنا موصولہ پتہ درج کریں۔",
   "short_02": "اپنی مستقل فنڈ کو فنڈ دیں۔",
-  "locale": "ur"
+  "locale": "ur",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_ur.pdf"
 }

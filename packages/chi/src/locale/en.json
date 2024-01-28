@@ -38,5 +38,6 @@
   "short_00": "Enter your receiving address.",
   "locale": "en",
   "bitcoin.jpg": "https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/",
+  "bitcoin.pdf": "/bitcoin.pdf",
   "direction": "ltr"
 }

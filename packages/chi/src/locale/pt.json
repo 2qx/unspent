@@ -36,5 +36,6 @@
   "overview": "Crie um contrato para distribuir cerca de um por cento do saldo mensalmente em perpetuidade.",
   "short_02": "Financiar sua perpetuidade.",
   "short_01": "Transmitir seu contrato de perpetuidade.",
-  "locale": "pt"
+  "locale": "pt",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_pt.pdf"
 }

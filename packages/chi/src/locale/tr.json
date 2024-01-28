@@ -36,5 +36,6 @@
   "short_02": "Sürekliliğinizi finanse edin.",
   "short_00": "Alma adresinizi girin.",
   "overview": "Bakiyenin yaklaşık yüzde birini kalıcı olarak dağıtmak için bir sözleşme oluşturun.",
-  "locale": "tr"
+  "locale": "tr",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_tr.pdf"
 }

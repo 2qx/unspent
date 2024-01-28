@@ -36,5 +36,6 @@
   "short_00": "अपना प्राप्त पता दर्ज करें।",
   "overview": "मासिक रूप से मासिक रूप से शेष राशि का लगभग एक प्रतिशत वितरित करने के लिए एक अनुबंध बनाएं।",
   "short_01": "अपने सतत अनुबंध को प्रसारित करें।",
-  "locale": "hi"
+  "locale": "hi",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_hi.pdf"
 }

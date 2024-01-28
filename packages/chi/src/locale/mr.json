@@ -36,5 +36,6 @@
   "short_01": "आपला चिरस्थायी करार प्रसारित करा.",
   "year": "वर्ष",
   "overview": "कायमस्वरूपी मासिक शिल्लक सुमारे एक टक्के वितरण करण्यासाठी करार तयार करा.",
-  "locale": "mr"
+  "locale": "mr",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_mr.pdf"
 }

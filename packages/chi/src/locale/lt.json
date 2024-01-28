@@ -36,5 +36,6 @@
   "overview": "Sukurkite sutartį paskirstyti maždaug vieną procentą balanso per mėnesį.",
   "short_01": "Transliuokite savo amžinybės sutartį.",
   "ok": "Gerai",
-  "locale": "lt"
+  "locale": "lt",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_lt.pdf"
 }

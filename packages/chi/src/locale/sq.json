@@ -36,5 +36,6 @@
   "overview": "Krijoni një kontratë për të shpërndarë rreth një përqind të bilancit çdo muaj në përjetësi.",
   "short_01": "Transmetoni kontratën tuaj të përjetësisë.",
   "short_00": "Vendosni adresën tuaj të marrjes.",
-  "locale": "sq"
+  "locale": "sq",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_al.pdf"
 }

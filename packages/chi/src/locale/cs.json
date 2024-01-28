@@ -36,5 +36,6 @@
   "short_02": "Financovat vaši věčnost.",
   "ok": "dobře",
   "overview": "Vytvořte smlouvu na distribuci přibližně jedno procento rovnováhy měsíčně.",
-  "locale": "cs"
+  "locale": "cs",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_cz.pdf"
 }

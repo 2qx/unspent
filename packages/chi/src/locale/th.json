@@ -36,5 +36,6 @@
   "overview": "สร้างสัญญาเพื่อแจกจ่ายประมาณหนึ่งเปอร์เซ็นต์ของยอดคงเหลือต่อเดือนในความเป็นอมตะ",
   "short_02": "กองทุนเป็นอมตะของคุณ",
   "short_00": "ป้อนที่อยู่ที่คุณได้รับ",
-  "locale": "th"
+  "locale": "th",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_th.pdf"
 }

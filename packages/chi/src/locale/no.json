@@ -36,5 +36,6 @@
   "overview": "Opprett en kontrakt for å distribuere omtrent en prosent av balansen månedlig i evighet.",
   "short_00": "Skriv inn mottaksadressen din.",
   "short_01": "Kringkaster din evigvarende kontrakt.",
-  "locale": "no"
+  "locale": "no",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_no.pdf"
 }

@@ -6,7 +6,6 @@
 	import { _, isLoading } from 'svelte-i18n';
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
-	import arrow_right from '$lib/images/arrow_right.svg';
 	import arrow_right_white from '$lib/images/arrow_right_white.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
 	import boss from '$lib/images/boss.svg';
@@ -106,6 +105,18 @@
 					window.open(`https://selene.cash/`, '_blank');
 					break;
 				case 8:
+					goto('/');
+					break;
+				case 9:
+					goto('/');
+					break;
+				case 10:
+					goto('/chart');
+					break;
+				case 11:
+					goto('/');
+					break;
+				case 12:
 					goto('/');
 					break;
 				default:

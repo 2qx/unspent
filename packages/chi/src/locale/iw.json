@@ -36,5 +36,6 @@
   "overview": "צור חוזה להפצת אחוז אחד מהיתרה חודשית בתמיד.",
   "short_01": "שידר את חוזה התמיד שלך.",
   "short_02": "לממן את נצחיותך.",
-  "locale": "iw"
+  "locale": "iw",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_iw.pdf"
 }

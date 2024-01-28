@@ -36,5 +36,6 @@
   "short_02": "Rahastage oma püsivust.",
   "short_00": "Sisestage oma vastuvõtu aadress.",
   "short_01": "Edastage oma püsivuslepingut.",
-  "locale": "et"
+  "locale": "et",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_et.pdf"
 }

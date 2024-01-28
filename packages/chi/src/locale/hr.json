@@ -36,5 +36,6 @@
   "short_01": "Emitirajte svoj ugovor o vječnoj.",
   "short_00": "Unesite svoju adresu za primanje.",
   "short_02": "Financirati svoju vječnost.",
-  "locale": "hr"
+  "locale": "hr",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_hr.pdf"
 }

@@ -36,5 +36,6 @@
   "short_02": "Finanzia la tua perpetuità.",
   "short_01": "Trasmette il tuo contratto perpetuo.",
   "short_00": "Inserisci il tuo indirizzo di ricezione.",
-  "locale": "it"
+  "locale": "it",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_it.pdf"
 }

@@ -36,5 +36,6 @@
   "short_00": "Voer uw ontvangstadres in.",
   "short_02": "Fonds uw eeuwigheid.",
   "short_01": "Uitzend uw eeuwigheidscontract.",
-  "locale": "nl"
+  "locale": "nl",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_nl.pdf"
 }

@@ -36,5 +36,6 @@
   "short_01": "Transmitir su contrato de perpetuidad.",
   "short_00": "Ingrese su dirección de recepción.",
   "overview": "Cree un contrato para distribuir alrededor del uno por ciento del saldo mensualmente a perpetuidad.",
-  "locale": "es"
+  "locale": "es",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_es.pdf"
 }

@@ -1,6 +1,6 @@
 {
   "name": "unspent",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "A command line utility for Unspent Phi (₿∙ϕ) contracts",
   "type": "module",
   "bin": "cli.cjs",
@@ -9,8 +9,8 @@
     "@swc/helpers": "0.5.2",
     "@tsconfig/node18-strictest-esm": "latest",
     "@types/node": "^10.8.0",
-    "@unspent/phi": "0.2.7",
-    "@unspent/psi": "0.2.7",
+    "@unspent/phi": "0.2.8",
+    "@unspent/psi": "0.2.8",
     "clipanion": "^3.2.0-rc.11",
     "fake-indexeddb": "4.0.1",
     "get-stream": "^5.1.0",

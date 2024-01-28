@@ -36,5 +36,6 @@
   "overview": "Erstellen Sie einen Vertrag, um monatlich etwa ein Prozent des Guthabens auf Dauer zu verteilen.",
   "short_00": "Geben Sie Ihre Empfangsadresse ein.",
   "short_01": "Übertragen Sie Ihren Perpetuity -Vertrag.",
-  "locale": "de"
+  "locale": "de",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_de.pdf"
 }

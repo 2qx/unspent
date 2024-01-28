@@ -36,5 +36,6 @@
   "overview": "یک قرارداد ایجاد کنید تا حدود یک درصد از تعادل ماهانه را به صورت دائمی توزیع کنید.",
   "short_00": "آدرس دریافت خود را وارد کنید.",
   "short_02": "دائمی خود را تأمین کنید.",
-  "locale": "fa"
+  "locale": "fa",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_fa.pdf"
 }

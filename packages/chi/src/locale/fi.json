@@ -36,5 +36,6 @@
   "short_00": "Kirjoita vastaanottava osoite.",
   "short_01": "Lähetä pysyvyyssopimuksesi.",
   "short_02": "Rahoita jatkuvasti.",
-  "locale": "fi"
+  "locale": "fi",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_fi.pdf"
 }

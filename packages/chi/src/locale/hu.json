@@ -36,5 +36,6 @@
   "short_00": "Írja be a fogadó címét.",
   "short_02": "Finanszírozza az örökkévalóságát.",
   "short_01": "Sugározza az örökkévalóság szerződését.",
-  "locale": "hu"
+  "locale": "hu",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_hu.pdf"
 }

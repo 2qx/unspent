@@ -36,5 +36,6 @@
   "month": "lună",
   "overview": "Creați un contract pentru a distribui aproximativ un procent din sold lunar în perpetuitate.",
   "short_01": "Difuzați -vă contractul de perpetuitate.",
-  "locale": "ro"
+  "locale": "ro",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_ro.pdf"
 }

@@ -36,5 +36,6 @@
   "overview": "Buat kontrak untuk mendistribusikan sekitar satu persen dari saldo bulanan untuk selamanya.",
   "short_00": "Masukkan alamat penerima Anda.",
   "short_02": "Mendanai selamanya.",
-  "locale": "id"
+  "locale": "id",
+  "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_id.pdf"
 }

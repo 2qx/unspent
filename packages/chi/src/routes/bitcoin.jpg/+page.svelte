@@ -1,5 +1,7 @@
 <script>
 	import { _, isLoading } from 'svelte-i18n';
+
+  
 </script>
 
 
@@ -29,7 +31,7 @@
 	<img src="/wp/{$_('locale')}/51-55.jpg" class="img-fluid" />
 	<img src="/wp/{$_('locale')}/56-58.jpg" class="img-fluid" />
   {/if}
-  <a href="https://web.archive.org/web/20100704213649if_/http://www.bitcoin.org:80/bitcoin.pdf">original whitepaper</a>
+  <a href="{$_('bitcoin.pdf')}">original whitepaper</a>
 </section>
 
 <style>
