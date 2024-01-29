@@ -37,6 +37,7 @@
   "year": "年",
   "short_02": "あなたの永続性に資金を提供してください。",
   "locale": "ja",
+  "wp_dir": "ja",
   "bitcoin.jpg":"/bitcoin.jpg",
   "bitcoin.pdf":"https://bitcoin.org/files/bitcoin-paper/bitcoin_jp.pdf"
 }

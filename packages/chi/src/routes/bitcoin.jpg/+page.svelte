@@ -13,22 +13,22 @@
 		...
 	{:else}
 		<img
-			src="/wp/{$_('locale')}/00-title.jpg"
+			src="/wp/{$_('wp_dir')}/00-title.jpg"
 			class="img-fluid"
-			alt="White Paper comic first tile"
+			alt="White Paper comic"
 		/>
-		<img src="/wp/{$_('locale')}/01-05.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/06-10.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/11-15.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/16-20.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/21-25.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/26-30.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/31-35.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/36-40.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/41-45.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/46-50.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/51-55.jpg" class="img-fluid" />
-		<img src="/wp/{$_('locale')}/56-58.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/01-05.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/06-10.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/11-15.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/16-20.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/21-25.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/26-30.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/31-35.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/36-40.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/41-45.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/46-50.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/51-55.jpg" class="img-fluid" />
+		<img src="/wp/{$_('wp_dir')}/56-58.jpg" class="img-fluid" />
 
 		<CopyToClipboard
 			on:copy={() => toast.push('bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc 📋💚🗸 ')}

@@ -28,8 +28,14 @@
 		stateStore.set('');
 		receiptAddressStore.set('');
 		pageStore.set('');
-		goto('/');
+		reloadPage();
 	};
+
+  function reloadPage() {
+		const thisPage = window.location.pathname;
+
+		goto('/').then(() => goto(thisPage));
+	}
 </script>
 
 <header>

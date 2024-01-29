@@ -118,7 +118,7 @@
 		<table>
 			<tr>
 				<td style="text-align: center;">
-					<img width="60px" height="60px" src={banner} />
+					<img width="80px" height="80px" src={banner} />
 				</td>
 				<td colspan="3" style="line-break: auto;"> <h1>unspent&hairsp;.cash</h1></td>
 			</tr>
@@ -150,7 +150,7 @@
 					</td>
 					<td colspan="3">
 						<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-							<div style="max-width: 95%;" on:click={bumpLevel} class="contract-div">
+							<div style="max-width: 95%; line-break:anywhere;" on:click={bumpLevel} class="contract-div">
 								<button class="styled" on:click={copy}>
 									{contract.getAddress()}
 								</button>
@@ -204,7 +204,7 @@
 						<img src={wallet} alt="wallet" />
 					</p>
 				</td>
-				<td colspan="2">
+				<td style="line-break:anywhere;" colspan="2">
 					<textarea
 						id="addr"
 						rows="3"
@@ -234,16 +234,8 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		line-break: anywhere;
 	}
 
-	#form1 {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
 
 	table {
 		background-color: white;

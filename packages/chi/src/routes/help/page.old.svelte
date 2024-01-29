@@ -71,7 +71,9 @@
 		if (stateValue < 1) {
 			stateStore.set('1');
 		}
-		goto('/bitcoin.jpg');
+		reloadPage();
+		//window.location = $_('bitcoin.jpg');
+		//goto('/bitcoin.jpg');
 	};
 
 	function handleWalletClick(walletIdx) {
@@ -96,6 +98,7 @@
 			switch (currentPageIndex) {
 				case 1:
 					handleWpClick();
+					window.open($_('bitcoin.jpg'), '_blank');
 					break;
 				case 3:
 					handleWalletClick('selene');
@@ -142,13 +145,15 @@
 						<img src={whitepaper} /><br />
 					</div>
 				{:else}
-					<div
+					<a
 						class={currentPageIndex == 1 ? 'flashing' : ''}
 						on:click={handleWpClick}
+						target="_blank"
+						href={$_('bitcoin.jpg')}
 					>
 						<img src={whitepaper} /><br />
 						BCH
-        </div>
+					</a>
 				{/if}
 			</li>
 

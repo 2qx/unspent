@@ -1,11 +1,11 @@
 {
   "0": "Let's create a stream of monthly payments.",
-  "1": "Learn about our coin. Tap to see a webcomic of the original whitepaper.",
-  "2": "Time locks a perpetuity. Keys unlock a wallet.",
+  "1": "Learn how bitcoin works with the webcomic of the whitepaper.",
+  "2": "Secrets lock a wallet. Time lock a perpetuity.",
   "3": "Select your Bitcoin Cash (BCH) wallet above.",
-  "4": "Find and backup your wallet private key.",
-  "5": "Then create another backup",
-  "6": "Keys control coins; no keys, no coins.",
+  "4": "Find and backup your wallet secrets key.",
+  "5": "Then make a copy, in a different place.",
+  "6": "Secrets control coins; no keys, no coins.",
   "7": "Copy an address from your wallet.",
   "8": "Paste your receiving address in the home screen.",
   "9": "Record your perpetuity on the blockchain.",
@@ -37,7 +37,8 @@
   "spendable": "spendable",
   "short_00": "Enter your receiving address.",
   "locale": "en",
-  "bitcoin.jpg": "https://web.archive.org/web/20230215013643/https://whitepaper.coinspice.io/",
+  "wp_dir": "en",
+  "bitcoin.jpg": "/bitcoin.jpg",
   "bitcoin.pdf": "/bitcoin.pdf",
   "direction": "ltr"
 }
