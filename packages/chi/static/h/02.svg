@@ -28,8 +28,8 @@
      id="namedview26"
      showgrid="false"
      inkscape:zoom="0.99614257"
-     inkscape:cx="-76.866521"
-     inkscape:cy="347.79818"
+     inkscape:cx="405.32778"
+     inkscape:cy="248.68657"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
@@ -83,7 +83,7 @@
      aria-label=":"
      id="text94"
      style="font-size:28.5869px;line-height:1.25;font-family:sans-serif;fill:#000000;stroke-width:0.714685"
-     transform="translate(-0.12528187,30.12766)">
+     transform="matrix(0.58673199,0,0,0.58673199,22.009958,39.580739)">
     <path
        d="m 51.209944,25.892041 h 2.945233 v 3.545446 h -2.945233 z m 0,-11.23655 h 2.945233 v 3.545445 h -2.945233 z"
        style="stroke-width:0.714685"
