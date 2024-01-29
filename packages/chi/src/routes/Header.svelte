@@ -93,7 +93,7 @@
 	</nav>
 
 	<div class="corner" >
-    <div style="display:flex">
+    <div>
       <span on:click={resetState}>
         <img src={restart} alt="restart" />
       </span>

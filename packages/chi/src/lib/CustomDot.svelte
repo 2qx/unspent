@@ -41,7 +41,9 @@
     background-color: #67a323;
   }
   .custom-dot__dot-container_disabled {
-    background-color: #dbdbdb;
+    background-color: #b1b1b1;
+    height: 10px;
+    width: 10px;
   }
   .custom-dot__symbol {
     font-size: 12px;

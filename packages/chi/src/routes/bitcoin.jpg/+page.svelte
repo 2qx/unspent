@@ -13,71 +13,24 @@
 		...
 	{:else}
 		<img
-      class="contain2"
+			class="c2"
 			src="/wp/{$_('wp_dir')}/00-title.jpg"
 			loading="eager"
 			alt="White Paper comic"
 		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/01-05.jpg"
-			loading="eager"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/06-10.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/11-15.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/16-20.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/21-25.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/26-30.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/31-35.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/36-40.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/41-45.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/46-50.jpg"
-			loading="lazy"
-		/>
-		<img
-			class="contain"
-			src="/wp/{$_('wp_dir')}/51-55.jpg"
-			loading="lazy"
-		/>
-		<img
-      class="contain2"
-			src="/wp/{$_('wp_dir')}/56-58.jpg"
-			loading="lazy"
-		/>
+
+		<img class="c" src="/wp/{$_('wp_dir')}/01-05.jpg" loading="eager" />
+		<img class="c" src="/wp/{$_('wp_dir')}/06-10.jpg" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/11-15.jpg" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/16-20.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/21-25.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/26-30.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/31-35.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/36-40.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/41-45.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/46-50.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c" src="/wp/{$_('wp_dir')}/51-55.jpg" fetchpriority="low" loading="lazy" />
+		<img class="c2" src="/wp/{$_('wp_dir')}/56-58.jpg" fetchpriority="low" loading="lazy" />
 
 		<CopyToClipboard
 			on:copy={() => toast.push('bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc 📋💚🗸 ')}
@@ -104,11 +57,11 @@
 		flex: 0.6;
 		line-break: anywhere;
 	}
-	.contain {
+	.c {
 		max-width: 100%;
-    aspect-ratio: 1060/2879;
+		aspect-ratio: 1060/2879;
 	}
-  .contain2{
-    max-width: 100%;
-  }
+	.c2 {
+		max-width: 100%;
+	}
 </style>

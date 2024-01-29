@@ -145,7 +145,7 @@
 
 			<tr>
 				{#if contract}
-					<td>
+					<td style="text-align: end;">
 						<img src={lock_clock} alt="lock_clock" />
 					</td>
 					<td colspan="3">

@@ -225,7 +225,7 @@
 
 				{#if stateValue < 8}
 					{#each Array(3) as _, pageIndex (pageIndex)}
-						<CustomDot symbol={pagesCount + pageIndex + 1} disabled={true} />
+						<CustomDot  disabled={true} />
 					{/each}
 				{/if}
 			</div>
@@ -316,8 +316,7 @@
 	}
 
 	.next-button_faded {
-		background-color: rgb(245, 245, 245);
-		color: linen;
+		background-color: rgb(199, 199, 199);
 		opacity: 1;
 	}
 
