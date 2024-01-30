@@ -63,6 +63,7 @@
 	.c {
 		max-width: 100%;
 		aspect-ratio: 1060/2879;
+    min-height: 960px;
 	}
 	.c2 {
 		max-width: 100%;
