@@ -18,6 +18,5 @@ packages/app/build
 packages/app/.svelte-kit
 app2
 packages/cli/.warnings
-packages/chi/static/wp_*
 *.yarn
 *.yarnrc.yml
