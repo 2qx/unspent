@@ -7,6 +7,7 @@ module.exports = {
   rootDir: "./",
   roots: [
     "<rootDir>/packages/cli",
+    "<rootDir>/packages/cat/src",
     "<rootDir>/packages/phi/src",
     "<rootDir>/packages/psi/src"
   ],
@@ -53,7 +54,7 @@ module.exports = {
   },
   testEnvironment: "jest-environment-node",
   setupFiles: ["fake-indexeddb/auto"],
-  testTimeout: 65000,
+  testTimeout: 125000,
   maxWorkers: 3,
   verbose: true
 

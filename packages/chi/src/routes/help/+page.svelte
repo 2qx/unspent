@@ -6,7 +6,6 @@
 	import { _, isLoading } from 'svelte-i18n';
 	import paytaca from '$lib/images/paytaca.svg';
 	import selene from '$lib/images/selene.svg';
-	import arrow_right from '$lib/images/arrow_right.svg';
 	import arrow_right_white from '$lib/images/arrow_right_white.svg';
 	import arrow_step from '$lib/images/arrow_step.svg';
 	import boss from '$lib/images/boss.svg';
@@ -72,9 +71,7 @@
 		if (stateValue < 1) {
 			stateStore.set('1');
 		}
-		reloadPage();
-		//window.location = $_('whitepaper');
-		//goto('/bitcoin.jpg');
+		goto('/bitcoin.jpg');
 	};
 
 	function handleWalletClick(walletIdx) {
@@ -92,8 +89,36 @@
 	};
 
 	const handleNextClick = () => {
-		if (currentPageIndex < pagesCount) {
+		if (currentPageIndex < pagesCount - 1) {
 			carousel.goToNext();
+		} else if (currentPageIndex == pagesCount - 1) {
+			console.log(currentPageIndex);
+			switch (currentPageIndex) {
+				case 1:
+					handleWpClick();
+					break;
+				case 3:
+					handleWalletClick('selene');
+					window.open(`https://selene.cash/`, '_blank');
+					break;
+				case 8:
+					goto('/');
+					break;
+				case 9:
+					goto('/');
+					break;
+				case 10:
+					goto('/chart');
+					break;
+				case 11:
+					goto('/');
+					break;
+				case 12:
+					goto('/');
+					break;
+				default:
+					break;
+			}
 		}
 	};
 
@@ -109,106 +134,109 @@
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <section>
-  <div id="book">
-    <ul>
-      <li>
-        {#if $isLoading}
-          <div on:click={handleWpClick}>
-            <img src={whitepaper} /><br />
-          </div>
-        {:else}
-          <a
-            class="{(currentPageIndex == 1) ? 'flashing' : ''}"
-            on:click={handleWpClick}
-            target="_blank"
-            href={$_('bitcoin.jpg')}
-          >
-            <img src={whitepaper} /><br />
-            BCH
-          </a>
-        {/if}
-      </li>
-  
-      {#if (stateValue == 1 && currentPageIndex > 2) || stateValue > 1}
-        <li style="background-color:white;">
-          <a
-            href="https://www.paytaca.com/#wallet"
-            target="_blank"
-            class="{(currentPageIndex == 3) ? 'flashing' : ''}"
-            on:click={() => handleWalletClick('paytaca')}
-          >
-            <img src={paytaca} /><br />
-            Paytaca
-          </a>
-        </li>
-        <li style="background-color:white;">
-          <a
-            class="{(currentPageIndex == 3) ? 'flashing' : ''}"
-            href="https://selene.cash/"
-            target="_blank"
-            on:click={() => handleWalletClick('selene')}
-          >
-            <img src={selene} /><br />
-            Selene
-          </a>
-        </li>
-      {/if}
-    </ul>
-  </div>
-  
-  {#if browser}
-    {#if !$isLoading}
-      <div class="caption" dir="{$_('direction')}">
-        {$_(String(currentPageIndex))}
-      </div>
-    {/if}
-    <Carousel
-      initialPageIndex={currentPageIndex}
-      infinite={false}
-      timingFunction={'linear'}
-      bind:this={carousel}
-      on:pageChange={(event) => updatePage(event.detail)}
-    >
-      {#each pages as page}
-        <div id="book">
-          <img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
+	<div id="book">
+		<ul>
+			<li>
+				{#if $isLoading}
+					<div on:click={handleWpClick}>
+						<img src={whitepaper} /><br />
+					</div>
+				{:else}
+					<div
+						class={currentPageIndex == 1 ? 'flashing' : ''}
+						on:click={handleWpClick}
+					>
+						<img src={whitepaper} /><br />
+						BCH
         </div>
-      {/each}
-  
-      <div slot="prev">
-        <!-- -->
-      </div>
-      <div slot="next">
-        <div class="button-box {(currentPageIndex == 0) ? 'flashing' : ''}">
-          <button
-            class="next-button"
-            disabled={currentPageIndex == pagesCount - 1}
-            on:click={handleNextClick}
-          >
-            <img src={arrow_right_white} />
-          </button>
-        </div>
-      </div>
-  
-      <!-- autoplay autoplayDuration={4400} -->
-      <div slot="dots" class="custom-dots">
-        {#each Array(pagesCount) as _, pageIndex (pageIndex)}
-          <CustomDot
-            symbol={pageIndex + 1}
-            active={currentPageIndex === pageIndex}
-            on:click={() => showPage(pageIndex)}
-          />
-        {/each}
-      </div>
-    </Carousel>
-  {/if}
-  
-  <div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
-  <span style="align:right; width: 10px;" on:click={skipState}>
-    <img src={arrow_step} />
-  </span>
-</section>
+				{/if}
+			</li>
 
+			{#if (stateValue == 1 && currentPageIndex > 2) || stateValue > 1}
+				<li style="background-color:white;">
+					<a
+						href="https://www.paytaca.com/#wallet"
+						target="_blank"
+						class={currentPageIndex == 3 ? 'flashing' : ''}
+						on:click={() => handleWalletClick('paytaca')}
+					>
+						<img src={paytaca} /><br />
+						Paytaca
+					</a>
+				</li>
+				<li style="background-color:white;">
+					<a
+						class={currentPageIndex == 3 ? 'flashing' : ''}
+						href="https://selene.cash/"
+						target="_blank"
+						on:click={() => handleWalletClick('selene')}
+					>
+						<img src={selene} /><br />
+						Selene
+					</a>
+				</li>
+			{/if}
+		</ul>
+	</div>
+
+	{#if browser}
+		{#if !$isLoading}
+			<div class="caption" dir={$_('direction')}>
+				{$_(String(currentPageIndex))}
+			</div>
+		{/if}
+		<Carousel
+			initialPageIndex={currentPageIndex}
+			infinite={false}
+			timingFunction={'linear'}
+			bind:this={carousel}
+			on:pageChange={(event) => updatePage(event.detail)}
+		>
+			{#each pages as page}
+				<div id="book">
+					<img width="100%" src="/h/{String(page).padStart(2, '0')}.svg" alt="home" />
+				</div>
+			{/each}
+
+			<div slot="prev">
+				<!-- -->
+			</div>
+			<div slot="next">
+				<div class="button-box {currentPageIndex == 0 ? 'flashing' : ''}">
+					<button
+						class="next-button"
+						class:next-button_faded={currentPageIndex == pagesCount - 1}
+						on:click={handleNextClick}
+					>
+						<img src={arrow_right_white} />
+					</button>
+				</div>
+			</div>
+
+			<!-- autoplay autoplayDuration={4400} -->
+			<div slot="dots" class="custom-dots">
+				{#each Array(pagesCount) as _, pageIndex (pageIndex)}
+					<CustomDot
+						symbol={pageIndex + 1}
+						active={currentPageIndex === pageIndex}
+						on:click={() => showPage(pageIndex)}
+					/>
+				{/each}
+
+				{#if stateValue < 8}
+					{#each Array(3) as _, pageIndex (pageIndex)}
+						<CustomDot  disabled={true} />
+					{/each}
+				{/if}
+			</div>
+		</Carousel>
+	{/if}
+
+	<div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
+	<span style="align:right; width: 10px;" on:click={skipState}>
+		<img src={arrow_step} />
+	</span>
+</section>
 
 <style>
 	#book {
@@ -223,21 +251,21 @@
 		font-weight: 700;
 	}
 	ul li {
-		padding: 10px;
+		padding: 0px 20px;
 		font-weight: 700;
 		align-self: center;
 	}
 
 	ul li img {
-		min-height: 45px;
+		min-height: 30px;
 	}
 
 	ul {
 		background-color: white;
 		border-radius: 50px;
-		padding-left: 0px;
-		margin: 5px;
-		border-radius: 10px;
+		padding: 10px;
+		margin: 0px;
+		border-radius: 40px;
 		display: inline-flex;
 		justify-content: center;
 		list-style: none;
@@ -260,10 +288,10 @@
 	}
 
 	.caption {
-		height: 6ex;
+		height: 8ex;
 		padding: 1ex;
 		text-align: center;
-		font-size: x-large;
+		font-size: large;
 		font-weight: 700;
 		background-color: white;
 	}
@@ -287,9 +315,8 @@
 		top: 1ex;
 	}
 
-	.next-button:disabled {
-		background-color: rgb(245, 245, 245);
-		color: linen;
+	.next-button_faded {
+		background-color: rgb(199, 199, 199);
 		opacity: 1;
 	}
 

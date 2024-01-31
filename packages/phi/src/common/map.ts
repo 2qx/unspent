@@ -39,6 +39,7 @@ export function opReturnToInstance(
   const code = String.fromCharCode(parseInt(contractCode, 16)) as CodeType;
 
   const instance = contractMap[code].fromOpReturn(serialized, network);
+  if(instance.isSpecial()) throw("Too Special: " + serialized)
   return instance;
 }
 

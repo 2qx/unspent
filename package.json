@@ -11,7 +11,7 @@
       "**/jest-runner/**"
     ]
   },
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
@@ -28,6 +28,7 @@
     "bump": "node bump.cjs",
     "phi:publish": "yarn workspace @unspent/phi run publish ",
     "format": "prettier --write .",
+    "cat": "yarn workspace @unspent/cat run cli",
     "cli": "yarn workspace unspent run cli",
     "postinstall": "lerna bootstrap && lerna run build",
     "nuke": "rm -fr jest/playwright/* && rm -fr node_modules && yarn remove:packages",
@@ -36,6 +37,7 @@
     "regtest:down": "./jest/docker/stop.sh",
     "test": "NODE_OPTIONS='--experimental-vm-modules --es-module-specifier-resolution=node' ./node_modules/jest/bin/jest.js  --config jest.config.js  --forceExit",
     "test:skip": "SKIP_REGTEST_INIT=1 yarn test",
+    "test:cat:skip": "SKIP_REGTEST_INIT=1 yarn workspace @unspent/cat run test",
     "test:browser": "npx jest --config jest.config.browser.js --detectOpenHandles",
     "test:browser:skip": "SKIP_REGTEST_INIT=1 yarn test:browser",
     "update:artifacts": "yarn workspace @unspent/phi run update:artifacts"

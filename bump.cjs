@@ -18,6 +18,7 @@ let rootPackageFile = "./package.json";
 // update package.json
 const workspacePackageFiles = [
   "./packages/app/package.json",
+  "./packages/cat/package.json",
   "./packages/chi/package.json",
   "./packages/cli/package.json",
   "./packages/phi/package.json",

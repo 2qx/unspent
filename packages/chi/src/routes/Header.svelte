@@ -28,8 +28,14 @@
 		stateStore.set('');
 		receiptAddressStore.set('');
 		pageStore.set('');
-		goto('/');
+		reloadPage();
 	};
+
+  function reloadPage() {
+		const thisPage = window.location.pathname;
+
+		goto('/').then(() => goto(thisPage));
+	}
 </script>
 
 <header>
@@ -86,13 +92,16 @@
 		</svg>
 	</nav>
 
-	<div class="corner">
-    <span on:click={resetState}>
-			<img src={restart} alt="restart" />
-		</span>
-		<a href="https://github.com/2qx/unspent">
-			<img src={github} alt="GitHub" />
-		</a>
+	<div class="corner" >
+    <div>
+      <span on:click={resetState}>
+        <img src={restart} alt="restart" />
+      </span>
+      <a href="https://github.com/2qx/unspent">
+        <img src={github} alt="GitHub" />
+      </a>
+    </div>
+
 		
 	</div>
 </header>
@@ -104,12 +113,11 @@
 	}
 
 	.corner {
-		width: 3em;
+		width: 6em;
 		height: 3em;
 	}
 
 	.corner a {
-		display: flex;
 		align-items: center;
 		justify-content: center;
 		width: 100%;

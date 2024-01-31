@@ -18,8 +18,8 @@ const config = {
       // these options are set automatically — see below
       pages: buildDir,
       assets: buildDir,
-      fallback: '404.html',
-      precompress: false,
+      fallback: 'index.html',
+      precompress: true,
       strict: true
     })
   }

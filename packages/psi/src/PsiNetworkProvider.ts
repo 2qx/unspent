@@ -35,7 +35,7 @@ export class PsiNetworkProvider implements NetworkProvider {
     this.chaingraphHost = chaingraphHost ? chaingraphHost : "https://demo.chaingraph.cash/v1/graphql"
     this.db = new Psi(network)
 
-    failoverProvider = failoverProvider ? failoverProvider : undefined
+    failoverProvider = failoverProvider ? failoverProvider : new ElectrumNetworkProvider(network)
     if (debounce) this.DEBOUNCE = debounce
     if (fuzz) this.FUZZ = fuzz
   }
@@ -72,8 +72,13 @@ export class PsiNetworkProvider implements NetworkProvider {
       // some time ago
       return goodUtxos.map(op => asUtxo(op))
     } else {
-      const history = await getHistory(this.chaingraphHost!, lockingBytecode, { node: this.network, limit: 5 })
-      return (await this.db.bulkPutRawTransaction(history, lockingBytecodeHex)).map(u => asUtxo(u))
+      try{
+        const history = await getHistory(this.chaingraphHost!, lockingBytecode, { limit: 3 })
+        return (await this.db.bulkPutRawTransaction(history, lockingBytecodeHex)).map(u => asUtxo(u))
+      }catch{
+        return (await this.failoverProvider?.getUtxos(address))!
+      }
+      
     }
 
   }
@@ -84,12 +89,9 @@ export class PsiNetworkProvider implements NetworkProvider {
       throw Error("No failover network providers specified. Cannot get tx from cache.")
     } else {
       // TODO replace with chaingraph raw transaction getter.
-      try {
-        return await this.failoverProvider.getRawTransaction(txid)
-      } catch (e: any) {
-        console.debug(e)
-      }
-      throw Error("Failover Transaction (get) Network providers exhausted, bailing")
+      return await this.failoverProvider.getRawTransaction(txid)
+      
+      
     }
 
   }
@@ -99,13 +101,8 @@ export class PsiNetworkProvider implements NetworkProvider {
       throw Error("No failover network providers specified. Cannot send from cache.")
     } else {
       // replace with chaingraph send
-        try {
-          return await this.failoverProvider.sendRawTransaction(txHex)
-        } catch (e: any) {
-          console.debug(e)
-        }
-      
-      throw Error("Failover Broadcast Network Providers exhausted, bailing")
+      return await this.failoverProvider.sendRawTransaction(txHex)
+        
     }
   }
 

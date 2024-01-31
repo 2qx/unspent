@@ -1,0 +1,14 @@
+{
+  // If you don't need native ESM, you can switch to @tsconfig/node16/tsconfig.json and remove "type": "module" from package.json
+  "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true
+  },
+  "ts-node": {
+    "swc": true
+  },
+  "exclude": ["cli.cjs"]
+}

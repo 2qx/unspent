@@ -1,0 +1,53 @@
+{
+  "name": "@unspent/cat",
+  "version": "0.2.8",
+  "description": "A TLV utility for unpspent/phi",
+  "type": "module",
+  "bin": "cli.cjs",
+  "dependencies": {
+    "@swc/core": "1.3.71",
+    "@swc/helpers": "0.5.2",
+    "@tsconfig/node18-strictest-esm": "latest",
+    "@types/node": "^10.8.0",
+    "@unspent/phi": "0.2.8",
+    "@unspent/psi": "0.2.8",
+    "clipanion": "^3.2.0-rc.11",
+    "fake-indexeddb": "4.0.1",
+    "get-stream": "^5.1.0",
+    "parse-database-url": "^0.3.0",
+    "pg": "^8.11.3",
+    "pg-format": "^1.0.4",
+    "pg-promise": "^11.5.4",
+    "pino": "^8.17.1",
+    "ts-node": "^10.8.0",
+    "typescript": "^4.7.2"
+  },
+  "scripts": {
+    "cli": "node --experimental-modules --redirect-warnings=.warnings --es-module-specifier-resolution=node cli.cjs",
+    "test": "npx jest",
+    "publish:public": "#no op"
+  },
+  "exclude": [
+    "exclude/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2qx/unspent.git"
+  },
+  "author": "-",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/2qx/unspent/issues"
+  },
+  "homepage": "https://github.com/2qx/unspent#readme",
+  "keywords": [
+    "bitcoin",
+    "bitcoin cash",
+    "bch",
+    "tBCH",
+    "cashscript",
+    "testnet",
+    "perpetuity",
+    "unspent"
+  ]
+}

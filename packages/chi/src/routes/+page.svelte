@@ -118,19 +118,39 @@
 		<table>
 			<tr>
 				<td style="text-align: center;">
-					<img width="125px" height="125px" src={banner} />
+					<img width="80px" height="80px" src={banner} />
 				</td>
 				<td colspan="3" style="line-break: auto;"> <h1>unspent&hairsp;.cash</h1></td>
 			</tr>
+			{#if !contract}
+				<tr style="height:4el;">
+					<td colspan="4" />
+				</tr>
+				<tr dir={$_('direction')}>
+					<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
+						<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
+						<ol>
+							<li>{$_('short_00')}</li>
+							<li>{$_('short_01')}</li>
+							<li>{$_('short_02')}</li>
+						</ol>
+					</td>
+					<td style="text-align:center; width:25%">
+						<a href="{base}/help">
+							<img class={!stateValue ? 'flashing' : ''} width="80px" src={help} alt="help" />
+						</a>
+					</td>
+				</tr>
+			{/if}
+
 			<tr>
 				{#if contract}
-					<td style="text-align: center;" />
-					<td>
+					<td style="text-align: end;">
 						<img src={lock_clock} alt="lock_clock" />
 					</td>
-					<td colspan="2">
+					<td colspan="3">
 						<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-							<div style="max-width: 95%;" on:click={bumpLevel} class="contract-div">
+							<div style="max-width: 95%; line-break:anywhere;" on:click={bumpLevel} class="contract-div">
 								<button class="styled" on:click={copy}>
 									{contract.getAddress()}
 								</button>
@@ -138,7 +158,7 @@
 						</CopyToClipboard>
 					</td>
 				{:else}
-					<td style="text-align: center;" />
+					<td style="text-align: center; line-break:auto" />
 					<td colspan="3" dir={$_('direction')}><b> {$_('create')}</b></td>
 				{/if}
 			</tr>
@@ -184,7 +204,7 @@
 						<img src={wallet} alt="wallet" />
 					</p>
 				</td>
-				<td colspan="2">
+				<td style="line-break:anywhere;" colspan="2">
 					<textarea
 						id="addr"
 						rows="3"
@@ -204,27 +224,6 @@
 					<td style="line-break:auto;" dir={$_('direction')} colspan="3">{$_('receive')}</td>
 				{/if}
 			</tr>
-			{#if !contract}
-				<tr>
-					<td colspan="3" />
-					<td style="text-align:center; padding:20px;">
-						<a href="{base}/help">
-							<img class={!stateValue ? 'flashing' : ''} width="100px" src={help} alt="help" />
-						</a>
-					</td>
-				</tr>
-				<tr dir={$_('direction')}>
-          <td></td>
-					<td colspan="3" style="line-break:auto; font-size:medium; padding:10px;">
-						<p style="line-break:auto; font-size:medium;">{$_('overview')}</p>
-						<ol>
-							<li>{$_('short_00')}</li>
-							<li>{$_('short_01')}</li>
-							<li>{$_('short_02')}</li>
-						</ol>
-					</td>
-				</tr>
-			{/if}
 		</table>
 	{/if}
 </section>
@@ -235,21 +234,13 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		flex: 0.6;
-		line-break: anywhere;
 	}
 
-	#form1 {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
 
 	table {
 		background-color: white;
-		border-radius: 60px;
+		border-radius: 40px;
+		border-collapse: collapse;
 	}
 	table tr td {
 		justify-content: space-around;

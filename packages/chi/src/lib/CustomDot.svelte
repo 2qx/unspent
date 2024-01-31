@@ -3,6 +3,7 @@
    * Indicates if dot is active
    */
   export let active = false
+  export let disabled = false
 
   /**
    * Symbol to show
@@ -13,6 +14,7 @@
 <div
   class="custom-dot__dot-container"
   class:custom-dot__dot-container_active={active}
+  class:custom-dot__dot-container_disabled={disabled}
   on:click
 >
   <span class="custom-dot__symbol">{symbol}</span>
@@ -37,6 +39,11 @@
   }
   .custom-dot__dot-container_active {
     background-color: #67a323;
+  }
+  .custom-dot__dot-container_disabled {
+    background-color: #b1b1b1;
+    height: 10px;
+    width: 10px;
   }
   .custom-dot__symbol {
     font-size: 12px;

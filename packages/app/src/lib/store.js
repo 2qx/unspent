@@ -6,7 +6,6 @@ export let executorChipnetAddress = persist(writable(''), createLocalStorage(tru
 export let protocol = persist(writable('utxo'), createLocalStorage(true), 'protocol');
 
 export let chaingraphHost = persist(
-  // https://demo.chaingraph.cash/v1/graphql
 	//writable('https://gql.chaingraph.pat.mn/v1/graphql'),
 	writable('https://demo.chaingraph.cash/v1/graphql'),
 	createLocalStorage(true),
@@ -14,7 +13,8 @@ export let chaingraphHost = persist(
 );
 
 export let explorer = persist(
-	writable('https://explorer.bitcoinunlimited.info/'),
+	//writable('https://explorer.bitcoinunlimited.info/'),
+	writable('https://explorer.bch.ninja/'),
 	createLocalStorage(true),
 	'explorer'
 );

@@ -5,11 +5,11 @@
 	import month from '$lib/images/month.svg';
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
-  import banner from '$lib/images/banner.svg';
+	import banner from '$lib/images/banner.svg';
 	import chart from '$lib/images/chart.svg';
 	import table from '$lib/images/table.svg';
 	import share from '$lib/images/share.svg';
-	import { _ } from 'svelte-i18n';
+	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 	import {
@@ -88,100 +88,106 @@
 	<meta name="description" content="Unspent Cash" />
 </svelte:head>
 <h4><img src={share} alt="share" /></h4>
-<section>
-	<table>
-		<tr>
-			<td colspan="4"> <h1>unspent.cash</h1></td>
-		</tr>
-		<tr>
-			{#if contract}
-				<td style="text-align: center;">
-					<img width="125px" src={banner} />
-				</td>
-				<td colspan="3">
-					<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.getAddress()} let:copy>
-						<div style="max-width: 80%;"  class="action">
-							<button on:click={copy}>
-								{contract.getAddress()}
-							</button>
-						</div>
-					</CopyToClipboard>
-				</td>
-			{:else}
-				<td style="text-align: center;">
-					<img width="125px" src={banner} />
-				</td>
-				<td colspan="3"><b> {$_('create')}</b></td>
+{#if $isLoading}
+	loading ...
+{:else}
+	<section>
+		<table>
+			<tr>
+				<td colspan="4"> <h1>unspent.cash</h1></td>
+			</tr>
+			<tr>
+				{#if contract}
+					<td style="text-align: center;">
+						<img width="125px" src={banner} />
+					</td>
+					<td colspan="3">
+						<CopyToClipboard
+							on:copy={() => toast.push('📋🗸')}
+							text={contract.getAddress()}
+							let:copy
+						>
+							<div style="max-width: 80%;" class="action">
+								<button on:click={copy}>
+									{contract.getAddress()}
+								</button>
+							</div>
+						</CopyToClipboard>
+					</td>
+				{:else}
+					<td style="text-align: center;">
+						<img width="125px" src={banner} />
+					</td>
+					<td colspan="3"><b> {$_('create')}</b></td>
+				{/if}
+			</tr>
+			<tr>
+				{#if balance}
+					<td />
+					<td style="width:30px;">
+						<img src={lock_clock} alt="lock_clock" />
+					</td>
+					<td colspan="2">
+						<b>{balance.toLocaleString()}</b> sats <br />
+						(<i
+							>{(Number(balance) / 100000000).toLocaleString(undefined, {
+								minimumSignificantDigits: 6
+							})}</i
+						> BCH)
+					</td>
+				{:else}
+					<td />
+					<td style="width:30px;">
+						<img src={lock_clock} alt="lock_clock" />
+					</td>
+					<td colspan="2" />
+				{/if}
+			</tr>
+			{#if receiptAddressValid}
+				<tr>
+					<td />
+					<td>
+						<p><img src={arrow_down} alt="to" /></p>
+					</td>
+					<td>
+						<p>
+							<b>1.04% month</b>
+						</p>
+						<p>
+							<b>11.8% year</b>
+						</p>
+					</td>
+					<td>
+						<p>
+							<img src={month} alt="month" />
+						</p>
+					</td>
+				</tr>
 			{/if}
-		</tr>
-		<tr>
-			{#if balance}
-				<td />
-				<td style="width:30px;">
-					<img src={lock_clock} alt="lock_clock" />
-				</td>
-				<td colspan="2">
-					<b>{balance.toLocaleString()}</b> sats <br />
-					(<i
-						>{(Number(balance) / 100000000).toLocaleString(undefined, {
-							minimumSignificantDigits: 6
-						})}</i
-					> BCH)
-				</td>
-			{:else}
-				<td />
-				<td style="width:30px;">
-					<img src={lock_clock} alt="lock_clock" />
-				</td>
-				<td colspan="2" />
-			{/if}
-		</tr>
-		{#if receiptAddressValid}
 			<tr>
 				<td />
-				<td>
-					<p><img src={arrow_down} alt="to" /></p>
-				</td>
-				<td>
+				<td style="width=30px;">
 					<p>
-						<b>1.04% month</b>
-					</p>
-					<p>
-						<b>11.8% year</b>
+						<img src={wallet} alt="wallet" />
 					</p>
 				</td>
-				<td>
+				<td style="line-break:anywhere;" colspan="2">
 					<p>
-						<img src={month} alt="month" />
+						{#if receiptAddress}
+							{receiptAddress}
+						{/if}
 					</p>
 				</td>
 			</tr>
-		{/if}
-		<tr>
-			<td />
-			<td style="width=30px;">
-				<p>
-					<img src={wallet} alt="wallet" />
-				</p>
-			</td>
-			<td style="line-break:anywhere;" colspan="2">
-				<p>
-					{#if receiptAddress}
-						{receiptAddress}
-					{/if}
-				</p>
-			</td>
-		</tr>
-		
-	</table>
-	
-</section>
-<hr />
-<h4><img src={table} alt="table" /></h4>
-<UtxoSection {receiptAddress} />
-<hr />
-<h4><img src={chart} alt="chart" /></h4>
-<ContractChartSection {receiptAddress} />
+		</table>
+	</section>
+	<hr />
+	<h4><img src={table} alt="table" /></h4>
+	<UtxoSection {receiptAddress} />
+	<hr />
+	<h4><img src={chart} alt="chart" /></h4>
+	<ContractChartSection {receiptAddress} />
+{/if}
 
 <style>
 	section {
@@ -206,14 +212,12 @@
 		background-color: white;
 	}
 	table tr td {
-		min-width: 10%;
-		justify-content: space-around;
+		min-width: 5%;
 	}
 
 	table tr td p {
 		font-size: small;
 		display: flex;
-		justify-content: space-around;
 	}
 
 	table tr td pre {
@@ -225,5 +229,4 @@
 		font-weight: 900;
 		color: #d99b22;
 	}
-
 </style>

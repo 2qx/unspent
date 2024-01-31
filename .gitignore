@@ -1,6 +1,7 @@
 .idea
 .DS_Store
 .vscode
+.env
 .env.testnet
 .env.mainnet
 node_modules
@@ -17,6 +18,5 @@ packages/app/build
 packages/app/.svelte-kit
 app2
 packages/cli/.warnings
-packages/chi/static/wp_*
 *.yarn
 *.yarnrc.yml

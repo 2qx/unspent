@@ -59,6 +59,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       BigInt(executorAllowance),
     ]);
     this.recipientLockingBytecode = lock.bytecode;
+    if(SPECIALS.includes(binToHex(lock.bytecode))) throw Error("Contract is too special")
     this.options = options;
   }
 
