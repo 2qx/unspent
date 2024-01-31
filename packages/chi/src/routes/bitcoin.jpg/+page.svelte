@@ -16,7 +16,7 @@
 			class="c2"
       srcset="/wp_sm/{$_('wp_dir')}/00-title.jpg 530w, /wp/{$_('wp_dir')}/00-title.jpg 1060w"
       sizes="(max-width: 530px) 530px, 1060px"
-
+      style="aspect-ratio: 1060/576; min-height:192px"
 			src="/wp/{$_('wp_dir')}/00-title.jpg"
 			loading="eager"
 			alt="The bitcoin whitepaper webcomic"
