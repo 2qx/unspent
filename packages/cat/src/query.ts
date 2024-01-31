@@ -144,7 +144,7 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
     let outputs = tx.transaction.outputs.filter((o: any) => o.locking_bytecode.includes(lockingBytecode) > 0)
     let inputs = tx.transaction.inputs.filter((i: any) => i.outpoint.locking_bytecode.includes(lockingBytecode) > 0)
     return [
-      ...outputs.map(output => {
+      ...outputs.map((output:any) => {
         return {
           id: tx.transaction.hash.substring(3) + ":o:" + output.output_index,
           value: -parseInt(output.value_satoshis),
@@ -152,7 +152,7 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
           locking_bytecode: lockingBytecode
         }
       }),
-      ...inputs.map(input => {
+      ...inputs.map((input:any) => {
         return {
           id: tx.transaction.hash.substring(3) + ":i:" + input.input_index,
           value: parseInt(input.value_satoshis),

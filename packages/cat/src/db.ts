@@ -174,7 +174,7 @@ export default class StorageProvider {
     return false
   }
 
-  public async putTransactions(rawValues: string[]) {
+  public async putTransactions(rawValues: OutputEntryI[]) {
     await this.putOutputs(rawValues)
     //await this.putSpends(rawValues)
   }

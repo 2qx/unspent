@@ -29,14 +29,23 @@ describe(`Perpetuity Class Tests`, () => {
 
 
   test("Should denote special Perpetuities", async () => {
-    const p = new Perpetuity(
-      4000n,
-      "bitcoincash:qpgf0ztxq3mwfq6eg5versgfdzq9c3pwv5jsk6wnay",
-      1000n,
-      12n,
-      {version:2}
-    );
-    expect(p.isSpecial()).toBe(true);
+    expect.assertions(1);
+    try {
+      const p = new Perpetuity(
+        4000n,
+        "bitcoincash:qpgf0ztxq3mwfq6eg5versgfdzq9c3pwv5jsk6wnay",
+        1000n,
+        12n,
+        {version:2}
+      );
+      // error 
+    } catch (e: any) {
+      expect(e.message).toBe(
+        "Contract is too special"
+      );
+    }
+
+    
 
   });
 
