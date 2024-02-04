@@ -108,14 +108,14 @@
   .border{
     background: linear-gradient(#fff1ff, #ffffff);
     border: 0.2vmin solid rgb(0, 0, 0);
-		border-radius: 10px;
+		border-radius: 20px;
     border-style: double;
   }
   .border > img{
     object-fit: cover;
   }
 	.wrapper > div > img{
-		border-radius: 10px;
+		border-radius: 20px;
 		width: 100%;
     height: 100%;
     z-index: -10;
