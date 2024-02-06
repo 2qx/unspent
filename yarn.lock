@@ -4832,6 +4832,11 @@
   resolved "https://registry.yarnpkg.com/@types/pako/-/pako-2.0.0.tgz#12ab4c19107528452e73ac99132c875ccd43bdfb"
   integrity sha512-10+iaz93qR5WYxTo+PMifD5TSxiOtdRaxBf7INGGXMQgTCu8Z/7GYWYFUOS3q/G0nE5boj1r4FEB+WSy7s5gbA==
 
+"@types/pg-format@^1.0.4":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/pg-format/-/pg-format-1.0.5.tgz#329c4b64ec77d442407f59631c6b86fdb6461672"
+  integrity sha512-i+oEEJEC+1I3XAhgqtVp45Faj8MBbV0Aoq4rHsHD7avgLjyDkaWKObd514g0Q/DOUkdxU0P4CQ0iq2KR4SoJcw==
+
 "@types/prettier@^2.1.5":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.7.0.tgz#ea03e9f0376a4446f44797ca19d9c46c36e352dc"

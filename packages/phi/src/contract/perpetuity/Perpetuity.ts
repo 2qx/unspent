@@ -308,13 +308,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
           if (nextPayout < Number(DUST_UTXO_THRESHOLD)) {
             break;
           }
-          if (this.options.version! < 2) {
-            time.push(Number(seriesStartTime + i * intervalSeconds));
-            installment.push(Number(nextPayout));
-            payout.push(payout.at(-1)! + nextPayout);
-            principal.push(Number(lastPrincipal - nextPayout - Number(this.executorAllowance)));
-            allowance.push(Number(this.executorAllowance) * i);
-          } else {
+          if (this.options.version && this.options.version >= 2) {
             if (nextPayout > 1000n) {
               time.push(Number(seriesStartTime + i * intervalSeconds));
               installment.push(Number(nextPayout));
@@ -323,11 +317,19 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
               allowance.push(Number(this.executorAllowance) * i);
             } else {
               time.push(Number(seriesStartTime + i * intervalSeconds));
-              payout.push(Number(lastPrincipal - Number(this.executorAllowance)));
+              installment.push(Number(lastPrincipal));
+              payout.push(payout.at(-1)! + Number(lastPrincipal - nextPayout - Number(this.executorAllowance)));
               principal.push(0);
               allowance.push(Number(this.executorAllowance) * i);
               break;
             }
+          }
+          else {
+            time.push(Number(seriesStartTime + i * intervalSeconds));
+            installment.push(Number(nextPayout));
+            payout.push(payout.at(-1)! + nextPayout);
+            principal.push(Number(lastPrincipal - nextPayout - Number(this.executorAllowance)));
+            allowance.push(Number(this.executorAllowance) * i);
           }
         }
 

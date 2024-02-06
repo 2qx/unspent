@@ -9,6 +9,7 @@
     "@swc/helpers": "0.5.2",
     "@tsconfig/node18-strictest-esm": "latest",
     "@types/node": "^10.8.0",
+    "@types/pg-format":"^1.0.4",
     "@unspent/phi": "0.2.9",
     "@unspent/psi": "0.2.9",
     "clipanion": "^3.2.0-rc.11",

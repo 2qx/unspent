@@ -234,3 +234,41 @@ export function assurePkh(address: string){
   if(cashaddrInfo.type!=CashAddressType.p2pkh) throw ("Provided address was not a pay to public key hash address")
 }
 
+/**
+* Helper function to convert an address to a locking script
+*
+* @param address   Address to convert to locking script
+*
+* @returns a locking script corresponding to the passed address
+*/
+export function addressToLockScript(address: string): Uint8Array {
+  const result = cashAddressToLockingBytecode(address);
+
+  if (typeof result === 'string') throw new Error(result);
+
+  return result.bytecode;
+}
+
+
+/**
+ * Helper function to convert an address to an electrum-cash compatible scripthash.
+ * This is necessary to support electrum versions lower than 1.4.3, which do not
+ * support addresses, only script hashes.
+ *
+ * @param address Address to convert to an electrum scripthash
+ *
+ * @returns The corresponding script hash in an electrum-cash compatible format
+ */
+export async function addressToElectrumScriptHash(address: string): Promise<string> {
+  // Retrieve locking script
+  const lockScript = addressToLockScript(address);
+
+  // Hash locking script
+  const scriptHash = await sha256(lockScript);
+
+  // Reverse scripthash
+  scriptHash.reverse();
+
+  // Return scripthash as a hex string
+  return binToHex(scriptHash);
+}
