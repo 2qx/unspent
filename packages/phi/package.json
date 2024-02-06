@@ -1,6 +1,6 @@
 {
   "name": "@unspent/phi",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
@@ -32,7 +32,7 @@
     "@bitauth/libauth": "v2.0.0",
     "@cashscript/utils": "0.10.0-next.2",
     "@tsconfig/node16-strictest-esm": "latest",
-    "@unspent/psi": "0.2.8",
+    "@unspent/psi": "0.2.9",
     "cashc": "0.10.0-next.2",
     "cashscript": "0.10.0-next.2",
     "electrum-cash": "^2.0.10",

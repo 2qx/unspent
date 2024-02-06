@@ -1,6 +1,6 @@
 {
   "name": "@unspent/app",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -18,8 +18,8 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "dependencies": {
-    "@unspent/phi": "0.2.8",
-    "@unspent/psi": "0.2.8",
+    "@unspent/phi": "0.2.9",
+    "@unspent/psi": "0.2.9",
     "lightweight-charts": "^3.8.0",
     "svelte-lightweight-charts": "^1.6.3",
     "throttle-debounce": "^5.0.0"
