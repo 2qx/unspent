@@ -8,7 +8,6 @@ import {
   Argument,
   Artifact,
   Contract as CashScriptContract,
-  Transaction,
   Utxo,
   NetworkProvider
 }
@@ -27,8 +26,7 @@ import {
   sum
 } from "./util.js";
 import { DELIMITER, PROTOCOL_ID, _PROTOCOL_ID } from "./constant.js";
-import { ParsedContractI, Network } from "./interface.js"
-import { buildAuthenticationTemplate, getBitauthUri } from "./template.js"
+import { ParsedContractI } from "./interface.js"
 import { ContractOptions } from "cashscript/dist/interfaces.js";
 
 export class BaseUtxPhiContract {
@@ -290,19 +288,6 @@ export class BaseUtxPhiContract {
     } else {
       return opReturn;
     }
-  }
-
-  async asBitAuthUrl(transaction: Transaction | string, network?: Network) {
-    const template = await buildAuthenticationTemplate({
-      contract: this.contract,
-      artifact: this.artifact,
-      transaction: transaction,
-      network: network,
-      manglePrivateKeys: false,
-      includeSource: true
-    })
-
-    return getBitauthUri(template);
   }
 
   async isFunded(): Promise<boolean> {

@@ -210,7 +210,7 @@ export class Record extends BaseUtxPhiContract {
 
     let txn = ""
     if (debug) {
-      txn = await this.asBitAuthUrl(tx)
+      txn = await tx.bitauthUri();
     } else {
       txn = (await tx.send()).txid;
     }

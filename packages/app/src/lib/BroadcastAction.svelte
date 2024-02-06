@@ -90,7 +90,7 @@
 		} catch (e) {
 			executeError = e;
 			clearProgress();
-		}
+		
 	};
 </script>
 
