@@ -8,6 +8,8 @@ import { _PROTOCOL_ID } from "../../common/constant.js";
 import { createOpReturnData, decodeNullDataScript } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
+
+
 describe(`Record Class Tests`, () => {
   test("Should announce itself and Faucet", async () => {
     const options = { version: 1, network: "regtest" };
@@ -70,13 +72,18 @@ describe(`Record Class Tests`, () => {
     const r = new Record(850n, 1n, options);
 
     // fund the contract
-    const alice = await getAnAliceWallet(55000);
+    const alice = await getAnAliceWallet(105000);
     await alice.send([
       {
         cashaddr: r.getAddress(),
         value: 50000,
         unit: "satoshis",
       },
+      {
+        cashaddr: r.getAddress(),
+        value: 50000,
+        unit: "satoshis",
+      }
     ]);
 
 

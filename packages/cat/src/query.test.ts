@@ -6,7 +6,7 @@ import {
 /**
  * @jest-environment jsdom
  */
-test("Store and retrieve a transactions", async () => {
+test("Store and retrieve a price history", async () => {
   let history = await getPriceHistory();
 
   expect(history.length).toBeGreaterThan(1);

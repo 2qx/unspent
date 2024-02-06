@@ -17,9 +17,9 @@ export function getDefaultProvider(network="mainnet", chaingraphHost?:string){
   let provider = undefined;
 
   if (network === "mainnet") {
-    let failover = getDefaultElectrumProvider("mainnet");
-    provider = new PsiNetworkProvider("mainnet", chaingraphHost, failover);
-    //provider = failover;
+    // failover = getDefaultElectrumProvider("mainnet"); 
+    // provider = new PsiNetworkProvider("mainnet", chaingraphHost, failover);
+    provider = getDefaultElectrumProvider("mainnet"); //
   } else if (network === "chipnet") {
     let failover = getDefaultElectrumProvider("chipnet");
     provider = new PsiNetworkProvider("chipnet", chaingraphHost, failover);
