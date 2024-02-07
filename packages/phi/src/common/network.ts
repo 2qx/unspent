@@ -44,8 +44,8 @@ export function getDefaultProvider(network="mainnet", chaingraphHost?:string){
 
     const filteringOption = 'include_tokens';
 
-    //@ts-ignore
-    const result = await provider.performRequest('blockchain.scripthash.listunspent', scripthash, filteringOption) as ElectrumUtxo[];
+    // @ts-ignore
+    const result = await provider.performRequest('blockchain.scripthash.listunspent', scripthash, filteringOption)! as ElectrumUtxo[];
 
     const utxos = result.map((utxo) => ({
       txid: utxo.tx_hash,

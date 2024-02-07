@@ -87,6 +87,7 @@ describe(`Perpetuity Class Tests`, () => {
   });
 
   test("Should pay a Perpetuity, to completion", async () => {
+    expect.assertions(5);
     const alice = await getAnAliceWallet(101000);
     const bob = await RegTestWallet.newRandom();
     const charlie = await RegTestWallet.newRandom();
@@ -115,7 +116,11 @@ describe(`Perpetuity Class Tests`, () => {
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 1,
       });
-      await p1.execute(charlie.getDepositAddress());
+      try{
+        await p1.execute(charlie.getDepositAddress());
+      } catch(e){
+        expect(e.message).toBe("No funds on contract")
+      }
     }
     expect(await charlie.getBalance("sat")).toBeGreaterThan(1710);
     expect(await bob.getBalance("sat")).toBeGreaterThan(10000);

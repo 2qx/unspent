@@ -177,8 +177,8 @@ export class Record extends BaseUtxPhiContract {
     // regardless of how many inputs, filter to one if more than two utxos are available
     if (!utxos || utxos.length == 0) {
       const allUtxos = await this.getUtxos();
-      if (allUtxos && allUtxos.length > 0) {
-        utxos = [allUtxos[1]!];
+      if (allUtxos && allUtxos.length > 1) {
+        utxos = [allUtxos[0]!];
       }
     }
 
