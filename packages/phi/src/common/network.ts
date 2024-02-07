@@ -8,6 +8,8 @@ import { addressToElectrumScriptHash } from "./util.js";
 import { ElectrumNetworkProvider, NetworkProvider } from "cashscript";
 import { PsiNetworkProvider } from "@unspent/psi";
 
+PsiNetworkProvider
+
 export async function getBlockHeight(): Promise<number> {
   let e = new ElectrumNetworkProvider();
   const height = await e.getBlockHeight();
@@ -18,6 +20,7 @@ export async function getBlockHeight(): Promise<number> {
 export function getDefaultProvider(network="mainnet", chaingraphHost?:string){
   let provider:NetworkProvider;
 
+  chaingraphHost
   if (network === "mainnet") {
     // failover = getDefaultElectrumProvider("mainnet"); 
     // provider = new PsiNetworkProvider("mainnet", chaingraphHost, failover);
