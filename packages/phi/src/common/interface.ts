@@ -1,5 +1,3 @@
-import type { Utxo } from "cashscript";
-
 export interface UtxPhiIface {
   toString(): string;
 
@@ -21,6 +19,37 @@ export interface UtxPhiIface {
 export interface ContractOptions {
   version?: number;
   network?: string;
+}
+
+export interface ElectrumUtxo {
+  tx_pos: number;
+  value: number;
+  tx_hash: string;
+  height: number;
+  token_data?: {
+    amount: string;
+    category: string;
+    nft?: {
+      capability: 'none' | 'mutable' | 'minting';
+      commitment: string;
+    };
+  };
+}
+
+export interface Utxo {
+  txid: string;
+  vout: number;
+  satoshis: bigint;
+  token?: TokenDetails;
+}
+
+export interface TokenDetails {
+  amount: bigint;
+  category: string;
+  nft?: {
+    capability: 'none' | 'mutable' | 'minting';
+    commitment: string;
+  };
 }
 
 export interface ParsedContractI {

@@ -3,8 +3,12 @@ import {
   ClusterOrder,
   ElectrumTransport,
 } from "electrum-cash";
-import { ElectrumNetworkProvider } from "cashscript";
+import { ElectrumUtxo, Utxo } from "./interface.js" 
+import { addressToElectrumScriptHash } from "./util.js";
+import { ElectrumNetworkProvider, NetworkProvider } from "cashscript";
 import { PsiNetworkProvider } from "@unspent/psi";
+
+PsiNetworkProvider
 
 export async function getBlockHeight(): Promise<number> {
   let e = new ElectrumNetworkProvider();
@@ -14,15 +18,17 @@ export async function getBlockHeight(): Promise<number> {
 }
 
 export function getDefaultProvider(network="mainnet", chaingraphHost?:string){
-  let provider = undefined;
+  let provider:NetworkProvider;
 
+  chaingraphHost
   if (network === "mainnet") {
-    let failover = getDefaultElectrumProvider("mainnet");
-    provider = new PsiNetworkProvider("mainnet", chaingraphHost, failover);
-    //provider = failover;
+    // failover = getDefaultElectrumProvider("mainnet"); 
+    // provider = new PsiNetworkProvider("mainnet", chaingraphHost, failover);
+    provider = getDefaultElectrumProvider("mainnet"); //
   } else if (network === "chipnet") {
-    let failover = getDefaultElectrumProvider("chipnet");
-    provider = new PsiNetworkProvider("chipnet", chaingraphHost, failover);
+    //provider = new PsiNetworkProvider("chipnet", chaingraphHost, failover);
+    provider = getDefaultElectrumProvider("chipnet");
+    
   } 
   // fallback to fulcrum for regtest
   else if (network === "regtest") {
@@ -36,8 +42,34 @@ export function getDefaultProvider(network="mainnet", chaingraphHost?:string){
     cluster.addServer("127.0.0.1", 60003, ElectrumTransport.WS.Scheme, false);
     provider = new ElectrumNetworkProvider("regtest", cluster);
   } else throw "unrecognized network";
+
+  provider.getUtxos = async function getUtxos(address: string): Promise<Utxo[]> {
+    const scripthash = await addressToElectrumScriptHash(address);
+
+    const filteringOption = 'include_tokens';
+
+    // @ts-ignore
+    const result = await provider.performRequest('blockchain.scripthash.listunspent', scripthash, filteringOption)! as ElectrumUtxo[];
+
+    const utxos = result.map((utxo) => ({
+      txid: utxo.tx_hash,
+      vout: utxo.tx_pos,
+      height: utxo.height,
+      satoshis: BigInt(utxo.value),
+      token: utxo.token_data ? {
+        ...utxo.token_data,
+        amount: BigInt(utxo.token_data.amount),
+      } : undefined,
+    }));
+
+    return utxos;
+  }
+
+
   return provider;
 }
+
+
 
 export function getDefaultElectrumProvider(network = "mainnet") {
   let provider = undefined;

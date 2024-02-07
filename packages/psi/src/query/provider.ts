@@ -349,11 +349,40 @@ export async function getHistory(host: string,
   const query = `
   query GetTransactionHistory(
     $lockingBytecode: String!
+    $node: String!
     $limit: Int
     $offset: Int
   ) {
       search_output_prefix(
         args: { locking_bytecode_prefix_hex: $lockingBytecode }
+      
+      where: {
+        _and: [
+          {
+            _or: [
+              {
+                transaction: {
+                  block_inclusions: {
+                    block: { accepted_by: { node: { name: { _regex: $node } } } }
+                  }
+                }
+              }
+              {
+                transaction: {
+                  node_validations: { node: { name: { _regex: $node } } }
+                }
+              }
+              {
+                transaction:{
+                  node_validations:{
+                    node_internal_id:{_is_null:true}
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
       limit: $limit
       offset: $offset
       order_by: { transaction: { internal_id: desc } }

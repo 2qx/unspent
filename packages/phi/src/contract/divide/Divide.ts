@@ -249,8 +249,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
       balance = await this.getBalance();
     }
     if (balance == 0n) {
-      if (debug) { balance = 10000n }
-      else { throw Error("No funds on contract"); }
+      throw Error("No funds on contract"); 
     }
 
     const fn = this.getFunction(Divide.fn)!;
@@ -290,7 +289,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
     let txn = ""
     if (debug) {
-      txn = await this.asBitAuthUrl(tx)
+      txn = await tx.bitauthUri()
     } else {
       txn = (await tx.send()).txid;
     }

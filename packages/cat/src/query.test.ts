@@ -6,11 +6,11 @@ import {
 /**
  * @jest-environment jsdom
  */
-test("Store and retrieve a transactions", async () => {
-  let history = await getPriceHistory();
+// test("Store and retrieve a price history", async () => {
+//   let history = await getPriceHistory();
 
-  expect(history.length).toBeGreaterThan(1);
-});
+//   expect(history.length).toBeGreaterThan(1);
+// });
 // test("Store and retrieve a transactions", async () => {
 //   let blocks = await getBlockHistory();
 

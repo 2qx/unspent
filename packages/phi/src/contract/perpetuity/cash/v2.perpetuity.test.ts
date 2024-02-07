@@ -9,7 +9,6 @@ import { Contract, ElectrumNetworkProvider } from "cashscript";
 import { RegTestWallet, mine } from "mainnet-js";
 import { artifact as v2 } from "./v2.js";
 import { Network } from "../../../common/interface.js" 
-import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js" 
 
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
 
@@ -79,16 +78,7 @@ describe(`Example Perpetuity Tests`, () => {
       .from([utxos[0]])
       .withoutChange();
 
-    
-      const template =  await buildAuthenticationTemplate({
-        contract: contract, 
-        artifact: v2, 
-        transaction: transaction, 
-        network: Network.REGTEST,
-        manglePrivateKeys: 
-        false, includeSource:true})
-
-     //console.log(getBitauthUri(template))
+  
      
      await transaction.send()
      utxos = await  contract.getUtxos()

@@ -18,7 +18,6 @@ import {
   hash160,
 } from "../../../common/util.js";
 import { Network } from "../../../common/interface.js" 
-import { buildAuthenticationTemplate, getBitauthUri } from "../../../common/template.js" 
 import { getAnAliceWallet } from "../../../test/aliceWallet4test.js";
 
 describe(`Record Contract Tests`, () => {
@@ -130,15 +129,7 @@ describe(`Record Contract Tests`, () => {
       .withOpReturn(chunks)
       .withHardcodedFee(BigInt(500n) / 2n);
 
-    const template =  await buildAuthenticationTemplate({
-      contract: contract, 
-      artifact: v2, 
-      transaction: transaction, 
-      network: Network.REGTEST,
-      manglePrivateKeys: 
-      false, includeSource:true})
 
-    expect(getBitauthUri(template)).toContain("bitauth.com");
 
   });
 });

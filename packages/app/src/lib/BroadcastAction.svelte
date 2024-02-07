@@ -8,7 +8,7 @@
 
 	import { load } from '$lib/machinery/loader-store.js';
 	import { Record } from '@unspent/phi';
-  import { getRecords } from '@unspent/psi'
+	import { getRecords } from '@unspent/psi';
 	import { chaingraphHost, node } from '$lib/store.js';
 
 	export let opReturnHex: string;
@@ -62,7 +62,7 @@
 		await load({
 			load: async () => {
 				if (opReturnHex.length > 0) {
-          let queryHex = opReturnHex.length > 60 ? opReturnHex.slice(0, 60) : opReturnHex;
+					let queryHex = opReturnHex.length > 60 ? opReturnHex.slice(0, 60) : opReturnHex;
 					let records = await getRecords(chaingraphHostValue, queryHex);
 					records = records.filter((r) => r == opReturnHex);
 					isPublished = records.length > 0 ? true : false;
@@ -71,12 +71,17 @@
 		});
 	};
 
+	function randomInteger(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
 	const broadcast = async () => {
 		try {
 			setProgress();
 			executedSuccess = false;
-      let options =  {network: nodeValue, version:2}
-			let r = new Record(undefined, undefined, options);
+			let options = { network: nodeValue, version: 2 };
+			let index = randomInteger(0, 3);
+			let r = new Record(undefined, index, options);
 			txid = await r.broadcast(opReturnHex);
 			isPublished = true;
 			executedSuccess = true;
@@ -85,7 +90,7 @@
 		} catch (e) {
 			executeError = e;
 			clearProgress();
-		}
+    }
 	};
 </script>
 

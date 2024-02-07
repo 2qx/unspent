@@ -297,7 +297,7 @@ export class Mine extends BaseUtxPhiContract implements UtxPhiIface {
 
     let txn = ""
     if (debug) {
-      txn = await this.asBitAuthUrl(tx)
+      txn = await tx.bitauthUri();
     } else {
       txn = (await tx.send()).txid;
     }

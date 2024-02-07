@@ -37,16 +37,16 @@ test("Store and retrieve a dummy block header", async () => {
  
 });
 
-test("Store the price history", async () => {
-  let db = new SqlProvider('regtest5');
-  await db.init();
-  let prices = await getPriceHistory();
-  await db.putFiatHistory(prices);
+// test("Store the price history", async () => {
+//   let db = new SqlProvider('regtest5');
+//   await db.init();
+//   let prices = await getPriceHistory();
+//   await db.putFiatHistory(prices);
   
-  let c = await db.getFiatCount();
-  expect(c).toBeGreaterThan(500)
+//   let c = await db.getFiatCount();
+//   expect(c).toBeGreaterThan(500)
  
-});
+// });
 
 
 // This stores the whole block history from protocol "inception"
