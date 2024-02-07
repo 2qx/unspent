@@ -15,7 +15,7 @@ export async function getRecords(
   host: string,
   prefix?: string,
   node = "mainnet",
-  limit = 25,
+  limit = 200,
   offset = 0,
   exclude_pattern = "",
   after = 0
