@@ -296,6 +296,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         installment.push(
           (utxo.satoshis / BigInt(this.decay)) - BigInt(this.executorAllowance)
         );
+        time.push(Number(seriesStartTime));
         payout.push(Number(installment.at(-1)!));
         principal.push(Number(utxo.satoshis - installment.at(-1)!));
         allowance.push(Number(this.executorAllowance));
@@ -318,10 +319,9 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
             } else {
               time.push(Number(seriesStartTime + i * intervalSeconds));
               installment.push(Number(lastPrincipal));
-              payout.push(payout.at(-1)! + Number(lastPrincipal - nextPayout - Number(this.executorAllowance)));
+              payout.push(payout.at(-1)! + Number(lastPrincipal - Number(this.executorAllowance)));
               principal.push(0);
               allowance.push(Number(this.executorAllowance) * i);
-              break;
             }
           }
           else {
@@ -345,6 +345,8 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
         });
       } // for utxos
     } // if utxos
+    console.log(series)
+
     return series;
   }
 
