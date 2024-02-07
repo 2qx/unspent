@@ -349,6 +349,7 @@ export async function getHistory(host: string,
   const query = `
   query GetTransactionHistory(
     $lockingBytecode: String!
+    $node: String!
     $limit: Int
     $offset: Int
   ) {
