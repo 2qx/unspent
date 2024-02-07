@@ -53,7 +53,7 @@
 
 	const check = async () => {
 		if (opReturnHex.length > 0) {
-			let queryHex = opReturnHex.length > 60 ? opReturnHex.slice(0, 60) : opReturnHex;
+			let queryHex = opReturnHex.length > 60 ? opReturnHex.slice(0, 34) : opReturnHex;
 			let records = await getRecords('https://demo.chaingraph.cash/v1/graphql', queryHex);
 			records = records.filter((r) => r == opReturnHex);
 			isPublished = records.length > 0 ? true : false;
