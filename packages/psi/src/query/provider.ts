@@ -345,10 +345,9 @@ export async function getHistory(host: string,
 
   if (typeof lockingBytecode !== "string") lockingBytecode = binToHex(lockingBytecode)
   param = { ...HistoryIDefaults, ...param };
-
+  
   const query = `
   query GetTransactionHistory(
-    $node: String!
     $lockingBytecode: String!
     $limit: Int
     $offset: Int
@@ -423,7 +422,6 @@ export async function getHistory(host: string,
     if (response.data.error) {
       throw Error(response.data.error);
     } else {
-      console.log(response.data.errors)
       throw Error(response.data.errors[0].message);
     }
   }

@@ -37,7 +37,6 @@ export interface HistoryQueryI{
 }
 
 export const HistoryIDefaults: HistoryQueryI = {
-  node: "mainnet",
   limit: 500,
   offset: 0
 }
