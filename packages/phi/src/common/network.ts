@@ -23,8 +23,9 @@ export function getDefaultProvider(network="mainnet", chaingraphHost?:string){
     // provider = new PsiNetworkProvider("mainnet", chaingraphHost, failover);
     provider = getDefaultElectrumProvider("mainnet"); //
   } else if (network === "chipnet") {
-    let failover = getDefaultElectrumProvider("chipnet");
-    provider = new PsiNetworkProvider("chipnet", chaingraphHost, failover);
+    //provider = new PsiNetworkProvider("chipnet", chaingraphHost, failover);
+    provider = getDefaultElectrumProvider("chipnet");
+    
   } 
   // fallback to fulcrum for regtest
   else if (network === "regtest") {

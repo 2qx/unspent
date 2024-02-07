@@ -118,7 +118,7 @@ describe(`Perpetuity Class Tests`, () => {
       });
       try{
         await p1.execute(charlie.getDepositAddress());
-      } catch(e){
+      } catch(e:any){
         expect(e.message).toBe("No funds on contract")
       }
     }
