@@ -2,7 +2,7 @@
 import { register } from 'svelte-i18n';
 
 
-register("en", () => import(`../../locale/en.json`))
+register("en", () => import(`$lib/locale/en.json`))
 
 const langs = [
   "af", "ak", "am", "ar", "as", "ay", "az", "be", "bg", "bho", "bm", "bn", "bs", "ca",
@@ -18,7 +18,7 @@ const langs = [
 
 
 for (const lang of langs) {
-  register(lang, () => import(`../../locale/${lang}.json`))
+  register(lang, () => import(`$lib/locale/${lang}.json`))
 }
 
 
