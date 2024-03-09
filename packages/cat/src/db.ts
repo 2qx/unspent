@@ -44,6 +44,11 @@ export default class StorageProvider {
 
 
 
+  public async save() {
+
+
+   
+  }
 
 
   public async init(): Promise<StorageProvider> {
@@ -62,7 +67,18 @@ export default class StorageProvider {
         this.prefix + "_output"
       );
       const resUtxo = await this.db.query(createOutputTable);
-      resUtxo
+
+
+      let createSeriesTable = this.formatter(
+        "CREATE TABLE IF NOT EXISTS %I (" +
+        "id TEXT PRIMARY KEY," +
+        "timestamp TIMESTAMP," +
+        "value DECIMAL," +
+        "locking_bytecode TEXT" +
+        " );",
+        this.prefix + "_series"
+      );
+      const resTs = await this.db.query(createSeriesTable);
 
 
       let createLockingBytecodeTable = this.formatter(
@@ -111,12 +127,14 @@ export default class StorageProvider {
 
   public async syncBlockHistory() {
     let synced = false;
+    let tip = await this.getBlockHeight()
     while (!synced) {
-      let tip = await this.getBlockHeight()
-      tip = tip ? tip : INCEPTION
+
+      tip = tip ? tip + 1000 : INCEPTION
       console.log(tip)
       let blocks = await getBlockHistory(tip);
       if (blocks.length) await this.putBlockHeights(blocks);
+      console.log(blocks.length)
       if (blocks.length < 1000) synced = true
     }
   }
@@ -139,8 +157,8 @@ export default class StorageProvider {
 
   public async syncOutputHistory(lockingBytecode: string) {
     let outpoints = await getOutputs(lockingBytecode)
-    console.log(outpoints)
-    await this.putOutputs(outpoints)
+
+    if (outpoints.length > 0) await this.putOutputs(outpoints)
   }
 
   public async getFiatCount() {
@@ -161,11 +179,21 @@ export default class StorageProvider {
     ]
     const cs = new this.pgp.helpers.ColumnSet(headers, { table: this.prefix + "_block" });
 
-    // generating a multi-row insert query:
-    const query = this.pgp.helpers.insert(rawValues, cs) +
-      ' ON CONFLICT(height) DO UPDATE SET ' +
-      cs.assignColumns({ from: 'EXCLUDED', skip: 'height' });
-    await this.db.none(query);
+    // // generating a multi-row insert query:
+    // const query = this.pgp.helpers.insert(rawValues, cs) +
+    //   ' ON CONFLICT(height) DO UPDATE SET ' +
+    //   cs.assignColumns({ from: 'EXCLUDED', skip: 'height' });
+
+    const insert = this.pgp.helpers.insert(rawValues, cs);
+
+    await this.db.none(insert)
+      .then(() => {
+        // success, all records inserted
+      })
+      .catch((error: any) => {
+        throw (error)
+      });
+    //await this.db.none(query);
   }
 
   public async getBlockHeight() {
@@ -193,9 +221,29 @@ export default class StorageProvider {
     ]
     const cs = new this.pgp.helpers.ColumnSet(headers, { table: this.prefix + "_locking_bytecode" });
     const query = this.pgp.helpers.insert(rawValues, cs) +
-    ' ON CONFLICT(id) DO UPDATE SET ' +
-    cs.assignColumns({ from: 'EXCLUDED', skip: 'locking_bytecode' });
-  await this.db.none(query);
+      ' ON CONFLICT(id) DO UPDATE SET ' +
+      cs.assignColumns({ from: 'EXCLUDED', skip: 'locking_bytecode' });
+    await this.db.none(query);
+  }
+
+  public async putSeries(rawValues: SeriesEntryI[]) {
+
+
+
+    let headers = [
+      'id',
+      'timestamp',
+      'value',
+      'locking_bytecode'
+    ]
+
+    const cs = new this.pgp.helpers.ColumnSet(headers, { table: this.prefix + "_series" });
+
+    const query = this.pgp.helpers.insert(rawValues, cs) +
+      ' ON CONFLICT(id) DO UPDATE SET ' +
+      cs.assignColumns({ from: 'EXCLUDED', skip: 'timestamp' });
+    await this.db.none(query);
+
   }
 
   public async putOutputs(rawValues: OutputEntryI[]) {
@@ -238,6 +286,27 @@ export default class StorageProvider {
     const r = await this.db.oneOrNone(`SELECT count(*) FROM ${this.prefix + '_output'}`);
     return Number(r.count)
   }
+
+  public async getDistinctLockingBytecodes() {
+    return (await this.db.many(`SELECT DISTINCT(locking_bytecode) FROM ${this.prefix + "_output"}`))
+  }
+
+  public async getIrregularTs(lockingBytecode) {
+    return (await this.db.many(`
+    SELECT 
+    DISTINCT
+    DATE(b.timestamp) date,
+    o1.locking_bytecode,
+    sum(-o1.value)::float/100000000 "dv"
+    FROM ${this.prefix + "_output"} o1	
+    LEFT JOIN ${this.prefix + "_block"} as b ON  o1.height  = b.height
+    WHERE o1.locking_bytecode ~ '${lockingBytecode}'
+    GROUP BY date, o1.locking_bytecode, o1.height ORDER BY date asc
+    
+    `))
+  }
+
+
 
   public async getOutputs(key: any) {
     return (await this.db.one(`SELECT * FROM ${this.prefix + "_output"} WHERE locking_bytecode like '${key}%'`))
@@ -306,6 +375,13 @@ export interface PerpetuityEntryI {
   period: number,
   allowance: number,
   decay: number
+}
+
+export interface SeriesEntryI {
+  id: string,
+  timestamp: Date;
+  value: number,
+  locking_bytecode: string,
 }
 
 export interface OutputEntryI {

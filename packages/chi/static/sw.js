@@ -5,7 +5,7 @@
 const PRECACHE_URLS = [];
 
 //
-const version = '0.0.1';
+const version = '0.2.9';
 
 const RUNTIME = 'runtime-' + version;
 const INSTALL = 'install-' + version;
@@ -63,24 +63,23 @@ self.addEventListener('fetch', function (event) {
 			})
 		);
 	}
-
-	// else if (event.request.url.startsWith(self.location.origin)) {
-	//     event.respondWith(
-	//         caches.match(event.request).then(cachedResponse => {
-	//             if (cachedResponse) {
-	//                 return cachedResponse;
-	//             }
-	//             return caches.open(RUNTIME).then(cache => {
-	//                 return fetch(event.request).then(response => {
-	//                     // Put a copy of the response in the runtime cache.
-	//                     return cache.put(event.request, response.clone()).then(() => {
-	//                         return response;
-	//                     });
-	//                 });
-	//             });
-	//         })
-	//     );
-	// }
+	else if (event.request.url.startsWith(self.location.origin)) {
+	    event.respondWith(
+	        caches.match(event.request).then(cachedResponse => {
+	            if (cachedResponse) {
+	                return cachedResponse;
+	            }
+	            return caches.open(RUNTIME).then(cache => {
+	                return fetch(event.request).then(response => {
+	                    // Put a copy of the response in the runtime cache.
+	                    return cache.put(event.request, response.clone()).then(() => {
+	                        return response;
+	                    });
+	                });
+	            });
+	        })
+	    );
+	}
 });
 
 self.addEventListener('install', (event) => {

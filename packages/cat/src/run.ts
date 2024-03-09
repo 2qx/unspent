@@ -1,9 +1,11 @@
 import {
   cli,
-  UpdateCommand
+  UpdateCommand,
+  SaveCommand
 } from "./cli.js"
 import { Builtins } from "clipanion"
 
+cli.register(SaveCommand);
 cli.register(UpdateCommand);
 cli.register(Builtins.VersionCommand);
 cli.register(Builtins.HelpCommand);

@@ -16,9 +16,6 @@
 		<a href="{base}/202309_fundraiser">Checkout the final fundraiser ◼️⛏️</a>
 	</div>
 {:else}
-	<div class="beta">
-		Beta Release. Checkout our <a href="{base}/202309_fundraiser">final fundraiser ◼️⛏️ </a><br/>
-	</div>
 {/if}
 
 <header>
