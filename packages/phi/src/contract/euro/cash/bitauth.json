@@ -1,0 +1,173 @@
+{
+  "$schema": "https://ide.bitauth.com/authentication-template-v0.schema.json",
+  "description": "Imported from cashscript",
+  "name": "FutureBCH",
+  "entities": {
+    "parameters": {
+      "description": "Contract creation and function parameters",
+      "name": "parameters",
+      "scripts": [
+        "lock",
+        "unlock_lock",
+        "p2pkh_placeholder_lock",
+        "p2pkh_placeholder_unlock"
+      ],
+      "variables": {
+        "is_redeem": {
+          "description": "\"isRedeem\" parameter of function \"lockOrRedeem\"",
+          "name": "isRedeem",
+          "type": "WalletData"
+        },
+        "function_index": {
+          "description": "Script function index to execute",
+          "name": "function_index",
+          "type": "WalletData"
+        },
+        "locktime": {
+          "description": "\"locktime\" parameter of this contract",
+          "name": "locktime",
+          "type": "WalletData"
+        },
+        "placeholder_key": {
+          "description": "placeholder_key",
+          "name": "placeholder_key",
+          "type": "Key"
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "evaluate_function": {
+      "data": {
+        "bytecode": {
+          "is_redeem": "",
+          "function_index": "0",
+          "locktime": "0x430a02"
+        },
+        "currentBlockHeight": 2,
+        "currentBlockTime": 1708370074,
+        "keys": {
+          "privateKeys": {
+            "placeholder_key": "<Uint8Array: 0x0000000000000000000000000000000000000000000000000000000000000000>"
+          }
+        }
+      },
+      "description": "An example evaluation where this script execution passes.",
+      "name": "Evaluate",
+      "transaction": {
+        "inputs": [
+          {
+            "outpointIndex": 1,
+            "outpointTransactionHash": "9beaf4034ae97ad72f18190e08134794b2fe09a11c4974e3129a1c24f8c63e07",
+            "sequenceNumber": 4294967294,
+            "unlockingBytecode": {
+              "script": "p2pkh_placeholder_unlock",
+              "overrides": {
+                "keys": {
+                  "privateKeys": {
+                    "placeholder_key": "9dbaa51029185304d65e0dbe7f6b84867a06cab6da19baf6d3592b6eeed52d97"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "outpointIndex": 8,
+            "outpointTransactionHash": "6bd9c9aa50fd9959a834e3f8fd8b3a565b0b056bcf2a65eb869ba8fb3e42e523",
+            "sequenceNumber": 4294967294,
+            "unlockingBytecode": [
+              "slot"
+            ]
+          }
+        ],
+        "locktime": 133700,
+        "outputs": [
+          {
+            "lockingBytecode": {},
+            "valueSatoshis": 100000000
+          },
+          {
+            "lockingBytecode": {
+              "script": "p2pkh_placeholder_lock",
+              "overrides": {
+                "keys": {
+                  "privateKeys": {
+                    "placeholder_key": "9dbaa51029185304d65e0dbe7f6b84867a06cab6da19baf6d3592b6eeed52d97"
+                  }
+                }
+              }
+            },
+            "token": {
+              "amount": "100000000",
+              "category": "32ebee735b55bc8b41375f621b85d833f01d6504bf32d200287a8bc0fe37bf17"
+            },
+            "valueSatoshis": 1000
+          },
+          {
+            "lockingBytecode": {},
+            "token": {
+              "amount": "20999999900000000",
+              "category": "32ebee735b55bc8b41375f621b85d833f01d6504bf32d200287a8bc0fe37bf17"
+            },
+            "valueSatoshis": 1000
+          }
+        ],
+        "version": 2
+      },
+      "sourceOutputs": [
+        {
+          "lockingBytecode": {
+            "script": "p2pkh_placeholder_lock",
+            "overrides": {
+              "keys": {
+                "privateKeys": {
+                  "placeholder_key": "9dbaa51029185304d65e0dbe7f6b84867a06cab6da19baf6d3592b6eeed52d97"
+                }
+              }
+            }
+          },
+          "valueSatoshis": 100001000
+        },
+        {
+          "lockingBytecode": [
+            "slot"
+          ],
+          "valueSatoshis": 100003000,
+          "token": {
+            "amount": "21000000000000000",
+            "category": "32ebee735b55bc8b41375f621b85d833f01d6504bf32d200287a8bc0fe37bf17"
+          }
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "unlock_lock": {
+      "passes": [
+        "evaluate_function"
+      ],
+      "name": "unlock",
+      "script": "// \"lockOrRedeem\" function parameters\n<is_redeem> // bool = <0x>\n",
+      "unlocks": "lock"
+    },
+    "p2pkh_placeholder_unlock": {
+      "name": "p2pkh_placeholder_unlock",
+      "script": "<placeholder_key.schnorr_signature.all_outputs>\n<placeholder_key.public_key>",
+      "unlocks": "p2pkh_placeholder_lock"
+    },
+    "lock": {
+      "lockingType": "p2sh20",
+      "name": "lock",
+      "script": "// \"FutureBCH\" contract constructor parameters\n<locktime> // int = <0x430a02>\n\n// bytecode\n                                                /* pragma cashscript ^0.10.0;                                        */\n                                                /*                                                                   */\n                                                /* // Future BCH fungible token vault                                */\n                                                /* //                                                                */\n                                                /* //      Inputs: 00-covenant                                       */\n                                                /* //      Outputs: 00-covenant                                      */\n                                                /* //                                                                */\n                                                /*                                                                   */\n                                                /* contract FutureBCH(int locktime) {                                */\n                                                /*                                                                   */\n                                                /*     function lockOrRedeem(bool isRedeem) {                        */\n                                                /*                                                                   */\n                                                /*         //  Flow                                                  */\n                                                /*         //  00 contract    ->  00 contract                        */\n                                                /*         //  01 userPkh     =>  01 userPkh                         */\n                                                /*         //  02 coupons     ^                                      */\n                                                /*                                                                   */\n                                                /*                                                                   */\n                                                /*         // enforce BIP65 timelocks and the direction of the swap  */\nOP_1 OP_ROLL OP_IF                              /*         if(isRedeem){                                             */\n                                                /*           require(                                                */\nOP_0 OP_PICK                                    /*             tx.time >= locktime,                                  */\n                                                /*             \"Future locktime not met\"                             */\nOP_CHECKLOCKTIMEVERIFY OP_DROP                  /*             );                                                    */\n                                                /*                                                                   */\n                                                /*         }else{                                                    */\n                                                /*           require(                                                */\n                                                /*             (                                                     */\nOP_INPUTINDEX OP_UTXOTOKENAMOUNT                /*               tx.inputs[this.activeInputIndex].tokenAmount +      */\nOP_INPUTINDEX OP_UTXOVALUE OP_ADD               /*               tx.inputs[this.activeInputIndex].value              */\n                                                /*               )                                                   */\n<0x00c2eb0b> OP_NUMEQUAL                        /*               == 200000000                                        */\nOP_VERIFY                                       /*               );                                                  */\nOP_ELSE OP_ENDIF                                /*         }                                                         */\n                                                /*                                                                   */\n                                                /*         // Enforce that this contract lives on                    */\n                                                /*         require(                                                  */\nOP_INPUTINDEX OP_OUTPUTBYTECODE                 /*           tx.outputs[this.activeInputIndex].lockingBytecode       */\n                                                /*           ==                                                      */\nOP_INPUTINDEX OP_UTXOBYTECODE OP_EQUAL          /*           tx.inputs[this.activeInputIndex].lockingBytecode,       */\n                                                /*           \"locking bytecode index mismatch\"                       */\nOP_VERIFY                                       /*           );                                                      */\n                                                /*                                                                   */\n                                                /*         // Token categories match or are zero, which match        */\n                                                /*         require(                                                  */\nOP_INPUTINDEX OP_OUTPUTTOKENCATEGORY            /*           tx.outputs[this.activeInputIndex].tokenCategory         */\n                                                /*           ==                                                      */\nOP_INPUTINDEX OP_UTXOTOKENCATEGORY OP_EQUAL     /*           tx.inputs[this.activeInputIndex].tokenCategory,         */\nOP_VERIFY                                       /*           \"tokenCategory mismatch\");                              */\n                                                /*                                                                   */\n                                                /*         require(                                                  */\nOP_INPUTINDEX OP_UTXOTOKENAMOUNT                /*           tx.inputs[this.activeInputIndex].tokenAmount +          */\nOP_INPUTINDEX OP_UTXOVALUE OP_ADD               /*           tx.inputs[this.activeInputIndex].value                  */\n                                                /*           ==                                                      */\nOP_INPUTINDEX OP_OUTPUTTOKENAMOUNT              /*           tx.outputs[this.activeInputIndex].tokenAmount +         */\nOP_INPUTINDEX OP_OUTPUTVALUE OP_ADD OP_NUMEQUAL /*           tx.outputs[this.activeInputIndex].value,                */\n                                                /*          \"summation mismatch\"                                     */\n                                                /*          );                                                       */\nOP_NIP                                          /*     }                                                             */\n                                                /* }                                                                 */"
+    },
+    "p2pkh_placeholder_lock": {
+      "lockingType": "standard",
+      "name": "p2pkh_placeholder_lock",
+      "script": "OP_DUP\nOP_HASH160 <$(<placeholder_key.public_key> OP_HASH160\n)> OP_EQUALVERIFY\nOP_CHECKSIG"
+    }
+  },
+  "supported": [
+    "BCH_SPEC"
+  ],
+  "version": 0
+}

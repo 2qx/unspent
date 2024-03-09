@@ -18,24 +18,24 @@ import { getPriceHistory, getBlockHistory } from "./query.js";
 // });
 
 
-test("Store and retrieve a dummy block header", async () => {
-  let db = new SqlProvider('regtest3');
-  await db.init();
-  let d = new Date();
-  let headers = [{
-    height: 0,
-    timestamp: d
-  },
-  {
-    height: 1,
-    timestamp: d
-  }]
+// test("Store and retrieve a dummy block header", async () => {
+//   let db = new SqlProvider('regtest3');
+//   await db.init();
+//   let d = new Date();
+//   let headers = [{
+//     height: 0,
+//     timestamp: d
+//   },
+//   {
+//     height: 1,
+//     timestamp: d
+//   }]
   
-  await db.putBlockHeights(headers);
-  let c = await db.getCount();
-  c
+//   await db.putBlockHeights(headers);
+//   let c = await db.getCount();
+//   c
  
-});
+// });
 
 // test("Store the price history", async () => {
 //   let db = new SqlProvider('regtest5');

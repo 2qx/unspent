@@ -1,6 +1,7 @@
 import glob from "glob";
 import fs from "fs";
 import { compileFile as compileFile07, compileString as compileString07 } from "cashc-0.7";
+import { compileFile as compileFile08, compileString as compileString08 } from "cashc-0.8";
 import { compileFile, compileString } from "cashc";
 import { getDivideContract as getV1 } from "./divide.v1.js";
 import { getDivideContract as getV2 } from "./divide.v2.js";
@@ -19,6 +20,17 @@ function updateArtifacts() {
 
 
   glob("src/contract/**/cash/v2.cash", function (err, files) {
+    if (err) {
+      console.log(err);
+    }
+
+    files.forEach((file) => {
+      console.log(file);
+      updateArtifact(file, compileFile08);
+    });
+  });
+
+  glob("src/contract/**/cash/v3.cash", function (err, files) {
     if (err) {
       console.log(err);
     }
@@ -56,7 +68,7 @@ function updateDivideContract(d, v) {
     artifact = compileString07(cashString);
   }else if (v==2){
     cashString = getV2(d);
-    artifact = compileString(cashString);
+    artifact = compileString08(cashString);
   }else{
     throw("Unrecognized version of Divide contract")
   }

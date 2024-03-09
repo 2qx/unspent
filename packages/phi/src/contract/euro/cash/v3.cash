@@ -1,0 +1,49 @@
+pragma cashscript ^0.10.0;
+
+// Future BCH fungible token vault
+//
+//      Inputs: 00-covenant
+//      Outputs: 00-covenant
+//
+
+contract FutureVault(int locktime, bytes tokenCategory) {
+
+    function placeOrRedeem(bool isRedeem) {
+
+        //  Flow
+        //  00 contract    ->  00 contract
+        //  01 userPkh     =>  01 userPkh
+        //  02 coupons     ^
+
+        // enforce BIP65 timelocks and the direction of the swap 
+        if(isRedeem){
+          // tokens may be redeemed in any amount after the future has matured
+          require(tx.time >= locktime);
+          require(tx.inputs[1].tokenCategory == tokenCategory);
+        } else{
+          // otherwise, only whole coins may be "placed" or locked
+          // And the token id must match a pre-configured token
+          require(tx.inputs[0].tokenAmount == 100000000);
+          require(tx.inputs[0].tokenCategory == tokenCategory);
+          require(tx.inputs[1].value == 100000000);
+          require(tx.outputs[1].tokenCategory == tokenCategory);
+        }
+
+        // Enforce that this contract lives on
+        require(
+          tx.outputs[this.activeInputIndex].lockingBytecode 
+          == 
+          tx.inputs[this.activeInputIndex].lockingBytecode, 
+          "locking bytecode index mismatch"
+          );
+
+        require(
+          tx.inputs[this.activeInputIndex].tokenAmount + 
+          tx.inputs[this.activeInputIndex].value 
+          == 
+          tx.outputs[this.activeInputIndex].tokenAmount + 
+          tx.outputs[this.activeInputIndex].value,
+         "summation mismatch"
+         );
+    }
+}

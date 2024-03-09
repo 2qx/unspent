@@ -29,7 +29,7 @@ export const artifact = {
   "source": "pragma cashscript >= 0.7.1;\n\n// Deprecated.\n// Do not use. \n\n// Pay equal payments at regular intervals using input locks\ncontract Annuity(\n\n  // interval for payouts, in blocks\n  int period,\n\n  // LockingBytecode of the beneficiary, the address receiving payments\n  bytes recipientLockingBytecode,\n\n  // amount paid in each installment\n  int installment,\n\n  // extra allowance for administration of contract\n  // fees are paid from executors' allowance. \n  int executorAllowance\n) {\n  function execute() {\n\n    // Check that the first output sends to the recipient\n    require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);\n\n    // Check that time has passed and that time locks are enabled\n    require(tx.age >= period);\n        \n    // require the second output to match the active bytecode\n    require(tx.outputs[1].lockingBytecode == new LockingBytecodeP2SH(hash160(this.activeBytecode)));\n\n    // Get the input value \n    int currentValue = tx.inputs[this.activeInputIndex].value;\n\n    // Calculate value returned to the contract\n    int returnedValue = currentValue - installment - executorAllowance;\n\n    // Check that the outputs send the correct amounts\n    require(tx.outputs[0].value >= installment);\n    require(tx.outputs[1].value >= returnedValue);\n        \n  }\n}",
   "compiler": {
     "name": "cashc",
-    "version": "0.7.3"
+    "version": "0.7.6"
   },
-  "updatedAt": "2023-08-31T19:17:58.984Z"
+  "updatedAt": "2024-02-26T17:26:32.806Z"
 }

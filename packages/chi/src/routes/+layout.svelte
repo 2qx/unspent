@@ -6,8 +6,10 @@
 	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
 	import { toast } from '@zerodevx/svelte-toast';
 	import './styles.css';
+  import { register } from 'svelte-i18n';
 
-	import { locale, waitLocale, getLocaleFromNavigator, init } from 'svelte-i18n';
+	import {  getLocaleFromNavigator, init } from 'svelte-i18n';
+  register("en", () => import('$lib/locale/en.json'))
 
 	let currentPage;
 

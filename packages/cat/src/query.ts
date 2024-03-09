@@ -5,6 +5,8 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+
 export async function getBlockHistory(start: number) {
 
   let resp = await getBlockTimestamps(
@@ -13,7 +15,8 @@ export async function getBlockHistory(start: number) {
     1000,
     start
   )
-  await sleep(100);
+
+  await sleep(1000);
   return resp
 }
 
@@ -27,7 +30,7 @@ export async function getBlockTimestamps(host: string, offset: number, limit: nu
       where: {
         _and: [
           { height: { _gt: $start } }
-          { accepted_by: { node: { name: { _is_null: false } } } }
+          { accepted_by: { node: { name: { _eq: "bchn-mainnet" } } } }
         ]
       }
     ) {
@@ -88,6 +91,19 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
         args: { locking_bytecode_prefix_hex: $lockingBytecode }
       limit: $limit
       offset: $offset
+      where: {
+        _or: [
+          {
+            transaction: {
+              block_inclusions: {
+                block: {
+                  accepted_by: { node: { name: { _regex: "bchn-mainnet" } } }
+                }
+              }
+            }
+          }
+        ]
+      }
       order_by: { transaction: { internal_id: desc } }
     ) {
       transaction {
@@ -171,8 +187,8 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
 
 
 // https://api.coingecko.com/api/v3/coins/bitcoin-cash/market_chart/range?vs_currency=usd&from=1501546841&to=
-//1705191932803
-//1705191641&precision=2
+// 1705191932803
+// 1705191641&precision=2
 export async function getPriceHistory() {
 
   const response = await axios.get(COINGECKO_CHART, {

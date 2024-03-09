@@ -1,0 +1,26 @@
+pragma cashscript ^0.10.0;
+
+// Restrict output of any utxo to a preconfigured address
+
+contract Coupon(
+  // Locking bytecode the coupon will be applied to
+  bytes destinationLockingBytecode
+){
+  function apply() {
+    // Require all utxos be spent atomically
+    require(tx.inputs.length == 1);
+    require(tx.outputs.length == 1);
+
+    // assure at the entire amount minus a transaction fee
+    // goes to the intended output 
+    int appliedAmount = tx.inputs[0].value - 1500;
+    require(tx.outputs[0].value >= appliedAmount);
+
+    // Check that the first output 
+    // sends to the intended recipient. 
+    require(
+      tx.outputs[0].lockingBytecode 
+      == destinationLockingBytecode
+    );
+  }
+}
