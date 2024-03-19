@@ -132,10 +132,9 @@ export default class StorageProvider {
 
       tip = tip ? tip + 1000 : INCEPTION
       console.log(tip)
-      let blocks = await getBlockHistory(tip);
+      let blocks = await getBlockHistory(tip, tip + 1000);
       if (blocks.length) await this.putBlockHeights(blocks);
-      console.log(blocks.length)
-      if (blocks.length < 1000) synced = true
+      if (blocks.length < 1) synced = true
     }
   }
 
@@ -301,6 +300,7 @@ export default class StorageProvider {
     FROM ${this.prefix + "_output"} o1	
     LEFT JOIN ${this.prefix + "_block"} as b ON  o1.height  = b.height
     WHERE o1.locking_bytecode ~ '${lockingBytecode}'
+    and b.timestamp is not null
     GROUP BY date, o1.locking_bytecode, o1.height ORDER BY date asc
     
     `))

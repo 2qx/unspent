@@ -12,6 +12,7 @@ import "fake-indexeddb/auto";
 import dotenv from 'dotenv';
 
 import { default as SqlProvider } from "./db.js";
+import { default as pgp } from "pg-promise";
 import { getBlockHistory, getPriceHistory } from "./query.js";
 import { getRegularSeries } from "./timeseries.js";
 
@@ -115,21 +116,26 @@ export class UpdateCommand extends NetworkCommand {
     let chaingraph = this.chaingraph
       ? this.chaingraph
       : "https://demo.chaingraph.cash/v1/graphql";
-    let prefix = this.prefix ? this.prefix : "6a047574786f015001";
+    let prefix = this.prefix ? this.prefix : "6a047574786f01";
 
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
     let networkProvider = getDefaultElectrumProvider(node)
-    let limit = !this.limit ? 300 : parseInt(this.limit);
-    let offset = !this.offset ? undefined : parseInt(this.offset);
-    let exclude = "6a047574786f014d0101"
-    let hexRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
+    let limit = !this.limit ? 50 : parseInt(this.limit);
+    let offset = !this.offset ? 0 : parseInt(this.offset);
+    let exclude = "6a0401010102010717"
+    let hexRecords = [];
+    while(true){
+      let tmpRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
+      hexRecords.push(...tmpRecords)
+      if(tmpRecords.length<50) break;
+      console.log(tmpRecords.length)
+      offset+=50
+    }
     let contracts = [];
     let total = 0n;
     for (let record of hexRecords) {
-
       try {
         let instance = opReturnToSerializedString(record, this.network);
-        console.log(instance)
         if (instance) contracts.push(instance.toString());
         //@ts-ignore
         let subTotal = await opReturnToBalance(record, this.network, networkProvider)
@@ -140,7 +146,16 @@ export class UpdateCommand extends NetworkCommand {
           let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
           if (Number(subTotal) > 0) {
             await db.syncOutputHistory(lockingBytecode)
-            let irregularTs = await db.getIrregularTs(lockingBytecode)
+            let irregularTs = []
+            try{
+              irregularTs = await db.getIrregularTs(lockingBytecode)
+            }catch(error){
+              if(error instanceof pgp.errors.QueryResultError){
+                // pass
+              }else{
+                throw(error);
+              }
+            }
             let regular = getRegularSeries(irregularTs)
             if (regular.length > 0) await db.putSeries(regular)
           }
@@ -149,8 +164,7 @@ export class UpdateCommand extends NetworkCommand {
 
       } catch (e) {
         console.log(e)
-        //anyone can post an OP_RETURN that doesn't parse
-        console.log('couldn\'t parse: ', record)
+        console.log('Error processing: ', record)
       }
 
 

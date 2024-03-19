@@ -16,6 +16,7 @@ export function getRegularSeries(irregularTs: any): SeriesEntryI[] {
       try{
         changes = Object.fromEntries(irregularTs.map((d: any) => [d.date.toISOString().split('T')[0], d.dv]))
       }catch (e:any){
+        console.log(e)
         console.log(irregularTs)
       }
 

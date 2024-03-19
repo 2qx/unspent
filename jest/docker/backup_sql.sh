@@ -1,0 +1,1 @@
+docker exec -t postgres pg_dumpall -c -U postgres > packages/cat/postgres_dump.sql
