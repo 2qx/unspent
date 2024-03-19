@@ -29,7 +29,8 @@ jobs:
     - name: build
       run: |
           yarn
-          yarn regtest:up
+          yarn regtest:up;
+          sleep 5;
           ./jest/docker/restore_sql.sh
           yarn stats:sync
           yarn stats:dump
