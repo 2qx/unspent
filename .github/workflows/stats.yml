@@ -5,7 +5,7 @@ name: stats
 on: 
   push:
     branches:
-    - feature/stats
+    - stats
   schedule:
   # Run everyday Sunday at 4:00 UTC
   - cron: "0 4 * * 0"
@@ -25,14 +25,14 @@ jobs:
         ref: ${{ github.head_ref }}
     - uses: actions/setup-node@v1
       with:
-        node-version: "18.x"
+        node-version: "18.14.2"
     - name: build
       run: |
           yarn regtest:up;
           yarn
           ./jest/docker/restore_sql.sh
-          yarn stats:sync
-          yarn stats:dump
+          yarn workspace @unspent/cat run cli update
+          ./jest/docker/backup_sql.sh
     - uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: Apply stat changes
