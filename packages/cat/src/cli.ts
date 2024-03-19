@@ -60,18 +60,7 @@ abstract class CustomFeeCommand extends NetworkCommand {
   });
 }
 
-export class SaveCommand extends NetworkCommand {
-  static override usage = Command.Usage({
-    category: `Utility`,
-    description: `Update time-series records`,
-  });
 
-  static override paths = [[`save`], [`s`]];
-  async execute() {
-    dotenv.config()
-
-  }
-}
 
 export class UpdateCommand extends NetworkCommand {
   static override usage = Command.Usage({
