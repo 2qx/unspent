@@ -28,9 +28,8 @@ jobs:
         node-version: "18.x"
     - name: build
       run: |
-          yarn
           yarn regtest:up;
-          sleep 5;
+          yarn
           ./jest/docker/restore_sql.sh
           yarn stats:sync
           yarn stats:dump
