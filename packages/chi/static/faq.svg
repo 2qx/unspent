@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1080"
+   height="1080"
+   viewBox="0 0 285.74999 285.75001"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="faq.svg"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   inkscape:export-filename="/home/amnesia/projects/unspent/packages/chi/static/revenue.png"
+   inkscape:export-xdpi="244.00999"
+   inkscape:export-ydpi="244.00999">
+  <defs
+     id="defs2">
+    <rect
+       x="32.04664"
+       y="81.246169"
+       width="240.61557"
+       height="72.471761"
+       id="rect991" />
+    <rect
+       x="321.43665"
+       y="62.879115"
+       width="271.23445"
+       height="35.543214"
+       id="rect1308" />
+    <rect
+       x="13.927611"
+       y="36.02368"
+       width="227.87677"
+       height="58.574052"
+       id="rect1300" />
+    <rect
+       x="19.09317"
+       y="-24.34153"
+       width="234.61441"
+       height="40.337086"
+       id="rect1243" />
+    <rect
+       x="-106.49082"
+       y="65.155261"
+       width="246.046"
+       height="227.77627"
+       id="rect865" />
+    <rect
+       x="-89.45315"
+       y="32.221155"
+       width="261.70805"
+       height="283.3586"
+       id="rect853" />
+    <rect
+       x="-95.973978"
+       y="-92.888364"
+       width="704.85888"
+       height="359.40546"
+       id="rect845" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient839">
+      <stop
+         style="stop-color:#fbf5e3;stop-opacity:1"
+         offset="0"
+         id="stop835" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="1"
+         id="stop837" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient839"
+       id="linearGradient841"
+       x1="143.92029"
+       y1="-0.21080351"
+       x2="145.85718"
+       y2="288.56451"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-1.2620585,-0.93100631)" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect880" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-7" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect916" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-3" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect916-5" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-3-2" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect973" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-3-2-1" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect1010" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-3-7" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect1046" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-3-7-9" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect1083" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-3-7-9-6" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect1119" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect865-3-3-7-9-6-6" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect1155" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="101.62682"
+       height="55.433851"
+       id="rect865-3-3-7-9-1" />
+    <rect
+       x="-106.49082"
+       y="65.155258"
+       width="246.04601"
+       height="227.77628"
+       id="rect1214" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="184.28738"
+       height="185.25505"
+       id="rect991-3" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="240.61557"
+       height="72.471764"
+       id="rect1006" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="240.61557"
+       height="72.471764"
+       id="rect991-7" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="240.61557"
+       height="72.471764"
+       id="rect1006-5" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="247.72406"
+       height="56.85749"
+       id="rect991-3-5" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="240.61557"
+       height="72.471764"
+       id="rect1083-6" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="240.61557"
+       height="72.471764"
+       id="rect991-9" />
+    <rect
+       x="32.046638"
+       y="81.24617"
+       width="240.61557"
+       height="72.471764"
+       id="rect1127" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.59374111"
+     inkscape:cx="587.13389"
+     inkscape:cy="592.76244"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1422"
+     inkscape:window-height="960"
+     inkscape:window-x="488"
+     inkscape:window-y="206"
+     inkscape:window-maximized="0"
+     showguides="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect833"
+       style="fill:url(#linearGradient841);fill-opacity:1;stroke:none;stroke-width:1.61;stroke-linecap:round"
+       d="m 0,0 c 95.25,0 190.5,0 285.75,0 0,95.250002 0,190.5 0,285.75 -95.25,0 -190.499999,0 -285.75,0 C 0,190.5 0,95.250002 0,0 Z" />
+    <text
+       xml:space="preserve"
+       id="text851"
+       style="line-height:1.25;font-family:'Annie Use Your Telescope';font-size:2.11666667px;-inkscape-font-specification:'Annie Use Your Telescope';white-space:pre;shape-inside:url(#rect853);font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;" />
+    <text
+       xml:space="preserve"
+       id="text1241"
+       style="font-size:19.7556px;line-height:1.25;font-family:OCRACondensed;-inkscape-font-specification:OCRACondensed;white-space:pre;shape-inside:url(#rect1243);"
+       transform="translate(10.015458,32.574219)"><tspan
+         x="19.09375"
+         y="-6.0678669"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7556px;font-family:'Annie Use Your Telescope';-inkscape-font-specification:'Annie Use Your Telescope'">Unspent.cash - What is revenue?</tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 44.339483,28.378173 241.58357,28.163411"
+       id="path1312" />
+    <text
+       xml:space="preserve"
+       id="text989-6"
+       style="font-size:10.399px;line-height:1.15;font-family:'Annie Use Your Telescope';-inkscape-font-specification:'Annie Use Your Telescope';white-space:pre;shape-inside:url(#rect991-3);text-align:center"
+       transform="matrix(1.356964,0,0,1.356964,-22.588174,-59.505199)"
+       x="91.057259"
+       y="0"><tspan
+         x="53.697598"
+         y="89.456912"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">Revenue is income returned per period. 
+</tspan></tspan><tspan
+         x="124.19043"
+         y="101.41576"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">
+</tspan></tspan><tspan
+         x="40.389112"
+         y="113.37461"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">Monthly recurring revenue (MMR) is income that </tspan></tspan><tspan
+         x="63.421272"
+         y="125.33345"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">occurs on a regular monthly basis.
+</tspan></tspan><tspan
+         x="124.19043"
+         y="137.2923"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">
+</tspan></tspan><tspan
+         x="33.219489"
+         y="149.25115"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">Once a revenue stream is established, budgeting and </tspan></tspan><tspan
+         x="67.6154"
+         y="161.20999"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">planning can be done around it. 
+</tspan></tspan><tspan
+         x="124.19043"
+         y="173.16884"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">
+</tspan></tspan><tspan
+         x="34.052221"
+         y="185.12769"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">Many things (from largest the organizations to the </tspan></tspan><tspan
+         x="53.535114"
+         y="197.08654"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">smallest kids' allowance) rely on revenue.
+</tspan></tspan><tspan
+         x="124.19043"
+         y="209.04538"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">
+</tspan></tspan><tspan
+         x="33.310886"
+         y="221.00423"><tspan
+           style="font-size:10.399px;text-align:center;text-anchor:middle;shape-inside:url(#rect991-3)">The bitcoin network has a revenue stream baked in.</tspan></tspan></text>
+  </g>
+</svg>

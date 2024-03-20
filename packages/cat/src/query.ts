@@ -7,13 +7,12 @@ function sleep(ms: number) {
 
 
 
-export async function getBlockHistory(start: number) {
+export async function getBlockHistory(start: number, end: number) {
 
   let resp = await getBlockTimestamps(
     CHAINGRAPH,
-    0,
-    1000,
-    start
+    start,
+    end
   )
 
   await sleep(1000);
@@ -21,15 +20,14 @@ export async function getBlockHistory(start: number) {
 }
 
 
-export async function getBlockTimestamps(host: string, offset: number, limit: number, start: number) {
+export async function getBlockTimestamps(host: string, start: number, end: number) {
   const query = `
-  query GetBlockTimestamps($limit: Int, $offset: Int, $start:bigint) {
+  query GetBlockTimestamps($start:bigint, $end:bigint) {
     block(
-      limit: $limit, 
-      offset: $offset,
       where: {
         _and: [
           { height: { _gt: $start } }
+          { height: { _lte: $end } }
           { accepted_by: { node: { name: { _eq: "bchn-mainnet" } } } }
         ]
       }
@@ -45,9 +43,8 @@ export async function getBlockTimestamps(host: string, offset: number, limit: nu
     data: {
       query: query,
       variables: {
-        limit: limit,
-        offset: offset,
-        start: start
+        start: start,
+        end: end
       },
     },
   }).catch((e: any) => {
@@ -160,7 +157,7 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
     let outputs = tx.transaction.outputs.filter((o: any) => o.locking_bytecode.includes(lockingBytecode) > 0)
     let inputs = tx.transaction.inputs.filter((i: any) => i.outpoint.locking_bytecode.includes(lockingBytecode) > 0)
     return [
-      ...outputs.map((output:any) => {
+      ...outputs.map((output: any) => {
         return {
           id: tx.transaction.hash.substring(3) + ":o:" + output.output_index,
           value: -parseInt(output.value_satoshis),
@@ -168,7 +165,7 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
           locking_bytecode: lockingBytecode
         }
       }),
-      ...inputs.map((input:any) => {
+      ...inputs.map((input: any) => {
         return {
           id: tx.transaction.hash.substring(3) + ":i:" + input.input_index,
           value: parseInt(input.value_satoshis),
