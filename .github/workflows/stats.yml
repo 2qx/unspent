@@ -3,9 +3,6 @@ name: stats
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on: 
-  push:
-    branches:
-    - stats
   schedule:
   # Run everyday Sunday at 4:00 UTC
   - cron: "0 4 * * 0"
@@ -32,6 +29,8 @@ jobs:
           yarn
           ./jest/docker/restore_sql.sh
           yarn workspace @unspent/cat run cli update
+          yarn workspace @unspent/cat run cli cache
+          ./jest/docker/cache_ts.sh
           ./jest/docker/backup_sql.sh
     - uses: stefanzweifel/git-auto-commit-action@v5
       with:

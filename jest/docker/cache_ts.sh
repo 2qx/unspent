@@ -1,0 +1,1 @@
+cat packages/cat/sql/tvl.sql | docker exec -i postgres psql --csv -U postgres -d unspent-cat > packages/app/static/stats.csv

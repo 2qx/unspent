@@ -45,11 +45,9 @@
 			₿∙ϕ:
 			<a target="_blank" href="https://unspent.app/documentation">docs</a>
 			<a target="_blank" href="https://unspent.app/earn">earn</a>
-			<a target="_blank" href="https://unspent.app/create">adv</a> |
+			<a href="/stats">stats</a> |
 			<a target="_blank" href="https://t.me/unspent_cash">telegram</a>
 		</p>
-		<br /><br />
-		<br /><br />
 	</footer>
 </div>
 

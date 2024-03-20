@@ -2,7 +2,8 @@
 // @ts-ignore
 import packageJson from "../package.json" assert { type: "json" };
 
-
+import fs from "node:fs";
+import path from "node:path";
 import { exec } from "node:child_process";
 import util from "node:util";
 const execPromise = util.promisify(exec);
@@ -53,11 +54,42 @@ abstract class NetworkCommand extends VersionedCommand {
     });
 }
 
-abstract class CustomFeeCommand extends NetworkCommand {
-  fee = Option.String("--fee", {
-    required: false,
-    description: "transaction fee override",
+export class CacheCommand extends Command {
+  static override usage = Command.Usage({
+    category: `Utility`,
+    description: `Cache timeseries as json`,
   });
+  file = Option.String("--file", {
+    required: false,
+    description: "The file path to write json to",
+  });
+
+  static override paths = [[`cache`], [`c`]];
+
+  async execute() {
+    dotenv.config()
+    let db = new SqlProvider('mainnet');
+    await db.init();
+
+    let phiFile = !this.file ? "../../packages/app/static/stats.json" : this.file;
+    let chiFile = !this.file ? "../../packages/chi/static/stats.json" : this.file;
+    let chiPath = path.join(path.dirname(""), chiFile)
+    let phiPath = path.join(path.dirname(""), phiFile)
+    let results = await db.getTlv();
+    fs.writeFile(chiPath, JSON.stringify(results, null, 4), (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      };
+    });
+    fs.writeFile(phiPath, JSON.stringify(results, null, 4), (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      };
+    });
+  }
+
 }
 
 
@@ -113,12 +145,12 @@ export class UpdateCommand extends NetworkCommand {
     let offset = !this.offset ? 0 : parseInt(this.offset);
     let exclude = "6a0401010102010717"
     let hexRecords = [];
-    while(true){
+    while (true) {
       let tmpRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
       hexRecords.push(...tmpRecords)
-      if(tmpRecords.length<50) break;
+      if (tmpRecords.length < 50) break;
       console.log(tmpRecords.length)
-      offset+=50
+      offset += 50
     }
     let contracts = [];
     let total = 0n;
@@ -136,13 +168,13 @@ export class UpdateCommand extends NetworkCommand {
           if (Number(subTotal) > 0) {
             await db.syncOutputHistory(lockingBytecode)
             let irregularTs = []
-            try{
+            try {
               irregularTs = await db.getIrregularTs(lockingBytecode)
-            }catch(error){
-              if(error instanceof pgp.errors.QueryResultError){
+            } catch (error) {
+              if (error instanceof pgp.errors.QueryResultError) {
                 // pass
-              }else{
-                throw(error);
+              } else {
+                throw (error);
               }
             }
             let regular = getRegularSeries(irregularTs)

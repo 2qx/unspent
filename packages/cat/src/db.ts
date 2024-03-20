@@ -307,6 +307,21 @@ export default class StorageProvider {
   }
 
 
+  public async getTlv() {
+    return (await this.db.many(`
+    SELECT * FROM (SELECT 
+      date_part('epoch', ts.timestamp) "time",
+      count(ts.locking_bytecode) "mau",
+      round(sum(ts.value),6) "bch",
+      round(sum(ts.value*f.value),2) "fiat"
+    from mainnet_series ts 
+    left join mainnet_fiat f on Date(f.timestamp) = Date(ts.timestamp)
+    group by ts.timestamp order by ts.timestamp) a
+    where fiat is not null    
+    `))
+  }
+
+
 
   public async getOutputs(key: any) {
     return (await this.db.one(`SELECT * FROM ${this.prefix + "_output"} WHERE locking_bytecode like '${key}%'`))
