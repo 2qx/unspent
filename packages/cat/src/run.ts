@@ -1,7 +1,8 @@
 import {
   CacheCommand,
   cli,
-  UpdateCommand
+  UpdateCommand,
+  SaveCommand
 } from "./cli.js"
 import { Builtins } from "clipanion"
 

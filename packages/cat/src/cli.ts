@@ -92,6 +92,18 @@ export class CacheCommand extends Command {
 
 }
 
+export class SaveCommand extends NetworkCommand {
+  static override usage = Command.Usage({
+    category: `Utility`,
+    description: `Update time-series records`,
+  });
+
+  static override paths = [[`save`], [`s`]];
+  async execute() {
+    dotenv.config()
+
+  }
+}
 
 
 export class UpdateCommand extends NetworkCommand {
@@ -155,6 +167,7 @@ export class UpdateCommand extends NetworkCommand {
     let contracts = [];
     let total = 0n;
     for (let record of hexRecords) {
+
       try {
         let instance = opReturnToSerializedString(record, this.network);
         if (instance) contracts.push(instance.toString());
