@@ -3,7 +3,7 @@ import { SeriesEntryI } from "./db";
 export function getRegularSeries(irregularTs: any): SeriesEntryI[] {
   let regular = []
 
-  if (irregularTs) {
+  if (irregularTs.length>0) {
 
     let dateVector = getDailyArray(new Date(irregularTs[0].date))
 
