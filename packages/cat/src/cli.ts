@@ -158,14 +158,21 @@ export class UpdateCommand extends NetworkCommand {
     let exclude = "6a0401010102010717"
     let hexRecords = [];
     while (true) {
-      let tmpRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
-      hexRecords.push(...tmpRecords)
-      if (tmpRecords.length < 50) break;
-      console.log(tmpRecords.length)
+      try {
+        let tmpRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
+        hexRecords.push(...tmpRecords)
+        if (tmpRecords.length == 0) break;
+        console.log(tmpRecords.length)
+      } catch {
+        console.log(`Error getting records at offset ${offset}`)
+      }
+
       offset += 50
     }
     let contracts = [];
     let total = 0n;
+    console.log(`found ${hexRecords.length} records`);
+    console.log(hexRecords)
     for (let record of hexRecords) {
 
       try {
@@ -179,22 +186,35 @@ export class UpdateCommand extends NetworkCommand {
 
           let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
           if (Number(subTotal) > 0) {
-            await db.syncOutputHistory(lockingBytecode)
+            try {
+              await db.syncOutputHistory(lockingBytecode)
+            } catch {
+              console.log(`Error posting outputs for ${contractAddr}`)
+            }
+
             let irregularTs = []
             try {
               irregularTs = await db.getIrregularTs(lockingBytecode)
             } catch (error) {
               if (error instanceof pgp.errors.QueryResultError) {
-                // pass
+                console.log(`Error getting time-series for ${lockingBytecode}`)
               } else {
                 throw (error);
               }
             }
-            let regular = getRegularSeries(irregularTs)
-            if (regular.length > 0) await db.putSeries(regular)
+
+            try {
+              let regular = getRegularSeries(irregularTs)
+              if (regular.length > 0) await db.putSeries(regular)
+            } catch {
+              console.log(`Error posting time-series for ${contractAddr}`)
+            }
+
+
           }
         }
         total += BigInt(subTotal);
+        console.log(`${contracts.length} ${total.toLocaleString()} ${record}`)
 
       } catch (e) {
         console.log(e)
