@@ -28,7 +28,7 @@ export async function getBlockTimestamps(host: string, start: number, end: numbe
         _and: [
           { height: { _gt: $start } }
           { height: { _lte: $end } }
-          { accepted_by: { node: { name: { _eq: "bchn-mainnet" } } } }
+          { accepted_by: { node: { name: { _regex: "mainnet" } } } }
         ]
       }
     ) {
@@ -94,7 +94,7 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
             transaction: {
               block_inclusions: {
                 block: {
-                  accepted_by: { node: { name: { _regex: "bchn-mainnet" } } }
+                  accepted_by: { node: { name: { _regex: "mainnet" } } }
                 }
               }
             }

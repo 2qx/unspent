@@ -148,7 +148,7 @@ export class UpdateCommand extends NetworkCommand {
 
     let chaingraph = this.chaingraph
       ? this.chaingraph
-      : "https://demo.chaingraph.cash/v1/graphql";
+      : "https://gql.chaingraph.pat.mn/v1/graphql";
     let prefix = this.prefix ? this.prefix : "6a047574786f01";
 
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
