@@ -3,8 +3,6 @@
 	import { browser } from '$app/environment';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Header from './Header.svelte';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
-	import { toast } from '@zerodevx/svelte-toast';
 	import './styles.css';
 	import { register } from 'svelte-i18n';
 

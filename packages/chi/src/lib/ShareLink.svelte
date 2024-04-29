@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import share from '$lib/images/share.svg';
-	import CopyToClipboard from './CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { binToBase64 } from '@bitauth/libauth';
 	import { deflate } from 'pako';
@@ -28,19 +28,23 @@
 		}
 	};
 
-	const handleClick = async () => {
-		toast.push('link copied');
-	};
+	
 </script>
 
 {#if lockingBytecode}
-	<CopyToClipboard on:copy={handleClick} text={linkText} let:copy>
+<div 
+						use:copy={linkText}
+						on:svelte-copy={(e) => toast.push('link copied: '+ e.detail)}
+                        on:svelte-copy:error="{(event) =>
+                        toast.push(`Error, no access to clipboard?: ${event.detail.message}`, { classes: ['warn'] })}"
+						>
 		<div class="action" on:click={bumpLevel}>
 			<button class="hitMe" on:click={copy}>
 				<img src={share} alt="share" />
 			</button>
 		</div>
-	</CopyToClipboard>
+	</div>
+
 {/if}
 
 <style>

@@ -11,7 +11,7 @@
 	import share from '$lib/images/share.svg';
 	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
 	import {
 		binToBase64,
 		base64ToBin,
@@ -102,17 +102,20 @@
 						<img width="125px" src={banner} />
 					</td>
 					<td colspan="3">
-						<CopyToClipboard
-							on:copy={() => toast.push('📋🗸')}
-							text={contract.getAddress()}
-							let:copy
+						<div
+							use:copy={contract.getAddress()}
+							on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail)}
+							on:svelte-copy:error={(event) =>
+								toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+									classes: ['warn']
+								})}
 						>
 							<div style="max-width: 80%;" class="action">
-								<button on:click={copy}>
+								<button>
 									{contract.getAddress()}
 								</button>
 							</div>
-						</CopyToClipboard>
+						</div>
 					</td>
 				{:else}
 					<td style="text-align: center;">

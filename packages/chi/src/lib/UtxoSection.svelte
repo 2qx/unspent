@@ -5,9 +5,9 @@
 	import arrow_split from '$lib/images/arrow_split.svg';
 	import arrow_right_white from '$lib/images/arrow_right_white.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
-	import copy from '$lib/images/copy.svg';
+	import * as copyIcon from '$lib/images/copy.svg';
 	import { toast } from '@zerodevx/svelte-toast';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
 
 	export let receiptAddress = '';
 	let utxos = [];
@@ -124,18 +124,19 @@
 				</tr>
 				<tr>
 					<td style="line-break:anywhere;" colspan="2">
-						<img src={copy} />
-						<CopyToClipboard
-							on:copy={() => toast.push('📋🗸')}
-							text={contract.getAddress()}
-							let:copy
+						<img src={copyIcon} />
+						<div 
+						use:copy={contract.getAddress()}
+						on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail )}
+                        on:svelte-copy:error="{(event) =>
+                        toast.push(`Error, no access to clipboard?: ${event.detail.message}`, { classes: ['warn'] })}"
 						>
 							<div class="action">
-								<button class="styled" on:click={copy}>
+								<button class="styled" >
 									{contract.getAddress()}
 								</button>
 							</div>
-						</CopyToClipboard>
+						</div>
 					</td>
 				</tr>
 			</table>

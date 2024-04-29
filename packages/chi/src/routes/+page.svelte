@@ -9,7 +9,7 @@
 	import month from '$lib/images/month.svg';
 	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import { cashAddressToLockingBytecode } from '@bitauth/libauth';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
@@ -102,9 +102,7 @@
 		}
 	};
 
-	const handleCopyClick = async () => {
-		toast.push('📋🗸');
-	};
+
 </script>
 
 <svelte:head>
@@ -148,14 +146,20 @@
 					<td style="text-align: end;">
 						<img src={lock_clock} alt="lock_clock" />
 					</td>
+					
 					<td colspan="3">
-						<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
+						<div 
+						use:copy={contract.getAddress()}
+						on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail )}
+                        on:svelte-copy:error="{(event) =>
+                        toast.push(`Error, no access to clipboard?: ${event.detail.message}`, { classes: ['warn'] })}"
+						>
 							<div style="max-width: 95%; line-break:anywhere;" on:click={bumpLevel} class="contract-div">
 								<button class="styled" on:click={copy}>
 									{contract.getAddress()}
 								</button>
 							</div>
-						</CopyToClipboard>
+						</div>
 					</td>
 				{:else}
 					<td style="text-align: center; line-break:auto" />
