@@ -25,8 +25,8 @@
 	});
 
 	const resetState = () => {
-		stateStore.set('');
 		receiptAddressStore.set('');
+		stateStore.set("");
 		pageStore.set('');
 		reloadPage();
 	};
