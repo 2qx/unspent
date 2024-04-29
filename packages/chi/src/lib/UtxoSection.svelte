@@ -115,7 +115,7 @@
 				<tr>
 					<td>
 						<p>
-							<img src={lock_clock} alt={$_('ok')} />
+
 						</p>
 					</td>
 					<td>
@@ -123,20 +123,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="line-break:anywhere;" colspan="2">
-						<img src={copyIcon} />
-						<div 
-						use:copy={contract.getAddress()}
-						on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail )}
-                        on:svelte-copy:error="{(event) =>
-                        toast.push(`Error, no access to clipboard?: ${event.detail.message}`, { classes: ['warn'] })}"
-						>
-							<div class="action">
-								<button class="styled" >
-									{contract.getAddress()}
-								</button>
-							</div>
-						</div>
+					<td  colspan="2">
+						{$_('12')}
 					</td>
 				</tr>
 			</table>
@@ -144,7 +132,10 @@
 		<br />
 		<br />
 		<p>
-			<img width="300px" src="/h/13.svg" alt="send bitcoin" />
+			<a href="/">
+				<img width="300px" src="/h/13.svg" alt="send bitcoin" />
+			</a>
+			
 		</p>
 	{:else}
 		<progress id="progress-bar" aria-label="Content loading…" />
