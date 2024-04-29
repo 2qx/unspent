@@ -36,6 +36,8 @@
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 
+	
+
 	function reloadPage() {
 		const thisPage = window.location.pathname;
 
@@ -56,8 +58,9 @@
 		if (value) {
 			currentPageIndex = Number(value);
 		} else {
-			currentPageIndex = 0;
-			pageStore.set('0');
+			console.log("no currentPageIndex")
+			//currentPageIndex = 0;
+			//pageStore.set('0');
 		}
 	});
 
@@ -226,10 +229,7 @@
 		</Carousel>
 	{/if}
 
-	<div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
-	<span style="align:right; width: 10px;" >
-		<img src={arrow_step} />
-	</span>
+	<div class="girl-boss"><img src={boss} />{stateValue + 1}, {currentPageIndex + 1}</div>
 </section>
 
 <style>
