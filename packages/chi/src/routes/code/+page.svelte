@@ -6,6 +6,7 @@
 	import { scriptToBytecode } from '@cashscript/utils';
 	import { receiptAddressStore } from '$lib/store.js';
 	import { copy } from 'svelte-copy';
+	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 
 	let receiptAddress = '';
@@ -23,7 +24,9 @@
 	});
 </script>
 
-{#if contract}
+{#if $isLoading}
+	...
+{:else if contract}
 	<div style=" align-self:center">
 		<h3>Links</h3>
 		<div>
@@ -132,8 +135,15 @@
 		</div>
 	</div>
 {:else}
-	No contract
+<h1>
+	{$_('8')}
+</h1>
+<a href="/">
+	<img width="100%" src="/h/09.svg" alt={$_('8')} />
+</a>
 {/if}
+
+
 
 <style>
 	a {

@@ -1,5 +1,6 @@
 <script>
 	import { beforeUpdate } from 'svelte';
+	import { _, isLoading } from 'svelte-i18n';
 	import { Perpetuity } from '@unspent/phi';
 	import { receiptAddressStore } from '$lib/store.js';
 
@@ -23,11 +24,18 @@
 	};
 </script>
 
-{#if series && series.length > 0}
+{#if $isLoading}
+	...
+{:else if series && series.length > 0}
 	{#each series as ts (ts.id)}
 		<pre style="font-size:x-small;">{ts.id}</pre>
 		{ts.data}
 	{/each}
 {:else}
-	<progress id="progress-bar" aria-label="Content loading…" />
+	<h1>
+		{$_('8')}
+	</h1>
+	<a href="/">
+		<img width="100%" src="/h/09.svg" alt={$_('8')} />
+	</a>
 {/if}

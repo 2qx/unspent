@@ -1,12 +1,10 @@
 <script>
-	import { beforeUpdate } from 'svelte';
-	import ContractChart from '$lib/ContractChart.svelte';
-	import { Perpetuity } from '@unspent/phi';
+	import { _, isLoading } from 'svelte-i18n';
 	import { receiptAddressStore, stateStore } from '$lib/store.js';
 	import ContractChartSection from '$lib/ContractChartSection.svelte';
 
 	let receiptAddress = '';
-  let stateValue;
+	let stateValue;
 	let series = [];
 	let contract;
 
@@ -22,4 +20,15 @@
 	});
 </script>
 
-<ContractChartSection {receiptAddress} />
+{#if $isLoading}
+	...
+{:else if !receiptAddress}
+<h1>
+	{$_('8')}
+</h1>
+<a href="/">
+	<img width="100%" src="/h/09.svg" alt={$_('8')} />
+</a>
+{:else}
+	<ContractChartSection {receiptAddress} />
+{/if}
