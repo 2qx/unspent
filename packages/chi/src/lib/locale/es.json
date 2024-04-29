@@ -34,7 +34,7 @@
   "short_02": "Fondo de su contrato de perpetuidad.",
   "ok": "Bueno",
   "short_00": "Ingrese su dirección de billetera.",
-  "receive": "Ingrese la dirección de su wallet bitcoin en efectivo (BCH)",
+  "receive": "Ingrese la dirección de su billetera BitcoinCash (BCH)",
   "overview": "Cree un contrato para distribuir alrededor del uno por ciento del saldo mensualmente a perpetuidad.",
   "locale": "es",
   "bitcoin.pdf": "https://bitcoin.org/files/bitcoin-paper/bitcoin_es.pdf"
