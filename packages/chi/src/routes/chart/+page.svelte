@@ -27,15 +27,15 @@
 {#if $isLoading}
 	...
 {:else if !receiptAddress}
-	<h2>
-		{$_('10')}
-	</h2>
+	<h1>
+		{$_('8')}
+	</h1>
 	<a href="/">
 		<img width="100%" src="/h/09.svg" alt={$_('8')} />
 	</a>
 {:else}
-<h1>
-	{$_('8')}
-</h1>
+<h2>
+	{$_('10')}
+</h2>
 	<ContractChartSection {receiptAddress} />
 {/if}
