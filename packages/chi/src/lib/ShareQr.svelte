@@ -38,8 +38,8 @@
 						position-ring-color="#b286cf"
 						position-center-color="#b286cf"
 						mask-x-to-y-ratio="1.2"
-						style="width: 200px;
-							height: 200px;
+						style="width: 150px;
+							height: 150px;
 							margin: 1em auto;
 							background-color: #fff;"
 					>

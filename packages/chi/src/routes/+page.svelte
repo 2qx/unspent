@@ -122,29 +122,37 @@
 				<td colspan="4" />
 			</tr>
 			<tr dir={$_('direction')}>
-				<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
-					<p style="line-break:auto; font-weight:400; font-size:small;">
-						<b>{$_('overview')}</b>
-					</p>
-					<ol>
-						{#if !(stateValue > 3)}
-							<li><b>{$_('short_00')}</b></li>
-						{:else}
-							<li>{$_('short_00')}</li>
+				{#if balance}
+					<td colspan="3" style="padding: 1em; text-align:center;">
+						<b>{balance.toLocaleString()}</b> sats <br />
+						(<i
+							>{(Number(balance) / 100000000).toLocaleString(undefined, {
+								minimumSignificantDigits: 6
+							})}</i
+						> BCH)
+					</td>
+				{:else}
+					<td colspan="3" style="line-break:auto; font-weight:400; padding:10px;">
+						{#if stateValue < 7}
+							<p style="line-break:auto; font-weight:400;">
+								{$_('overview')}
+							</p>
 						{/if}
-						{#if !(stateValue >= 4)}
-							<li><b>{$_('short_01')}</b></li>
-						{:else}
-							<li>{$_('short_01')}</li>
-						{/if}
-						{#if !(stateValue > 7)}
-							<li><b>{$_('short_02')}</b></li>
-						{:else}
-							<li>{$_('short_02')}</li>
-						{/if}
-					</ol>
-				</td>
-				<td style="text-align:center; width:25%">
+
+						<ul>
+							{#if stateValue < 3}
+								<li>{$_('short_00')}</li>
+							{/if}
+							{#if stateValue < 4}
+								<li>{$_('short_01')}</li>
+							{/if}
+							{#if stateValue < 7}
+								<li>{$_('short_02')}</li>
+							{/if}
+						</ul>
+					</td>
+				{/if}
+				<td style="text-align:center; width:25%;">
 					{#if !contract}
 						<a href="{base}/help">
 							<img class={!stateValue ? 'flashing' : ''} width="80px" src={help} alt="help" />
@@ -158,9 +166,9 @@
 								position-ring-color="#533c0d"
 								position-center-color="#d99b22"
 								mask-x-to-y-ratio="1.2"
-								style="width: 200px;
-									height: 200px;
-									margin: 1em auto;
+								style="width: 150px;
+									height: 150px;
+									margin: 0.5em auto;
 									background-color: #fff;"
 							>
 								<img src={lock_clock} slot="icon" />
@@ -182,11 +190,7 @@
 									classes: ['warn']
 								})}
 						>
-							<div
-								style="max-width: 95%; display:flex;"
-								on:click={bumpLevel}
-								class="contract-div"
-							>
+							<div style="max-width: 95%; display:flex;" on:click={bumpLevel} class="contract-div">
 								<img src={lock_clock} alt="lock_clock" />
 								<div>
 									<button class="styled" on:click={copy}>
@@ -199,31 +203,14 @@
 					</td>
 				{:else}
 					<td style="text-align: center; line-break:auto" />
-					<td colspan="3" dir={$_('direction')}><b> {$_('create')}</b></td>
+					<td colspan="3" dir={$_('direction')}> {$_('create')}</td>
 				{/if}
 			</tr>
-			<tr>
-				{#if balance}
-					<td />
-					<td style="width:30px;" />
-					<td colspan="2" style="padding: 1em;">
-						<b>{balance.toLocaleString()}</b> sats <br />
-						(<i
-							>{(Number(balance) / 100000000).toLocaleString(undefined, {
-								minimumSignificantDigits: 6
-							})}</i
-						> BCH)
-					</td>
-				{:else}
-					<td />
-					<td style="width:30px;" />
-					<td colspan="2" />
-				{/if}
-			</tr>
+
 			{#if receiptAddressValid}
 				<tr>
 					<td />
-					<td>
+					<td style="width:50px;">
 						<p><img src={arrow_down} alt="to" /></p>
 					</td>
 					<td colspan="2">
@@ -238,19 +225,19 @@
 			{/if}
 			<tr>
 				<td />
-				<td style="width=30px; display:flex;">
-					<img src={wallet} alt="wallet" />
-				</td>
-				<td dir={$_('direction')} colspan="2">
-					<textarea
-						id="addr"
-						rows="3"
-						style="line-break:anywhere;"
-						on:change={() => createContract()}
-						bind:value={receiptAddress}
-						placeholder="bitcoincash:q... ..."
-					/>
-					<p style="line-break: normal;">{$_('receive')}</p>
+
+				<td dir={$_('direction')} colspan="3">
+					<div style="display:flex;">
+						<img src={wallet} alt="wallet" />
+						<textarea
+							id="addr"
+							rows="3"
+							style="line-break:anywhere;"
+							on:change={() => createContract()}
+							bind:value={receiptAddress}
+							placeholder="bitcoincash:q... ..."
+						/>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -260,7 +247,9 @@
 						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
 					</td>
 				{:else}
-					<td colspan="3" />
+					<td colspan="3">
+						<p style="line-break: normal;"><b>{$_('receive')}</b></p>
+					</td>
 				{/if}
 			</tr>
 		</table>
