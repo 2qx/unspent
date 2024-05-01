@@ -132,8 +132,8 @@
 						> BCH)
 					</td>
 				{:else}
-					<td colspan="3" style="line-break:auto; font-weight:400; padding:10px;">
-						{#if stateValue < 7}
+					<td colspan="3" style="line-break:auto; font-weight:400; padding:2px;">
+						{#if stateValue < 3}
 							<p style="line-break:auto; font-weight:400;">
 								{$_('overview')}
 							</p>
@@ -224,7 +224,7 @@
 				</tr>
 			{/if}
 			<tr>
-				<td />
+				<td style="width: 25%;"/>
 
 				<td dir={$_('direction')} colspan="3">
 					<div style="display:flex;">
