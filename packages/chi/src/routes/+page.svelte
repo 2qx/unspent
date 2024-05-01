@@ -126,19 +126,19 @@
 					<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
 					<ol>
 						{#if !(stateValue > 3)}
-							<li>{$_('short_00')}</li>
+							<li><b>{$_('short_00')}</b></li>
 						{:else}
-							<li><s>{$_('short_00')}</s></li>
+							<li>{$_('short_00')}</li>
 						{/if}
 						{#if !(stateValue >= 4)}
-							<li>{$_('short_01')}</li>
+							<li><b>{$_('short_01')}</b></li>
 						{:else}
-							<li><s>{$_('short_01')}</s></li>
+							<li>{$_('short_01')}</li>
 						{/if}
 						{#if !(stateValue > 7)}
-							<li>{$_('short_02')}</li>
+							<li><b>{$_('short_02')}</b></li>
 						{:else}
-							<li><s>{$_('short_02')}</s></li>
+							<li>{$_('short_02')}</li>
 						{/if}
 					</ol>
 				</td>
@@ -221,7 +221,7 @@
 					<td>
 						<p><img src={arrow_down} alt="to" /></p>
 					</td>
-					<td>
+					<td colspan="2">
 						<p>
 							<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
 						</p>
@@ -229,7 +229,6 @@
 							<b>11.8% {$_('year')}</b>
 						</p>
 					</td>
-					<td />
 				</tr>
 			{/if}
 			<tr>
