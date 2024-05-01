@@ -1181,6 +1181,11 @@
   resolved "https://registry.yarnpkg.com/@bitauth/libauth/-/libauth-2.0.0-alpha.8.tgz#352ade2075517f1548e05553e7bb1c5e1023d1fe"
   integrity sha512-KINAJbzg5pKs+WM8wCjWw6Ct/CeZG1JMrRXsIyPFztjNtwA5eeQL8eFkyquePsf8aZ5peRYK2eFPUDo/1rkg+w==
 
+"@bitjson/qr-code@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@bitjson/qr-code/-/qr-code-1.0.2.tgz#a17330a09e6d29490d10eadb7280fdb41a070b03"
+  integrity sha512-oqcTWhzMs8Dt/xrHKDUzYglccgjVX2GleASd4FsE7TGGUkW8n57tBjKmfwkAVWa722+v6ijS81EmWbd07ebsmQ==
+
 "@cashscript/utils@0.10.0-next.2", "@cashscript/utils@^0.10.0-next.2":
   version "0.10.0-next.2"
   resolved "https://registry.yarnpkg.com/@cashscript/utils/-/utils-0.10.0-next.2.tgz#ca7a981335ca47a7fa188927c4cc6f080cdaf4f9"

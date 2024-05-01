@@ -101,8 +101,6 @@
 			stateStore.set('6');
 		}
 	};
-
-
 </script>
 
 <svelte:head>
@@ -120,41 +118,74 @@
 				</td>
 				<td colspan="3" style="line-break: auto;"> <h1>unspent&hairsp;.cash</h1></td>
 			</tr>
-			{#if !contract}
-				<tr style="height:4el;">
-					<td colspan="4" />
-				</tr>
-				<tr dir={$_('direction')}>
-					<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
-						<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
-						<ol>
+			<tr style="height:4el;">
+				<td colspan="4" />
+			</tr>
+			<tr dir={$_('direction')}>
+				<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
+					<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
+					<ol>
+						{#if !(stateValue > 3)}
 							<li>{$_('short_00')}</li>
+						{:else}
+							<li><s>{$_('short_00')}</s></li>
+						{/if}
+						{#if !(stateValue >= 4)}
 							<li>{$_('short_01')}</li>
+						{:else}
+							<li><s>{$_('short_01')}</s></li>
+						{/if}
+						{#if !(stateValue > 7)}
 							<li>{$_('short_02')}</li>
-						</ol>
-					</td>
-					<td style="text-align:center; width:25%">
+						{:else}
+							<li><s>{$_('short_02')}</s></li>
+						{/if}
+					</ol>
+				</td>
+				<td style="text-align:center; width:25%">
+					{#if !contract}
 						<a href="{base}/help">
 							<img class={!stateValue ? 'flashing' : ''} width="80px" src={help} alt="help" />
 						</a>
-					</td>
-				</tr>
-			{/if}
-
+					{:else}
+						<div >
+							<qr-code
+								id="qr1"
+								contents={contract.getAddress()}
+								module-color="#000"
+								position-ring-color="#533c0d"
+								position-center-color="#d99b22"
+								mask-x-to-y-ratio="1.2"
+								style="width: 200px;
+									height: 200px;
+									margin: 1em auto;
+									background-color: #fff;"
+							>
+								<img src={lock_clock} slot="icon" />
+							</qr-code>
+						</div>
+					{/if}
+				</td>
+			</tr>
 			<tr>
 				{#if contract}
-					<td style="text-align: end;">
-						<img src={lock_clock} alt="lock_clock" />
-					</td>
-					
+					<td style="text-align: end;" />
+
 					<td colspan="3">
-						<div 
-						use:copy={contract.getAddress()}
-						on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail )}
-                        on:svelte-copy:error="{(event) =>
-                        toast.push(`Error, no access to clipboard?: ${event.detail.message}`, { classes: ['warn'] })}"
+						<div
+							use:copy={contract.getAddress()}
+							on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail)}
+							on:svelte-copy:error={(event) =>
+								toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+									classes: ['warn']
+								})}
 						>
-							<div style="max-width: 95%; line-break:anywhere;" on:click={bumpLevel} class="contract-div">
+							<div
+								style="max-width: 95%; display:flex; line-break:anywhere;"
+								on:click={bumpLevel}
+								class="contract-div"
+							>
+								<img src={lock_clock} alt="lock_clock" />
 								<button class="styled" on:click={copy}>
 									{contract.getAddress()}
 								</button>
@@ -240,7 +271,6 @@
 		align-items: center;
 	}
 
-
 	table {
 		background-color: white;
 		border-radius: 40px;
@@ -276,6 +306,7 @@
 	.styled {
 		border-color: #000;
 		font-size: 1rem;
+		line-break: anywhere;
 		text-align: center;
 		color: #000;
 		border-radius: 10px;
