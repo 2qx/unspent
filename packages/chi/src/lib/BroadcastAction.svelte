@@ -5,6 +5,7 @@
 	import { Record } from '@unspent/phi';
 	import { getRecords } from '@unspent/psi';
 	import ShareLink from './ShareLink.svelte';
+	import ShareQr from './ShareQr.svelte';
 	import { stateStore } from '$lib/store.js';
 	let stateValue;
 	export let opReturnHex: string;
@@ -109,12 +110,15 @@
 	<div class="action">
 		<ShareLink {lockingBytecode} />
 	</div>
+	<div class="action" style="display: inline-block;">
+		<ShareQr {lockingBytecode} />
+	</div>
 {:else}
 	<div>
 		<button class="hitMe" on:click={broadcast}>
 			<img src={heart} alt="heart" />
 		</button>
-		<br>
+		<br />
 		{$_('9')}
 	</div>
 
