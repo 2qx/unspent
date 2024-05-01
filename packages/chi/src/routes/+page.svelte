@@ -123,7 +123,9 @@
 			</tr>
 			<tr dir={$_('direction')}>
 				<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
-					<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
+					<p style="line-break:auto; font-weight:400; font-size:small;">
+						<b>{$_('overview')}</b>
+					</p>
 					<ol>
 						{#if !(stateValue > 3)}
 							<li><b>{$_('short_00')}</b></li>
@@ -148,7 +150,7 @@
 							<img class={!stateValue ? 'flashing' : ''} width="80px" src={help} alt="help" />
 						</a>
 					{:else}
-						<div >
+						<div>
 							<qr-code
 								id="qr1"
 								contents={contract.getAddress()}
@@ -181,14 +183,17 @@
 								})}
 						>
 							<div
-								style="max-width: 95%; display:flex; line-break:anywhere;"
+								style="max-width: 95%; display:flex;"
 								on:click={bumpLevel}
 								class="contract-div"
 							>
 								<img src={lock_clock} alt="lock_clock" />
-								<button class="styled" on:click={copy}>
-									{contract.getAddress()}
-								</button>
+								<div>
+									<button class="styled" on:click={copy}>
+										{contract.getAddress()}
+									</button>
+									{$_('11')}
+								</div>
 							</div>
 						</div>
 					</td>
@@ -201,7 +206,7 @@
 				{#if balance}
 					<td />
 					<td style="width:30px;" />
-					<td colspan="2">
+					<td colspan="2" style="padding: 1em;">
 						<b>{balance.toLocaleString()}</b> sats <br />
 						(<i
 							>{(Number(balance) / 100000000).toLocaleString(undefined, {
@@ -233,29 +238,29 @@
 			{/if}
 			<tr>
 				<td />
-				<td style="width=30px;">
-					<p>
-						<img src={wallet} alt="wallet" />
-					</p>
+				<td style="width=30px; display:flex;">
+					<img src={wallet} alt="wallet" />
 				</td>
-				<td style="line-break:anywhere;" colspan="2">
+				<td dir={$_('direction')} colspan="2">
 					<textarea
 						id="addr"
 						rows="3"
+						style="line-break:anywhere;"
 						on:change={() => createContract()}
 						bind:value={receiptAddress}
 						placeholder="bitcoincash:q... ..."
 					/>
+					<p style="line-break: normal;">{$_('receive')}</p>
 				</td>
 			</tr>
 			<tr>
 				<td />
 				{#if contract}
-					<td style="text-align: end; padding: 20px;" colspan="3">
+					<td style="text-align: end; padding: 20px;" dir={$_('direction')} colspan="3">
 						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
 					</td>
 				{:else}
-					<td style="line-break:auto;" dir={$_('direction')} colspan="3">{$_('receive')}</td>
+					<td colspan="3" />
 				{/if}
 			</tr>
 		</table>
@@ -280,7 +285,6 @@
 	}
 
 	table tr td p {
-		font-size: small;
 		justify-content: space-around;
 	}
 

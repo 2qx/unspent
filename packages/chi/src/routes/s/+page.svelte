@@ -103,7 +103,7 @@
 						<img width="125px" src={banner} />
 					</td>
 					<td colspan="3">
-						<b> {$_('overview')}</b>
+						<b> {$_('10')}</b>
 						<qr-code
 							id="qr1"
 							contents={contract.getAddress()}
@@ -126,7 +126,7 @@
 					<td style="text-align: center;">
 						<img width="125px" src={banner} />
 					</td>
-					<td colspan="3"><b> {$_('create')}</b></td>
+					<td colspan="3"><b> {$_('overview')}</b></td>
 				{/if}
 			</tr>
 			<tr>
@@ -142,6 +142,8 @@
 						> BCH)
 					</td>
 				{/if}
+			</tr>
+			<tr>
 				{#if contract}
 					<td />
 					<td style="width:30px;">
@@ -270,5 +272,6 @@
 		width: 100%;
 		font-weight: 900;
 		color: #d99b22;
+		padding: 1em;
 	}
 </style>

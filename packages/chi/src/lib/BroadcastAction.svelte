@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { _, isLoading } from 'svelte-i18n';
 	import heart from '$lib/images/heart.svg';
 	import { Record } from '@unspent/phi';
 	import { getRecords } from '@unspent/psi';
@@ -96,11 +96,14 @@
 	};
 </script>
 
-{#if isPublished == undefined}
+{#if $isLoading}
+	loading ...
+{:else if isPublished == undefined}
 	<div class="action">
 		<button disabled>
 			<progress id="progress-bar" aria-label="Content loading…" />
 		</button>
+		{$_('9')}
 	</div>
 {:else if isPublished == true}
 	<div class="action">
@@ -111,6 +114,8 @@
 		<button class="hitMe" on:click={broadcast}>
 			<img src={heart} alt="heart" />
 		</button>
+		<br>
+		{$_('9')}
 	</div>
 
 	{#if !executionProgressClosed}
