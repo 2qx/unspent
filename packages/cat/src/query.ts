@@ -191,7 +191,7 @@ export async function getPriceHistory() {
   const response = await axios.get(COINGECKO_CHART, {
     params: {
       vs_currency: "usd",
-      from: "1682930834",
+      from: Date.now() / 1000 - (360*1440*60),
       to: Date.now() / 1000
 
     }

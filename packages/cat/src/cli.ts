@@ -137,6 +137,7 @@ export class UpdateCommand extends NetworkCommand {
     let db = new SqlProvider('mainnet');
     await db.init();
 
+    console.log("get price history...")
     let prices = await getPriceHistory();
 
     console.log("updating price history...")
