@@ -1,0 +1,60 @@
+pragma cashscript ^0.10.0;
+
+// Unspent Phi
+//
+// Perpetuity v3 
+//
+// Perpetuity: fractional monthly payments using rolling timelocks.
+//
+// [ ] BIP-68 timelocks were introduced in version 2 transactions, enforce versions.
+// [ ] The input must have aged for at least 4383 blocks
+// [ ] All utxos must be processed atomically. One coin per tx, no merging.
+// [ ] Require the first output is to the receipt.
+// [ ] require the installment is paid,
+// [ ] return the remainder,
+//
+// 
+// String & op_return serializations:
+//
+// a914e78564d75c446f8c00c757a2bd783d30c4f0819a87
+//
+// P,3,<receiptLockingBytecode>,<contractBytecode>
+// 
+// 6a 047574786f
+// 01 50
+// 01 03
+// ...
+//
+
+contract Perpetuity(
+
+ // lockingBytecode of the beneficiary, 
+ // the address receiving payments
+ bytes recipientLockingBytecode,
+
+) {
+ function execute() {
+
+  // Force tx version equal to 2 to force BIP68 support
+  require(tx.version == 2);
+  
+  // Check that time has passed and that time locks are enabled
+  require(tx.age >= 4383);
+
+  // Limit to a single utxo input
+  require(tx.inputs.length == 1);
+
+  // Check that the first output sends to the recipient
+  require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+  // Check that the output sends a normal installment
+  require(tx.outputs[0].value >= tx.inputs[this.activeInputIndex].value/100);
+
+  // require the second output match the active bytecode
+  require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+
+  // balance was returned to the contract
+  require(tx.outputs[1].value >= tx.inputs[this.activeInputIndex].value*9899/10000);
+  
+ }
+}
