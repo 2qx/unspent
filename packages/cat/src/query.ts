@@ -15,7 +15,7 @@ export async function getBlockHistory(start: number, end: number) {
     end
   )
 
-  await sleep(1000);
+  await sleep(2000);
   return resp
 }
 

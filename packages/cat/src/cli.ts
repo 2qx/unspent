@@ -173,55 +173,54 @@ export class UpdateCommand extends NetworkCommand {
     let contracts = [];
     let total = 0n;
     console.log(`found ${hexRecords.length} records`);
-    console.log(hexRecords)
+    hexRecords.reverse()
+    //hexRecords = hexRecords.slice(420+80)
     for (let record of hexRecords) {
 
+      let instance = null;
       try {
-        let instance = opReturnToSerializedString(record, this.network);
-        if (instance) contracts.push(instance.toString());
-        //@ts-ignore
-        let subTotal = await opReturnToBalance(record, this.network, networkProvider)
-        if (instance && instance[0] != 'F') {
-          let prefix = this.isChipnet ? 'bchtest' : 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
-          let lockingBytecode = instance.split(",").pop() as string
-
-          let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
-          if (Number(subTotal) > 0) {
-            try {
-              await db.syncOutputHistory(lockingBytecode)
-            } catch {
-              console.log(`Error posting outputs for ${contractAddr}`)
-            }
-
-            let irregularTs = []
-            try {
-              irregularTs = await db.getIrregularTs(lockingBytecode)
-            } catch (error) {
-              if (error instanceof pgp.errors.QueryResultError) {
-                console.log(`Error getting time-series for ${lockingBytecode}`)
-              } else {
-                throw (error);
-              }
-            }
-
-            try {
-              let regular = getRegularSeries(irregularTs)
-              if (regular.length > 0) await db.putSeries(regular)
-            } catch {
-              console.log(`Error posting time-series for ${contractAddr}`)
-            }
-
-
-          }
-        }
-        total += BigInt(subTotal);
-        console.log(`${contracts.length} ${total.toLocaleString()} ${record}`)
-
-      } catch (e) {
-        console.log(e)
-        console.log('Error processing: ', record)
+        instance = opReturnToSerializedString(record, this.network);
+      } catch {
+        console.log(`Deserialization failed ${record}`);
       }
 
+      if (instance) contracts.push(instance.toString());
+      //@ts-ignore
+      let subTotal = await opReturnToBalance(record, this.network, networkProvider)
+      if (instance && instance[0] != 'F') {
+        let prefix = this.isChipnet ? 'bchtest' : 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
+        let lockingBytecode = instance.split(",").pop() as string
+
+        let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
+        if (Number(subTotal) > 0) {
+          try {
+            await db.syncOutputHistory(lockingBytecode)
+          } catch {
+            console.log(`Error posting outputs for ${contractAddr}`)
+          }
+
+          let irregularTs = []
+          try {
+            irregularTs = await db.getIrregularTs(lockingBytecode)
+          } catch (error) {
+            if (error instanceof pgp.errors.QueryResultError) {
+              console.log(`Error getting time-series for ${lockingBytecode}`)
+            }
+            console.log(`${error}`)
+          }
+
+          try {
+            let regular = getRegularSeries(irregularTs)
+            if (regular.length > 0) await db.putSeries(regular)
+          } catch {
+            console.log(`Error posting time-series for ${contractAddr}`)
+          }
+
+
+        }
+      }
+      total += BigInt(subTotal);
+      console.log(`${contracts.length} ${hexRecords.length} ${total.toLocaleString()} ${record}`)
 
     }
 
