@@ -5,18 +5,8 @@ pragma cashscript ^0.10.0;
 // Perpetuity v3 
 //
 // Perpetuity: fractional monthly payments using rolling timelocks.
-//
-// [ ] BIP-68 timelocks were introduced in version 2 transactions, enforce versions.
-// [ ] The input must have aged for at least 4383 blocks
-// [ ] All utxos must be processed atomically. One coin per tx, no merging.
-// [ ] Require the first output is to the receipt.
-// [ ] require the installment is paid,
-// [ ] return the remainder,
-//
 // 
 // String & op_return serializations:
-//
-// a914e78564d75c446f8c00c757a2bd783d30c4f0819a87
 //
 // P,3,<receiptLockingBytecode>,<contractBytecode>
 // 
@@ -35,26 +25,33 @@ contract Perpetuity(
 ) {
  function execute() {
 
-  // Force tx version equal to 2 to force BIP68 support
+  // [ ] Force tx version equal to 2 to force BIP68 support
+  // OP_TXVERSION OP_2 OP_NUMEQUALVERIFY 
   require(tx.version == 2);
   
-  // Check that time has passed and that time locks are enabled
+  // [ ] Check that time has passed and that time locks are enabled
+  // 1f11 OP_CHECKSEQUENCEVERIFY OP_DROP 
   require(tx.age >= 4383);
 
-  // Limit to a single utxo input
+  // [ ] Limit to a single utxo input
+  // OP_TXINPUTCOUNT OP_1 OP_NUMEQUALVERIFY 
   require(tx.inputs.length == 1);
 
-  // Check that the first output sends to the recipient
+  // [ ] Check that the first output sends to the recipient
+  // OP_0 OP_OUTPUTBYTECODE OP_EQUALVERIFY 
   require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
 
-  // Check that the output sends a normal installment
+  // [ ] Check that the output sends a normal installment
+  // OP_0 OP_OUTPUTVALUE OP_INPUTINDEX OP_UTXOVALUE 64 OP_DIV OP_GREATERTHANOREQUAL OP_VERIFY 
   require(tx.outputs[0].value >= tx.inputs[this.activeInputIndex].value/100);
 
-  // require the second output match the active bytecode
+  // [ ] require the second output match the active bytecode
+  // OP_1 OP_OUTPUTBYTECODE OP_INPUTINDEX OP_UTXOBYTECODE OP_EQUALVERIFY 
   require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
 
-  // balance was returned to the contract
-  require(tx.outputs[1].value >= tx.inputs[this.activeInputIndex].value*9899/10000);
+  // [ ] balance was returned to the contract, minus 5/1,000,000 for executor fee
+  // OP_1 OP_OUTPUTVALUE OP_INPUTINDEX OP_UTXOVALUE 2b1b0f OP_MUL 40420f OP_DIV OP_GREATERTHANOREQUAL
+  require(tx.outputs[1].value >= tx.inputs[this.activeInputIndex].value*989995/1000000);
   
  }
 }
