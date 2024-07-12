@@ -3,18 +3,18 @@ import { sveltekit } from '@sveltejs/kit/vite';
 /** @type {import('vite').UserConfig} */
 const config = {
 	plugins: [sveltekit()],
-  optimizeDeps: { // 
-    // linked modules in a monorepo must be explicitly included
-    include: ['@unspent/phi'],
-    esbuildOptions: {
-      target: "esnext", 
-      supported: { 
-        bigint: true 
-      },
-    }
-  }, 
+	optimizeDeps: { // 
+		// linked modules in a monorepo must be explicitly included
+		include: ['@unspent/phi'],
+		esbuildOptions: {
+			target: "esnext",
+			supported: {
+				bigint: true
+			},
+		}
+	},
 	build: {
-    target: ["esnext"], // for bigints
+		target: ["esnext"], // for bigints
 		commonjsOptions: {
 			transformMixedEsModules: true,
 			// linked modules in a monorepo must be explicitly included
