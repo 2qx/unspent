@@ -1,0 +1,18 @@
+// Automatically Generated
+export const artifact = {
+  "contractName": "DripMine",
+  "constructorInputs": [],
+  "abi": [
+    {
+      "name": "drip",
+      "inputs": []
+    }
+  ],
+  "bytecode": "OP_1 OP_CHECKSEQUENCEVERIFY OP_DROP OP_TXINPUTCOUNT OP_1 OP_NUMEQUALVERIFY OP_TXOUTPUTCOUNT OP_1 OP_NUMEQUALVERIFY 4002 a400 OP_INPUTINDEX OP_UTXOVALUE OP_ROT OP_2 OP_PICK OP_ADD OP_GREATERTHAN OP_IF OP_INPUTINDEX OP_UTXOBYTECODE OP_INPUTINDEX OP_OUTPUTBYTECODE OP_EQUALVERIFY OP_INPUTINDEX OP_UTXOVALUE 2811 OP_MUL c685744f OP_DIV OP_2DUP OP_GREATERTHAN OP_IF OP_OVER OP_NIP OP_ENDIF OP_INPUTINDEX OP_UTXOVALUE OP_INPUTINDEX OP_OUTPUTVALUE OP_SUB OP_2DUP OP_GREATERTHANOREQUAL OP_VERIFY OP_2DROP OP_ELSE OP_INPUTINDEX OP_OUTPUTVALUE OP_0 OP_NUMEQUALVERIFY OP_INPUTINDEX OP_OUTPUTBYTECODE 6a OP_EQUALVERIFY OP_ENDIF OP_DROP OP_1",
+  "source": "// Drip Mine: An MEV faucet\ncontract DripMine() {\n\n    function drip() {\n        // Drip once per block\n        // OP_1 OP_CHECKSEQUENCEVERIFY OP_DROP\n        require(tx.age >= 1);\n\n        // Drip will be released as TX fee\n        // OP_TXINPUTCOUNT OP_1 OP_NUMEQUALVERIFY\n        // OP_TXOUTPUTCOUNT OP_1 OP_NUMEQUALVERIFY\n        require(tx.inputs.length == 1);\n        require(tx.outputs.length == 1);\n\n        // dustLimit = 444 + output_size * 3; // p2sh32 output size is 44\n        // 4002 \n        int dustLimit = 576;\n\n        // minPayout = this_tx_size * min_fee_rate; \n        // this TX size will be 164, double check when compiling\n        // a400\n        int minPayout = 164;\n\n        // if we have enough to pay out the minimum and stay above dust limit\n        // then we drip from the contract\n        // OP_INPUTINDEX OP_UTXOVALUE OP_ROT OP_2 OP_PICK OP_ADD OP_GREATERTHAN OP_IF\n        if (tx.inputs[this.activeInputIndex].value > dustLimit + minPayout) {\n\n            // DripMine contract must be passed on\n            // OP_INPUTINDEX OP_UTXOBYTECODE OP_INPUTINDEX OP_OUTPUTBYTECODE OP_EQUALVERIFY\n            require(tx.inputs[this.activeInputIndex].lockingBytecode ==\n                    tx.outputs[this.activeInputIndex].lockingBytecode);\n\n            // Calculate maxPayout\n            // Decay half-life of 4 years\n            // OP_INPUTINDEX OP_UTXOVALUE 2811 OP_MUL c685744f OP_DIV\n            int maxPayout = (tx.inputs[this.activeInputIndex].value * 4392) / 1333036486;\n\n            // If calculated payout would be too low, switch to flat minPayout\n            // OP_2DUP OP_GREATERTHAN OP_IF\n            if (maxPayout < minPayout) {\n                // OP_OVER OP_NIP\n                maxPayout = minPayout;\n            } // OP_ENDIF\n\n            // TX fee is the payout to miners\n            // OP_INPUTINDEX OP_UTXOVALUE OP_INPUTINDEX OP_OUTPUTVALUE OP_SUB\n            int payout = tx.inputs[this.activeInputIndex].value -\n                         tx.outputs[this.activeInputIndex].value;\n            // OP_2DUP OP_GREATERTHANOREQUAL OP_VERIFY\n            require(payout <= maxPayout);\n\n        // else we sweep everything as fee and terminate the contract\n        // OP_2DROP OP_ELSE\n        } else {\n            // Burn the output with remainning value to miners' fees\n            // OP_INPUTINDEX OP_OUTPUTVALUE OP_0 OP_NUMEQUALVERIFY\n            require(tx.outputs[this.activeInputIndex].value == 0);\n            // OP_INPUTINDEX OP_OUTPUTBYTECODE 6a OP_EQUALVERIFY\n            require(tx.outputs[this.activeInputIndex].lockingBytecode == 0x6a);\n        } //OP_ENDIF \n    } // OP_DROP OP_1\n}\n",
+  "compiler": {
+    "name": "cashc",
+    "version": "0.8.2"
+  },
+  "updatedAt": "2025-01-16T23:03:06.684Z"
+}

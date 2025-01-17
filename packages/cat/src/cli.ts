@@ -174,7 +174,7 @@ export class UpdateCommand extends NetworkCommand {
     let total = 0n;
     console.log(`found ${hexRecords.length} records`);
     hexRecords.reverse()
-    //hexRecords = hexRecords.slice()
+    //hexRecords = hexRecords.slice(270)
     for (let record of hexRecords) {
 
       let instance = null;
