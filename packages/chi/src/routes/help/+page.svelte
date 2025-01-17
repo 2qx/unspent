@@ -36,8 +36,8 @@
 	let pagesCount = 23;
 	let pages = Array.from(Array(pagesCount).keys()).map((n) => String(n + 1).padStart(2, '0'));
 
-	const skipState = () => {
-		if (stateValue < 7) stateValue += 1;
+	const unlockAll = () => {
+		if (stateValue < 7) stateValue = 7;
 		stateStore.set(String(stateValue));
 		reloadPage();
 	};
@@ -62,8 +62,9 @@
 		if (value) {
 			currentPageIndex = Number(value);
 		} else {
-			currentPageIndex = 0;
-			pageStore.set('0');
+			console.log("no currentPageIndex")
+			//currentPageIndex = 0;
+			//pageStore.set('0');
 		}
 	});
 
@@ -232,8 +233,8 @@
 		</Carousel>
 	{/if}
 
-	<div class="girl-boss"><img src={boss} />{stateValue + 1}</div>
-	<span style="align:right; width: 10px;" on:click={skipState}>
+	<div class="girl-boss"><img src={boss} />{stateValue + 1}, {currentPageIndex + 1}</div>
+	<span style="align:right; width: 10px;" on:click={unlockAll}>
 		<img src={arrow_step} />
 	</span>
 </section>

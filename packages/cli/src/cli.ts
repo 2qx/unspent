@@ -9,6 +9,7 @@ import { Cli, Command, Option } from "clipanion";
 import {
   Annuity,
   Divide,
+  Drip,
   Faucet,
   Mine,
   Perpetuity,
@@ -23,13 +24,13 @@ import {
   stringToInstance,
 } from "@unspent/phi";
 
-import { 
-  getRecords 
+import {
+  getRecords
 } from "@unspent/psi";
 
 import { lockingBytecodeToCashAddress, hexToBin } from "@bitauth/libauth";
 
-abstract class VersionedCommand extends Command{
+abstract class VersionedCommand extends Command {
   version = Option.String("--version", "2", {
     description: "The unspent/phi contract version",
   });
@@ -40,9 +41,9 @@ abstract class NetworkCommand extends VersionedCommand {
     description: "Use chipnet",
   });
   isRegtest = Option.Boolean("--regtest", false,
-  {
-    description: "Use a regtest network",
-  });
+    {
+      description: "Use a regtest network",
+    });
 }
 
 abstract class CustomFeeCommand extends NetworkCommand {
@@ -50,6 +51,31 @@ abstract class CustomFeeCommand extends NetworkCommand {
     required: false,
     description: "transaction fee override",
   });
+}
+
+export class DripCommand extends NetworkCommand {
+  static override usage = Command.Usage({
+    category: `Drip-Mine`,
+    description: `An Miner Extractable Value (MEV) faucet`,
+  });
+
+  static override paths = [[`drip`], [`x`]];
+
+  async execute() {
+    let network = this.isChipnet
+      ? "chipnet"
+      : this.isRegtest
+        ? "regtest"
+        : "mainnet";
+    let version = parseInt(this.version)
+
+    let a = new Drip(
+      { version: version, network: network }
+    );
+    await a.info();
+    await a.execute();
+  }
+
 }
 
 export class AnnuityCommand extends CustomFeeCommand {
@@ -92,8 +118,8 @@ export class AnnuityCommand extends CustomFeeCommand {
     let network = this.isChipnet
       ? "chipnet"
       : this.isRegtest
-      ? "regtest"
-      : "mainnet";
+        ? "regtest"
+        : "mainnet";
     const defaultPeriod = this.isChipnet ? 1n : 4000n;
     let periodInt = !this.period ? defaultPeriod : parseBigInt(this.period);
     let allowanceInt = !this.allowance ? 3400n : parseBigInt(this.allowance);
@@ -101,7 +127,7 @@ export class AnnuityCommand extends CustomFeeCommand {
     let feeOverride = !this.fee ? undefined : parseBigInt(this.fee);
     let version = parseInt(this.version)
 
-    if (!this.getAddress) {
+    if (!this.address) {
       let a = new Annuity(
         periodInt,
         this.address,
@@ -110,7 +136,7 @@ export class AnnuityCommand extends CustomFeeCommand {
         { version: version, network: network }
       );
       await a.info();
-      if(await a.isFunded()) a.execute(this.executorAddress, feeOverride);
+      if (await a.isFunded()) a.execute(this.executorAddress, feeOverride);
     } else {
       let a = new Annuity(
         periodInt,
@@ -151,8 +177,8 @@ export class DivideCommand extends CustomFeeCommand {
     let network = this.isChipnet
       ? "chipnet"
       : this.isRegtest
-      ? "regtest"
-      : "mainnet";
+        ? "regtest"
+        : "mainnet";
 
     let allowanceInt = !this.allowance ? 1200n : parseBigInt(this.allowance);
     let addresses = this.addresses.split(",");
@@ -201,8 +227,8 @@ export class FaucetCommand extends CustomFeeCommand {
     let network = this.isChipnet
       ? "chipnet"
       : this.isRegtest
-      ? "regtest"
-      : "mainnet";
+        ? "regtest"
+        : "mainnet";
 
     let periodInt = !this.period ? 1n : parseBigInt(this.period);
     let payoutInt = !this.payout ? 1000n : parseBigInt(this.payout);
@@ -216,7 +242,7 @@ export class FaucetCommand extends CustomFeeCommand {
         network: network,
       });
       await faucet.info();
-      if(await faucet.isFunded()) await faucet.execute(this.address, feeOverride);
+      if (await faucet.isFunded()) await faucet.execute(this.address, feeOverride);
     } else {
       let faucet = await new Faucet(periodInt, payoutInt, indexInt, {
         version: version,
@@ -265,8 +291,8 @@ export class MineCommand extends CustomFeeCommand {
     let network = this.isChipnet
       ? "chipnet"
       : this.isRegtest
-      ? "regtest"
-      : "mainnet";
+        ? "regtest"
+        : "mainnet";
     const defaultPeriod = this.isChipnet ? 1 : 4000;
     let periodInt = !this.period ? defaultPeriod : parseBigInt(this.period);
     let payoutInt = !this.payout ? 1000 : parseBigInt(this.payout);
@@ -324,8 +350,8 @@ export class PerpetuityCommand extends CustomFeeCommand {
     let network = this.isChipnet
       ? "chipnet"
       : this.isRegtest
-      ? "regtest"
-      : "mainnet";
+        ? "regtest"
+        : "mainnet";
     const defaultPeriod = this.isChipnet ? 0 : 4383;
     const defaultDecay = this.isChipnet ? 8 : 96;
     let periodInt = !this.period ? defaultPeriod : parseBigInt(this.period);
@@ -343,7 +369,7 @@ export class PerpetuityCommand extends CustomFeeCommand {
         { version: version, network: network }
       );
       await perpetuity.info();
-      if(await perpetuity.isFunded()) perpetuity.execute(this.executorAddress, feeOverride);
+      if (await perpetuity.isFunded()) perpetuity.execute(this.executorAddress, feeOverride);
     } else {
       let perpetuity = new Perpetuity(
         periodInt,
@@ -388,7 +414,7 @@ export class QueryCommand extends NetworkCommand {
       ? this.chaingraph
       : "https://demo.chaingraph.cash/v1/graphql";
     let prefix = this.prefix ? this.prefix : "6a047574786f";
-    
+
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
     let networkProvider = getDefaultElectrumProvider(node)
     let limit = !this.limit ? undefined : parseInt(this.limit);
@@ -398,31 +424,31 @@ export class QueryCommand extends NetworkCommand {
     let contracts = [];
     let total = 0n;
     for (let record of hexRecords) {
-      try{
+      try {
         let instance = opReturnToSerializedString(record, this.network);
         if (instance) contracts.push(instance.toString());
         //@ts-ignore
         let subTotal = await opReturnToBalance(record, this.network, networkProvider)
         if (instance) {
-          let prefix = this.isChipnet ? 'bchtest': 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
+          let prefix = this.isChipnet ? 'bchtest' : 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
           let lockingBytecode = instance.split(",").pop() as string
           let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
           console.log(Number(subTotal), instance, contractAddr)
         }
         total += BigInt(subTotal);
 
-      }catch (e){
+      } catch (e) {
         //console.log(e)
         // anyone can post an OP_RETURN that doesn't parse
         //console.log('couldn\'t parse: ', record)
       }
-      
-      
+
+
     }
 
     console.log("sum: ", total.toLocaleString())
     console.log(`Built ${contracts.length} contracts`);
-    
+
   }
 }
 
@@ -456,8 +482,8 @@ export class RecordCommand extends CustomFeeCommand {
     let network = this.isChipnet
       ? "chipnet"
       : this.isRegtest
-      ? "regtest"
-      : "mainnet";
+        ? "regtest"
+        : "mainnet";
     let maxFeeInt = !this.maxFee ? undefined : parseBigInt(this.maxFee);
     let indexInt = !this.index ? undefined : parseBigInt(this.index);
     let version = parseInt(this.version)
@@ -467,7 +493,7 @@ export class RecordCommand extends CustomFeeCommand {
       let r = new Record(maxFeeInt, indexInt, { version: version, network: network });
       if (await r.isFunded()) {
         await r.info();
-        if(this.selfPublish) await r.broadcast();
+        if (this.selfPublish) await r.broadcast();
       } else {
         await r.info();
       }

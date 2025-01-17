@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import share from '$lib/images/share.svg';
-	import { copy } from 'svelte-copy';
-	import { toast } from '@zerodevx/svelte-toast';
 	import { binToBase64 } from '@bitauth/libauth';
 	import { deflate } from 'pako';
 	import { stateStore } from '$lib/store.js';
@@ -32,17 +30,21 @@
 </script>
 
 {#if lockingBytecode}
-<div 
-						use:copy={linkText}
-						on:svelte-copy={(e) => toast.push('link copied: '+ e.detail)}
-                        on:svelte-copy:error="{(event) =>
-                        toast.push(`Error, no access to clipboard?: ${event.detail.message}`, { classes: ['warn'] })}"
-						>
-		<div class="action" on:click={bumpLevel}>
-			<button class="hitMe" on:click={copy}>
-				<img src={share} alt="share" />
-			</button>
-		</div>
+<div 						>
+						<qr-code
+						id="qr1"
+						contents={linkText}
+						module-color="#c1a5d4"
+						position-ring-color="#b286cf"
+						position-center-color="#b286cf"
+						mask-x-to-y-ratio="1.2"
+						style="width: 150px;
+							height: 150px;
+							margin: 1em auto;
+							background-color: #fff;"
+					>
+						<img src={share} slot="icon" />
+					</qr-code>
 	</div>
 
 {/if}
@@ -57,7 +59,7 @@
 		padding: 15px;
 		font-size: 1rem;
 		text-align: center;
-		color: #fff;
+		color: #b286cf;
 		text-shadow: 1px 1px 1px #000;
 		border-radius: 50px;
 		background-color: rgb(178, 134, 207);

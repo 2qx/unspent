@@ -3,13 +3,11 @@
 	import { browser } from '$app/environment';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Header from './Header.svelte';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
-	import { toast } from '@zerodevx/svelte-toast';
 	import './styles.css';
-  import { register } from 'svelte-i18n';
+	import { register } from 'svelte-i18n';
 
-	import {  getLocaleFromNavigator, init } from 'svelte-i18n';
-  register("en", () => import('$lib/locale/en.json'))
+	import { getLocaleFromNavigator, init } from 'svelte-i18n';
+	register('en', () => import('$lib/locale/en.json'));
 
 	let currentPage;
 
@@ -32,15 +30,9 @@
 		<slot p={currentPage} />
 	</main>
 	<footer>
-		<CopyToClipboard
-			on:copy={() => toast.push('bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4 📋💚🗸 ')}
-			text="bitcoincash:qz7xjt4xcpdu2gl75vrvkpwzfpjhy9hnm55gwzyvj4"
-			let:copy
-		>
-			<div class="donate">
-				<button on:click={copy}> 💚 support unspent.cash 💚 </button>
-			</div>
-		</CopyToClipboard>
+		<div class="donate">
+			<a href="/moonshot"><button>Your skills are needed for a job.</button></a>
+		</div>
 		<p>
 			₿∙ϕ:
 			<a target="_blank" href="https://unspent.app/documentation">docs</a>
@@ -48,6 +40,7 @@
 			<a href="/stats">stats</a> |
 			<a target="_blank" href="https://t.me/unspent_cash">telegram</a>
 		</p>
+		<div class="footSpacer" />
 	</footer>
 </div>
 
@@ -78,6 +71,9 @@
 		font-size: small;
 	}
 
+	.footSpacer {
+		height: 300px;
+	}
 	footer {
 		display: flex;
 		flex-direction: column;

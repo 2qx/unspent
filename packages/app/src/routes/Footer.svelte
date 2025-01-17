@@ -6,6 +6,7 @@
 
 <footer>
   <a href="{base}/faq">FAQ</a>
+  <a href="{base}/stats">stats</a>
   <a href="{base}/202308_security">&lt;=v1 exploit</a>
 </footer>
 

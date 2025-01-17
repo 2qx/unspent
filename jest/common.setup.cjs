@@ -46,9 +46,9 @@ module.exports = async function (cwd) {
   }
 
   // ping bchd as a readiness signal, give up and run anyway after 10s
-  for (let i = 0; (await pingBchn()).length > 0 && i < 5; i++) {
+  for (let i = 0; (await pingBchn()).length > 0 && i < 9; i++) {
     console.log("Waiting for bchn node");
-    await delay(200);
+    await delay(2000);
   }
 
   for (
@@ -57,7 +57,7 @@ module.exports = async function (cwd) {
     i++
   ) {
     console.log("Waiting for blocks to be mined");
-    await delay(2000);
+    await delay(5000);
     //console.log(".....");
   }
   console.log("utxos: " + (await getRegtestUtxos(process.env.ADDRESS)).length);

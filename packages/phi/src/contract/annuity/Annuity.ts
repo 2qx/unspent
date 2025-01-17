@@ -339,17 +339,17 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     const fn = this.getFunction(Annuity.fn)!;
 
-    if (balance < this.installment)
+    let newPrincipal = 0n
+    let to: any = [];
+    if (balance < this.installment){
       throw Error("Funds selected below installment amount");
-
-    const newPrincipal = balance - (BigInt(this.installment) + BigInt(this.executorAllowance));
-
-    const to = [
-      {
-        to: this.recipientAddress,
-        amount: BigInt(this.installment),
-      }
-    ];
+    }
+    else if (balance < (BigInt(Number(this.installment)*2))){
+      console.log("liquidating annuity;")
+      newPrincipal = balance - BigInt(Number(this.executorAllowance)-100);
+    }else{
+      newPrincipal = balance - (BigInt(this.installment) + BigInt(this.executorAllowance));
+    }
 
     if (this.options.version == 1 || balance > BigInt(this.installment) * 2n) {
       to.push(
@@ -358,6 +358,19 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
           amount: newPrincipal,
         }
       )
+    }else if(this.options.version == 2 && balance < BigInt(this.installment) * 2n){
+      to.pop()
+      to.push(
+        {
+          to: this.recipientAddress,
+          amount: newPrincipal,
+        }
+      )
+    }else{
+      to.push({
+        to: this.recipientAddress,
+        amount: BigInt(this.installment),
+      })
     }
 
 
@@ -373,6 +386,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         amount: 577n,
       });
 
+      console.log(to)
     const size = await estimator!
       .to(to)
       .withAge(Number(this.period))

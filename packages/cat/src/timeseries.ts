@@ -2,27 +2,25 @@ import { SeriesEntryI } from "./db";
 
 export function getRegularSeries(irregularTs: any): SeriesEntryI[] {
   let regular = []
-
-  if (irregularTs) {
+  let irregularTsCopy  =  irregularTs;
+  if (irregularTs.length > 0) {
 
     let dateVector = getDailyArray(new Date(irregularTs[0].date))
 
-
-    let first = irregularTs.shift();
+    let first = irregularTs[0];
     let lockingBytecode = first.locking_bytecode
 
     if (irregularTs.length > 0) {
-      let changes:{ [k: string]: any; } = []
-      try{
+      let changes: { [k: string]: any; } = []
+      try {
         changes = Object.fromEntries(irregularTs.map((d: any) => [d.date.toISOString().split('T')[0], d.dv]))
-      }catch (e:any){
+      } catch (e: any) {
         console.log(e)
-        console.log(irregularTs)
+        console.log("error mapping time series: ", irregularTs)
       }
 
       for (let d of dateVector) {
-
-        let tmpVal: number = regular.length > 0 ? regular.slice(-1)[0].value : first.dv
+        let tmpVal: number = regular.length > 0 ? regular.slice(-1)[0].value : 0
         if (d in changes) {
           tmpVal += changes[d]
         }
@@ -36,9 +34,14 @@ export function getRegularSeries(irregularTs: any): SeriesEntryI[] {
     }
 
 
-
   }
-  return regular
+
+  if (regular.length > 1) {
+
+    return regular
+  } else {
+    return irregularTsCopy;
+  }
 }
 
 function getDailyArray(start: Date) {

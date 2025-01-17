@@ -21,6 +21,9 @@
           <p>
             Every funded open contract counted as monthly active user (MAU) total.
           </p>
+		  <p>
+            Fiat data from CoinGecko
+          </p>
 			</div>
 		</Card>
 	</div>

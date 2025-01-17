@@ -15,7 +15,7 @@ export async function getBlockHistory(start: number, end: number) {
     end
   )
 
-  await sleep(1000);
+  await sleep(2000);
   return resp
 }
 
@@ -28,7 +28,7 @@ export async function getBlockTimestamps(host: string, start: number, end: numbe
         _and: [
           { height: { _gt: $start } }
           { height: { _lte: $end } }
-          { accepted_by: { node: { name: { _eq: "bchn-mainnet" } } } }
+          { accepted_by: { node: { name: { _regex: "mainnet" } } } }
         ]
       }
     ) {
@@ -94,7 +94,7 @@ export async function getOutputsRaw(host: string, lockingBytecode: string, offse
             transaction: {
               block_inclusions: {
                 block: {
-                  accepted_by: { node: { name: { _regex: "bchn-mainnet" } } }
+                  accepted_by: { node: { name: { _regex: "mainnet" } } }
                 }
               }
             }
@@ -191,7 +191,7 @@ export async function getPriceHistory() {
   const response = await axios.get(COINGECKO_CHART, {
     params: {
       vs_currency: "usd",
-      from: "1501546841",
+      from: Date.now() / 1000 - (360*1440*60),
       to: Date.now() / 1000
 
     }

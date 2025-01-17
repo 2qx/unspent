@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { _, isLoading } from 'svelte-i18n';
 	import heart from '$lib/images/heart.svg';
 	import { Record } from '@unspent/phi';
 	import { getRecords } from '@unspent/psi';
 	import ShareLink from './ShareLink.svelte';
+	import ShareQr from './ShareQr.svelte';
 	import { stateStore } from '$lib/store.js';
-  let stateValue;
+	let stateValue;
 	export let opReturnHex: string;
 	export let lockingBytecode: string;
- 
 
 	let preRecord = '';
 	let isPublished: boolean;
@@ -21,7 +21,7 @@
 	let executedSuccess = false;
 	let executeError = '';
 
-  stateStore.subscribe((value) => {
+	stateStore.subscribe((value) => {
 		stateValue = Number(value);
 	});
 
@@ -54,7 +54,14 @@
 	const check = async () => {
 		if (opReturnHex.length > 0) {
 			let queryHex = opReturnHex.length > 60 ? opReturnHex.slice(0, 34) : opReturnHex;
-			let records = await getRecords('https://demo.chaingraph.cash/v1/graphql', queryHex);
+			let records = await getRecords(
+				'https://gql.chaingraph.pat.mn/v1/graphql',
+				queryHex,
+				'mainnet',
+				500,
+				0,
+				'6a0401010102010717'
+			);
 			records = records.filter((r) => r == opReturnHex);
 			isPublished = records.length > 0 ? true : false;
 			console.log('is published: ', isPublished);
@@ -64,23 +71,22 @@
 		}
 	};
 
-  function randomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
+	function randomInteger(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
 
 	const broadcast = async () => {
 		try {
 			setProgress();
 			executedSuccess = false;
 			let options = { network: 'mainnet', version: 2 };
-      let index = randomInteger(0,3)
+			let index = randomInteger(0, 3);
 			let r = new Record(undefined, index, options);
 			txid = await r.broadcast(opReturnHex);
 			isPublished = true;
 			executedSuccess = true;
 			executeError = '';
-      if (isPublished && stateValue < 4) {
+			if (isPublished && stateValue < 4) {
 				stateStore.set('4');
 			}
 			clearProgress();
@@ -91,25 +97,33 @@
 	};
 </script>
 
-{#if isPublished == undefined}
+{#if $isLoading}
+	loading ...
+{:else if isPublished == undefined}
 	<div class="action">
 		<button disabled>
 			<progress id="progress-bar" aria-label="Content loading…" />
 		</button>
+		{$_('9')}
 	</div>
 {:else if isPublished == true}
 	<div class="action">
 		<ShareLink {lockingBytecode} />
+	</div>
+	<div class="action" style="display: inline-block;">
+		<ShareQr {lockingBytecode} />
 	</div>
 {:else}
 	<div>
 		<button class="hitMe" on:click={broadcast}>
 			<img src={heart} alt="heart" />
 		</button>
+		<br />
+		{$_('9')}
 	</div>
 
 	{#if !executionProgressClosed}
-    <br>
+		<br />
 		<progress id="progress-bar" aria-label="Content loading…" />
 	{/if}
 	{#if executeError}
@@ -139,7 +153,7 @@
 			rgba(0, 0, 0, 0)
 		);
 		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
-    padding: 15px;
+		padding: 15px;
 	}
 
 	@keyframes blinker {

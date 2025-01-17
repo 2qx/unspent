@@ -5,7 +5,8 @@
 	import { binToHex } from '@bitauth/libauth';
 	import { scriptToBytecode } from '@cashscript/utils';
 	import { receiptAddressStore } from '$lib/store.js';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
+	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
 
 	let receiptAddress = '';
@@ -23,7 +24,9 @@
 	});
 </script>
 
-{#if contract}
+{#if $isLoading}
+	...
+{:else if contract}
 	<div style=" align-self:center">
 		<h3>Links</h3>
 		<div>
@@ -41,43 +44,60 @@
 					href="https://www.npmjs.com/package/unspent">unspent</a
 				> command to call this contract from the command line:
 			</p>
-			<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.asCommand()} let:copy>
+			<div
+				use:copy={contract.asCommand()}
+				on:svelte-copy={(e) => toast.push('OK 📋🗸: ' + e.detail)}
+				on:svelte-copy:error={(event) =>
+					toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+						classes: ['warn']
+					})}
+			>
 				<div>
-					<button class="mono" on:click={copy}>
+					<button class="mono">
 						{contract.asCommand()}
 					</button>
 				</div>
-			</CopyToClipboard>
+			</div>
 		</div>
 
 		<h3>Unspent Phi Protocol (string)</h3>
 
 		<div class="hex">
 			<p>A human readable record of this contract:</p>
-			<CopyToClipboard on:copy={() => toast.push('📋🗸')} text={contract.toString()} let:copy>
+			<div
+				use:copy={contract.toString()}
+				on:svelte-copy={(e) => toast.push('OK 📋🗸: ' + e.detail)}
+				on:svelte-copy:error={(event) =>
+					toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+						classes: ['warn']
+					})}
+			>
 				<div class="action">
-					<button class="mono" on:click={copy}>
+					<button class="mono">
 						{contract.toString()}
 					</button>
 				</div>
-			</CopyToClipboard>
+			</div>
 		</div>
 
 		<h3>Unspent Phi Protocol (op_return)</h3>
 
 		<div class="hex">
 			<p>A record of this contract encoded for inclusion as an OP_RETURN message.</p>
-			<CopyToClipboard
-				on:copy={() => toast.push('📋🗸')}
-				text={binToHex(contract.toOpReturn())}
-				let:copy
+			<div
+				use:copy={contract.toOpReturn()}
+				on:svelte-copy={(e) => toast.push('OK 📋🗸: ' + e.detail)}
+				on:svelte-copy:error={(event) =>
+					toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+						classes: ['warn']
+					})}
 			>
 				<div class="action">
-					<button class="mono" on:click={copy}>
+					<button class="mono">
 						{binToHex(contract.toOpReturn())}
 					</button>
 				</div>
-			</CopyToClipboard>
+			</div>
 		</div>
 
 		{#if contract.contract.redeemScript}
@@ -89,17 +109,20 @@
 						>decoder</a
 					>
 				</p>
-				<CopyToClipboard
-					on:copy={() => toast.push('📋🗸')}
-					text={binToHex(scriptToBytecode(contract.contract.redeemScript))}
-					let:copy
+				<div
+					use:copy={binToHex(scriptToBytecode(contract.contract.redeemScript))}
+					on:svelte-copy={(e) => toast.push('OK 📋🗸: ' + e.detail)}
+					on:svelte-copy:error={(event) =>
+						toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+							classes: ['warn']
+						})}
 				>
 					<div class="action">
 						<button class="mono" on:click={copy}>
 							{binToHex(scriptToBytecode(contract.contract.redeemScript))}
 						</button>
 					</div>
-				</CopyToClipboard>
+				</div>
 			</div>
 		{/if}
 		<h3>Unlocking Bytecode</h3>
@@ -112,8 +135,15 @@
 		</div>
 	</div>
 {:else}
-	No contract
+<h1>
+	{$_('8')}
+</h1>
+<a href="/">
+	<img width="100%" src="/h/09.svg" alt={$_('8')} />
+</a>
 {/if}
+
+
 
 <style>
 	a {

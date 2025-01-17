@@ -1,6 +1,6 @@
 <script>
 	import { _, isLoading } from 'svelte-i18n';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from "svelte-copy";
 	import { toast } from '@zerodevx/svelte-toast';
 </script>
 
@@ -35,16 +35,21 @@
 		<img class="c"  srcset="/wp_sm/{$_('wp_dir')}/51-55.jpg 530w, /wp/{$_('wp_dir')}/51-55.jpg 1060w"  sizes="(max-width: 600px) 530px, 1060px" src="/wp/{$_('wp_dir')}/51-55.jpg" fetchpriority="low" loading="lazy"  />
 		<img class="c2" srcset="/wp_sm/{$_('wp_dir')}/56-58.jpg 530w, /wp/{$_('wp_dir')}/56-58.jpg 1060w"  sizes="(max-width: 600px) 530px, 1060px" src="/wp/{$_('wp_dir')}/56-58.jpg" fetchpriority="low" loading="lazy"  />
 
-		<CopyToClipboard
-			on:copy={() => toast.push('bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc 📋💚🗸 ')}
-			text="bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc"
-			let:copy
-		>
+		<div
+				use:copy={'bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc'}
+				on:svelte-copy={(e) => toast.push('💚💚💚 📋🗸: ' + e.detail)}
+				on:svelte-copy:error={(event) =>
+					toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+						classes: ['warn']
+					})}
+			>
+
+
 			<div class="donate">
-				<button on:click={copy}> Donate to Scott McCloud </button>
+				<button> Donate to Scott McCloud </button>
 			</div>
-		</CopyToClipboard>
-		<p>donations: bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc</p>
+			</div>
+		<p>Copy Manually: bitcoincash:pzycl4x2sc8z8rep6ex9x843qwucd7h3uvy0hrlmjc</p>
 		<div style="height:10ex;" />
 		<a href={$_('bitcoin.pdf')}>original whitepaper</a>
 		<div style="height:10ex;" />

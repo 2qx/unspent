@@ -1,0 +1,57 @@
+pragma cashscript ^0.10.0;
+
+// Unspent Phi
+//
+// Perpetuity v3 
+//
+// Perpetuity: fractional monthly payments using rolling timelocks.
+// 
+// String & op_return serializations:
+//
+// P,3,<receiptLockingBytecode>,<contractBytecode>
+// 
+// 6a 047574786f
+// 01 50
+// 01 03
+// ...
+//
+
+contract Perpetuity(
+
+ // lockingBytecode of the beneficiary, 
+ // the address receiving payments
+ bytes recipientLockingBytecode,
+
+) {
+ function execute() {
+
+  // [ ] Force tx version equal to 2 to force BIP68 support
+  // OP_TXVERSION OP_2 OP_NUMEQUALVERIFY 
+  require(tx.version == 2);
+  
+  // [ ] Check that time has passed and that time locks are enabled
+  // 1f11 OP_CHECKSEQUENCEVERIFY OP_DROP 
+  require(tx.age >= 4383);
+
+  // [ ] Limit to a single utxo input
+  // OP_TXINPUTCOUNT OP_1 OP_NUMEQUALVERIFY 
+  require(tx.inputs.length == 1);
+
+  // [ ] Check that the first output sends to the recipient
+  // OP_0 OP_OUTPUTBYTECODE OP_EQUALVERIFY 
+  require(tx.outputs[0].lockingBytecode == recipientLockingBytecode);
+
+  // [ ] Check that the output sends a normal installment
+  // OP_0 OP_OUTPUTVALUE OP_INPUTINDEX OP_UTXOVALUE 64 OP_DIV OP_GREATERTHANOREQUAL OP_VERIFY 
+  require(tx.outputs[0].value >= tx.inputs[this.activeInputIndex].value/100);
+
+  // [ ] require the second output match the active bytecode
+  // OP_1 OP_OUTPUTBYTECODE OP_INPUTINDEX OP_UTXOBYTECODE OP_EQUALVERIFY 
+  require(tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode);
+
+  // [ ] balance was returned to the contract, minus 5/1,000,000 for executor fee
+  // OP_1 OP_OUTPUTVALUE OP_INPUTINDEX OP_UTXOVALUE 2b1b0f OP_MUL 40420f OP_DIV OP_GREATERTHANOREQUAL
+  require(tx.outputs[1].value >= tx.inputs[this.activeInputIndex].value*989995/1000000);
+  
+ }
+}

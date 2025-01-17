@@ -3,6 +3,7 @@ export { PROTOCOL_ID, DUST_UTXO_THRESHOLD } from "./common/constant.js";
 export { BaseUtxPhiContract } from "./common/contract.js";
 export { Annuity } from "./contract/annuity/index.js";
 export { Divide } from "./contract/divide/index.js";
+export { Drip } from "./contract/drip/index.js";
 export { Faucet } from "./contract/faucet/index.js";
 export { Perpetuity } from "./contract/perpetuity/index.js";
 export { Mine } from "./contract/mine/index.js";

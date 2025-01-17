@@ -7,7 +7,6 @@
 	let series = [];
 	let contract;
 
-
 	beforeUpdate(async () => {
 		if (receiptAddress) {
 			if (!contract) {
@@ -21,17 +20,18 @@
 		series = await contract.asSeries();
 	};
 </script>
+
 <section>
-  {#if series && series.length > 0}
-	{#each series as ts (ts.id)}
-		<pre style="font-size:x-small;">{ts.id}</pre>
-		<ContractChart bind:series={ts.data} />
-	{/each}
-{:else if !receiptAddress}
-	-
-{:else}
-	<progress id="progress-bar" aria-label="Content loading…" />
-{/if}
+	{#if series && series.length > 0}
+		{#each series as ts (ts.id)}
+			<pre style="font-size:x-small;">{ts.id}</pre>
+			<ContractChart bind:series={ts.data} />
+		{/each}
+	{:else if !receiptAddress}
+		-
+	{:else}
+		<progress id="progress-bar" aria-label="Content loading…" />
+	{/if}
 </section>
 
 <style>

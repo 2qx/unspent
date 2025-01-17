@@ -14,6 +14,15 @@
 		}))
 	};
 
+  const watermark = {
+        visible: true,
+        fontSize: 24,
+        horzAlign: 'center',
+        vertAlign: 'center',
+        color: 'rgba(171, 71, 188, 0.5)',
+        text: 'unspent.app',
+    };
+
 	afterUpdate(() => {
 		//chartApi.timeScale().fitContent();
 	});
@@ -38,22 +47,19 @@
 </script>
 
 {#if Object.keys(data).length > 0}
-	<div>
-    <div id="key">
-			<div id="fiat">Fiat</div>
-			<div id="bch">BCH</div>
-			<div id="mau">MAU</div>
-		</div>
-		<Chart
-      {...options}
-			container={{ class: 'chart' }}
-		>
-			<LineSeries data={data.fiat} priceScaleId='left' color="#9ec69e94" reactive={true} />
-			<LineSeries data={data.bch} priceScaleId='right' color="#0f0" reactive={true} />
-			<LineSeries data={data.mau} priceScaleId='right' color="#f0f" reactive={true} />
-		</Chart>
-		
-	</div>
+<div>
+  <Chart
+    {...options}
+    watermark={watermark}
+    
+    container={{ class: 'chart' }}
+  >
+    <LineSeries data={data.fiat} title="TLV ($)" priceScaleId='left' color="#9ec69e94" reactive={true} />
+    <LineSeries data={data.bch} title="TLV (coins)" priceScaleId='right' color="#0f0" reactive={true} />
+    <LineSeries data={data.mau} title="open" priceScaleId='right' color="#f0f" reactive={true} />
+  </Chart>
+  
+</div>
 {/if}
 
 <style>

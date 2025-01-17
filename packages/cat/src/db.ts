@@ -130,11 +130,12 @@ export default class StorageProvider {
     let tip = await this.getBlockHeight()
     while (!synced) {
 
-      tip = tip ? tip + 1000 : INCEPTION
+      tip = tip ? tip : INCEPTION
       console.log(tip)
       let blocks = await getBlockHistory(tip, tip + 1000);
       if (blocks.length) await this.putBlockHeights(blocks);
       if (blocks.length < 1) synced = true
+      tip += 1000;
     }
   }
 

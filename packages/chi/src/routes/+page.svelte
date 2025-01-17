@@ -9,7 +9,7 @@
 	import month from '$lib/images/month.svg';
 	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
 	import BroadcastAction from '$lib/BroadcastAction.svelte';
 	import { cashAddressToLockingBytecode } from '@bitauth/libauth';
 	import { Perpetuity, sanitizeAddress } from '@unspent/phi';
@@ -101,10 +101,6 @@
 			stateStore.set('6');
 		}
 	};
-
-	const handleCopyClick = async () => {
-		toast.push('📋🗸');
-	};
 </script>
 
 <svelte:head>
@@ -122,51 +118,12 @@
 				</td>
 				<td colspan="3" style="line-break: auto;"> <h1>unspent&hairsp;.cash</h1></td>
 			</tr>
-			{#if !contract}
-				<tr style="height:4el;">
-					<td colspan="4" />
-				</tr>
-				<tr dir={$_('direction')}>
-					<td colspan="3" style="line-break:auto; font-weight:400; font-size:small; padding:10px;">
-						<p style="line-break:auto; font-weight:400; font-size:small;">{$_('overview')}</p>
-						<ol>
-							<li>{$_('short_00')}</li>
-							<li>{$_('short_01')}</li>
-							<li>{$_('short_02')}</li>
-						</ol>
-					</td>
-					<td style="text-align:center; width:25%">
-						<a href="{base}/help">
-							<img class={!stateValue ? 'flashing' : ''} width="80px" src={help} alt="help" />
-						</a>
-					</td>
-				</tr>
-			{/if}
-
-			<tr>
-				{#if contract}
-					<td style="text-align: end;">
-						<img src={lock_clock} alt="lock_clock" />
-					</td>
-					<td colspan="3">
-						<CopyToClipboard on:copy={handleCopyClick} text={contract.getAddress()} let:copy>
-							<div style="max-width: 95%; line-break:anywhere;" on:click={bumpLevel} class="contract-div">
-								<button class="styled" on:click={copy}>
-									{contract.getAddress()}
-								</button>
-							</div>
-						</CopyToClipboard>
-					</td>
-				{:else}
-					<td style="text-align: center; line-break:auto" />
-					<td colspan="3" dir={$_('direction')}><b> {$_('create')}</b></td>
-				{/if}
+			<tr style="height:4el;">
+				<td colspan="4" />
 			</tr>
-			<tr>
+			<tr dir={$_('direction')}>
 				{#if balance}
-					<td />
-					<td style="width:30px;" />
-					<td colspan="2">
+					<td colspan="3" style="padding: 1em; text-align:center;">
 						<b>{balance.toLocaleString()}</b> sats <br />
 						(<i
 							>{(Number(balance) / 100000000).toLocaleString(undefined, {
@@ -175,18 +132,88 @@
 						> BCH)
 					</td>
 				{:else}
-					<td />
-					<td style="width:30px;" />
-					<td colspan="2" />
+					<td colspan="3" style="line-break:auto; font-weight:400; padding:2px;">
+						{#if stateValue < 3}
+							<p style="line-break:auto; font-weight:400;">
+								{$_('overview')}
+							</p>
+						{/if}
+
+						<ul>
+							{#if stateValue < 3}
+								<li>{$_('short_00')}</li>
+							{/if}
+							{#if stateValue < 4}
+								<li>{$_('short_01')}</li>
+							{/if}
+							{#if stateValue < 7}
+								<li>{$_('short_02')}</li>
+							{/if}
+						</ul>
+					</td>
+				{/if}
+				<td style="text-align:center; width:25%;">
+					{#if !contract}
+						<a href="{base}/help">
+							<img class={!stateValue ? 'flashing' : ''} width="80px" src={help} alt="help" />
+						</a>
+					{:else}
+						<div>
+							<qr-code
+								id="qr1"
+								contents={contract.getAddress()}
+								module-color="#000"
+								position-ring-color="#533c0d"
+								position-center-color="#d99b22"
+								mask-x-to-y-ratio="1.2"
+								style="width: 150px;
+									height: 150px;
+									margin: 0.5em auto;
+									background-color: #fff;"
+							>
+								<img src={lock_clock} slot="icon" />
+							</qr-code>
+						</div>
+					{/if}
+				</td>
+			</tr>
+			<tr>
+				{#if contract}
+					<td style="text-align: end;" />
+
+					<td colspan="3">
+						<div
+							use:copy={contract.getAddress()}
+							on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail)}
+							on:svelte-copy:error={(event) =>
+								toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+									classes: ['warn']
+								})}
+						>
+							<div style="max-width: 95%; display:flex;" on:click={bumpLevel} class="contract-div">
+								<img src={lock_clock} alt="lock_clock" />
+								<div>
+									<button class="styled" on:click={copy}>
+										{contract.getAddress()}
+									</button>
+									{$_('11')}
+								</div>
+							</div>
+						</div>
+					</td>
+				{:else}
+					<td style="text-align: center; line-break:auto" />
+					<td colspan="3" dir={$_('direction')}> {$_('create')}</td>
 				{/if}
 			</tr>
+
 			{#if receiptAddressValid}
 				<tr>
 					<td />
-					<td>
+					<td style="width:50px;">
 						<p><img src={arrow_down} alt="to" /></p>
 					</td>
-					<td>
+					<td colspan="2">
 						<p>
 							<b>1.04% {$_('month')} </b><img width="25px" src={month} alt="month" />
 						</p>
@@ -194,34 +221,35 @@
 							<b>11.8% {$_('year')}</b>
 						</p>
 					</td>
-					<td />
 				</tr>
 			{/if}
 			<tr>
-				<td />
-				<td style="width=30px;">
-					<p>
+				<td style="width: 25%;"/>
+
+				<td dir={$_('direction')} colspan="3">
+					<div style="display:flex;">
 						<img src={wallet} alt="wallet" />
-					</p>
-				</td>
-				<td style="line-break:anywhere;" colspan="2">
-					<textarea
-						id="addr"
-						rows="3"
-						on:change={() => createContract()}
-						bind:value={receiptAddress}
-						placeholder="bitcoincash:q... ..."
-					/>
+						<textarea
+							id="addr"
+							rows="3"
+							style="line-break:anywhere;"
+							on:change={() => createContract()}
+							bind:value={receiptAddress}
+							placeholder="bitcoincash:q... ..."
+						/>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<td />
 				{#if contract}
-					<td style="text-align: end; padding: 20px;" colspan="3">
+					<td style="text-align: end; padding: 20px;" dir={$_('direction')} colspan="3">
 						<BroadcastAction opReturnHex={contract.toOpReturn(true)} {lockingBytecode} />
 					</td>
 				{:else}
-					<td style="line-break:auto;" dir={$_('direction')} colspan="3">{$_('receive')}</td>
+					<td colspan="3">
+						<p style="line-break: normal;"><b>{$_('receive')}</b></p>
+					</td>
 				{/if}
 			</tr>
 		</table>
@@ -236,7 +264,6 @@
 		align-items: center;
 	}
 
-
 	table {
 		background-color: white;
 		border-radius: 40px;
@@ -247,7 +274,6 @@
 	}
 
 	table tr td p {
-		font-size: small;
 		justify-content: space-around;
 	}
 
@@ -272,6 +298,7 @@
 	.styled {
 		border-color: #000;
 		font-size: 1rem;
+		line-break: anywhere;
 		text-align: center;
 		color: #000;
 		border-radius: 10px;

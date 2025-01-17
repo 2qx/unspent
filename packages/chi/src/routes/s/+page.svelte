@@ -6,12 +6,13 @@
 	import wallet from '$lib/images/wallet.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
 	import banner from '$lib/images/banner.svg';
+	import qr_code from '$lib/images/qr_code.svg';
 	import chart from '$lib/images/chart.svg';
 	import table from '$lib/images/table.svg';
 	import share from '$lib/images/share.svg';
 	import { _, isLoading } from 'svelte-i18n';
 	import { toast } from '@zerodevx/svelte-toast';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
 	import {
 		binToBase64,
 		base64ToBin,
@@ -102,31 +103,36 @@
 						<img width="125px" src={banner} />
 					</td>
 					<td colspan="3">
-						<CopyToClipboard
-							on:copy={() => toast.push('📋🗸')}
-							text={contract.getAddress()}
-							let:copy
+						<b> {$_('10')}</b>
+						<qr-code
+							id="qr1"
+							contents={contract.getAddress()}
+							module-color="#000"
+							position-ring-color="#533c0d"
+							position-center-color="#d99b22"
+							mask-x-to-y-ratio="1.2"
+							style="
+		width: 200px;
+		height: 200px;
+		margin: 2em auto;
+		background-color: #fff;
+	  "
 						>
-							<div style="max-width: 80%;" class="action">
-								<button on:click={copy}>
-									{contract.getAddress()}
-								</button>
-							</div>
-						</CopyToClipboard>
+							<img src={lock_clock} slot="icon" />
+						</qr-code>
+						
 					</td>
 				{:else}
 					<td style="text-align: center;">
 						<img width="125px" src={banner} />
 					</td>
-					<td colspan="3"><b> {$_('create')}</b></td>
+					<td colspan="3"><b> {$_('overview')}</b></td>
 				{/if}
 			</tr>
 			<tr>
 				{#if balance}
 					<td />
-					<td style="width:30px;">
-						<img src={lock_clock} alt="lock_clock" />
-					</td>
+					<td style="width:30px;" />
 					<td colspan="2">
 						<b>{balance.toLocaleString()}</b> sats <br />
 						(<i
@@ -135,12 +141,30 @@
 							})}</i
 						> BCH)
 					</td>
-				{:else}
+				{/if}
+			</tr>
+			<tr>
+				{#if contract}
 					<td />
 					<td style="width:30px;">
 						<img src={lock_clock} alt="lock_clock" />
 					</td>
-					<td colspan="2" />
+					<td colspan="2" >
+						<div
+							use:copy={contract.getAddress()}
+							on:svelte-copy={(event) => toast.push('OK 📋🗸: ' + event.detail)}
+							on:svelte-copy:error={(event) =>
+								toast.push(`Error, no access to clipboard?: ${event.detail.message}`, {
+									classes: ['warn']
+								})}
+						>
+							<div style="max-width: 80%;" class="action">
+								<button class="styled">
+									{contract.getAddress()}
+								</button>
+							</div>
+						</div>
+					</td>
 				{/if}
 			</tr>
 			{#if receiptAddressValid}
@@ -196,7 +220,6 @@
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
-		line-break: anywhere;
 	}
 
 	#form1 {
@@ -224,9 +247,31 @@
 		white-space: pre-wrap;
 	}
 
+	.styled {
+		border-color: #000;
+		line-break: anywhere;
+		font-size: 1rem;
+		text-align: center;
+		color: #000;
+		border-radius: 10px;
+		background-color: #fff3e2;
+		font-weight: 700;
+		padding: 5px;
+		box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+	}
+
+	.styled:hover {
+		background-color: rgb(255, 184, 54);
+	}
+
+	.styled:active {
+		box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+	}
+
 	h1 {
 		width: 100%;
 		font-weight: 900;
 		color: #d99b22;
+		padding: 1em;
 	}
 </style>

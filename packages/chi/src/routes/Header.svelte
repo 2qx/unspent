@@ -15,25 +15,32 @@
 
 	let addressIsSet = false;
 	let stateValue;
+
 	receiptAddressStore.subscribe((value) => {
 		addressIsSet = value ? true : false;
 	});
 
 	stateStore.subscribe((value) => {
-		stateValue = Number(value);
 		console.log(stateValue);
+		stateValue = Number(value);
 	});
 
 	const resetState = () => {
-		stateStore.set('');
-		receiptAddressStore.set('');
-		pageStore.set('');
-		reloadPage();
+		
+		goto('/')
+			.then(() => {
+				console.log('reset state');
+				receiptAddressStore.set('');
+				stateStore.set('0');
+				pageStore.set('0');
+			})
+			.then(() => {
+				reloadPage();
+			});
 	};
 
-  function reloadPage() {
+	function reloadPage() {
 		const thisPage = window.location.pathname;
-
 		goto('/').then(() => goto(thisPage));
 	}
 </script>
@@ -50,7 +57,7 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li  aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
 				<a href="{base}/">
 					<img src={home} alt="home" />
 				</a>
@@ -68,7 +75,10 @@
 						</a>
 					</li>
 				{/if}
-				<li class="{(stateValue == 4) ? 'flashing' : ''}" aria-current={$page.url.pathname === '/chart' ? 'page' : undefined}>
+				<li
+					class={stateValue == 4 ? 'flashing' : ''}
+					aria-current={$page.url.pathname === '/chart' ? 'page' : undefined}
+				>
 					<a href="{base}/chart">
 						<img src={chart} alt="chart" />
 					</a>
@@ -92,17 +102,15 @@
 		</svg>
 	</nav>
 
-	<div class="corner" >
-    <div>
-      <span on:click={resetState}>
-        <img src={restart} alt="restart" />
-      </span>
-      <a href="https://github.com/2qx/unspent">
-        <img src={github} alt="GitHub" />
-      </a>
-    </div>
-
-		
+	<div class="corner">
+		<div>
+			<span on:click={resetState}>
+				<img src={restart} alt="restart" />
+			</span>
+			<a href="https://github.com/2qx/unspent">
+				<img src={github} alt="GitHub" />
+			</a>
+		</div>
 	</div>
 </header>
 
@@ -192,7 +200,6 @@
 	a:hover {
 		color: var(--color-theme-1);
 	}
-
 
 	.flashing {
 		animation: blinker 3s linear infinite;

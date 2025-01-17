@@ -137,6 +137,7 @@ export class UpdateCommand extends NetworkCommand {
     let db = new SqlProvider('mainnet');
     await db.init();
 
+    console.log("get price history...")
     let prices = await getPriceHistory();
 
     console.log("updating price history...")
@@ -148,7 +149,7 @@ export class UpdateCommand extends NetworkCommand {
 
     let chaingraph = this.chaingraph
       ? this.chaingraph
-      : "https://demo.chaingraph.cash/v1/graphql";
+      : "https://gql.chaingraph.pat.mn/v1/graphql";
     let prefix = this.prefix ? this.prefix : "6a047574786f01";
 
     let node = this.isChipnet ? "chipnet" : this.isRegtest ? "rbchn" : "mainnet";
@@ -158,49 +159,68 @@ export class UpdateCommand extends NetworkCommand {
     let exclude = "6a0401010102010717"
     let hexRecords = [];
     while (true) {
-      let tmpRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
-      hexRecords.push(...tmpRecords)
-      if (tmpRecords.length < 50) break;
-      console.log(tmpRecords.length)
+      try {
+        let tmpRecords = await getRecords(chaingraph, prefix, node, limit, offset, exclude);
+        hexRecords.push(...tmpRecords)
+        if (tmpRecords.length == 0) break;
+        console.log(tmpRecords.length)
+      } catch {
+        console.log(`Error getting records at offset ${offset}`)
+      }
+
       offset += 50
     }
     let contracts = [];
     let total = 0n;
+    console.log(`found ${hexRecords.length} records`);
+    hexRecords.reverse()
+    //hexRecords = hexRecords.slice(270)
     for (let record of hexRecords) {
 
+      let instance = null;
       try {
-        let instance = opReturnToSerializedString(record, this.network);
-        if (instance) contracts.push(instance.toString());
-        //@ts-ignore
-        let subTotal = await opReturnToBalance(record, this.network, networkProvider)
-        if (instance && instance[0] != 'F') {
-          let prefix = this.isChipnet ? 'bchtest' : 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
-          let lockingBytecode = instance.split(",").pop() as string
-
-          let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
-          if (Number(subTotal) > 0) {
-            await db.syncOutputHistory(lockingBytecode)
-            let irregularTs = []
-            try {
-              irregularTs = await db.getIrregularTs(lockingBytecode)
-            } catch (error) {
-              if (error instanceof pgp.errors.QueryResultError) {
-                // pass
-              } else {
-                throw (error);
-              }
-            }
-            let regular = getRegularSeries(irregularTs)
-            if (regular.length > 0) await db.putSeries(regular)
-          }
-        }
-        total += BigInt(subTotal);
-
-      } catch (e) {
-        console.log(e)
-        console.log('Error processing: ', record)
+        instance = opReturnToSerializedString(record, this.network);
+      } catch {
+        console.log(`Deserialization failed ${record}`);
       }
 
+      if (instance) contracts.push(instance.toString());
+      //@ts-ignore
+      let subTotal = await opReturnToBalance(record, this.network, networkProvider)
+      if (instance && instance[0] != 'F') {
+        let prefix = this.isChipnet ? 'bchtest' : 'bitcoincash' as "bchtest" | "bitcoincash" | "bchreg" | undefined
+        let lockingBytecode = instance.split(",").pop() as string
+
+        let contractAddr = lockingBytecodeToCashAddress(hexToBin(lockingBytecode), prefix)
+        if (Number(subTotal) > 0) {
+          try {
+            await db.syncOutputHistory(lockingBytecode)
+          } catch {
+            console.log(`Error posting outputs for ${contractAddr}`)
+          }
+
+          let irregularTs = []
+          try {
+            irregularTs = await db.getIrregularTs(lockingBytecode)
+          } catch (error) {
+            if (error instanceof pgp.errors.QueryResultError) {
+              console.log(`Error getting time-series for ${lockingBytecode}`)
+            }
+            console.log(`${error}`)
+          }
+
+          try {
+            let regular = getRegularSeries(irregularTs)
+            if (regular.length > 0) await db.putSeries(regular)
+          } catch {
+            console.log(`Error posting time-series for ${contractAddr}`)
+          }
+
+
+        }
+      }
+      total += BigInt(subTotal);
+      console.log(`${contracts.length} ${hexRecords.length} ${total.toLocaleString()} ${record}`)
 
     }
 

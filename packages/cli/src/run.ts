@@ -2,6 +2,7 @@ import {
   cli,
   AnnuityCommand,
   DivideCommand,
+  DripCommand,
   FaucetCommand,
   MineCommand,
   PerpetuityCommand,
@@ -12,6 +13,7 @@ import { Builtins } from "clipanion"
 
 cli.register(AnnuityCommand);
 cli.register(DivideCommand);
+cli.register(DripCommand);
 cli.register(FaucetCommand);
 cli.register(MineCommand);
 cli.register(PerpetuityCommand);

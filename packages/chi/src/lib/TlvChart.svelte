@@ -4,13 +4,23 @@
 	export let series;
 	let chartApi;
 
+  const watermark = {
+        visible: true,
+        fontSize: 24,
+        horzAlign: 'center',
+        vertAlign: 'center',
+        color: 'rgba(171, 71, 188, 0.5)',
+        text: 'unspent.cash',
+    };
+
 	let data = [];
 	$: data = {
 		fiat: series.map((p) => ({ time: p.time, value: p.fiat })),
 		bch: series.map((p) => ({ time: p.time, value: p.bch })),
 		mau: series.map((p) => ({
 			time: p.time,
-			value: p.mau
+			value: p.mau,
+      title: "Monthly Active Users"
 		}))
 	};
 
@@ -30,8 +40,8 @@
             autoScale: true,
             borderColor: 'rgba(197, 203, 206, 1)',
         },
-        width:400,
-        height:400
+        width:500,
+        height:500
         
   }
 	
@@ -39,18 +49,14 @@
 
 {#if Object.keys(data).length > 0}
 	<div>
-    <div id="key">
-			<div id="fiat">Fiat</div>
-			<div id="bch">Bitcoin Cash (BCH)</div>
-			<div id="mau">Monthly Active Users (MAU)</div>
-		</div>
 		<Chart
       {...options}
+      watermark={watermark}
 			container={{ class: 'chart' }}
 		>
-			<LineSeries data={data.fiat} priceScaleId='left' color="#9ec69e94" reactive={true} />
-			<LineSeries data={data.bch} priceScaleId='right' color="#0f0" reactive={true} />
-			<LineSeries data={data.mau} priceScaleId='right' color="#f0f" reactive={true} />
+			<LineSeries data={data.fiat} title="TLV ($)" priceScaleId='left' color="#9ec69e94" reactive={true} />
+			<LineSeries data={data.bch} title="TLV (coins)" priceScaleId='right' color="#0f0" reactive={true} />
+			<LineSeries data={data.mau} title="open" priceScaleId='right' color="#f0f" reactive={true} />
 		</Chart>
 		
 	</div>
@@ -87,6 +93,6 @@
 	}
   :global(.chart) {
 		width: 100%;
-		height: 400px;
+		height: 500px;
 	}
 </style>

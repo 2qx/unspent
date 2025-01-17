@@ -5,9 +5,9 @@
 	import arrow_split from '$lib/images/arrow_split.svg';
 	import arrow_right_white from '$lib/images/arrow_right_white.svg';
 	import lock_clock from '$lib/images/lock_clock.svg';
-	import copy from '$lib/images/copy.svg';
+	import * as copyIcon from '$lib/images/copy.svg';
 	import { toast } from '@zerodevx/svelte-toast';
-	import CopyToClipboard from '$lib/CopyToClipboard.svelte';
+	import { copy } from 'svelte-copy';
 
 	export let receiptAddress = '';
 	let utxos = [];
@@ -115,7 +115,7 @@
 				<tr>
 					<td>
 						<p>
-							<img src={lock_clock} alt={$_('ok')} />
+
 						</p>
 					</td>
 					<td>
@@ -123,19 +123,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="line-break:anywhere;" colspan="2">
-						<img src={copy} />
-						<CopyToClipboard
-							on:copy={() => toast.push('📋🗸')}
-							text={contract.getAddress()}
-							let:copy
-						>
-							<div class="action">
-								<button class="styled" on:click={copy}>
-									{contract.getAddress()}
-								</button>
-							</div>
-						</CopyToClipboard>
+					<td  colspan="2">
+						{$_('12')}
 					</td>
 				</tr>
 			</table>
@@ -143,7 +132,10 @@
 		<br />
 		<br />
 		<p>
-			<img width="300px" src="/h/13.svg" alt="send bitcoin" />
+			<a href="/">
+				<img width="300px" src="/h/13.svg" alt="send bitcoin" />
+			</a>
+			
 		</p>
 	{:else}
 		<progress id="progress-bar" aria-label="Content loading…" />
