@@ -428,7 +428,9 @@ Every unspent transaction output (utxo) on the contract is a new "thread" to pay
 
 You can make your own thread by sending some sats here:
 
-    bitcoincash:pwsu8f4ftnsugunzy8wruhuayvtpz9mt88euwvwtp5jvv58wnd95c0td3wpdp
+```
+bitcoincash:pwsu8f4ftnsugunzy8wruhuayvtpz9mt88euwvwtp5jvv58wnd95c0td3wpdp
+```
 
 ```solidity
 // Drip Mine: An MEV faucet
