@@ -21,7 +21,7 @@
 		</IconButton>
 	{:else}
 		<IconButton
-			href="https://explorer.bitcoinunlimited.info/address/{address}"
+			href="https://explorer.bch.ninja/address/{address}"
 			target="_blank"
 			touch
 			color="secondary"
