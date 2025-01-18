@@ -7,6 +7,7 @@
 	let fruits: Contract[] = [
 		{ id: 'A', label: 'Annuity' },
 		{ id: 'D', label: 'Divide' },
+		{ id: '$', label: 'Drip' },
 		{ id: 'F', label: 'Faucet' },
 		{ id: 'M', label: 'Mine' },
 		{ id: 'P', label: 'Perpetuity' },

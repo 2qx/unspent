@@ -1,4 +1,7 @@
 // Drip Mine: An MEV faucet
+// Contributed by Bitcoin Cash Autist - 2025
+// https://gitlab.com/0353F40E/drip-mine
+// 
 contract DripMine() {
 
     function drip() {

@@ -414,6 +414,91 @@ contract Annuity(
   }
 }
 ```
+### Drip-mine
+
+The [Drip Mine contract, contributed by The Bitcoin Cash Autist](https://gitlab.com/0353F40E/drip-mine), allows Bitcoin Cash network maintainers (miners) to take value as fees when creating a block. 
+
+It is like a Perpetuity, but it's only for miners. Miners are both the executors and benefactors of the contract.
+
+The contract allows about 1/30,000th of the value to be used as fees for a transaction that sends the remainder back to the contract. There's only one instance of the contract. 
+
+If the payout would be below 164 sats, that minimum fee is used instead, until each unspent output runs out of funds. 
+
+Every unspent transaction output (utxo) on the contract is a new "thread" to pay miners. 
+
+You can make your own thread by sending some sats here:
+
+    bitcoincash:pwsu8f4ftnsugunzy8wruhuayvtpz9mt88euwvwtp5jvv58wnd95c0td3wpdp
+
+```solidity
+// Drip Mine: An MEV faucet
+// Contributed by Bitcoin Cash Autist - 2025
+// https://gitlab.com/0353F40E/drip-mine
+// 
+contract DripMine() {
+
+    function drip() {
+        // Drip once per block
+        // OP_1 OP_CHECKSEQUENCEVERIFY OP_DROP
+        require(tx.age >= 1);
+
+        // Drip will be released as TX fee
+        // OP_TXINPUTCOUNT OP_1 OP_NUMEQUALVERIFY
+        // OP_TXOUTPUTCOUNT OP_1 OP_NUMEQUALVERIFY
+        require(tx.inputs.length == 1);
+        require(tx.outputs.length == 1);
+
+        // dustLimit = 444 + output_size * 3; // p2sh32 output size is 44
+        // 4002 
+        int dustLimit = 576;
+
+        // minPayout = this_tx_size * min_fee_rate; 
+        // this TX size will be 164, double check when compiling
+        // a400
+        int minPayout = 164;
+
+        // if we have enough to pay out the minimum and stay above dust limit
+        // then we drip from the contract
+        // OP_INPUTINDEX OP_UTXOVALUE OP_ROT OP_2 OP_PICK OP_ADD OP_GREATERTHAN OP_IF
+        if (tx.inputs[this.activeInputIndex].value > dustLimit + minPayout) {
+
+            // DripMine contract must be passed on
+            // OP_INPUTINDEX OP_UTXOBYTECODE OP_INPUTINDEX OP_OUTPUTBYTECODE OP_EQUALVERIFY
+            require(tx.inputs[this.activeInputIndex].lockingBytecode ==
+                    tx.outputs[this.activeInputIndex].lockingBytecode);
+
+            // Calculate maxPayout
+            // Decay half-life of 4 years
+            // OP_INPUTINDEX OP_UTXOVALUE 2811 OP_MUL c685744f OP_DIV
+            int maxPayout = (tx.inputs[this.activeInputIndex].value * 4392) / 1333036486;
+
+            // If calculated payout would be too low, switch to flat minPayout
+            // OP_2DUP OP_GREATERTHAN OP_IF
+            if (maxPayout < minPayout) {
+                // OP_OVER OP_NIP
+                maxPayout = minPayout;
+            } // OP_ENDIF
+
+            // TX fee is the payout to miners
+            // OP_INPUTINDEX OP_UTXOVALUE OP_INPUTINDEX OP_OUTPUTVALUE OP_SUB
+            int payout = tx.inputs[this.activeInputIndex].value -
+                         tx.outputs[this.activeInputIndex].value;
+            // OP_2DUP OP_GREATERTHANOREQUAL OP_VERIFY
+            require(payout <= maxPayout);
+
+        // else we sweep everything as fee and terminate the contract
+        // OP_2DROP OP_ELSE
+        } else {
+            // Burn the output with remainning value to miners' fees
+            // OP_INPUTINDEX OP_OUTPUTVALUE OP_0 OP_NUMEQUALVERIFY
+            require(tx.outputs[this.activeInputIndex].value == 0);
+            // OP_INPUTINDEX OP_OUTPUTBYTECODE 6a OP_EQUALVERIFY
+            require(tx.outputs[this.activeInputIndex].lockingBytecode == 0x6a);
+        } //OP_ENDIF 
+    } // OP_DROP OP_1
+}
+
+```
 
 ### Divide
 

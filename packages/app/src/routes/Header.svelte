@@ -40,8 +40,8 @@
 			<li class:active={$page.url.pathname.startsWith('/documentation')}>
 				<a href="{base}/documentation">Docs</a>
 			</li>
-			<li class:active={$page.url.pathname === '/earn'}>
-				<a href="{base}/earn">Earn</a>
+			<li class:active={$page.url.pathname === '/explore'}>
+				<a href="{base}/explore">Explore</a>
 			</li>
 			<li class:active={$page.url.pathname === '/settings'}>
 				<a class="settings" href="{base}/settings">

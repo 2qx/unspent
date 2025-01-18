@@ -6,8 +6,9 @@
 
 	let contractTypes = [
 		{ id: 'P', name: 'Perpetuity' },
-    { id: 'A', name: 'Annuity' },
+        { id: 'A', name: 'Annuity' },
 		{ id: 'D', name: 'Divide' },
+		{ id: '$', name: 'DripMine' },
 		{ id: 'F', name: 'Faucet' },
 		{ id: 'R', name: 'Record' }
 	];
