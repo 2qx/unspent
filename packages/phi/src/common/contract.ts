@@ -216,20 +216,22 @@ export class BaseUtxPhiContract {
   async getUtxos(ageFilter?: number): Promise<Utxo[] | undefined> {
     if (ageFilter) {
       let utxos = await this.provider?.getUtxos(this.getAddress())
-      let blockHeight = await this.provider?.getBlockHeight()!
+      let nextHeight = await this.provider?.getBlockHeight()! + 1
+      console.log(nextHeight)
       return utxos?.filter(u => {
         // @ts-ignore
-        if(u.height==-1){
-          if(ageFilter==0){
+        if(u.height<=0){
+          // @ts-ignore
+          if(ageFilter==u.height){
             return true;
           }else{
             return false;
           }
         }
         // @ts-ignore
-        if (u.height && blockHeight) {
+        if (u.height && nextHeight) {
           // @ts-ignore
-          return ((blockHeight - u.height) >= ageFilter)
+          return ((nextHeight - u.height) >= ageFilter)
         } else {
           return false;
         }

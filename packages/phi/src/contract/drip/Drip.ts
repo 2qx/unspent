@@ -160,7 +160,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
     ): Promise<string> {
 
         // Filter to inputs of sufficient age
-        if (!utxos) utxos = await this.getUtxos(Number(1));
+        if (!utxos) utxos = await this.getUtxos(1);
         debug;
         const fn = this.getFunction(Drip.fn)
         let txids = await Promise.all(utxos!.map(async (utxo) => await this.doDrip(utxo, fn)))
