@@ -187,18 +187,23 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
             tx.to(to)
         } else if (balance > Drip.minPayout) {
             newPrincipal = balance - Drip.minPayout
-            to.push({
-                to: this.getAddress(),
-                amount: newPrincipal,
-            })
-            tx.to(to)
+            if(newPrincipal > 576){
+                to.push({
+                    to: this.getAddress(),
+                    amount: newPrincipal,
+                })
+                tx.to(to)
+            }else{
+                tx.withOpReturn([])
+            }
         }
         else {
-            tx.withOpReturn([""])
+            tx.withOpReturn([])
         }
 
-        tx.withAge(1)
-            .withoutChange();
+        tx
+        .withAge(1)
+        .withoutChange();
 
         let txn = ""
         txn = (await tx.send()).txid;
