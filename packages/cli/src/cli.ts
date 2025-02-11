@@ -67,7 +67,7 @@ export class DripCommand extends NetworkCommand {
       : this.isRegtest
         ? "regtest"
         : "mainnet";
-    let version = parseInt(this.version)
+    let version = 3
 
     let a = new Drip(
       { version: version, network: network }
