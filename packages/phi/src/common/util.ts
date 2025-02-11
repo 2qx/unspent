@@ -97,7 +97,7 @@ export async function sanitizeAddress(wildString: string) {
       } else {
         throw Error("Couldn't identify type of legacy address");
       }
-      cashAddr = encodeCashAddress(prefix as CashAddressNetworkPrefix, "p2pkh", r.payload);
+      cashAddr = encodeCashAddress({payload: r.payload, prefix: prefix as CashAddressNetworkPrefix, throwErrors:false, type: "p2pkh"});
       return cashAddr;
     } else {
       r = decodeCashAddressFormatWithoutPrefix(wildString);
@@ -105,7 +105,7 @@ export async function sanitizeAddress(wildString: string) {
   }
   // otherwise, derive the network from the address without prefix
   if (typeof r === "string") throw Error(r);
-  cashAddr = encodeCashAddressFormat(r.prefix, r.version, r.payload);
+  cashAddr = encodeCashAddressFormat({payload:r.payload, prefix: r.prefix, throwErrors:false, version:r.version});
   return cashAddr;
 }
 

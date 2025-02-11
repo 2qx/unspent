@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals';
 import { RegTestWallet } from "mainnet-js";
 
-import { cli } from "../index.js"
+import { cli } from "./index.js"
 import {
   AnnuityCommand,
   DivideCommand,
@@ -10,7 +10,7 @@ import {
   PerpetuityCommand,
   QueryCommand,
   RecordCommand,
-} from "../index.js"
+} from "./index.js"
 import { Builtins } from "clipanion";
 // @ts-ignore
 import packageJson from "../package.json" assert { type: "json" };

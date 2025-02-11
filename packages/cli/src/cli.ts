@@ -1,6 +1,6 @@
 
 // @ts-ignore
-import packageJson from "../package.json" assert { type: "json" };
+import packageJson from "../package.json" with { type: "json" };
 
 import "fake-indexeddb/auto";
 

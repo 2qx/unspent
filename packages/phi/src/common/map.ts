@@ -102,7 +102,7 @@ export async function opReturnToBalance(
     serialized = hexToBin(serialized);
   }
   const serializedBinChunks = decodeNullDataScript(serialized);
-  const address = lockingBytecodeToCashAddress(serializedBinChunks.pop()!, "bitcoincash")
+  const address = lockingBytecodeToCashAddress({bytecode: serializedBinChunks.pop()!, prefix:"bitcoincash"})
 
   if(typeof address!=="string") throw Error("couldn't decode cashaddr")
   if (!networkProvider) networkProvider = new PsiNetworkProvider(network);

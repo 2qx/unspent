@@ -7,4 +7,4 @@ export {
   PerpetuityCommand,
   QueryCommand,
   RecordCommand,
-} from "./src/cli.js";
+} from "./cli.js";

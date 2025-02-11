@@ -5,7 +5,7 @@ import {
   } from "electrum-cash";
   import { Contract, ElectrumNetworkProvider } from "cashscript";
   import { RegTestWallet, mine } from "mainnet-js";
-  import { artifact } from "./v2.js";
+  import { artifact } from "./v3.js";
   import { getAnAliceWallet } from "../../../test/aliceWallet4test.js"
   
   describe(`Faucet Contract Tests`, () => {

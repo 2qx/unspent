@@ -11,7 +11,8 @@
 import getStream from 'get-stream';
 import { PassThrough } from 'stream';
 
-import { Cli, CommandClass, Command, RunContext } from 'clipanion';
+import { Cli,  Command } from 'clipanion';
+import { type CommandClass, type RunContext } from 'clipanion';
 
 export const log = <T extends Command>(command: T, properties: Array<keyof T> = []) => {
   command.context.stdout.write(`Running ${command.constructor.name}\n`);

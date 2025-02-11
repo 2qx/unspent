@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import {
   cli,
   AnnuityCommand,
@@ -8,7 +9,7 @@ import {
   PerpetuityCommand,
   QueryCommand,
   RecordCommand,
-} from "./cli.js"
+} from "./cli.ts"
 import { Builtins } from "clipanion"
 
 cli.register(AnnuityCommand);
@@ -21,4 +22,5 @@ cli.register(QueryCommand);
 cli.register(RecordCommand);
 cli.register(Builtins.VersionCommand);
 cli.register(Builtins.HelpCommand);
+
 cli.runExit(process.argv.slice(2));

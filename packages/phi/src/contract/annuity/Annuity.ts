@@ -87,7 +87,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     const period = parseBigInt(p.args.shift()!);
     const lock = p.args.shift()!;
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
+    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode:hexToBin(lock)});
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
     const installment = parseBigInt(p.args.shift()!);
@@ -126,7 +126,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     const lock = p.args.shift()!;
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress(lock, prefix);
+    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode:lock});
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
@@ -386,7 +386,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         amount: 577n,
       });
 
-      console.log(to)
+
     const size = await estimator!
       .to(to)
       .withAge(Number(this.period))

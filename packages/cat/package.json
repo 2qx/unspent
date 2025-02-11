@@ -1,6 +1,6 @@
 {
   "name": "@unspent/cat",
-  "version": "0.2.12",
+  "version": "0.2.16",
   "description": "A TLV utility for unpspent/phi",
   "type": "module",
   "bin": "cli.cjs",
@@ -10,8 +10,8 @@
     "@tsconfig/node18-strictest-esm": "latest",
     "@types/node": "^10.8.0",
     "@types/pg-format": "^1.0.4",
-    "@unspent/phi": "0.2.12",
-    "@unspent/psi": "0.2.12",
+    "@unspent/phi": "0.2.16",
+    "@unspent/psi": "0.2.16",
     "clipanion": "^3.2.0-rc.11",
     "fake-indexeddb": "4.0.1",
     "get-stream": "^5.1.0",

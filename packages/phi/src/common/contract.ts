@@ -5,7 +5,7 @@ import {
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import {
-  Argument,
+  ConstructorArgument,
   Artifact,
   Contract as CashScriptContract,
   Utxo,
@@ -43,7 +43,7 @@ export class BaseUtxPhiContract {
   constructor(
     network: string,
     artifact: Artifact,
-    constructorArguments: Argument[]
+    constructorArguments: ConstructorArgument[]
   ) {
 
     const defaultProvider = getDefaultProvider(network);
@@ -64,7 +64,7 @@ export class BaseUtxPhiContract {
     );
   }
 
-  _refresh(constructorArguments: Argument[]) {
+  _refresh(constructorArguments: ConstructorArgument[]) {
     this.contract = new CashScriptContract(
       this.artifact,
       [...constructorArguments],
@@ -86,10 +86,10 @@ export class BaseUtxPhiContract {
     const options = { version: version, network: network };
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress(
-      hexToBin(lockingBytecode!),
-      prefix
-    );
+    const address = lockingBytecodeToCashAddress({
+      prefix:prefix,
+      bytecode:hexToBin(lockingBytecode!)
+    });
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
@@ -125,7 +125,7 @@ export class BaseUtxPhiContract {
     const options = { version: version, network: network };
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress(lockingBytecode!, prefix);
+    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode: lockingBytecode!});
     if (typeof address !== "string")
       throw Error("non-standard address:" + address);
 
@@ -217,7 +217,6 @@ export class BaseUtxPhiContract {
     if (ageFilter) {
       let utxos = await this.provider?.getUtxos(this.getAddress())
       let nextHeight = await this.provider?.getBlockHeight()! + 1
-      console.log(nextHeight)
       return utxos?.filter(u => {
         // @ts-ignore
         if(u.height<=0){

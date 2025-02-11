@@ -108,7 +108,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     const lock = p.args.shift()!;
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
+    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode: hexToBin(lock) });
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 
@@ -149,7 +149,7 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     const lock = p.args.shift()!;
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress(lock, prefix);
+    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode:lock});
     if (typeof address !== "string")
       throw Error("non-standard address" + address);
 

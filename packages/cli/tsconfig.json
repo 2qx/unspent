@@ -1,14 +1,31 @@
 {
-  // If you don't need native ESM, you can switch to @tsconfig/node16/tsconfig.json and remove "type": "module" from package.json
-  "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "esnext",
-    "moduleResolution": "nodenext",
-    "resolveJsonModule": true
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "declaration": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationMap": true,
+    "sourceMap": true,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    /* Node Stuff */
+    "allowImportingTsExtensions": true,
+		"rewriteRelativeImportExtensions": true,
+    "module": "NodeNext",
+    /* If your code doesn't run in the DOM: */
+    "lib": [
+      "es2022"
+    ],
   },
-  "ts-node": {
-    "swc": true
-  },
-  "exclude": ["cli.cjs"]
+  "include": ["src/**/*.ts", "src/**/cash/*.json"],
 }

@@ -3,7 +3,7 @@ import type { UtxPhiIface, ContractOptions } from "../../common/interface.js";
 import { DefaultOptions } from "../../common/constant.js";
 import { BaseUtxPhiContract } from "../../common/contract.js";
 import { sum, toHex, binToBigInt } from "../../common/util.js";
-import { artifact as v2 } from "./cash/v2.js";
+import { artifact as v3 } from "./cash/v3.js";
 
 export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
     public static c: string = "$";
@@ -14,8 +14,8 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         public options: ContractOptions = DefaultOptions
     ) {
         let script: Artifact;
-        if (options.version === 2) {
-            script = v2;
+        if (options.version === 3) {
+            script = v3;
         } else {
             throw Error("Unrecognized Drip Version");
         }
@@ -165,7 +165,6 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         const fn = this.getFunction(Drip.fn)
         let txids = await Promise.all(utxos!.map(async (utxo) => await this.doDrip(utxo, fn)))
         
-        console.log(txids)
         return txids!.join(",")
     }
 

@@ -98,7 +98,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
 
     const executorAllowance = parseBigInt(p.args.shift()!);
     const payees = p.args.map((lock) => {
-      const addr = lockingBytecodeToCashAddress(hexToBin(lock), prefix);
+      const addr = lockingBytecodeToCashAddress({prefix:prefix, bytecode:hexToBin(lock)});
       if (typeof addr !== "string") throw Error("non-standard address" + addr);
       return addr;
     });
@@ -134,7 +134,7 @@ export class Divide extends BaseUtxPhiContract implements UtxPhiIface {
     const executorAllowance = binToBigInt(p.args.shift()!);
     const payeesLocks = p.args;
     const payees = payeesLocks.map((lock) => {
-      const addr = lockingBytecodeToCashAddress(lock, prefix);
+      const addr = lockingBytecodeToCashAddress({prefix:prefix, bytecode:lock});
       if (typeof addr !== "string")
         throw Error("non-standard address: " + addr);
       return addr;

@@ -6,6 +6,7 @@
     "rootDir": "src",
     "outDir": "dist/main",
     "incremental": true,
+    "skipLibCheck": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "declaration": true,
     "declarationMap": true,
