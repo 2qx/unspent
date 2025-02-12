@@ -5,7 +5,7 @@ import {
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import {
-  Argument,
+  ConstructorArgument as Argument,
   Artifact,
   Contract as CashScriptContract,
   Utxo,

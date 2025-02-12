@@ -1,6 +1,6 @@
 {
   "name": "@unspent/psi",
-  "version": "0.2.18",
+  "version": "0.2.19",
   "description": "A persistent storage IndexedDB wrapper for ₿∙ϕ contracts and data using Dexie.js",
   "author": "2qx",
   "scripts": {
@@ -29,7 +29,7 @@
   "dependencies": {
     "@bitauth/libauth": "v3.0.0",
     "axios": "1.4.0",
-    "cashscript": "0.10.0-next.2",
+    "cashscript": "0.10.0",
     "dexie": "4.0.1-alpha.8",
     "electrum-cash": "^2.0.10",
     "typeson": "8.0.1"

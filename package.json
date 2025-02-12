@@ -11,7 +11,7 @@
       "**/jest-runner/**"
     ]
   },
-  "version": "0.2.18",
+  "version": "0.2.19",
   "description": "a collection of anyone can spend contracts",
   "author": "2qx",
   "scripts": {
@@ -56,10 +56,10 @@
   "dependencies": {
     "@bitauth/libauth": "v2.0.0",
     "@tsconfig/node16-strictest-esm": "latest",
-    "cashc": "0.10.0-next.2 ",
+    "cashc": "0.10.0",
     "cashc-0.8": "npm:cashc@0.8.2",
     "cashc-0.7": "npm:cashc@0.7.6",
-    "cashscript": "0.10.0-next.2",
+    "cashscript": "0.10.0",
     "cashscript-0.8": "npm:cashscript@0.8.2",
     "cashscript-0.7": "npm:cashscript@0.7.6",
     "clipanion": "^3.2.0-rc.11",
