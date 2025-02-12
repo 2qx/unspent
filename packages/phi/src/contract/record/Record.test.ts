@@ -242,10 +242,10 @@ describe(`Record Class Tests`, () => {
       'aa20000000000000000012345678900000000000000000000000000000000000000087'
     );
     
-    let cashaddr = lockingBytecodeToCashAddress(p2sh32, "bchreg")
-    if(typeof cashaddr != `string`)  throw (cashaddr)
+    let cashaddr = lockingBytecodeToCashAddress({prefix:"bchreg", bytecode:p2sh32})
+    if(typeof cashaddr === `string`)  throw (cashaddr)
 
-    const payees = Array(4).fill(cashaddr);
+    const payees = Array(4).fill(cashaddr.address);
     const options = { version: 2, network: "regtest" };
     const d = new Divide(1047n, payees, options);
     const r = new Record(Record.minMaxFee, 1n, options);

@@ -11,18 +11,6 @@ module.exports = {
     "<rootDir>/packages/phi/src",
     "<rootDir>/packages/psi/src"
   ],
-  collectCoverage: true,
-
-  collectCoverageFrom: [
-    "**/dist/*.{js,jsx,ts}",
-    "!**/node_modules/**",
-    "!**/generated/**",
-  ],
-  coveragePathIgnorePatterns: [
-    ".*/src/.*\\.d\\.ts",
-    ".*/src/.*\\.test\\.{ts,js}",
-    ".*/src/.*\\.test\\.headless\\.js",
-  ],
   globalSetup: "<rootDir>/jest/node.setup.js",
   globalTeardown: "<rootDir>/jest/node.teardown.js",
   testMatch: [

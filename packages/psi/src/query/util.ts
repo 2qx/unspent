@@ -63,16 +63,16 @@ export function parseOpReturn(opReturn: Uint8Array | string, network = "mainnet"
   const options = { version: version, network: network };
 
   const prefix = getPrefixFromNetwork(network);
-  const address = lockingBytecodeToCashAddress({prefix: prefix, bytecode: lockingBytecode!});
-  if (typeof address !== "string")
-    throw Error("non-standard address:" + address);
+  const CashAddrResult = lockingBytecodeToCashAddress({prefix: prefix, bytecode: lockingBytecode!});
+  if (typeof CashAddrResult === "string")
+    throw Error("non-standard address:" + CashAddrResult);
 
   return {
     code: code,
     options: options,
     args: args,
     lockingBytecode: lockingBytecode,
-    address: address,
+    address: CashAddrResult.address,
   };
 }
 

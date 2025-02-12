@@ -102,9 +102,9 @@ describe(`Example Divide Tests`, () => {
       'aa20000000000000000012345678900000000000000000000000000000000000000087'
     );
     
-    let cashaddr = lockingBytecodeToCashAddress(p2sh32, "bchreg")
-    if(typeof cashaddr != `string`)  throw (cashaddr)
-    let bobs = await RegTestWallet.watchOnly(cashaddr)
+    let cashAddrResponse = lockingBytecodeToCashAddress({bytecode:p2sh32, prefix:"bchreg"})
+    if(typeof cashAddrResponse === `string`)  throw (cashAddrResponse)
+    let bobs = await RegTestWallet.watchOnly(cashAddrResponse.address)
     let charlie = await RegTestWallet.newRandom();
 
     let exFee = 5000n;
@@ -133,7 +133,7 @@ describe(`Example Divide Tests`, () => {
 
     let to: any = [];
     for (let i = 0; i < divisor; i++) {
-      to.push({ to: cashaddr, amount: installment });
+      to.push({ to: cashAddrResponse.address, amount: installment });
     }
     to.push({ to: charlie.getDepositAddress(), amount: exFee - 2000n });
 

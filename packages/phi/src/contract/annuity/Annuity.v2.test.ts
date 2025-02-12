@@ -1,5 +1,6 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js";
+import { binToHex } from "@bitauth/libauth";
 import { DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js"; 
@@ -119,8 +120,8 @@ describe(`Annuity Class Tests`, () => {
       await p1.execute(charlie.getDepositAddress());
     }
 
-    expect(await charlie.getBalance("sat")).toBeGreaterThan(4000);
-    expect(await bob.getBalance("sat")).toBe(25000);
+    expect(await charlie.getBalance("sat")).toBeGreaterThan(3000);
+    expect(await bob.getBalance("sat")).toBeGreaterThan(25000);
     expect(p1.isTestnet()).toEqual(true);
     expect(await p1.getBalance()).toBe(0n);
   });

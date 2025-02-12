@@ -108,16 +108,16 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     const lock = p.args.shift()!;
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode: hexToBin(lock) });
-    if (typeof address !== "string")
-      throw Error("non-standard address" + address);
+    const CashAddrResult = lockingBytecodeToCashAddress({prefix:prefix, bytecode: hexToBin(lock) });
+    if (typeof CashAddrResult === "string")
+      throw Error("non-standard address" + CashAddrResult);
 
     const executorAllowance = BigInt(parseInt(p.args.shift()!));
     const decay = BigInt(parseInt(p.args.shift()!));
 
     const perpetuity = new Perpetuity(
       period,
-      address,
+      CashAddrResult.address,
       executorAllowance,
       decay,
       p.options
@@ -149,16 +149,16 @@ export class Perpetuity extends BaseUtxPhiContract implements UtxPhiIface {
     const lock = p.args.shift()!;
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode:lock});
-    if (typeof address !== "string")
-      throw Error("non-standard address" + address);
+    const CashAddrResult = lockingBytecodeToCashAddress({prefix:prefix, bytecode:lock});
+    if (typeof CashAddrResult === "string")
+      throw Error("non-standard address" + CashAddrResult);
 
     const executorAllowance = binToBigInt(p.args.shift()!);
     const decay = binToBigInt(p.args.shift()!);
 
     const perpetuity = new Perpetuity(
       period,
-      address,
+      CashAddrResult.address,
       executorAllowance,
       decay,
       p.options

@@ -64,7 +64,7 @@ export async function sanitizeAddress(wildString: string) {
   if (typeof wildString != "string")
     throw Error("Cashaddress was not a string");
   // If the address has a prefix decode it as is
-  let r, cashAddr;
+  let r, cashAddrResult;
 
   // in case it comes with spaces
   wildString = wildString.trim()
@@ -97,16 +97,16 @@ export async function sanitizeAddress(wildString: string) {
       } else {
         throw Error("Couldn't identify type of legacy address");
       }
-      cashAddr = encodeCashAddress({payload: r.payload, prefix: prefix as CashAddressNetworkPrefix, throwErrors:false, type: "p2pkh"});
-      return cashAddr;
+      cashAddrResult = encodeCashAddress({payload: r.payload, prefix: prefix as CashAddressNetworkPrefix, throwErrors:true, type: "p2pkh"});
+      return cashAddrResult.address;
     } else {
       r = decodeCashAddressFormatWithoutPrefix(wildString);
     }
   }
   // otherwise, derive the network from the address without prefix
   if (typeof r === "string") throw Error(r);
-  cashAddr = encodeCashAddressFormat({payload:r.payload, prefix: r.prefix, throwErrors:false, version:r.version});
-  return cashAddr;
+  cashAddrResult = encodeCashAddressFormat({payload:r.payload, prefix: r.prefix, throwErrors:true, version:r.version});
+  return cashAddrResult.address;
 }
 
 export function getPrefixFromNetwork(

@@ -116,6 +116,5 @@ let irregularTs = [
 
 test("Store and retrieve a transactions", async () => {
   let regular = getRegularSeries(irregularTs)
-  console.log(regular)
   expect(regular.length).toBeGreaterThan(500)
 });

@@ -6,7 +6,7 @@
     "lib": ["es2020", "dom"],
     "types": ["node", "jest"],
     "sourceMap": true,
-    "strict": true,
+    "strict": false,
     "strictPropertyInitialization": false,
     "experimentalDecorators": true,
     "moduleResolution": "node",

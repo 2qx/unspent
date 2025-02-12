@@ -5,7 +5,7 @@ import {
   lockingBytecodeToCashAddress,
 } from "@bitauth/libauth";
 import {
-  ConstructorArgument,
+  Argument,
   Artifact,
   Contract as CashScriptContract,
   Utxo,
@@ -43,7 +43,7 @@ export class BaseUtxPhiContract {
   constructor(
     network: string,
     artifact: Artifact,
-    constructorArguments: ConstructorArgument[]
+    constructorArguments: Argument[]
   ) {
 
     const defaultProvider = getDefaultProvider(network);
@@ -64,7 +64,7 @@ export class BaseUtxPhiContract {
     );
   }
 
-  _refresh(constructorArguments: ConstructorArgument[]) {
+  _refresh(constructorArguments: Argument[]) {
     this.contract = new CashScriptContract(
       this.artifact,
       [...constructorArguments],
@@ -86,19 +86,20 @@ export class BaseUtxPhiContract {
     const options = { version: version, network: network };
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress({
+    const CashAddrResult = lockingBytecodeToCashAddress({
       prefix:prefix,
       bytecode:hexToBin(lockingBytecode!)
     });
-    if (typeof address !== "string")
-      throw Error("non-standard address" + address);
+    if (typeof CashAddrResult === "string")
+      throw Error("non-standard address" + CashAddrResult);
+
 
     return {
       code: code,
       options: options,
       args: args,
       lockingBytecode: lockingBytecode,
-      address: address,
+      address: CashAddrResult.address,
     };
   }
 
@@ -125,16 +126,16 @@ export class BaseUtxPhiContract {
     const options = { version: version, network: network };
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode: lockingBytecode!});
-    if (typeof address !== "string")
-      throw Error("non-standard address:" + address);
+    const CashAddrResult = lockingBytecodeToCashAddress({prefix:prefix, bytecode: lockingBytecode!});
+    if (typeof CashAddrResult === "string")
+      throw Error("non-standard address:" + CashAddrResult);
 
     return {
       code: code,
       options: options,
       args: args,
       lockingBytecode: lockingBytecode,
-      address: address,
+      address: CashAddrResult.address,
     };
   }
 

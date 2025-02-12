@@ -13,7 +13,7 @@ import {
 } from "./index.js"
 import { Builtins } from "clipanion";
 // @ts-ignore
-import packageJson from "../package.json" assert { type: "json" };
+import packageJson from "../package.json" with { type: "json" };
 
 export async function getAnAliceWallet(amount: number) : Promise<RegTestWallet> {
   const alice = await RegTestWallet.fromId(process.env["ALICE_ID"]!);

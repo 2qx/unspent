@@ -2,7 +2,7 @@ A utility for calling unspent contracts via the command line.
 
 # Usage
 
-In a node ^18 environment:
+With a node 23 environment:
 
     npm i unspent
     unspent -h

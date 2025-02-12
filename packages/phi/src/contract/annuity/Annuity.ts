@@ -50,8 +50,8 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
 
     const lock = cashAddressToLockingBytecode(recipientAddress);
-    if (typeof lock === "string") throw lock;
 
+    if (typeof lock === "string") throw lock;
     super(options.network!, script, [
       BigInt(period),
       lock.bytecode,
@@ -59,7 +59,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       BigInt(executorAllowance),
     ]);
     this.recipientLockingBytecode = lock.bytecode;
-    if(SPECIALS.includes(binToHex(lock.bytecode))) throw Error("Contract is too special")
+    if (SPECIALS.includes(binToHex(lock.bytecode))) throw Error("Contract is too special")
     this.options = options;
   }
 
@@ -87,14 +87,14 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     const period = parseBigInt(p.args.shift()!);
     const lock = p.args.shift()!;
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode:hexToBin(lock)});
-    if (typeof address !== "string")
-      throw Error("non-standard address" + address);
+    const CashAddrResult = lockingBytecodeToCashAddress({ prefix: prefix, bytecode: hexToBin(lock) });
+    if (typeof CashAddrResult === "string")
+      throw Error("non-standard address" + CashAddrResult);
     const installment = parseBigInt(p.args.shift()!);
     const executorAllowance = parseBigInt(p.args.shift()!);
     const annuity = new Annuity(
       period,
-      address,
+      CashAddrResult.address,
       installment,
       executorAllowance,
       p.options
@@ -126,9 +126,9 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     const lock = p.args.shift()!;
 
     const prefix = getPrefixFromNetwork(network);
-    const address = lockingBytecodeToCashAddress({prefix:prefix, bytecode:lock});
-    if (typeof address !== "string")
-      throw Error("non-standard address" + address);
+    const CashAddrResult = lockingBytecodeToCashAddress({ prefix: prefix, bytecode: lock });
+    if (typeof CashAddrResult === "string")
+      throw Error("non-standard address" + CashAddrResult);
 
     let [installment, executorAllowance] = [30000n, 3000n];
     installment = binToBigInt(p.args.shift()!);
@@ -137,13 +137,13 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     const annuity = new Annuity(
       period,
-      address,
+      CashAddrResult.address,
       installment,
       executorAllowance,
       p.options
     );
 
-    if(annuity.isSpecial()) throw Error("Contract is too special")
+    if (annuity.isSpecial()) throw Error("Contract is too special")
     // check that the address is the same
     annuity.checkLockingBytecode(p.lockingBytecode);
     return annuity;
@@ -209,8 +209,8 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
     return `Annuity paying ${this.installment} (sat), every ${this.period} blocks, after a ${this.executorAllowance} (sat) executor allowance`;
   }
 
-  override asCommand(): string{
-    let chipnetFlag = this.options.network ==  'mainnet' ? "": "--chipnet ";
+  override asCommand(): string {
+    let chipnetFlag = this.options.network == 'mainnet' ? "" : "--chipnet ";
     return `unspent annuity --version ${this.options.version} ${chipnetFlag} --address ${this.recipientAddress} --period ${this.period} --allowance ${this.executorAllowance} --installment ${this.installment}`;
   }
 
@@ -281,19 +281,19 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
         const installment = BigInt(this.installment) + BigInt(this.executorAllowance);
         const intervalSeconds = Number(this.period) * 600;
         for (var i = 0; i < seriesLength; i++) {
-          if(installment > 1000n){
+          if (installment > 1000n) {
             time.push(Number(seriesStartTime + i * intervalSeconds));
             principal.push(Number(initialPrincipal) - Number(installment) * i);
             totalPayout.push(Number(this.installment) * i);
             totalFee.push(Number(this.executorAllowance) * i);
-          }else{
+          } else {
             time.push(Number(seriesStartTime + i * intervalSeconds));
             principal.push(0);
             totalPayout.push(Number(initialPrincipal) - Number(installment) * i);
             totalFee.push(Number(this.executorAllowance) * i);
             break;
           }
-          
+
 
         }
 
@@ -334,22 +334,27 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
       balance = await this.getBalance();
     }
     if (balance == 0n) {
-      throw Error("No funds on contract"); 
+      throw Error("No funds on contract");
     }
 
     const fn = this.getFunction(Annuity.fn)!;
 
     let newPrincipal = 0n
     let to: any = [];
-    if (balance < this.installment){
+    if (balance < this.installment) {
       throw Error("Funds selected below installment amount");
     }
-    else if (balance < (BigInt(Number(this.installment)*2))){
+    else if (balance < (BigInt(Number(this.installment) * 2))) {
       console.log("liquidating annuity;")
-      newPrincipal = balance - BigInt(Number(this.executorAllowance)-100);
-    }else{
+      newPrincipal = balance - BigInt(Number(this.executorAllowance) - 100);
+    } else {
       newPrincipal = balance - (BigInt(this.installment) + BigInt(this.executorAllowance));
     }
+
+    to.push({
+      to: this.recipientAddress,
+      amount: BigInt(this.installment),
+    })
 
     if (this.options.version == 1 || balance > BigInt(this.installment) * 2n) {
       to.push(
@@ -358,7 +363,7 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
           amount: newPrincipal,
         }
       )
-    }else if(this.options.version == 2 && balance < BigInt(this.installment) * 2n){
+    } else if (this.options.version == 2 && balance < BigInt(this.installment) * 2n) {
       to.pop()
       to.push(
         {
@@ -366,11 +371,6 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
           amount: newPrincipal,
         }
       )
-    }else{
-      to.push({
-        to: this.recipientAddress,
-        amount: BigInt(this.installment),
-      })
     }
 
 
@@ -399,17 +399,16 @@ export class Annuity extends BaseUtxPhiContract implements UtxPhiIface {
 
     if (exAddress) {
       to.pop();
-      if (executorFee < 577n)
-        throw Error(
-          `inputs would result in executor fee below dust limit ${executorFee}`
-        );
-      to.push({
+      if (executorFee > 577n) to.push({
         to: exAddress,
         amount: executorFee,
       });
     }
 
-    tx!.to(to).withAge(Number(this.period)).withoutChange();
+    tx!
+      .to(to)
+      .withAge(Number(this.period)).
+      withoutChange();
 
 
     let txn = ""

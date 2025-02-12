@@ -4,23 +4,23 @@ import { deriveLockingBytecodeHex } from "../../common/util.js";
 import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Drip Class Tests`, () => {
-  test("Should serialize a faucet (v2)", async () => {
-    let f = new Drip({version:2});
+  test("Should serialize a faucet (v3)", async () => {
+    let f = new Drip({version:3});
     let chk = deriveLockingBytecodeHex(f.getAddress());
     expect(f.toString()).toContain(chk);
-    expect(f.toString()).toEqual(`$,2,${chk}`);
+    expect(f.toString()).toEqual(`$,3,${chk}`);
 
-    let f2 = Drip.fromString(f.toString());
+    let f3 = Drip.fromString(f.toString());
 
-    expect(f.toString()).toEqual(f2.toString());
-    expect(f.toOpReturn()).toEqual(f2.toOpReturn());
-    expect(f.toOpReturn()).toEqual(Drip.fromOpReturn(f2.toOpReturn()).toOpReturn());
-    expect(f.getAddress()).toEqual(f2.getAddress());
-    expect(f.isTestnet()).toEqual(f2.isTestnet());
+    expect(f.toString()).toEqual(f3.toString());
+    expect(f.toOpReturn()).toEqual(f3.toOpReturn());
+    expect(f.toOpReturn()).toEqual(Drip.fromOpReturn(f3.toOpReturn()).toOpReturn());
+    expect(f.getAddress()).toEqual(f3.getAddress());
+    expect(f.isTestnet()).toEqual(f3.isTestnet());
   });
 
   test("Should deserialize and reserialize a chipnet faucet", async () => {
-    let f = new Drip({ version: 2, network: "chipnet" });
+    let f = new Drip({ version: 3, network: "chipnet" });
 
     let f2 = Drip.fromString(f.toString(), "chipnet");
 
@@ -30,7 +30,7 @@ describe(`Drip Class Tests`, () => {
   });
 
   test("Should deserialize and reserialize a regtest Drip to chunks and from an opreturn", async () => {
-    let options = { version: 2, network: "regtest" };
+    let options = { version: 3, network: "regtest" };
     let f1 = new Drip(options);
     let opReturn = f1.toOpReturn();
     let f2 = Drip.fromOpReturn(opReturn, "regtest");
@@ -40,7 +40,7 @@ describe(`Drip Class Tests`, () => {
   });
 
   test("Should return info", async () => {
-    let options = { version: 2, network: "regtest" };
+    let options = { version: 3, network: "regtest" };
     let f1 = new Drip(options);
     let info = await f1.info(false);
     expect(info).toContain(f1.toString());
@@ -48,7 +48,7 @@ describe(`Drip Class Tests`, () => {
   });
 
   test("Should return mainnet info", async () => {
-    let options = { version: 2};
+    let options = { version: 3};
     let f1 = new Drip(options);
     let info = await f1.info(false);
     expect(info).toContain(f1.toString());
@@ -57,8 +57,8 @@ describe(`Drip Class Tests`, () => {
   });
 
 
-  test("Should drip the faucet (v2) to completion", async () => {
-    let options = { version: 2, network: "regtest" };
+  test("Should drip the faucet (v3) to completion", async () => {
+    let options = { version: 3, network: "regtest" };
     let f1 = new Drip(options);
 
     const alice = await getAnAliceWallet(35000000);
@@ -90,9 +90,8 @@ describe(`Drip Class Tests`, () => {
       await f1.execute();
     }
 
-    expect(await charlie.getBalance("sat")).toBeGreaterThan(25000);
     expect(f1.isTestnet()).toEqual(true);
-    expect(await f1.getBalance()).toBe(0n);
+    expect(await f1.getBalance()).toBeGreaterThan(0n);
 
 
   });

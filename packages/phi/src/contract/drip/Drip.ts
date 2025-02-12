@@ -36,7 +36,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         if (!(Drip.c == p.code))
             throw "non-faucet serialized string passed to faucet constructor";
 
-        if (![2].includes(p.options.version))
+        if (![3].includes(p.options.version))
             throw Error("faucet contract version not recognized");
 
         if (p.args.length != 0)
@@ -59,7 +59,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
             throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
         // version
-        if (![0, 1, 2].includes(p.options.version))
+        if (![3].includes(p.options.version))
             throw Error(
                 `Wrong version code passed to ${this.name} class: ${p.options.version}`
             );

@@ -203,9 +203,9 @@ describe(`Divide Class Tests`, () => {
       'aa20000000000000000012345678900000000000000000000000000000000000000087'
     );
     
-    let cashaddr = lockingBytecodeToCashAddress(p2sh32, "bchreg")
-    if(typeof cashaddr != `string`)  throw (cashaddr)
-    const payees = Array(4).fill(cashaddr);
+    let cashAddrResponse = lockingBytecodeToCashAddress({bytecode:p2sh32, prefix:"bchreg"})
+    if(typeof cashAddrResponse === `string`)  throw (cashAddrResponse)
+    const payees = Array(4).fill(cashAddrResponse.address);
     const d4 = new Divide(1200n, payees, options);
     const info = await d4.info(false);
     expect(info).toContain(d4.toString());

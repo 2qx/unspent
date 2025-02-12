@@ -1,8 +1,9 @@
 import { mine, RegTestWallet } from "mainnet-js";
 import { Annuity } from "./Annuity.js";
+import { binToHex } from "@bitauth/libauth";
 import { DUST_UTXO_THRESHOLD } from "../../common/constant.js";
 import { derivePublicKeyHashHex } from "../../common/util.js";
-import { getAnAliceWallet } from "../../test/aliceWallet4test.js"; 
+import { getAnAliceWallet } from "../../test/aliceWallet4test.js";
 
 describe(`Annuity Class Tests`, () => {
   test("Should serialize a Annuity", async () => {
@@ -11,7 +12,7 @@ describe(`Annuity Class Tests`, () => {
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr",
       5000n,
       Annuity.minAllowance,
-      {version:1}
+      { version: 1 }
     );
     const chk = derivePublicKeyHashHex(
       "bitcoincash:pq75zmtt8d84nqnxv8vx3wj06mmzlhjnwuwprm4szr"
@@ -96,12 +97,11 @@ describe(`Annuity Class Tests`, () => {
       1n,
       bob.getDepositAddress(),
       10000n,
-      Annuity.minAllowance+20n,
+      Annuity.minAllowance + 20n,
       options
     );
 
     // fund the contract
-    
     await alice.send([
       {
         cashaddr: p1.getAddress(),
@@ -111,7 +111,7 @@ describe(`Annuity Class Tests`, () => {
     ]);
 
     for (let x = 0; x < 5; x++) {
-      
+
       await mine({
         cashaddr: "bchreg:ppt0dzpt8xmt9h2apv9r60cydmy9k0jkfg4atpnp2f",
         blocks: 2,
