@@ -16,7 +16,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         let script: Artifact;
         if (options.version === 3) {
             script = v3;
-        } else if(options.version === 2){
+        } else if (options.version === 2) {
             script = v3;
         }
         else {
@@ -39,7 +39,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         if (!(Drip.c == p.code))
             throw "non-faucet serialized string passed to faucet constructor";
 
-        if (![3].includes(p.options.version))
+        if (![2, 3].includes(p.options.version))
             throw Error("faucet contract version not recognized");
 
         if (p.args.length != 0)
@@ -62,7 +62,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
             throw Error(`Wrong short code passed to ${this.name} class: ${p.code}`);
 
         // version
-        if (![3].includes(p.options.version))
+        if (![2, 3].includes(p.options.version))
             throw Error(
                 `Wrong version code passed to ${this.name} class: ${p.options.version}`
             );
@@ -167,7 +167,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         debug;
         const fn = this.getFunction(Drip.fn)
         let txids = await Promise.all(utxos!.map(async (utxo) => await this.doDrip(utxo, fn)))
-        
+
         return txids!.join(",")
     }
 
@@ -189,13 +189,13 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
             tx.to(to)
         } else if (balance > Drip.minPayout) {
             newPrincipal = balance - Drip.minPayout
-            if(newPrincipal > 576){
+            if (newPrincipal > 576) {
                 to.push({
                     to: this.getAddress(),
                     amount: newPrincipal,
                 })
                 tx.to(to)
-            }else{
+            } else {
                 tx.withOpReturn([])
             }
         }
@@ -204,8 +204,8 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         }
 
         tx
-        .withAge(1)
-        .withoutChange();
+            .withAge(1)
+            .withoutChange();
 
         let txn = ""
         txn = (tx.send()).txid;
