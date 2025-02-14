@@ -16,7 +16,10 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         let script: Artifact;
         if (options.version === 3) {
             script = v3;
-        } else {
+        } else if(options.version === 2){
+            script = v3;
+        }
+        else {
             throw Error("Unrecognized Drip Version");
         }
 
@@ -205,7 +208,7 @@ export class Drip extends BaseUtxPhiContract implements UtxPhiIface {
         .withoutChange();
 
         let txn = ""
-        txn = (await tx.send()).txid;
+        txn = (tx.send()).txid;
         return txn;
     }
 }
